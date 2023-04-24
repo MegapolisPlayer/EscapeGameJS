@@ -44,21 +44,29 @@ class Button {
 
 //Audio player
 
-var AudioPlayer = {
-	audioTracks: [],
-	audioTrackCounter: 0,
-	Load: function() {
-		audioTracks.push(new Audio("res/music/Stormfront.mp3"));
-		audioTracks.push(new Audio("res/music/Faceoff.mp3"));
-	},
-	PlayNextTrack: function() {
-    	audioTracks[audioTrackCounter].play();
-		audioTrackCounter++;
-	},
-	ResetTrack: function() {
-		audioTracks[audioTrackCounter].currentTime = 0;
-	},
-}
+class AudioPlayer {
+	constructor() {
+		this.audioTracks = [];
+		this.audioTracks.push(new Audio("res/music/Stormfront.mp3"));
+		this.audioTracks.push(new Audio("res/music/Faceoff.mp3"));
+		this.audioTrackCounter = 0;
+	}
+	playNextTrack() {
+		if(this.audioTrackCounter > 0) {
+			this.audioTracks[(this.audioTrackCounter) - 1].pause();
+		}
+		this.audioTracks[this.audioTrackCounter].play();
+		this.audioTrackCounter++;
+	}
+	resetTrack() {
+		if(this.audioTrackCounter > 0) {
+			this.audioTracks[this.audioTrackCounter - 1].pause();
+			this.audioTracks[this.audioTrackCounter - 1].currentTime = 0;
+			this.audioTracks[this.audioTrackCounter - 1].play();
+		}
+	}
+};
+const ap = new AudioPlayer();
 
 function PlayButtonRegister() {
     console.log("Registered PLAY Button press!");
@@ -75,11 +83,9 @@ function CreditsButtonRegister() {
     console.log("Registered CREDITS Button press!");
 }
 
-AudioPlayer.Load();
-
 let mainMenuButtons = [];
-mainMenuButtons.push(new Button(0,   400, 150, 100, 25, "Enable audio", "AudioPlayer.PlayNextTrack"));
-mainMenuButtons.push(new Button(150,   400, 150, 100, 25, "Restart track", "AudioPlayer.ResetTrack"));
+mainMenuButtons.push(new Button(0,   400, 150, 100, 25, "Enable audio", "ap.playNextTrack"));
+mainMenuButtons.push(new Button(150, 400, 150, 100, 25, "Restart track", "ap.resetTrack"));
 mainMenuButtons.push(new Button(600, 100, 300, 100, 50, "Play", "PlayButtonRegister"));
 mainMenuButtons.push(new Button(600, 200, 300, 100, 50, "Settings", "SettingsButtonRegister"));
 mainMenuButtons.push(new Button(600, 300, 300, 100, 50, "Credits", "CreditsButtonRegister"));
