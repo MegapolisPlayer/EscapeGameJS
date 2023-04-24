@@ -1,0 +1,51 @@
+body {
+    font-family: Arial;
+    background-color: #333399;
+    font-size: 25px;
+    color: white;
+}
+h {
+    font-size: 50px;
+    font-weight: bold;
+}
+button {
+    background-color: white;
+    color: #333399;
+    
+    text-align: center;
+    padding: 10px;
+    
+    border-style: solid;
+    border-width: 1px;
+    border-color: #000000; 
+}
+
+/* Escape game related */
+
+#canvas_container {
+     position: relative;
+}
+
+#EscapeCanvas {
+    position: absolute;
+    z-index: -1;
+}
+
+.CanvasButton {
+    position: absolute;
+    
+    background-color: white;
+    color: #333399;
+    
+    text-align: center;
+    padding: auto;
+    
+    border-style: solid;
+    border-width: 1px;
+    border-color: #000000;
+}
+
+.CanvasButton:hover {
+	background-color: lightgrey;
+	color: black;
+}
