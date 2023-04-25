@@ -20,8 +20,9 @@ button {
     border-color: #000000; 
 }
 
-p {
-    position: static;
+a {
+    font-weight: bold;
+    color: lightgrey;
 }
 
 /* Escape game related */

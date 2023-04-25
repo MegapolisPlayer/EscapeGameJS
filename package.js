@@ -1,11 +1,17 @@
 //Canvas object
 class Canvas {
-    constructor(id, font, fontsize, color) {
+    constructor(id, font, fontsize, color, x, y) {
         this.canvas = document.getElementById(id);
+		this.canvas.width = x;
+		this.canvas.height = y;
         this.context = this.canvas.getContext("2d");
         this.color = color;
         this.context.font = fontsize+"px "+font;
         this.context.fillStyle = this.color;
+		let canvasbuffer = document.createElement("div");
+		canvasbuffer.style.setProperty("width", this.canvas.width+"px");
+		canvasbuffer.style.setProperty("height", this.canvas.height+"px");
+		document.getElementById(id).parentElement.appendChild(canvasbuffer);
     }
     //sets new color
     setnewcolor(newcolor) {
@@ -14,7 +20,7 @@ class Canvas {
     }
     //draws text
     text(text, xoffset, yoffset) {
-		this.context.fillText("Backstory", 50, 50);
+		this.context.fillText(text, xoffset, yoffset);
     }
 	//clears the canvas color
     clear() {
@@ -34,6 +40,10 @@ class Canvas {
 class Button {  
     //id of element where to insert as string
     insert(id) {
+		if((typeof this.button === "undefined")) { 
+			console.error("Button: Object not initialized.");
+			return;
+		}
 		this.button.setAttribute("class", "CanvasButton");
 		this.button.setAttribute("id", this.text);
 		this.button.setAttribute("onclick", this.callbackname+"()");
@@ -47,11 +57,18 @@ class Button {
 		document.getElementById(id).appendChild(this.button);
     }
 	changeText(newtext) {
+		if((typeof this.button === "undefined")) { 
+			console.error("Button: Object not initialized.");
+			return;
+		}
 		this.text = newtext;
 		this.buttontext.nodeValue =  this.text;
+		this.button.innerHTML = '';
 		this.button.appendChild(this.buttontext);
-		document.getElementById(id).appendChild(this.button);
-	}   
+	}
+	deleteButton() {
+		this.button.remove();
+	}
     constructor(xoffset, yoffset, width, height, fontsize, text, callbackname, container_id) {
 		this.button = document.createElement("button");
         this.xoffset = xoffset;
@@ -65,6 +82,10 @@ class Button {
 		
 		this.insert(container_id);
     } 
+	recreate(container_id) {
+		this.button = document.createElement("button");
+		insert(container_id);
+	}
 };
 
 //Audio player
@@ -72,16 +93,37 @@ class Button {
 class AudioPlayer {
 	constructor() {
 		this.audioTracks = [];
-		this.audioTracks.push(new Audio("res/music/Stormfront.mp3"));
-		this.audioTracks.push(new Audio("res/music/Faceoff.mp3"));
+		this.audioTracks.push(new Audio("res/music/Stormfront.mp3"));        //main menu
+		this.audioTracks.push(new Audio("res/music/Faceoff.mp3"));           //intro
+		this.audioTracks.push(new Audio("res/music/ImpendingBoom.mp3"));     //hranice
+		this.audioTracks.push(new Audio("res/music/Nerves.mp3"));            //prerov
+		this.audioTracks.push(new Audio("res/music/LateNightRadio.mp3"));    //nemcice nad hanou
+		this.audioTracks.push(new Audio("res/music/BlueFeather.mp3"));       //prostejov
+		this.audioTracks.push(new Audio("res/music/FailingDefense.mp3"));    //olomouc
+		this.audioTracks.push(new Audio("res/music/RoyalCoupling.mp3"));     //studenka
+		this.audioTracks.push(new Audio("res/music/TheParting.mp3"));        //ostrava
+		this.audioTracks.push(new Audio("res/music/StartingOutWaltzVivace.mp3")); //credits, ending
 		this.audioTrackCounter = 0;
 	}
 	playNextTrack() {
 		if(this.audioTrackCounter > 0) {
 			this.audioTracks[(this.audioTrackCounter) - 1].pause();
 		}
+		if(this.audioTrackCounter >= this.audioTracks.length) {
+			this.audioTrackCounter = 0;
+		}
 		this.audioTracks[this.audioTrackCounter].play();
 		this.audioTrackCounter++;
+	}
+	playTrack(id) {
+		if(id >= this.audioTracks.length) {
+			console.error("AudioPlayer: Out of bounds.");
+			return;
+		}
+		if(this.audioTrackCounter > 0) {
+			this.audioTracks[(this.audioTrackCounter) - 1].pause();
+		}
+		this.audioTracks[id].play();
 	}
 	resetTrack() {
 		if(this.audioTrackCounter > 0) {
@@ -91,16 +133,18 @@ class AudioPlayer {
 		}
 	}
 };
-const cvs = new Canvas("EscapeCanvas", "Arial", "48", "#333399");
+const cvs = new Canvas("EscapeCanvas", "Arial", "48", "#333399", 1000, 500);
 const ap = new AudioPlayer();
 
 const image = new Image();
 image.src = "res/MainMenu.jpg";
 image.onload = mydrawImage;
 
+let mainMenuButtons = [];
+
 function mydrawImage() {
-    cvs.context.drawImage(this, 0, 0, this.width, this.height);
-    cvs.text("Útěk z Olomouckého kraje", 50, 50);
+	cvs.context.drawImage(this, 0, 0, this.width, this.height);
+	cvs.text("Útěk z Olomouckého kraje", 50, 50);
 }
 
 function PlayButtonRegister() {
@@ -108,17 +152,26 @@ function PlayButtonRegister() {
 	cvs.clear("black");
     cvs.setnewcolor("white");
 	cvs.text("Backstory", 50, 50);
-	
+	for(let i = 0; i < mainMenuButtons.length; i++) {
+		mainMenuButtons[i].deleteButton();
+    }
+    mainMenuButtons[1].changeText();
 }
 function SettingsButtonRegister() {
-    console.log("Registered SETTINGS Button press!");
+	console.log("Registered SETTINGS Button press!");
 }
 function CreditsButtonRegister() {
-    console.log("Registered CREDITS Button press!");
+	console.log("Registered CREDITS Button press!");
 }
 
-let mainMenuButtons = [];
-mainMenuButtons.push(new Button(0,   400, 150, 100, 25, "Enable audio", "ap.playNextTrack", "canvas_container"));
+function apNextTrackButtonWrap() {
+	mainMenuButtons[0].changeText("Disable audio");
+	ap.playNextTrack();
+}
+
+//Main code
+
+mainMenuButtons.push(new Button(0,   400, 150, 100, 25, "Enable audio", "apNextTrackButtonWrap", "canvas_container"));
 mainMenuButtons.push(new Button(150, 400, 150, 100, 25, "Restart track", "ap.resetTrack", "canvas_container"));
 mainMenuButtons.push(new Button(600, 100, 300, 100, 50, "Play", "PlayButtonRegister", "canvas_container"));
 mainMenuButtons.push(new Button(600, 200, 300, 100, 50, "Settings", "SettingsButtonRegister", "canvas_container"));
