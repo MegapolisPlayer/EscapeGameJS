@@ -22,6 +22,10 @@ class Canvas {
     text(text, xoffset, yoffset) {
 		this.context.fillText(text, xoffset, yoffset);
     }
+	 //draws multiline text
+    text(mltext, xoffset, yoffset) {
+		this.context.fillText(text, xoffset, yoffset);
+    }
 	//clears the canvas color
     clear() {
         this.context.fillRect(0, 0, this.canvas.width, this.canvas.height);
@@ -85,6 +89,14 @@ class Button {
 	recreate(container_id) {
 		this.button = document.createElement("button");
 		insert(container_id);
+	}
+};
+
+//Arrow object
+
+class Arrow {
+	constructor() {
+		
 	}
 };
 

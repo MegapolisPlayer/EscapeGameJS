@@ -1,3 +1,3 @@
 function HraniceNaMorave() {
-    //lokace
+    //lokace, sipky
 }
