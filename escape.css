@@ -20,6 +20,10 @@ button {
     border-color: #000000; 
 }
 
+p {
+    position: static;
+}
+
 /* Escape game related */
 
 #canvas_container {
