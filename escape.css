@@ -54,3 +54,8 @@ a {
 	background-color: lightgrey;
 	color: black;
 }
+
+.CanvasArrow {
+    position: absolute;
+}
+

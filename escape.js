@@ -1,3 +1,8 @@
+if (window.document.documentMode) {
+    //internet explorer
+    alert("You seem to be using Internet Explorer.\nThe game might not work properly.\nDebug reports from IE will be ignored.\n");
+}
+
 const cvs = new Canvas("EscapeCanvas", "Arial", "48", "#333399", 1000, 500);
 const ap = new AudioPlayer();
 
@@ -21,12 +26,27 @@ function PlayButtonRegister() {
 		mainMenuButtons[i].deleteButton();
     }
     mainMenuButtons[1].changeText();
+    myarrow1 = new Arrow(200, 100, 100, 100, 1, "ArrowRegister1", cvs);
+    myarrow1.draw(cvs);
+    cvs.setnewfont("Arial", "32");
+    cvs.textml("It is the 1st of May 1997 and the Slovak minority has just\n"
+                +"declared independence from the young republic of Czechia.\n\n"
+                +"With the support of the Slovak Republic the separatists are\n"
+                +"now pushing deep into the Moravian heartlands. They have\n"
+                +"also poisoned the Bečva river along the way and are now\n"
+                +"standing just a few kilometers away from Hranice.\n\n"
+                +"It is time to escape.\n"
+    , 100, 100);
+    HraniceNaMorave();
 }
 function SettingsButtonRegister() {
 	console.log("Registered SETTINGS Button press!");
 }
 function CreditsButtonRegister() {
 	console.log("Registered CREDITS Button press!");
+}
+function ArrowRegister1() {
+    console.log("Registered arrow1 press!");
 }
 
 function apNextTrackButtonWrap() {

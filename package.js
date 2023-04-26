@@ -18,9 +18,26 @@ class Canvas {
         this.color = newcolor;
         this.context.fillStyle = this.color;
     }
+    //sets new font
+    setnewfont(font, fontsize) {
+        this.context.font = fontsize+"px "+font;
+    }
     //draws text
     text(text, xoffset, yoffset) {
 		this.context.fillText(text, xoffset, yoffset);
+    }
+	 //draws multiline text
+    textml(mltext, xoffset, yoffset, padding) {
+		let lines = mltext.split('\n');
+		let newlineyoffset = 0;
+		let metrics = this.context.measureText(mltext);
+        //lowest point from line + highest point from line
+		let lineheight = metrics.actualBoundingBoxAscent + metrics.actualBoundingBoxDescent;
+        lineheight *= 1.5;
+		for(let Id = 0; Id < lines.length; Id++) {
+			this.context.fillText(lines[Id], xoffset, yoffset + newlineyoffset);
+			newlineyoffset += lineheight;
+		}
     }
 	//clears the canvas color
     clear() {
@@ -39,7 +56,7 @@ class Canvas {
 
 class Button {  
     //id of element where to insert as string
-    insert(id) {
+    insert(container_id) {
 		if((typeof this.button === "undefined")) { 
 			console.error("Button: Object not initialized.");
 			return;
@@ -54,7 +71,7 @@ class Button {
 		this.button.style.setProperty("font-size", this.fontsize+"px");
 		
 		this.button.appendChild(this.buttontext);
-		document.getElementById(id).appendChild(this.button);
+		document.getElementById(container_id).appendChild(this.button);
     }
 	changeText(newtext) {
 		if((typeof this.button === "undefined")) { 
@@ -85,6 +102,84 @@ class Button {
 	recreate(container_id) {
 		this.button = document.createElement("button");
 		insert(container_id);
+	}
+};
+
+//Arrow object
+
+const ArrowDirections = {
+	Center: 0,
+	Up: 1,
+	Right: 2,
+	Down: 3,
+	Left: 4
+}
+
+const ArrowImages = [];
+for(let ArrowImagesId = 0; ArrowImagesId < 5; ArrowImagesId++) {
+	ArrowImages.push(new Image());
+}
+
+//arrow images
+ArrowImages[0].src = "res/arrow_top.png";
+ArrowImages[1].src = "res/arrow_up.png";
+ArrowImages[2].src = "res/arrow_right.png";
+ArrowImages[3].src = "res/arrow_down.png";
+ArrowImages[4].src = "res/arrow_left.png";
+
+class Arrow {
+    insert(canvasobj) {
+		if((typeof this.button === "undefined")) { 
+			console.error("Button: Object not initialized.");
+			return;
+		}
+		if((typeof canvasobj === "undefined")) { 
+			console.error("Arrow: Argument to function not provided.");
+			return;
+		}
+		
+		this.button.setAttribute("class", "CanvasArrow");
+		this.button.setAttribute("onclick", this.callbackname+"()");
+		this.button.style.setProperty("width", this.width+"px");
+		this.button.style.setProperty("height", this.height+"px");
+		this.button.style.setProperty("left", this.xoffset+"px");
+		this.button.style.setProperty("top", this.yoffset+"px");
+		
+		canvasobj.canvas.appendChild(this.button);
+    }
+	changeId(newid) {
+		if((typeof this.button === "undefined")) { 
+			console.error("Arrow: Object not initialized.");
+			return;
+		}
+		
+	}
+	deleteButton() {
+		this.button.remove();
+	}
+	draw(canvasobj) {
+		if((typeof this.button === "undefined")) { 
+			console.error("Arrow: Object not initialized.");
+			return;
+		}
+		if((typeof canvasobj === "undefined")) { 
+			console.error("Arrow: Argument to function not provided.");
+			return;
+		}
+		canvasobj.context.drawImage(ArrowImages[this.imageId], this.xoffset, this.yoffset, this.width, this.height);
+	}
+	//image id of type ArrowDirections
+	constructor(xoffset, yoffset, width, height, imageId, callbackname, canvasobj) {
+		this.button = document.createElement("button");
+		this.imageId = imageId;
+		this.callbackname = callbackname;
+		
+		this.width = width;
+		this.height = height;
+		this.xoffset = xoffset;
+		this.yoffset = yoffset;
+		
+		this.insert(canvasobj);
 	}
 };
 
@@ -133,6 +228,14 @@ class AudioPlayer {
 		}
 	}
 };
+function HraniceNaMorave() {
+    console.log("Hranice na Morave START");
+}
+if (window.document.documentMode) {
+    //internet explorer
+    alert("You seem to be using Internet Explorer.\nThe game might not work properly.\nDebug reports from IE will be ignored.\n");
+}
+
 const cvs = new Canvas("EscapeCanvas", "Arial", "48", "#333399", 1000, 500);
 const ap = new AudioPlayer();
 
@@ -156,12 +259,27 @@ function PlayButtonRegister() {
 		mainMenuButtons[i].deleteButton();
     }
     mainMenuButtons[1].changeText();
+    myarrow1 = new Arrow(200, 100, 100, 100, 1, "ArrowRegister1", cvs);
+    myarrow1.draw(cvs);
+    cvs.setnewfont("Arial", "32");
+    cvs.textml("It is the 1st of May 1997 and the Slovak minority has just\n"
+                +"declared independence from the young republic of Czechia.\n\n"
+                +"With the support of the Slovak Republic the separatists are\n"
+                +"now pushing deep into the Moravian heartlands. They have\n"
+                +"also poisoned the Bečva river along the way and are now\n"
+                +"standing just a few kilometers away from Hranice.\n\n"
+                +"It is time to escape.\n"
+    , 100, 100);
+    HraniceNaMorave();
 }
 function SettingsButtonRegister() {
 	console.log("Registered SETTINGS Button press!");
 }
 function CreditsButtonRegister() {
 	console.log("Registered CREDITS Button press!");
+}
+function ArrowRegister1() {
+    console.log("Registered arrow1 press!");
 }
 
 function apNextTrackButtonWrap() {

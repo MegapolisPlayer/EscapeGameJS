@@ -1,3 +1,0 @@
-function HraniceNaMorave() {
-    //lokace, sipky
-}
