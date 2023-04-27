@@ -22,11 +22,15 @@ class Canvas {
     setnewfont(font, fontsize) {
         this.context.font = fontsize+"px "+font;
     }
+    //draw box
+    box(x1, y1, x2, y2) {
+        this.context.fillRect(x1, y1, x2, y2);
+    }
     //draws text
     text(text, xoffset, yoffset) {
 		this.context.fillText(text, xoffset, yoffset);
     }
-	 //draws multiline text
+	//draws multiline text
     textml(mltext, xoffset, yoffset, padding) {
 		let lines = mltext.split('\n');
 		let newlineyoffset = 0;
@@ -38,6 +42,10 @@ class Canvas {
 			this.context.fillText(lines[Id], xoffset, yoffset + newlineyoffset);
 			newlineyoffset += lineheight;
 		}
+    }
+    //draws an image
+    image(image, xoffset, yoffset, dwidth, dheight) {
+        this.context.drawImage(image, xoffset, yoffset, dwidth, dheight);
     }
 	//clears the canvas color
     clear() {
@@ -63,7 +71,7 @@ class Button {
 		}
 		this.button.setAttribute("class", "CanvasButton");
 		this.button.setAttribute("id", this.text);
-		this.button.setAttribute("onclick", this.callbackname+"()");
+		this.button.setAttribute("onclick", this.callback);
 		this.button.style.setProperty("width", this.width+"px");
 		this.button.style.setProperty("height", this.height+"px");
 		this.button.style.setProperty("left", this.xoffset+"px");
@@ -86,7 +94,7 @@ class Button {
 	deleteButton() {
 		this.button.remove();
 	}
-    constructor(xoffset, yoffset, width, height, fontsize, text, callbackname, container_id) {
+    constructor(xoffset, yoffset, width, height, fontsize, text, callback, container_id) {
 		this.button = document.createElement("button");
         this.xoffset = xoffset;
         this.yoffset = yoffset;
@@ -95,7 +103,7 @@ class Button {
         this.fontsize = fontsize;
         this.text = text;
 		this.buttontext = document.createTextNode(this.text);
-        this.callbackname = callbackname;
+        this.callback = callback;
 		
 		this.insert(container_id);
     } 
@@ -139,13 +147,14 @@ class Arrow {
 		}
 		
 		this.button.setAttribute("class", "CanvasArrow");
-		this.button.setAttribute("onclick", this.callbackname+"()");
+		this.button.setAttribute("onclick", this.callback);
 		this.button.style.setProperty("width", this.width+"px");
 		this.button.style.setProperty("height", this.height+"px");
 		this.button.style.setProperty("left", this.xoffset+"px");
 		this.button.style.setProperty("top", this.yoffset+"px");
 		
-		canvasobj.canvas.appendChild(this.button);
+		canvasobj.canvas.parentElement.appendChild(this.button);
+        canvasobj.context.drawImage(ArrowImages[this.imageId], this.xoffset, this.yoffset, this.width, this.height);
     }
 	changeId(newid) {
 		if((typeof this.button === "undefined")) { 
@@ -169,11 +178,11 @@ class Arrow {
 		canvasobj.context.drawImage(ArrowImages[this.imageId], this.xoffset, this.yoffset, this.width, this.height);
 	}
 	//image id of type ArrowDirections
-	constructor(xoffset, yoffset, width, height, imageId, callbackname, canvasobj) {
+	constructor(xoffset, yoffset, width, height, imageId, callback, canvasobj) {
 		this.button = document.createElement("button");
 		this.imageId = imageId;
-		this.callbackname = callbackname;
-		
+		this.callback = callback;
+	    
 		this.width = width;
 		this.height = height;
 		this.xoffset = xoffset;
@@ -228,3 +237,4 @@ class AudioPlayer {
 		}
 	}
 };
+const ap = new AudioPlayer();

@@ -22,11 +22,15 @@ class Canvas {
     setnewfont(font, fontsize) {
         this.context.font = fontsize+"px "+font;
     }
+    //draw box
+    box(x1, y1, x2, y2) {
+        this.context.fillRect(x1, y1, x2, y2);
+    }
     //draws text
     text(text, xoffset, yoffset) {
 		this.context.fillText(text, xoffset, yoffset);
     }
-	 //draws multiline text
+	//draws multiline text
     textml(mltext, xoffset, yoffset, padding) {
 		let lines = mltext.split('\n');
 		let newlineyoffset = 0;
@@ -38,6 +42,10 @@ class Canvas {
 			this.context.fillText(lines[Id], xoffset, yoffset + newlineyoffset);
 			newlineyoffset += lineheight;
 		}
+    }
+    //draws an image
+    image(image, xoffset, yoffset, dwidth, dheight) {
+        this.context.drawImage(image, xoffset, yoffset, dwidth, dheight);
     }
 	//clears the canvas color
     clear() {
@@ -63,7 +71,7 @@ class Button {
 		}
 		this.button.setAttribute("class", "CanvasButton");
 		this.button.setAttribute("id", this.text);
-		this.button.setAttribute("onclick", this.callbackname+"()");
+		this.button.setAttribute("onclick", this.callback);
 		this.button.style.setProperty("width", this.width+"px");
 		this.button.style.setProperty("height", this.height+"px");
 		this.button.style.setProperty("left", this.xoffset+"px");
@@ -86,7 +94,7 @@ class Button {
 	deleteButton() {
 		this.button.remove();
 	}
-    constructor(xoffset, yoffset, width, height, fontsize, text, callbackname, container_id) {
+    constructor(xoffset, yoffset, width, height, fontsize, text, callback, container_id) {
 		this.button = document.createElement("button");
         this.xoffset = xoffset;
         this.yoffset = yoffset;
@@ -95,7 +103,7 @@ class Button {
         this.fontsize = fontsize;
         this.text = text;
 		this.buttontext = document.createTextNode(this.text);
-        this.callbackname = callbackname;
+        this.callback = callback;
 		
 		this.insert(container_id);
     } 
@@ -139,13 +147,14 @@ class Arrow {
 		}
 		
 		this.button.setAttribute("class", "CanvasArrow");
-		this.button.setAttribute("onclick", this.callbackname+"()");
+		this.button.setAttribute("onclick", this.callback);
 		this.button.style.setProperty("width", this.width+"px");
 		this.button.style.setProperty("height", this.height+"px");
 		this.button.style.setProperty("left", this.xoffset+"px");
 		this.button.style.setProperty("top", this.yoffset+"px");
 		
-		canvasobj.canvas.appendChild(this.button);
+		canvasobj.canvas.parentElement.appendChild(this.button);
+        canvasobj.context.drawImage(ArrowImages[this.imageId], this.xoffset, this.yoffset, this.width, this.height);
     }
 	changeId(newid) {
 		if((typeof this.button === "undefined")) { 
@@ -169,11 +178,11 @@ class Arrow {
 		canvasobj.context.drawImage(ArrowImages[this.imageId], this.xoffset, this.yoffset, this.width, this.height);
 	}
 	//image id of type ArrowDirections
-	constructor(xoffset, yoffset, width, height, imageId, callbackname, canvasobj) {
+	constructor(xoffset, yoffset, width, height, imageId, callback, canvasobj) {
 		this.button = document.createElement("button");
 		this.imageId = imageId;
-		this.callbackname = callbackname;
-		
+		this.callback = callback;
+	    
 		this.width = width;
 		this.height = height;
 		this.xoffset = xoffset;
@@ -228,25 +237,84 @@ class AudioPlayer {
 		}
 	}
 };
-function HraniceNaMorave() {
-    console.log("Hranice na Morave START");
+const ap = new AudioPlayer();
+let Character = new Image();
+Character.src = "res/Character.png";
+
+function dialogueMakeBox(canvasobj) {
+	canvasobj.box(20, (canvasobj.context.height * 0,8) - 20, canvasobj.context.width - 20, canvasobj.context.height - 20);
 }
+function dialogueNewText(canvasobj) {
+	canvasobj.textml(text, 30, (canvasobj.context.height * 0,8) - 10);
+}
+let Locations = [];
+let hnm_AmountLoadedImages = 0;
+
+function HraniceNaMoraveImageLoaded() {
+	hnm_AmountLoadedImages += 1;
+}
+
+function HraniceNaMoraveLoad(canvasobj) {
+	for(let Id = 0; Id < 5; Id++) {
+		Locations.push(new Image());
+		Locations[Id].onload = HraniceNaMoraveImageLoaded;
+	}
+	Locations[0].src = "res/hnm/domov.png";
+	Locations[1].src = "res/hnm/namesti.png";
+	Locations[2].src = "res/hnm/nadrazi.png";
+	Locations[3].src = "res/hnm/restaurace.png";
+	Locations[4].src = "res/hnm/nastupiste.png";
+	HraniceNaMorave(canvasobj);
+}
+
+function HraniceNaMorave(canvasobj) {
+	if(hnm_AmountLoadedImages != 5) {
+      	window.setTimeout(HraniceNaMorave, 100, canvasobj); // this checks the flag every 100 milliseconds
+		return;
+    }
+    console.log("Hranice na Morave START"+hnm_AmountLoadedImages);
+	HraniceNaMoraveDomov(canvasobj);
+}
+
+function HraniceNaMoraveDomov(canvasobj) {
+	canvasobj.clear("purple");
+	canvasobj.image(Locations[0], 0, 0, canvasobj.canvas.width, canvasobj.canvas.height);
+	dialogueMakeBox(canvasobj);
+	let ArrowToNamesti = new Arrow(700, 400, 100, 100, ArrowDirections.Right, "HraniceNaMoraveNamesti(canvasobj)", canvasobj);
+	myarrow1.draw(cvs);
+}
+function HraniceNaMoraveNamesti(canvasobj2) {
+	canvasobj2.clear("purple");
+	canvasobj2.image(Locations[1], 0, 0, canvasobj2.canvas.width, canvasobj2.canvas.height);
+}
+function HraniceNaMoraveNadrazi(canvasobj) {
+	canvasobj.clear("purple");
+	canvasobj.image(Locations[2], 0, 0, canvasobj.canvas.width, canvasobj.canvas.height);
+}
+function HraniceNaMoraveRestaurace(canvasobj) {
+	canvasobj.clear("purple");
+	canvasobj.image(Locations[3], 0, 0, canvasobj.canvas.width, canvasobj.canvas.height);
+}
+function HraniceNaMoraveNastupiste(canvasobj) {
+	canvasobj.clear("purple");
+	canvasobj.image(Locations[4], 0, 0, canvasobj.canvas.width, canvasobj.canvas.height);
+}
+
 if (window.document.documentMode) {
     //internet explorer
     alert("You seem to be using Internet Explorer.\nThe game might not work properly.\nDebug reports from IE will be ignored.\n");
 }
 
 const cvs = new Canvas("EscapeCanvas", "Arial", "48", "#333399", 1000, 500);
-const ap = new AudioPlayer();
 
 const image = new Image();
 image.src = "res/MainMenu.jpg";
-image.onload = mydrawImage;
+image.onload = MainMenu;
 
 let mainMenuButtons = [];
 
-function mydrawImage() {
-	cvs.context.drawImage(this, 0, 0, this.width, this.height);
+function MainMenu() {
+	cvs.image(this, 0, 0, this.width, this.height);
 	cvs.text("Útěk z Olomouckého kraje", 50, 50);
 }
 
@@ -259,8 +327,6 @@ function PlayButtonRegister() {
 		mainMenuButtons[i].deleteButton();
     }
     mainMenuButtons[1].changeText();
-    myarrow1 = new Arrow(200, 100, 100, 100, 1, "ArrowRegister1", cvs);
-    myarrow1.draw(cvs);
     cvs.setnewfont("Arial", "32");
     cvs.textml("It is the 1st of May 1997 and the Slovak minority has just\n"
                 +"declared independence from the young republic of Czechia.\n\n"
@@ -270,7 +336,8 @@ function PlayButtonRegister() {
                 +"standing just a few kilometers away from Hranice.\n\n"
                 +"It is time to escape.\n"
     , 100, 100);
-    HraniceNaMorave();
+    myarrow1 = new Arrow(700, 400, 100, 100, ArrowDirections.Right, "ArrowRegister1(myarrow1)", cvs);
+    myarrow1.draw(cvs);
 }
 function SettingsButtonRegister() {
 	console.log("Registered SETTINGS Button press!");
@@ -278,8 +345,10 @@ function SettingsButtonRegister() {
 function CreditsButtonRegister() {
 	console.log("Registered CREDITS Button press!");
 }
-function ArrowRegister1() {
+function ArrowRegister1(arrowobj) {
     console.log("Registered arrow1 press!");
+    arrowobj.deleteButton();
+    HraniceNaMoraveLoad(cvs);
 }
 
 function apNextTrackButtonWrap() {
@@ -289,8 +358,8 @@ function apNextTrackButtonWrap() {
 
 //Main code
 
-mainMenuButtons.push(new Button(0,   400, 150, 100, 25, "Enable audio", "apNextTrackButtonWrap", "canvas_container"));
-mainMenuButtons.push(new Button(150, 400, 150, 100, 25, "Restart track", "ap.resetTrack", "canvas_container"));
-mainMenuButtons.push(new Button(600, 100, 300, 100, 50, "Play", "PlayButtonRegister", "canvas_container"));
-mainMenuButtons.push(new Button(600, 200, 300, 100, 50, "Settings", "SettingsButtonRegister", "canvas_container"));
-mainMenuButtons.push(new Button(600, 300, 300, 100, 50, "Credits", "CreditsButtonRegister", "canvas_container"));
+mainMenuButtons.push(new Button(0,   400, 150, 100, 25, "Enable audio", "apNextTrackButtonWrap()", "canvas_container"));
+mainMenuButtons.push(new Button(150, 400, 150, 100, 25, "Restart track", "ap.resetTrack()", "canvas_container"));
+mainMenuButtons.push(new Button(600, 100, 300, 100, 50, "Play", "PlayButtonRegister()", "canvas_container"));
+mainMenuButtons.push(new Button(600, 200, 300, 100, 50, "Settings", "SettingsButtonRegister()", "canvas_container"));
+mainMenuButtons.push(new Button(600, 300, 300, 100, 50, "Credits", "CreditsButtonRegister()", "canvas_container"));
