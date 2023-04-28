@@ -23,8 +23,8 @@ class Canvas {
         this.context.font = fontsize+"px "+font;
     }
     //draw box
-    box(x1, y1, x2, y2) {
-        this.context.fillRect(x1, y1, x2, y2);
+    box(x1, y1, width, height) {
+        this.context.fillRect(x1, y1, width, height);
     }
     //draws text
     text(text, xoffset, yoffset) {
@@ -71,7 +71,6 @@ class Button {
 		}
 		this.button.setAttribute("class", "CanvasButton");
 		this.button.setAttribute("id", this.text);
-		this.button.setAttribute("onclick", this.callback);
 		this.button.style.setProperty("width", this.width+"px");
 		this.button.style.setProperty("height", this.height+"px");
 		this.button.style.setProperty("left", this.xoffset+"px");
@@ -94,7 +93,10 @@ class Button {
 	deleteButton() {
 		this.button.remove();
 	}
-    constructor(xoffset, yoffset, width, height, fontsize, text, callback, container_id) {
+	setCallback(callback) {
+		this.button.setAttribute("onclick", callback);
+	}
+    constructor(xoffset, yoffset, width, height, fontsize, text, container_id) {
 		this.button = document.createElement("button");
         this.xoffset = xoffset;
         this.yoffset = yoffset;
@@ -103,7 +105,6 @@ class Button {
         this.fontsize = fontsize;
         this.text = text;
 		this.buttontext = document.createTextNode(this.text);
-        this.callback = callback;
 		
 		this.insert(container_id);
     } 
@@ -147,7 +148,6 @@ class Arrow {
 		}
 		
 		this.button.setAttribute("class", "CanvasArrow");
-		this.button.setAttribute("onclick", this.callback);
 		this.button.style.setProperty("width", this.width+"px");
 		this.button.style.setProperty("height", this.height+"px");
 		this.button.style.setProperty("left", this.xoffset+"px");
@@ -177,11 +177,13 @@ class Arrow {
 		}
 		canvasobj.context.drawImage(ArrowImages[this.imageId], this.xoffset, this.yoffset, this.width, this.height);
 	}
+	setCallback(callback) {
+		this.button.setAttribute("onclick", callback);
+	}
 	//image id of type ArrowDirections
-	constructor(xoffset, yoffset, width, height, imageId, callback, canvasobj) {
+	constructor(xoffset, yoffset, width, height, imageId, canvasobj) {
 		this.button = document.createElement("button");
 		this.imageId = imageId;
-		this.callback = callback;
 	    
 		this.width = width;
 		this.height = height;
@@ -208,11 +210,11 @@ class AudioPlayer {
 		this.audioTracks.push(new Audio("res/music/TheParting.mp3"));        //ostrava
 		this.audioTracks.push(new Audio("res/music/StartingOutWaltzVivace.mp3")); //credits, ending
 		this.audioTrackCounter = 0;
+		this.allowed = false;
 	}
 	playNextTrack() {
-		if(this.audioTrackCounter > 0) {
-			this.audioTracks[(this.audioTrackCounter) - 1].pause();
-		}
+		if(this.allowed === false) { return; }
+		this.audioTracks[this.audioTrackCounter].pause();
 		if(this.audioTrackCounter >= this.audioTracks.length) {
 			this.audioTrackCounter = 0;
 		}
@@ -220,21 +222,36 @@ class AudioPlayer {
 		this.audioTrackCounter++;
 	}
 	playTrack(id) {
+		if(this.allowed === false) { return; }
 		if(id >= this.audioTracks.length) {
 			console.error("AudioPlayer: Out of bounds.");
 			return;
 		}
-		if(this.audioTrackCounter > 0) {
-			this.audioTracks[(this.audioTrackCounter) - 1].pause();
-		}
+		this.audioTracks[this.audioTrackCounter].pause();
 		this.audioTracks[id].play();
+		this.audioTrackCounter = id;
 	}
 	resetTrack() {
-		if(this.audioTrackCounter > 0) {
-			this.audioTracks[this.audioTrackCounter - 1].pause();
-			this.audioTracks[this.audioTrackCounter - 1].currentTime = 0;
-			this.audioTracks[this.audioTrackCounter - 1].play();
-		}
+		if(this.allowed === false) { return; }
+		this.audioTracks[this.audioTrackCounter].pause();
+		this.audioTracks[this.audioTrackCounter].currentTime = 0;
+		this.audioTracks[this.audioTrackCounter].play();
+	}
+	start() {
+		this.allowed = true;
+	}
+	stop() {
+		this.audioTracks[this.audioTrackCounter].pause();
+		this.allowed = false;
+	}
+	toggleSound() {
+		if(this.allowed) { this.stop(); }
+		else { this.start(); }
 	}
 };
 const ap = new AudioPlayer();
+
+function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
+

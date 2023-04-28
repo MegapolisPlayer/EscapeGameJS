@@ -23,8 +23,8 @@ class Canvas {
         this.context.font = fontsize+"px "+font;
     }
     //draw box
-    box(x1, y1, x2, y2) {
-        this.context.fillRect(x1, y1, x2, y2);
+    box(x1, y1, width, height) {
+        this.context.fillRect(x1, y1, width, height);
     }
     //draws text
     text(text, xoffset, yoffset) {
@@ -71,7 +71,6 @@ class Button {
 		}
 		this.button.setAttribute("class", "CanvasButton");
 		this.button.setAttribute("id", this.text);
-		this.button.setAttribute("onclick", this.callback);
 		this.button.style.setProperty("width", this.width+"px");
 		this.button.style.setProperty("height", this.height+"px");
 		this.button.style.setProperty("left", this.xoffset+"px");
@@ -94,7 +93,10 @@ class Button {
 	deleteButton() {
 		this.button.remove();
 	}
-    constructor(xoffset, yoffset, width, height, fontsize, text, callback, container_id) {
+	setCallback(callback) {
+		this.button.setAttribute("onclick", callback);
+	}
+    constructor(xoffset, yoffset, width, height, fontsize, text, container_id) {
 		this.button = document.createElement("button");
         this.xoffset = xoffset;
         this.yoffset = yoffset;
@@ -103,7 +105,6 @@ class Button {
         this.fontsize = fontsize;
         this.text = text;
 		this.buttontext = document.createTextNode(this.text);
-        this.callback = callback;
 		
 		this.insert(container_id);
     } 
@@ -147,7 +148,6 @@ class Arrow {
 		}
 		
 		this.button.setAttribute("class", "CanvasArrow");
-		this.button.setAttribute("onclick", this.callback);
 		this.button.style.setProperty("width", this.width+"px");
 		this.button.style.setProperty("height", this.height+"px");
 		this.button.style.setProperty("left", this.xoffset+"px");
@@ -177,11 +177,13 @@ class Arrow {
 		}
 		canvasobj.context.drawImage(ArrowImages[this.imageId], this.xoffset, this.yoffset, this.width, this.height);
 	}
+	setCallback(callback) {
+		this.button.setAttribute("onclick", callback);
+	}
 	//image id of type ArrowDirections
-	constructor(xoffset, yoffset, width, height, imageId, callback, canvasobj) {
+	constructor(xoffset, yoffset, width, height, imageId, canvasobj) {
 		this.button = document.createElement("button");
 		this.imageId = imageId;
-		this.callback = callback;
 	    
 		this.width = width;
 		this.height = height;
@@ -208,11 +210,11 @@ class AudioPlayer {
 		this.audioTracks.push(new Audio("res/music/TheParting.mp3"));        //ostrava
 		this.audioTracks.push(new Audio("res/music/StartingOutWaltzVivace.mp3")); //credits, ending
 		this.audioTrackCounter = 0;
+		this.allowed = false;
 	}
 	playNextTrack() {
-		if(this.audioTrackCounter > 0) {
-			this.audioTracks[(this.audioTrackCounter) - 1].pause();
-		}
+		if(this.allowed === false) { return; }
+		this.audioTracks[this.audioTrackCounter].pause();
 		if(this.audioTrackCounter >= this.audioTracks.length) {
 			this.audioTrackCounter = 0;
 		}
@@ -220,32 +222,54 @@ class AudioPlayer {
 		this.audioTrackCounter++;
 	}
 	playTrack(id) {
+		if(this.allowed === false) { return; }
 		if(id >= this.audioTracks.length) {
 			console.error("AudioPlayer: Out of bounds.");
 			return;
 		}
-		if(this.audioTrackCounter > 0) {
-			this.audioTracks[(this.audioTrackCounter) - 1].pause();
-		}
+		this.audioTracks[this.audioTrackCounter].pause();
 		this.audioTracks[id].play();
+		this.audioTrackCounter = id;
 	}
 	resetTrack() {
-		if(this.audioTrackCounter > 0) {
-			this.audioTracks[this.audioTrackCounter - 1].pause();
-			this.audioTracks[this.audioTrackCounter - 1].currentTime = 0;
-			this.audioTracks[this.audioTrackCounter - 1].play();
-		}
+		if(this.allowed === false) { return; }
+		this.audioTracks[this.audioTrackCounter].pause();
+		this.audioTracks[this.audioTrackCounter].currentTime = 0;
+		this.audioTracks[this.audioTrackCounter].play();
+	}
+	start() {
+		this.allowed = true;
+	}
+	stop() {
+		this.audioTracks[this.audioTrackCounter].pause();
+		this.allowed = false;
+	}
+	toggleSound() {
+		if(this.allowed) { this.stop(); }
+		else { this.start(); }
 	}
 };
 const ap = new AudioPlayer();
+
+function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
+
 let Character = new Image();
 Character.src = "res/Character.png";
 
 function dialogueMakeBox(canvasobj) {
-	canvasobj.box(20, (canvasobj.context.height * 0,8) - 20, canvasobj.context.width - 20, canvasobj.context.height - 20);
+	canvasobj.box(20, (canvasobj.canvas.height * 0.8) + 20, canvasobj.canvas.width - 40,canvasobj.canvas.height - 40);
 }
-function dialogueNewText(canvasobj) {
-	canvasobj.textml(text, 30, (canvasobj.context.height * 0,8) - 10);
+function dialogueMakeText(canvasobj, text) {
+	canvasobj.textml(text, 30, (canvasobj.context.height * 0.8) - 10);
+}
+function Settings(canvasobj) {
+	console.log("Registered SETTINGS Button press!");
+}
+
+function SettingsButtonRegister(canvasobj) {
+	console.log("Registered SETTINGS Button press!");
 }
 let Locations = [];
 let hnm_AmountLoadedImages = 0;
@@ -267,39 +291,62 @@ function HraniceNaMoraveLoad(canvasobj) {
 	HraniceNaMorave(canvasobj);
 }
 
-function HraniceNaMorave(canvasobj) {
+function HraniceNaMorave(canvas) {
 	if(hnm_AmountLoadedImages != 5) {
-      	window.setTimeout(HraniceNaMorave, 100, canvasobj); // this checks the flag every 100 milliseconds
+      	window.setTimeout(HraniceNaMorave, 100, canvas); // this checks the flag every 100 milliseconds
 		return;
     }
     console.log("Hranice na Morave START"+hnm_AmountLoadedImages);
-	HraniceNaMoraveDomov(canvasobj);
+	HraniceNaMoraveDomov(canvas);
 }
 
-function HraniceNaMoraveDomov(canvasobj) {
-	canvasobj.clear("purple");
-	canvasobj.image(Locations[0], 0, 0, canvasobj.canvas.width, canvasobj.canvas.height);
-	dialogueMakeBox(canvasobj);
-	let ArrowToNamesti = new Arrow(700, 400, 100, 100, ArrowDirections.Right, "HraniceNaMoraveNamesti(canvasobj)", canvasobj);
-	myarrow1.draw(cvs);
+async function HraniceNaMoraveDomov(canvas) {
+	console.log("Hranice na Morave Domov START");
+	ap.playTrack(2);
+	canvas.clear("purple");
+	canvas.setnewcolor("white");
+	canvas.image(Locations[0], 0, 0, canvas.canvas.width, canvas.canvas.height);
+	dialogueMakeBox(canvas);
+	canvas.setnewcolor("black");
+	dialogueMakeText(canvas, "Yet another wonderful sunny day.\nLet's read the news!");
+	await sleep(1000);
+	dialogueMakeText(canvas, "Crap. The Slovaks have rebelled and they also are just\m"
+							+"a few kilometers away from Hranice!");
+	await sleep(1000);
+	dialogueMakeText(canvas, "How is this possible? The czechs will start conscription\n"
+							+"soon!");
+	await sleep(1000);
+	canvas.image(Locations[0], 0, 0, canvas.canvas.width, canvas.canvas.height);
+	let ArrowToNamesti = new Arrow(700, 400, 100, 100, ArrowDirections.Right, canvas);
+	ArrowToNamesti.draw(canvas);
+	ArrowToNamesti.button.addEventListener("click", canvas => {
+    	HraniceNaMoraveNamesti(canvas);
+	});
 }
-function HraniceNaMoraveNamesti(canvasobj2) {
-	canvasobj2.clear("purple");
-	canvasobj2.image(Locations[1], 0, 0, canvasobj2.canvas.width, canvasobj2.canvas.height);
+function HraniceNaMoraveNamesti(canvas) {
+	console.log("hnm namesti");
+	canvas.clear("purple");
+	canvas.image(Locations[1], 0, 0, canvas.canvas.width, canvas.canvas.height);
 }
-function HraniceNaMoraveNadrazi(canvasobj) {
-	canvasobj.clear("purple");
-	canvasobj.image(Locations[2], 0, 0, canvasobj.canvas.width, canvasobj.canvas.height);
+function HraniceNaMoraveNadrazi(canvas) {
+	canvas.clear("purple");
+	canvas.image(Locations[2], 0, 0, canvas.canvas.width, canvas.canvas.height);
 }
-function HraniceNaMoraveRestaurace(canvasobj) {
-	canvasobj.clear("purple");
-	canvasobj.image(Locations[3], 0, 0, canvasobj.canvas.width, canvasobj.canvas.height);
+function HraniceNaMoraveRestaurace(canvas) {
+	canvas.clear("purple");
+	canvas.image(Locations[3], 0, 0, canvas.canvas.width, canvas.canvas.height);
 }
-function HraniceNaMoraveNastupiste(canvasobj) {
-	canvasobj.clear("purple");
-	canvasobj.image(Locations[4], 0, 0, canvasobj.canvas.width, canvasobj.canvas.height);
+function HraniceNaMoraveNastupiste(canvas) {
+	canvas.clear("purple");
+	canvas.image(Locations[4], 0, 0, canvas.canvas.width, canvas.canvas.height);
+}
+function Credits(canvasobj) {
+
 }
 
+function CreditsButtonRegister(canvasobj) {
+	console.log("Registered CREDITS Button press!");
+}
 if (window.document.documentMode) {
     //internet explorer
     alert("You seem to be using Internet Explorer.\nThe game might not work properly.\nDebug reports from IE will be ignored.\n");
@@ -320,6 +367,7 @@ function MainMenu() {
 
 function PlayButtonRegister() {
     console.log("Registered PLAY Button press!");
+	ap.playTrack(1);
 	cvs.clear("black");
     cvs.setnewcolor("white");
 	cvs.text("Backstory", 50, 50);
@@ -336,30 +384,52 @@ function PlayButtonRegister() {
                 +"standing just a few kilometers away from Hranice.\n\n"
                 +"It is time to escape.\n"
     , 100, 100);
-    myarrow1 = new Arrow(700, 400, 100, 100, ArrowDirections.Right, "ArrowRegister1(myarrow1)", cvs);
-    myarrow1.draw(cvs);
+	
+	introarrow1 = new Arrow(700, 400, 100, 100, ArrowDirections.Right, cvs);
+	introarrow1.setCallback("MapSceneLoad(introarrow1)");
+    introarrow1.draw(cvs);
 }
-function SettingsButtonRegister() {
-	console.log("Registered SETTINGS Button press!");
+
+//game sutff
+
+function MapSceneLoad(arrowobj) {
+	arrowobj.deleteButton();
+    const mapimage = new Image();
+	mapimage.src = "res/map1.png";
+	mapimage.onload = MapScene;
 }
-function CreditsButtonRegister() {
-	console.log("Registered CREDITS Button press!");
+function MapScene() {
+	cvs.image(this, 0, 0, cvs.canvas.width, cvs.canvas.height);
+	introarrow2 = new Arrow(700, 400, 100, 100, ArrowDirections.Right, cvs);
+	introarrow2.setCallback("StartMainGame(introarrow2)");
+    introarrow2.draw(cvs);
 }
-function ArrowRegister1(arrowobj) {
-    console.log("Registered arrow1 press!");
+function StartMainGame(arrowobj) {
     arrowobj.deleteButton();
     HraniceNaMoraveLoad(cvs);
 }
 
-function apNextTrackButtonWrap() {
-	mainMenuButtons[0].changeText("Disable audio");
-	ap.playNextTrack();
+function apWrap() {
+	ap.toggleSound();
+	if(ap.allowed) { 
+		mainMenuButtons[0].changeText("Disable audio");
+		ap.playTrack(0);
+    }
+	else { 
+		mainMenuButtons[0].changeText("Enable audio");
+	 }
 }
 
 //Main code
 
-mainMenuButtons.push(new Button(0,   400, 150, 100, 25, "Enable audio", "apNextTrackButtonWrap()", "canvas_container"));
-mainMenuButtons.push(new Button(150, 400, 150, 100, 25, "Restart track", "ap.resetTrack()", "canvas_container"));
-mainMenuButtons.push(new Button(600, 100, 300, 100, 50, "Play", "PlayButtonRegister()", "canvas_container"));
-mainMenuButtons.push(new Button(600, 200, 300, 100, 50, "Settings", "SettingsButtonRegister()", "canvas_container"));
-mainMenuButtons.push(new Button(600, 300, 300, 100, 50, "Credits", "CreditsButtonRegister()", "canvas_container"));
+mainMenuButtons.push(new Button(0,   400, 150, 100, 25, "Enable audio", "canvas_container"));
+mainMenuButtons.push(new Button(150, 400, 150, 100, 25, "Restart track", "canvas_container"));
+mainMenuButtons.push(new Button(600, 100, 300, 100, 50, "Play", "canvas_container"));
+mainMenuButtons.push(new Button(600, 200, 300, 100, 50, "Settings", "canvas_container"));
+mainMenuButtons.push(new Button(600, 300, 300, 100, 50, "Credits", "canvas_container"));
+
+mainMenuButtons[0].setCallback("apWrap()");
+mainMenuButtons[1].setCallback("ap.resetTrack()");
+mainMenuButtons[2].setCallback("PlayButtonRegister()");
+mainMenuButtons[3].setCallback("SettingsButtonRegister()");
+mainMenuButtons[4].setCallback("CreditsButtonRegister()");
