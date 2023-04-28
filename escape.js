@@ -41,10 +41,11 @@ function PlayButtonRegister() {
     introarrow1.draw(cvs);
 }
 
-//game sutff
+//game stuff
 
 function MapSceneLoad(arrowobj) {
 	arrowobj.deleteButton();
+	cvs.clear("purple");
     const mapimage = new Image();
 	mapimage.src = "res/map1.png";
 	mapimage.onload = MapScene;

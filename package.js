@@ -6,6 +6,8 @@ class Canvas {
 		this.canvas.height = y;
         this.context = this.canvas.getContext("2d");
         this.color = color;
+		this.border = "#000000";
+		this.linethickness = 1;
         this.context.font = fontsize+"px "+font;
         this.context.fillStyle = this.color;
 		let canvasbuffer = document.createElement("div");
@@ -22,10 +24,29 @@ class Canvas {
     setnewfont(font, fontsize) {
         this.context.font = fontsize+"px "+font;
     }
+	 //sets new border (color only is enough)
+    setnewborder(newborder) {
+		this.border = newborder;
+        this.context.strokeStyle = this.border;
+    }
     //draw box
     box(x1, y1, width, height) {
         this.context.fillRect(x1, y1, width, height);
     }
+	//draw border
+    border(x1, y1, width, height) {
+        this.context.strokeRect(x1, y1, width, height);
+    }
+	//draw box with border
+    boxborder(x1, y1, width, height) {
+		this.context.fillRect(x1, y1, width, height);
+        this.context.strokeRect(x1, y1, width, height);
+    }
+	//set thickness of lines (including borders)
+	setlinethickness(newlinethickness) {
+		this.linethickness = newlinethickness;
+		this.context.lineWidth = this.linethickness;
+	}
     //draws text
     text(text, xoffset, yoffset) {
 		this.context.fillText(text, xoffset, yoffset);
@@ -47,11 +68,11 @@ class Canvas {
     image(image, xoffset, yoffset, dwidth, dheight) {
         this.context.drawImage(image, xoffset, yoffset, dwidth, dheight);
     }
-	//clears the canvas color
+	//clears the canvas  - color
     clear() {
         this.context.fillRect(0, 0, this.canvas.width, this.canvas.height);
     }
-    //clears the canvas color
+    //clears the canvas
     clear(newcolor) {
         this.context.fillStyle = newcolor;
         this.context.fillRect(0, 0, this.canvas.width, this.canvas.height);
@@ -251,18 +272,44 @@ class AudioPlayer {
 };
 const ap = new AudioPlayer();
 
-function sleep(ms) {
-    return new Promise(resolve => setTimeout(resolve, ms));
+class Character {
+	constructor() {
+		this.image = new Image();
+		this.image.src = "res/Character.png";
+	}
+	draw(xoffset, yoffset, canvas) {
+		canvas.image(image, xoffset, yoffset);
+	}
+};
+let chr = new Character();
+
+//TODO: convert to class
+
+let dlg_delay_info = 0;
+let dlg_canvas_info;
+
+function dialogueBegin(canvasobj, delay) {
+	dlg_delay_info = delay;
+	dlg_canvas_info = canvasobj;
 }
-
-let Character = new Image();
-Character.src = "res/Character.png";
-
 function dialogueMakeBox(canvasobj) {
-	canvasobj.box(20, (canvasobj.canvas.height * 0.8) + 20, canvasobj.canvas.width - 40,canvasobj.canvas.height - 40);
+	canvasobj.setlinethickness(5);
+	canvasobj.boxborder(20, (canvasobj.canvas.height * 0.8), canvasobj.canvas.width - 40,canvasobj.canvas.height - 40);
 }
 function dialogueMakeText(canvasobj, text) {
-	canvasobj.textml(text, 30, (canvasobj.context.height * 0.8) - 10);
+	canvasobj.textml(text, 30, (canvasobj.canvas.height * 0.8) + 30);
+}
+function dialogueMakeBubble(id, text) {
+	setTimeout(function() {
+		dlg_canvas_info.setnewcolor("white");
+		dialogueMakeBox(dlg_canvas_info);
+		dlg_canvas_info.setnewcolor("black");
+		dialogueMakeText(dlg_canvas_info, text);
+	}, (id * dlg_delay_info));
+}
+function dialogueEnd(canvasobj, delay) {
+	dlg_counter = 0;
+	dlg_delay_info = 0;
 }
 function Settings(canvasobj) {
 	console.log("Registered SETTINGS Button press!");
@@ -278,7 +325,7 @@ function HraniceNaMoraveImageLoaded() {
 	hnm_AmountLoadedImages += 1;
 }
 
-function HraniceNaMoraveLoad(canvasobj) {
+function HraniceNaMoraveLoad(canvas) {
 	for(let Id = 0; Id < 5; Id++) {
 		Locations.push(new Image());
 		Locations[Id].onload = HraniceNaMoraveImageLoaded;
@@ -286,9 +333,9 @@ function HraniceNaMoraveLoad(canvasobj) {
 	Locations[0].src = "res/hnm/domov.png";
 	Locations[1].src = "res/hnm/namesti.png";
 	Locations[2].src = "res/hnm/nadrazi.png";
-	Locations[3].src = "res/hnm/restaurace.png";
-	Locations[4].src = "res/hnm/nastupiste.png";
-	HraniceNaMorave(canvasobj);
+	Locations[3].src = "res/hnm/nastupiste.png";
+	Locations[4].src = "res/hnm/restaurace.png";
+	HraniceNaMorave(canvas);
 }
 
 function HraniceNaMorave(canvas) {
@@ -296,49 +343,104 @@ function HraniceNaMorave(canvas) {
       	window.setTimeout(HraniceNaMorave, 100, canvas); // this checks the flag every 100 milliseconds
 		return;
     }
-    console.log("Hranice na Morave START"+hnm_AmountLoadedImages);
-	HraniceNaMoraveDomov(canvas);
-}
-
-async function HraniceNaMoraveDomov(canvas) {
-	console.log("Hranice na Morave Domov START");
+    console.log("Hranice na Morave START "+hnm_AmountLoadedImages);
 	ap.playTrack(2);
 	canvas.clear("purple");
-	canvas.setnewcolor("white");
 	canvas.image(Locations[0], 0, 0, canvas.canvas.width, canvas.canvas.height);
-	dialogueMakeBox(canvas);
-	canvas.setnewcolor("black");
-	dialogueMakeText(canvas, "Yet another wonderful sunny day.\nLet's read the news!");
-	await sleep(1000);
-	dialogueMakeText(canvas, "Crap. The Slovaks have rebelled and they also are just\m"
-							+"a few kilometers away from Hranice!");
-	await sleep(1000);
-	dialogueMakeText(canvas, "How is this possible? The czechs will start conscription\n"
-							+"soon!");
-	await sleep(1000);
+	
+	dialogueBegin(canvas, 1500);
+	dialogueMakeBubble(0, "Yet another wonderful sunny day.\nLet's read the news!");
+	dialogueMakeBubble(1, "Crap. The Slovaks have rebelled and they also are just a\nfew kilometers away from Hranice!");
+	dialogueMakeBubble(2, "How is this possible? The Czechs will start conscription\nsoon!");
+	dialogueMakeBubble(3, "I must escape! But where do I go? I think Poland might be\na safe bet and it's the simplest to get to.");
+	dialogueMakeBubble(4, "It's not like I have a choice anyway - Germany is too far\naway and too expensive and Austria is not much better.");
+	dialogueMakeBubble(5, "Poland it is then!");	
+	dialogueEnd();	
+	
+	setTimeout(function() {
+		HraniceNaMoraveDomov(canvas);
+	}, ((5 * 1500) + 500));
+}
+
+function HraniceNaMoraveDomov(canvas) {
+	console.log("hnm domov");
 	canvas.image(Locations[0], 0, 0, canvas.canvas.width, canvas.canvas.height);
 	let ArrowToNamesti = new Arrow(700, 400, 100, 100, ArrowDirections.Right, canvas);
 	ArrowToNamesti.draw(canvas);
-	ArrowToNamesti.button.addEventListener("click", canvas => {
+	ArrowToNamesti.button.addEventListener("click", () => {
+		ArrowToNamesti.deleteButton();
     	HraniceNaMoraveNamesti(canvas);
 	});
 }
 function HraniceNaMoraveNamesti(canvas) {
 	console.log("hnm namesti");
 	canvas.clear("purple");
+	let ArrowToDomov = new Arrow(300, 400, 100, 100, ArrowDirections.Left, canvas);
+	let ArrowToNadrazi = new Arrow(700, 400, 100, 100, ArrowDirections.Right, canvas);
+	ArrowToDomov.button.addEventListener("click", () => {
+		ArrowToDomov.deleteButton();
+		ArrowToNadrazi.deleteButton();
+    	HraniceNaMoraveDomov(canvas);
+	});
+	ArrowToNadrazi.button.addEventListener("click", () => {
+		ArrowToDomov.deleteButton();
+		ArrowToNadrazi.deleteButton();
+    	HraniceNaMoraveNadrazi(canvas);
+	});
 	canvas.image(Locations[1], 0, 0, canvas.canvas.width, canvas.canvas.height);
+	ArrowToDomov.draw(canvas);
+	ArrowToNadrazi.draw(canvas);
 }
 function HraniceNaMoraveNadrazi(canvas) {
+	console.log("hnm nadrazi");
 	canvas.clear("purple");
+	let ArrowToNamesti = new Arrow(100, 400, 100, 100, ArrowDirections.Left, canvas);
+	let ArrowToNastupiste = new Arrow(300, 300, 100, 100, ArrowDirections.Up, canvas);
+	let ArrowToRestaurace = new Arrow(700, 400, 100, 100, ArrowDirections.Right, canvas);
+	ArrowToNamesti.button.addEventListener("click", () => {
+		ArrowToNamesti.deleteButton();
+		ArrowToNastupiste.deleteButton();
+		ArrowToRestaurace.deleteButton();
+    	HraniceNaMoraveNamesti(canvas);
+	});
+	ArrowToNastupiste.button.addEventListener("click", () => {
+		ArrowToNamesti.deleteButton();
+		ArrowToNastupiste.deleteButton();
+		ArrowToRestaurace.deleteButton();
+    	HraniceNaMoraveNastupiste(canvas);
+	});
+	ArrowToRestaurace.button.addEventListener("click", () => {
+		ArrowToNamesti.deleteButton();
+		ArrowToNastupiste.deleteButton();
+		ArrowToRestaurace.deleteButton();
+    	HraniceNaMoraveRestaurace(canvas);
+	});
 	canvas.image(Locations[2], 0, 0, canvas.canvas.width, canvas.canvas.height);
-}
-function HraniceNaMoraveRestaurace(canvas) {
-	canvas.clear("purple");
-	canvas.image(Locations[3], 0, 0, canvas.canvas.width, canvas.canvas.height);
+	ArrowToNamesti.draw(canvas);
+	ArrowToNastupiste.draw(canvas);
+	ArrowToRestaurace.draw(canvas);
 }
 function HraniceNaMoraveNastupiste(canvas) {
+	console.log("hnm nastupiste");
 	canvas.clear("purple");
+	let ArrowToNadrazi = new Arrow(700, 400, 100, 100, ArrowDirections.Down, canvas);
+	ArrowToNadrazi.button.addEventListener("click", () => {
+		ArrowToNadrazi.deleteButton();
+    	HraniceNaMoraveNadrazi(canvas);
+	});
+	canvas.image(Locations[3], 0, 0, canvas.canvas.width, canvas.canvas.height);
+	ArrowToNadrazi.draw(canvas);
+}
+function HraniceNaMoraveRestaurace(canvas) {
+	console.log("hnm restaurace");
+	canvas.clear("purple");
+	let ArrowToNadrazi = new Arrow(500, 400, 100, 100, ArrowDirections.Down, canvas);
+	ArrowToNadrazi.button.addEventListener("click", () => {
+		ArrowToNadrazi.deleteButton();
+    	HraniceNaMoraveNadrazi(canvas);
+	});
 	canvas.image(Locations[4], 0, 0, canvas.canvas.width, canvas.canvas.height);
+	ArrowToNadrazi.draw(canvas);
 }
 function Credits(canvasobj) {
 
@@ -390,10 +492,11 @@ function PlayButtonRegister() {
     introarrow1.draw(cvs);
 }
 
-//game sutff
+//game stuff
 
 function MapSceneLoad(arrowobj) {
 	arrowobj.deleteButton();
+	cvs.clear("purple");
     const mapimage = new Image();
 	mapimage.src = "res/map1.png";
 	mapimage.onload = MapScene;

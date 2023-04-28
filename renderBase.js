@@ -6,6 +6,8 @@ class Canvas {
 		this.canvas.height = y;
         this.context = this.canvas.getContext("2d");
         this.color = color;
+		this.border = "#000000";
+		this.linethickness = 1;
         this.context.font = fontsize+"px "+font;
         this.context.fillStyle = this.color;
 		let canvasbuffer = document.createElement("div");
@@ -22,10 +24,29 @@ class Canvas {
     setnewfont(font, fontsize) {
         this.context.font = fontsize+"px "+font;
     }
+	 //sets new border (color only is enough)
+    setnewborder(newborder) {
+		this.border = newborder;
+        this.context.strokeStyle = this.border;
+    }
     //draw box
     box(x1, y1, width, height) {
         this.context.fillRect(x1, y1, width, height);
     }
+	//draw border
+    border(x1, y1, width, height) {
+        this.context.strokeRect(x1, y1, width, height);
+    }
+	//draw box with border
+    boxborder(x1, y1, width, height) {
+		this.context.fillRect(x1, y1, width, height);
+        this.context.strokeRect(x1, y1, width, height);
+    }
+	//set thickness of lines (including borders)
+	setlinethickness(newlinethickness) {
+		this.linethickness = newlinethickness;
+		this.context.lineWidth = this.linethickness;
+	}
     //draws text
     text(text, xoffset, yoffset) {
 		this.context.fillText(text, xoffset, yoffset);
@@ -47,11 +68,11 @@ class Canvas {
     image(image, xoffset, yoffset, dwidth, dheight) {
         this.context.drawImage(image, xoffset, yoffset, dwidth, dheight);
     }
-	//clears the canvas color
+	//clears the canvas  - color
     clear() {
         this.context.fillRect(0, 0, this.canvas.width, this.canvas.height);
     }
-    //clears the canvas color
+    //clears the canvas
     clear(newcolor) {
         this.context.fillStyle = newcolor;
         this.context.fillRect(0, 0, this.canvas.width, this.canvas.height);
@@ -250,8 +271,4 @@ class AudioPlayer {
 	}
 };
 const ap = new AudioPlayer();
-
-function sleep(ms) {
-    return new Promise(resolve => setTimeout(resolve, ms));
-}
 
