@@ -1,0 +1,1 @@
+let MoneyCount = 0;

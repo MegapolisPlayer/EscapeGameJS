@@ -9,31 +9,32 @@ class Character {
 };
 let chr = new Character();
 
-//TODO: convert to class
-
-let dlg_delay_info = 0;
-let dlg_canvas_info;
-
-function dialogueBegin(canvasobj, delay) {
-	dlg_delay_info = delay;
-	dlg_canvas_info = canvasobj;
-}
-function dialogueMakeBox(canvasobj) {
-	canvasobj.setlinethickness(5);
-	canvasobj.boxborder(20, (canvasobj.canvas.height * 0.8), canvasobj.canvas.width - 40,canvasobj.canvas.height - 40);
-}
-function dialogueMakeText(canvasobj, text) {
-	canvasobj.textml(text, 30, (canvasobj.canvas.height * 0.8) + 30);
-}
-function dialogueMakeBubble(id, text) {
-	setTimeout(function() {
-		dlg_canvas_info.setnewcolor("white");
-		dialogueMakeBox(dlg_canvas_info);
-		dlg_canvas_info.setnewcolor("black");
-		dialogueMakeText(dlg_canvas_info, text);
-	}, (id * dlg_delay_info));
-}
-function dialogueEnd(canvasobj, delay) {
-	dlg_counter = 0;
-	dlg_delay_info = 0;
-}
+class Dialogue {
+	constructor() {
+		this.delay_info = 0;
+		this.canvas_info;
+	}
+	begin(canvasobj, delay) {
+		this.delay_info = delay;
+		this.canvas_info = canvasobj;
+	}
+	makeBox() {
+		this.canvas_info.setlinethickness(5);
+		this.canvas_info.boxborder(20, (this.canvas_info.canvas.height * 0.8), this.canvas_info.canvas.width - 40, this.canvas_info.canvas.height - 40);
+	}
+	makeText(text) {
+		this.canvas_info.textml(text, 30, (this.canvas_info.canvas.height * 0.8) + 30);
+	}
+	makeBubble(id, text) {
+		setTimeout(function(dialogueinstance, text) {
+			dialogueinstance.canvas_info.setnewcolor("white");
+			dialogueinstance.makeBox();
+			dialogueinstance.canvas_info.setnewcolor("black");
+			dialogueinstance.makeText(text);
+		}, (id * this.delay_info), this, text);
+	}
+	end() {
+		this.delay_info = 0;
+		this.canvas_info;
+	}
+};

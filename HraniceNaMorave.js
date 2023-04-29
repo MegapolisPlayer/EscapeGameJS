@@ -1,4 +1,11 @@
-let Locations = [];
+//global for all locations, HnM is just first
+
+let LocationId = 0; //HnM, Prerov, etc... (HnM = 1, 0 is for main menu)
+let LocalLocationId = 0; //railway station, house, etc... (HnM house = 0, starts from 0)
+
+//HnM specific
+
+let hnm_Locations = [];
 let hnm_AmountLoadedImages = 0;
 
 function HraniceNaMoraveImageLoaded() {
@@ -6,15 +13,17 @@ function HraniceNaMoraveImageLoaded() {
 }
 
 function HraniceNaMoraveLoad(canvas) {
+	cvs.clear("purple");
+	LocationId = 1;
 	for(let Id = 0; Id < 5; Id++) {
-		Locations.push(new Image());
-		Locations[Id].onload = HraniceNaMoraveImageLoaded;
+		hnm_Locations.push(new Image());
+		hnm_Locations[Id].onload = HraniceNaMoraveImageLoaded;
 	}
-	Locations[0].src = "res/hnm/domov.png";
-	Locations[1].src = "res/hnm/namesti.png";
-	Locations[2].src = "res/hnm/nadrazi.png";
-	Locations[3].src = "res/hnm/nastupiste.png";
-	Locations[4].src = "res/hnm/restaurace.png";
+	hnm_Locations[0].src = "res/hnm/domov.png";
+	hnm_Locations[1].src = "res/hnm/namesti.png";
+	hnm_Locations[2].src = "res/hnm/nadrazi.png";
+	hnm_Locations[3].src = "res/hnm/nastupiste.png";
+	hnm_Locations[4].src = "res/hnm/restaurace.png";
 	HraniceNaMorave(canvas);
 }
 
@@ -24,27 +33,32 @@ function HraniceNaMorave(canvas) {
 		return;
     }
     console.log("Hranice na Morave START "+hnm_AmountLoadedImages);
-	ap.playTrack(2);
+	
+	ap.playTrack(2);	
+	
 	canvas.clear("purple");
-	canvas.image(Locations[0], 0, 0, canvas.canvas.width, canvas.canvas.height);
+	canvas.image(hnm_Locations[0], 0, 0, canvas.canvas.width, canvas.canvas.height);
 	
-	dialogueBegin(canvas, 1500);
-	dialogueMakeBubble(0, "Yet another wonderful sunny day.\nLet's read the news!");
-	dialogueMakeBubble(1, "Crap. The Slovaks have rebelled and they also are just a\nfew kilometers away from Hranice!");
-	dialogueMakeBubble(2, "How is this possible? The Czechs will start conscription\nsoon!");
-	dialogueMakeBubble(3, "I must escape! But where do I go? I think Poland might be\na safe bet and it's the simplest to get to.");
-	dialogueMakeBubble(4, "It's not like I have a choice anyway - Germany is too far\naway and too expensive and Austria is not much better.");
-	dialogueMakeBubble(5, "Poland it is then!");	
-	dialogueEnd();	
+	let FirstDialogue = new Dialogue();
+	FirstDialogue.begin(canvas, 1500);
+	FirstDialogue.makeBubble(0, "Yet another wonderful sunny day.\nLet's read the news!");
+	FirstDialogue.makeBubble(1, "Crap. The Slovaks have rebelled and they also are just a\nfew kilometers away from Hranice!");
+	FirstDialogue.makeBubble(2, "How is this possible? The Czechs will start conscription\nsoon!");
+	FirstDialogue.makeBubble(3, "I must escape! But where do I go? I think Poland might be\na safe bet and it's the simplest to get to.");
+	FirstDialogue.makeBubble(4, "It's not like I have a choice anyway - Germany is too far\naway and too expensive and Austria is not much better.");
+	FirstDialogue.makeBubble(5, "Poland it is then!");	
+	FirstDialogue.end();		
 	
-	setTimeout(function() {
+	setTimeout(function() {	
+		AllowedToPause = true;	
 		HraniceNaMoraveDomov(canvas);
-	}, ((5 * 1500) + 500));
+	}, ((5 * 1500) + 750));
 }
 
 function HraniceNaMoraveDomov(canvas) {
 	console.log("hnm domov");
-	canvas.image(Locations[0], 0, 0, canvas.canvas.width, canvas.canvas.height);
+	LocalLocationId = 0;
+	canvas.image(hnm_Locations[0], 0, 0, canvas.canvas.width, canvas.canvas.height);
 	let ArrowToNamesti = new Arrow(700, 400, 100, 100, ArrowDirections.Right, canvas);
 	ArrowToNamesti.draw(canvas);
 	ArrowToNamesti.button.addEventListener("click", () => {
@@ -54,6 +68,7 @@ function HraniceNaMoraveDomov(canvas) {
 }
 function HraniceNaMoraveNamesti(canvas) {
 	console.log("hnm namesti");
+	LocalLocationId = 1;
 	canvas.clear("purple");
 	let ArrowToDomov = new Arrow(300, 400, 100, 100, ArrowDirections.Left, canvas);
 	let ArrowToNadrazi = new Arrow(700, 400, 100, 100, ArrowDirections.Right, canvas);
@@ -67,12 +82,13 @@ function HraniceNaMoraveNamesti(canvas) {
 		ArrowToNadrazi.deleteButton();
     	HraniceNaMoraveNadrazi(canvas);
 	});
-	canvas.image(Locations[1], 0, 0, canvas.canvas.width, canvas.canvas.height);
+	canvas.image(hnm_Locations[1], 0, 0, canvas.canvas.width, canvas.canvas.height);
 	ArrowToDomov.draw(canvas);
 	ArrowToNadrazi.draw(canvas);
 }
 function HraniceNaMoraveNadrazi(canvas) {
 	console.log("hnm nadrazi");
+	LocalLocationId = 2;
 	canvas.clear("purple");
 	let ArrowToNamesti = new Arrow(100, 400, 100, 100, ArrowDirections.Left, canvas);
 	let ArrowToNastupiste = new Arrow(300, 300, 100, 100, ArrowDirections.Up, canvas);
@@ -95,30 +111,32 @@ function HraniceNaMoraveNadrazi(canvas) {
 		ArrowToRestaurace.deleteButton();
     	HraniceNaMoraveRestaurace(canvas);
 	});
-	canvas.image(Locations[2], 0, 0, canvas.canvas.width, canvas.canvas.height);
+	canvas.image(hnm_Locations[2], 0, 0, canvas.canvas.width, canvas.canvas.height);
 	ArrowToNamesti.draw(canvas);
 	ArrowToNastupiste.draw(canvas);
 	ArrowToRestaurace.draw(canvas);
 }
 function HraniceNaMoraveNastupiste(canvas) {
 	console.log("hnm nastupiste");
+	LocalLocationId = 3;
 	canvas.clear("purple");
 	let ArrowToNadrazi = new Arrow(700, 400, 100, 100, ArrowDirections.Down, canvas);
 	ArrowToNadrazi.button.addEventListener("click", () => {
 		ArrowToNadrazi.deleteButton();
     	HraniceNaMoraveNadrazi(canvas);
 	});
-	canvas.image(Locations[3], 0, 0, canvas.canvas.width, canvas.canvas.height);
+	canvas.image(hnm_Locations[3], 0, 0, canvas.canvas.width, canvas.canvas.height);
 	ArrowToNadrazi.draw(canvas);
 }
 function HraniceNaMoraveRestaurace(canvas) {
 	console.log("hnm restaurace");
+	LocalLocationId = 4;
 	canvas.clear("purple");
 	let ArrowToNadrazi = new Arrow(500, 400, 100, 100, ArrowDirections.Down, canvas);
 	ArrowToNadrazi.button.addEventListener("click", () => {
 		ArrowToNadrazi.deleteButton();
     	HraniceNaMoraveNadrazi(canvas);
 	});
-	canvas.image(Locations[4], 0, 0, canvas.canvas.width, canvas.canvas.height);
+	canvas.image(hnm_Locations[4], 0, 0, canvas.canvas.width, canvas.canvas.height);
 	ArrowToNadrazi.draw(canvas);
 }

@@ -11,8 +11,9 @@ cat "money.js" >> "package.js"
 cat "dialogue.js" >> "package.js"
 
 #gui files
-cat "settings.js" >> "package.js"
 cat "soundmgr.js" >> "package.js"
+cat "settings.js" >> "package.js"
+cat "credits.js" >> "package.js"
 
 #location files
 cat "HraniceNaMorave.js" >> "package.js"
@@ -24,7 +25,7 @@ cat "Studenka.js" >> "package.js"
 cat "Ostrava.js" >> "package.js"
 
 #other
-cat "credits.js" >> "package.js"
+cat "pause.js" >> "package.js"
 
 #main file
 cat "escape.js" >> "package.js"

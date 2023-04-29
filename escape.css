@@ -1,5 +1,5 @@
 body {
-    font-family: Arial;
+    font-family: Arial, FreeSans;
     background-color: #333399;
     font-size: 25px;
     color: white;
@@ -25,13 +25,15 @@ a {
 }
 
 .CanvasButton {
+	font-family: Arial, FreeSans;
+	
     position: absolute;
     
     background-color: white;
     color: #333399;
     
     text-align: center;
-    padding: auto;
+    padding: 10px;
     
     border-style: solid;
     border-width: 1px;
@@ -44,10 +46,12 @@ a {
 }
 
 .CanvasArrow {
+	font-family: Arial, FreeSans;
+	
     background: transparent;
     position: absolute;
     text-align: center;
-    padding: auto;
+    padding: 10px;
     border-width: 0px;
     border-color: #000000;
 }
