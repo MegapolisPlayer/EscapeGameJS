@@ -3,6 +3,8 @@
 let LocationId = 0; //HnM, Prerov, etc... (HnM = 1, 0 is for main menu)
 let LocalLocationId = 0; //railway station, house, etc... (HnM house = 0, starts from 0)
 
+let PauseButton = new Arrow(10, 10, 50, 50, ArrowDirections.Pause, null);
+
 //HnM specific
 
 let hnm_Locations = [];
@@ -34,14 +36,19 @@ function HraniceNaMorave(canvas) {
     }
     console.log("Hranice na Morave START "+hnm_AmountLoadedImages);
 	
-	ap.playTrack(2);	
+	ap.playTrack(2);
+
+	PauseButton.append(canvas);
+	PauseButton.button.addEventListener("click", () => {
+		Pause(canvas);
+	});	
 	
 	canvas.clear("purple");
 	canvas.image(hnm_Locations[0], 0, 0, canvas.canvas.width, canvas.canvas.height);
 	
 	let FirstDialogue = new Dialogue();
-	FirstDialogue.begin(canvas, 1500);
-	FirstDialogue.makeBubble(0, "Yet another wonderful sunny day.\nLet's read the news!");
+	FirstDialogue.begin(canvas, 2000);
+	FirstDialogue.makeBubble(0, "Yet another wonderful day.\nLet's read the news!");
 	FirstDialogue.makeBubble(1, "Crap. The Slovaks have rebelled and they also are just a\nfew kilometers away from Hranice!");
 	FirstDialogue.makeBubble(2, "How is this possible? The Czechs will start conscription\nsoon!");
 	FirstDialogue.makeBubble(3, "I must escape! But where do I go? I think Poland might be\na safe bet and it's the simplest to get to.");
@@ -52,7 +59,7 @@ function HraniceNaMorave(canvas) {
 	setTimeout(function() {	
 		AllowedToPause = true;	
 		HraniceNaMoraveDomov(canvas);
-	}, ((5 * 1500) + 750));
+	}, ((5 * 2000) + 1000));
 }
 
 function HraniceNaMoraveDomov(canvas) {
@@ -62,9 +69,12 @@ function HraniceNaMoraveDomov(canvas) {
 	let ArrowToNamesti = new Arrow(700, 400, 100, 100, ArrowDirections.Right, canvas);
 	ArrowToNamesti.draw(canvas);
 	ArrowToNamesti.button.addEventListener("click", () => {
+		if(GamePaused) { return; }
 		ArrowToNamesti.deleteButton();
     	HraniceNaMoraveNamesti(canvas);
 	});
+	PauseButton.draw(canvas);
+	drawMoneyCount(canvas);
 }
 function HraniceNaMoraveNamesti(canvas) {
 	console.log("hnm namesti");
@@ -73,11 +83,13 @@ function HraniceNaMoraveNamesti(canvas) {
 	let ArrowToDomov = new Arrow(300, 400, 100, 100, ArrowDirections.Left, canvas);
 	let ArrowToNadrazi = new Arrow(700, 400, 100, 100, ArrowDirections.Right, canvas);
 	ArrowToDomov.button.addEventListener("click", () => {
+		if(GamePaused) { return; }
 		ArrowToDomov.deleteButton();
 		ArrowToNadrazi.deleteButton();
     	HraniceNaMoraveDomov(canvas);
 	});
 	ArrowToNadrazi.button.addEventListener("click", () => {
+		if(GamePaused) { return; }
 		ArrowToDomov.deleteButton();
 		ArrowToNadrazi.deleteButton();
     	HraniceNaMoraveNadrazi(canvas);
@@ -85,6 +97,8 @@ function HraniceNaMoraveNamesti(canvas) {
 	canvas.image(hnm_Locations[1], 0, 0, canvas.canvas.width, canvas.canvas.height);
 	ArrowToDomov.draw(canvas);
 	ArrowToNadrazi.draw(canvas);
+	PauseButton.draw(canvas);
+	drawMoneyCount(canvas);
 }
 function HraniceNaMoraveNadrazi(canvas) {
 	console.log("hnm nadrazi");
@@ -94,18 +108,21 @@ function HraniceNaMoraveNadrazi(canvas) {
 	let ArrowToNastupiste = new Arrow(300, 300, 100, 100, ArrowDirections.Up, canvas);
 	let ArrowToRestaurace = new Arrow(700, 400, 100, 100, ArrowDirections.Right, canvas);
 	ArrowToNamesti.button.addEventListener("click", () => {
+		if(GamePaused) { return; }
 		ArrowToNamesti.deleteButton();
 		ArrowToNastupiste.deleteButton();
 		ArrowToRestaurace.deleteButton();
     	HraniceNaMoraveNamesti(canvas);
 	});
 	ArrowToNastupiste.button.addEventListener("click", () => {
+		if(GamePaused) { return; }
 		ArrowToNamesti.deleteButton();
 		ArrowToNastupiste.deleteButton();
 		ArrowToRestaurace.deleteButton();
     	HraniceNaMoraveNastupiste(canvas);
 	});
 	ArrowToRestaurace.button.addEventListener("click", () => {
+		if(GamePaused) { return; }
 		ArrowToNamesti.deleteButton();
 		ArrowToNastupiste.deleteButton();
 		ArrowToRestaurace.deleteButton();
@@ -115,6 +132,8 @@ function HraniceNaMoraveNadrazi(canvas) {
 	ArrowToNamesti.draw(canvas);
 	ArrowToNastupiste.draw(canvas);
 	ArrowToRestaurace.draw(canvas);
+	PauseButton.draw(canvas);
+	drawMoneyCount(canvas);
 }
 function HraniceNaMoraveNastupiste(canvas) {
 	console.log("hnm nastupiste");
@@ -122,11 +141,14 @@ function HraniceNaMoraveNastupiste(canvas) {
 	canvas.clear("purple");
 	let ArrowToNadrazi = new Arrow(700, 400, 100, 100, ArrowDirections.Down, canvas);
 	ArrowToNadrazi.button.addEventListener("click", () => {
+		if(GamePaused) { return; }
 		ArrowToNadrazi.deleteButton();
     	HraniceNaMoraveNadrazi(canvas);
 	});
 	canvas.image(hnm_Locations[3], 0, 0, canvas.canvas.width, canvas.canvas.height);
 	ArrowToNadrazi.draw(canvas);
+	PauseButton.draw(canvas);
+	drawMoneyCount(canvas);
 }
 function HraniceNaMoraveRestaurace(canvas) {
 	console.log("hnm restaurace");
@@ -134,9 +156,12 @@ function HraniceNaMoraveRestaurace(canvas) {
 	canvas.clear("purple");
 	let ArrowToNadrazi = new Arrow(500, 400, 100, 100, ArrowDirections.Down, canvas);
 	ArrowToNadrazi.button.addEventListener("click", () => {
+		if(GamePaused) { return; }
 		ArrowToNadrazi.deleteButton();
     	HraniceNaMoraveNadrazi(canvas);
 	});
 	canvas.image(hnm_Locations[4], 0, 0, canvas.canvas.width, canvas.canvas.height);
 	ArrowToNadrazi.draw(canvas);
+	PauseButton.draw(canvas);
+	drawMoneyCount(canvas);
 }

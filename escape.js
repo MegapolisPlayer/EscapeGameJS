@@ -27,7 +27,9 @@ function MainMenu() {
 	mainMenuButtons[4].setCallback("ButtonsRouter(2)");
 	
 	cvs.image(this, 0, 0, this.width, this.height);
-	cvs.text("Útěk z Olomouckého kraje", 50, 50);	
+	cvs.setfontweight("bold");
+	cvs.text("Escape from the Olomouc Region", 50, 50);	
+	cvs.resetfontweight();
 }
 
 //game stuff
@@ -37,11 +39,12 @@ function Intro() {
 	ap.playTrack(1);
 	cvs.clear("black");
     cvs.setnewcolor("white");
+	cvs.setfontweight("bold");
 	cvs.text("Backstory", 50, 50);
+	cvs.resetfontweight();
 	for(let i = 0; i < mainMenuButtons.length; i++) {
 		mainMenuButtons[i].deleteButton();
     }
-    mainMenuButtons[1].changeText();
     cvs.setnewfont("Arial, FreeSans", "32");
     cvs.textml("It is the 1st of May 1997 and the Slovak minority has just\n"
                 +"declared independence from the young republic of Czechia.\n\n"
@@ -66,6 +69,11 @@ function MapSceneLoad(arrowobj) {
 }
 function MapScene() {
 	cvs.image(this, 0, 0, cvs.canvas.width, cvs.canvas.height);
+	cvs.setnewcolor("#333399");
+	cvs.setfontweight("bold");
+	cvs.textml("Day 1\nHranice na Morave", 50, 50);
+	cvs.resetfontweight();
+	cvs.setnewcolor("#000000");
 	introarrow2 = new Arrow(700, 400, 100, 100, ArrowDirections.Right, cvs);
 	introarrow2.setCallback("StartMainGame(introarrow2)");
     introarrow2.draw(cvs);

@@ -24,6 +24,19 @@ class Canvas {
     setnewfont(font, fontsize) {
         this.context.font = fontsize+"px "+font;
     }
+	//sets new font - complete
+	setnewfontC(font, fontsize, weight) {
+		 this.context.font = weight+" "+fontsize+"px "+font;
+	}
+	//sets the font weight
+	setfontweight(weight) {
+		 this.context.font = this.context.font.substring(this.context.font.indexOf(" ") + 1);
+		 this.context.font = weight+" "+this.context.font;
+	}
+	//resets the font weight
+	resetfontweight() {
+		this.context.font = this.context.font.substring(this.context.font.indexOf(" ") + 1);
+	}
 	 //sets new border (color only is enough)
     setnewborder(newborder) {
 		this.border = newborder;
@@ -90,7 +103,7 @@ class Button {
 			console.error("Button: Object not initialized.");
 			return;
 		}
-		this.button.setAttribute("class", "CanvasButton");
+		this.button.setAttribute("class", "CanvasButton CanvasInputElement");
 		this.button.setAttribute("id", this.text);
 		this.button.style.setProperty("width", this.width+"px");
 		this.button.style.setProperty("height", this.height+"px");
@@ -142,11 +155,12 @@ const ArrowDirections = {
 	Up: 1,
 	Right: 2,
 	Down: 3,
-	Left: 4
+	Left: 4,
+	Pause: 5
 }
 
 const ArrowImages = [];
-for(let ArrowImagesId = 0; ArrowImagesId < 5; ArrowImagesId++) {
+for(let ArrowImagesId = 0; ArrowImagesId < 6; ArrowImagesId++) {
 	ArrowImages.push(new Image());
 }
 
@@ -156,6 +170,7 @@ ArrowImages[1].src = "res/arrow_up.png";
 ArrowImages[2].src = "res/arrow_right.png";
 ArrowImages[3].src = "res/arrow_down.png";
 ArrowImages[4].src = "res/arrow_left.png";
+ArrowImages[5].src = "res/pause.png";
 
 class Arrow {
     insert(canvasobj) {
@@ -168,14 +183,16 @@ class Arrow {
 			return;
 		}
 		
-		this.button.setAttribute("class", "CanvasArrow");
+		this.button.setAttribute("class", "CanvasArrow CanvasInputElement");
 		this.button.style.setProperty("width", this.width+"px");
 		this.button.style.setProperty("height", this.height+"px");
 		this.button.style.setProperty("left", this.xoffset+"px");
 		this.button.style.setProperty("top", this.yoffset+"px");
 		
-		canvasobj.canvas.parentElement.appendChild(this.button);
-        canvasobj.context.drawImage(ArrowImages[this.imageId], this.xoffset, this.yoffset, this.width, this.height);
+		if(canvasobj != null) {
+			canvasobj.canvas.parentElement.appendChild(this.button);
+        	canvasobj.context.drawImage(ArrowImages[this.imageId], this.xoffset, this.yoffset, this.width, this.height);
+		}
     }
 	changeId(newid) {
 		if((typeof this.button === "undefined")) { 
@@ -198,10 +215,21 @@ class Arrow {
 		}
 		canvasobj.context.drawImage(ArrowImages[this.imageId], this.xoffset, this.yoffset, this.width, this.height);
 	}
+	append(canvasobj) {
+		if((typeof this.button === "undefined")) { 
+			console.error("Arrow: Object not initialized.");
+			return;
+		}
+		if((typeof canvasobj === "undefined")) { 
+			console.error("Arrow: Argument to function not provided.");
+			return;
+		}
+		canvasobj.canvas.parentElement.appendChild(this.button);
+	}
 	setCallback(callback) {
 		this.button.setAttribute("onclick", callback);
 	}
-	//image id of type ArrowDirections
+	//image id of type ArrowDirections - set canvasobj to null if don't want to draw immediately
 	constructor(xoffset, yoffset, width, height, imageId, canvasobj) {
 		this.button = document.createElement("button");
 		this.imageId = imageId;
@@ -230,11 +258,16 @@ class AudioPlayer {
 		this.audioTracks.push(new Audio("res/music/RoyalCoupling.mp3"));     //studenka
 		this.audioTracks.push(new Audio("res/music/TheParting.mp3"));        //ostrava
 		this.audioTracks.push(new Audio("res/music/StartingOutWaltzVivace.mp3")); //credits, ending
+		for(let Id = 0; Id < 10; Id++) {
+			this.audioTracks[Id].loop = true;
+		}
 		this.audioTrackCounter = 0;
 		this.allowed = false;
 	}
 	playNextTrack() {
-		if(this.allowed === false) { return; }
+		if(this.allowed === false) { 
+			this.audioTrackCounter++; return;
+		}
 		this.audioTracks[this.audioTrackCounter].pause();
 		if(this.audioTrackCounter >= this.audioTracks.length) {
 			this.audioTrackCounter = 0;
@@ -243,7 +276,9 @@ class AudioPlayer {
 		this.audioTrackCounter++;
 	}
 	playTrack(id) {
-		if(this.allowed === false) { return; }
+		if(this.allowed === false) { 
+			this.audioTrackCounter = id; return;
+		}
 		if(id >= this.audioTracks.length) {
 			console.error("AudioPlayer: Out of bounds.");
 			return;
@@ -260,6 +295,7 @@ class AudioPlayer {
 	}
 	start() {
 		this.allowed = true;
+		this.audioTracks[this.audioTrackCounter].play();
 	}
 	stop() {
 		this.audioTracks[this.audioTrackCounter].pause();

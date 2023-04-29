@@ -11,9 +11,9 @@ function Settings(canvasobj) {
 	canvasobj.text("Settings", 50, 50);
 	
 	canvasobj.setnewfont("Arial, FreeSans", "32");
-	canvasobj.text("Difficulty", 50, 50);
+	canvasobj.text("Difficulty", 50, 100);
 	canvasobj.text("Cost Multiplier", 50, 150);
-	canvasobj.text("Chance of loss", 50, 250);
+	canvasobj.text("Chance of loss", 50, 200);
 	
 }
 

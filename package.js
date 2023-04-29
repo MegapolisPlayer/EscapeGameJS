@@ -24,6 +24,19 @@ class Canvas {
     setnewfont(font, fontsize) {
         this.context.font = fontsize+"px "+font;
     }
+	//sets new font - complete
+	setnewfontC(font, fontsize, weight) {
+		 this.context.font = weight+" "+fontsize+"px "+font;
+	}
+	//sets the font weight
+	setfontweight(weight) {
+		 this.context.font = this.context.font.substring(this.context.font.indexOf(" ") + 1);
+		 this.context.font = weight+" "+this.context.font;
+	}
+	//resets the font weight
+	resetfontweight() {
+		this.context.font = this.context.font.substring(this.context.font.indexOf(" ") + 1);
+	}
 	 //sets new border (color only is enough)
     setnewborder(newborder) {
 		this.border = newborder;
@@ -90,7 +103,7 @@ class Button {
 			console.error("Button: Object not initialized.");
 			return;
 		}
-		this.button.setAttribute("class", "CanvasButton");
+		this.button.setAttribute("class", "CanvasButton CanvasInputElement");
 		this.button.setAttribute("id", this.text);
 		this.button.style.setProperty("width", this.width+"px");
 		this.button.style.setProperty("height", this.height+"px");
@@ -142,11 +155,12 @@ const ArrowDirections = {
 	Up: 1,
 	Right: 2,
 	Down: 3,
-	Left: 4
+	Left: 4,
+	Pause: 5
 }
 
 const ArrowImages = [];
-for(let ArrowImagesId = 0; ArrowImagesId < 5; ArrowImagesId++) {
+for(let ArrowImagesId = 0; ArrowImagesId < 6; ArrowImagesId++) {
 	ArrowImages.push(new Image());
 }
 
@@ -156,6 +170,7 @@ ArrowImages[1].src = "res/arrow_up.png";
 ArrowImages[2].src = "res/arrow_right.png";
 ArrowImages[3].src = "res/arrow_down.png";
 ArrowImages[4].src = "res/arrow_left.png";
+ArrowImages[5].src = "res/pause.png";
 
 class Arrow {
     insert(canvasobj) {
@@ -168,14 +183,16 @@ class Arrow {
 			return;
 		}
 		
-		this.button.setAttribute("class", "CanvasArrow");
+		this.button.setAttribute("class", "CanvasArrow CanvasInputElement");
 		this.button.style.setProperty("width", this.width+"px");
 		this.button.style.setProperty("height", this.height+"px");
 		this.button.style.setProperty("left", this.xoffset+"px");
 		this.button.style.setProperty("top", this.yoffset+"px");
 		
-		canvasobj.canvas.parentElement.appendChild(this.button);
-        canvasobj.context.drawImage(ArrowImages[this.imageId], this.xoffset, this.yoffset, this.width, this.height);
+		if(canvasobj != null) {
+			canvasobj.canvas.parentElement.appendChild(this.button);
+        	canvasobj.context.drawImage(ArrowImages[this.imageId], this.xoffset, this.yoffset, this.width, this.height);
+		}
     }
 	changeId(newid) {
 		if((typeof this.button === "undefined")) { 
@@ -198,10 +215,21 @@ class Arrow {
 		}
 		canvasobj.context.drawImage(ArrowImages[this.imageId], this.xoffset, this.yoffset, this.width, this.height);
 	}
+	append(canvasobj) {
+		if((typeof this.button === "undefined")) { 
+			console.error("Arrow: Object not initialized.");
+			return;
+		}
+		if((typeof canvasobj === "undefined")) { 
+			console.error("Arrow: Argument to function not provided.");
+			return;
+		}
+		canvasobj.canvas.parentElement.appendChild(this.button);
+	}
 	setCallback(callback) {
 		this.button.setAttribute("onclick", callback);
 	}
-	//image id of type ArrowDirections
+	//image id of type ArrowDirections - set canvasobj to null if don't want to draw immediately
 	constructor(xoffset, yoffset, width, height, imageId, canvasobj) {
 		this.button = document.createElement("button");
 		this.imageId = imageId;
@@ -230,11 +258,16 @@ class AudioPlayer {
 		this.audioTracks.push(new Audio("res/music/RoyalCoupling.mp3"));     //studenka
 		this.audioTracks.push(new Audio("res/music/TheParting.mp3"));        //ostrava
 		this.audioTracks.push(new Audio("res/music/StartingOutWaltzVivace.mp3")); //credits, ending
+		for(let Id = 0; Id < 10; Id++) {
+			this.audioTracks[Id].loop = true;
+		}
 		this.audioTrackCounter = 0;
 		this.allowed = false;
 	}
 	playNextTrack() {
-		if(this.allowed === false) { return; }
+		if(this.allowed === false) { 
+			this.audioTrackCounter++; return;
+		}
 		this.audioTracks[this.audioTrackCounter].pause();
 		if(this.audioTrackCounter >= this.audioTracks.length) {
 			this.audioTrackCounter = 0;
@@ -243,7 +276,9 @@ class AudioPlayer {
 		this.audioTrackCounter++;
 	}
 	playTrack(id) {
-		if(this.allowed === false) { return; }
+		if(this.allowed === false) { 
+			this.audioTrackCounter = id; return;
+		}
 		if(id >= this.audioTracks.length) {
 			console.error("AudioPlayer: Out of bounds.");
 			return;
@@ -260,6 +295,7 @@ class AudioPlayer {
 	}
 	start() {
 		this.allowed = true;
+		this.audioTracks[this.audioTrackCounter].play();
 	}
 	stop() {
 		this.audioTracks[this.audioTrackCounter].pause();
@@ -273,6 +309,23 @@ class AudioPlayer {
 const ap = new AudioPlayer();
 
 let MoneyCount = 0;
+
+function drawMoneyCount(canvasobj) {
+	canvasobj.setnewcolor("#ffffff");
+	let text = "Money: "+MoneyCount+" ";
+	let metrics = canvasobj.context.measureText(text);
+	canvasobj.box(1000 - metrics.width - 20, 0, metrics.width + 20, 50);
+	canvasobj.setnewcolor("#333399");
+	canvasobj.text(text, 1000 - metrics.width - 10, 40);
+}
+
+function addMoney(amount) {
+	MoneyCount += amount;
+}
+
+function removeMoney(amount) {
+	MoneyCount -= amount;
+}
 class Character {
 	constructor() {
 		this.image = new Image();
@@ -326,9 +379,9 @@ function Settings(canvasobj) {
 	canvasobj.text("Settings", 50, 50);
 	
 	canvasobj.setnewfont("Arial, FreeSans", "32");
-	canvasobj.text("Difficulty", 50, 50);
+	canvasobj.text("Difficulty", 50, 100);
 	canvasobj.text("Cost Multiplier", 50, 150);
-	canvasobj.text("Chance of loss", 50, 250);
+	canvasobj.text("Chance of loss", 50, 200);
 	
 }
 
@@ -339,7 +392,7 @@ function SettingsButtonRegister(canvasobj) {
 function Credits(canvasobj) {
 	canvasobj.setnewcolor("purple");
 	canvasobj.box(0, 0, canvasobj.canvas.width, canvasobj.canvas.height);
-	canvasobj.setnewcolor("#333399");
+	//images of katowice and stuff, music = waltz vivace!
 }
 
 function CreditsButtonRegister(canvasobj) {
@@ -350,6 +403,8 @@ function CreditsButtonRegister(canvasobj) {
 
 let LocationId = 0; //HnM, Prerov, etc... (HnM = 1, 0 is for main menu)
 let LocalLocationId = 0; //railway station, house, etc... (HnM house = 0, starts from 0)
+
+let PauseButton = new Arrow(10, 10, 50, 50, ArrowDirections.Pause, null);
 
 //HnM specific
 
@@ -382,14 +437,19 @@ function HraniceNaMorave(canvas) {
     }
     console.log("Hranice na Morave START "+hnm_AmountLoadedImages);
 	
-	ap.playTrack(2);	
+	ap.playTrack(2);
+
+	PauseButton.append(canvas);
+	PauseButton.button.addEventListener("click", () => {
+		Pause(canvas);
+	});	
 	
 	canvas.clear("purple");
 	canvas.image(hnm_Locations[0], 0, 0, canvas.canvas.width, canvas.canvas.height);
 	
 	let FirstDialogue = new Dialogue();
-	FirstDialogue.begin(canvas, 1500);
-	FirstDialogue.makeBubble(0, "Yet another wonderful sunny day.\nLet's read the news!");
+	FirstDialogue.begin(canvas, 2000);
+	FirstDialogue.makeBubble(0, "Yet another wonderful day.\nLet's read the news!");
 	FirstDialogue.makeBubble(1, "Crap. The Slovaks have rebelled and they also are just a\nfew kilometers away from Hranice!");
 	FirstDialogue.makeBubble(2, "How is this possible? The Czechs will start conscription\nsoon!");
 	FirstDialogue.makeBubble(3, "I must escape! But where do I go? I think Poland might be\na safe bet and it's the simplest to get to.");
@@ -400,7 +460,7 @@ function HraniceNaMorave(canvas) {
 	setTimeout(function() {	
 		AllowedToPause = true;	
 		HraniceNaMoraveDomov(canvas);
-	}, ((5 * 1500) + 750));
+	}, ((5 * 2000) + 1000));
 }
 
 function HraniceNaMoraveDomov(canvas) {
@@ -410,9 +470,12 @@ function HraniceNaMoraveDomov(canvas) {
 	let ArrowToNamesti = new Arrow(700, 400, 100, 100, ArrowDirections.Right, canvas);
 	ArrowToNamesti.draw(canvas);
 	ArrowToNamesti.button.addEventListener("click", () => {
+		if(GamePaused) { return; }
 		ArrowToNamesti.deleteButton();
     	HraniceNaMoraveNamesti(canvas);
 	});
+	PauseButton.draw(canvas);
+	drawMoneyCount(canvas);
 }
 function HraniceNaMoraveNamesti(canvas) {
 	console.log("hnm namesti");
@@ -421,11 +484,13 @@ function HraniceNaMoraveNamesti(canvas) {
 	let ArrowToDomov = new Arrow(300, 400, 100, 100, ArrowDirections.Left, canvas);
 	let ArrowToNadrazi = new Arrow(700, 400, 100, 100, ArrowDirections.Right, canvas);
 	ArrowToDomov.button.addEventListener("click", () => {
+		if(GamePaused) { return; }
 		ArrowToDomov.deleteButton();
 		ArrowToNadrazi.deleteButton();
     	HraniceNaMoraveDomov(canvas);
 	});
 	ArrowToNadrazi.button.addEventListener("click", () => {
+		if(GamePaused) { return; }
 		ArrowToDomov.deleteButton();
 		ArrowToNadrazi.deleteButton();
     	HraniceNaMoraveNadrazi(canvas);
@@ -433,6 +498,8 @@ function HraniceNaMoraveNamesti(canvas) {
 	canvas.image(hnm_Locations[1], 0, 0, canvas.canvas.width, canvas.canvas.height);
 	ArrowToDomov.draw(canvas);
 	ArrowToNadrazi.draw(canvas);
+	PauseButton.draw(canvas);
+	drawMoneyCount(canvas);
 }
 function HraniceNaMoraveNadrazi(canvas) {
 	console.log("hnm nadrazi");
@@ -442,18 +509,21 @@ function HraniceNaMoraveNadrazi(canvas) {
 	let ArrowToNastupiste = new Arrow(300, 300, 100, 100, ArrowDirections.Up, canvas);
 	let ArrowToRestaurace = new Arrow(700, 400, 100, 100, ArrowDirections.Right, canvas);
 	ArrowToNamesti.button.addEventListener("click", () => {
+		if(GamePaused) { return; }
 		ArrowToNamesti.deleteButton();
 		ArrowToNastupiste.deleteButton();
 		ArrowToRestaurace.deleteButton();
     	HraniceNaMoraveNamesti(canvas);
 	});
 	ArrowToNastupiste.button.addEventListener("click", () => {
+		if(GamePaused) { return; }
 		ArrowToNamesti.deleteButton();
 		ArrowToNastupiste.deleteButton();
 		ArrowToRestaurace.deleteButton();
     	HraniceNaMoraveNastupiste(canvas);
 	});
 	ArrowToRestaurace.button.addEventListener("click", () => {
+		if(GamePaused) { return; }
 		ArrowToNamesti.deleteButton();
 		ArrowToNastupiste.deleteButton();
 		ArrowToRestaurace.deleteButton();
@@ -463,6 +533,8 @@ function HraniceNaMoraveNadrazi(canvas) {
 	ArrowToNamesti.draw(canvas);
 	ArrowToNastupiste.draw(canvas);
 	ArrowToRestaurace.draw(canvas);
+	PauseButton.draw(canvas);
+	drawMoneyCount(canvas);
 }
 function HraniceNaMoraveNastupiste(canvas) {
 	console.log("hnm nastupiste");
@@ -470,11 +542,14 @@ function HraniceNaMoraveNastupiste(canvas) {
 	canvas.clear("purple");
 	let ArrowToNadrazi = new Arrow(700, 400, 100, 100, ArrowDirections.Down, canvas);
 	ArrowToNadrazi.button.addEventListener("click", () => {
+		if(GamePaused) { return; }
 		ArrowToNadrazi.deleteButton();
     	HraniceNaMoraveNadrazi(canvas);
 	});
 	canvas.image(hnm_Locations[3], 0, 0, canvas.canvas.width, canvas.canvas.height);
 	ArrowToNadrazi.draw(canvas);
+	PauseButton.draw(canvas);
+	drawMoneyCount(canvas);
 }
 function HraniceNaMoraveRestaurace(canvas) {
 	console.log("hnm restaurace");
@@ -482,11 +557,14 @@ function HraniceNaMoraveRestaurace(canvas) {
 	canvas.clear("purple");
 	let ArrowToNadrazi = new Arrow(500, 400, 100, 100, ArrowDirections.Down, canvas);
 	ArrowToNadrazi.button.addEventListener("click", () => {
+		if(GamePaused) { return; }
 		ArrowToNadrazi.deleteButton();
     	HraniceNaMoraveNadrazi(canvas);
 	});
 	canvas.image(hnm_Locations[4], 0, 0, canvas.canvas.width, canvas.canvas.height);
 	ArrowToNadrazi.draw(canvas);
+	PauseButton.draw(canvas);
+	drawMoneyCount(canvas);
 }
 let GamePaused = false;
 let AllowedToPause = true;
@@ -495,6 +573,12 @@ function Pause(canvasobj) {
 	if(GamePaused) {
 		//unpause
 		GamePaused = false;
+		Pause.buttonAudio.deleteButton();
+		Pause.buttonRestart.deleteButton();
+		Pause.buttonCode.deleteButton();
+		Pause.buttonSave.deleteButton();
+		Pause.buttonLoad.deleteButton();
+		Pause.buttonQuit.deleteButton();
 		switch(LocationId) {
 		case 1:
 			switch(LocalLocationId) {
@@ -520,11 +604,81 @@ function Pause(canvasobj) {
 	if(!AllowedToPause) { return; }
 	GamePaused = true;
 	canvasobj.setnewcolor("#dddddd");
-	canvasobj.box(350, 100, 300, 300);
+	canvasobj.box(300, 50, 400, 400);
 	canvasobj.setnewcolor("#333399");
-	canvasobj.text("Game paused", 360, 120);
+	
+	canvasobj.setnewfont("Arial, FreeSans", "48");
+	canvasobj.text("Game paused", 320, 100);
 	
 	canvasobj.setnewfont("Arial, FreeSans", "32");
+	
+	Pause.buttonAudio = new Button(320, 130, 100, 100, 25, "", "canvas_container");
+	Pause.buttonRestart = new Button(420, 130, 100, 100, 25, "Restart Track", "canvas_container");
+	Pause.buttonCode = new Button(520, 130, 100, 100, 25, "View source code", "canvas_container");
+	Pause.buttonSave = new Button(320, 230, 100, 100, 25, "Save Game", "canvas_container");
+	Pause.buttonLoad = new Button(420, 230, 100, 100, 25, "Load Game", "canvas_container");
+	Pause.buttonQuit = new Button(520, 230, 100, 100, 25, "Exit Game", "canvas_container");
+	
+	if(ap.allowed) { Pause.buttonAudio.changeText("Disable audio"); }
+	else { Pause.buttonAudio.changeText("Enable audio"); }
+	
+	Pause.buttonAudio.button.addEventListener("click", (event) => {
+		ap.toggleSound();
+		if(ap.allowed) { Pause.buttonAudio.changeText("Disable audio"); }
+		else { Pause.buttonAudio.changeText("Enable audio"); }
+	});	
+	Pause.buttonRestart.button.addEventListener("click", (event) => {
+		ap.resetTrack();
+	});
+	Pause.buttonCode.button.addEventListener("click", (event) => {
+		window.open("https://www.github.com/MegapolisPlayer/EscapeGameJS", "_blank");
+	});
+	Pause.buttonSave.button.addEventListener("click", (event) => {
+		Save();
+	});
+	Pause.buttonLoad.button.addEventListener("click", (event) => {
+		Load(canvasobj);
+	});
+	Pause.buttonQuit.button.addEventListener("click", (event) => {
+		location.reload();
+	});
+	
+	canvasobj.textml("Press escape or click the\nbutton to unpause.", 320, 380);
+	canvasobj.setnewfont("Arial, FreeSans", "48");
+}
+
+function SetState(filecontent, canvas) {
+	let Children = document.getElementsByClassName("CanvasInputElement");
+
+	while(Children[0]) {
+   		Children[0].parentNode.removeChild(Children[0]);
+	}
+	
+	canvas.clear("purple");
+
+	//file, split with spaces
+	//info - location id, local location id, money, difficulty
+	let Data = filecontent.split('\n');
+	console.log(Data); //load using SetState() function!
+}
+
+function Save() {
+
+}
+
+function Load(canvasobj) {
+	let hiddenInputElem = document.createElement("input");
+	hiddenInputElem.type = "file";
+
+	hiddenInputElem.onchange = (event) => { 
+   		let fileInfo = event.target.files[0]; 
+		let reader = new FileReader();
+   		reader.readAsText(fileInfo, "UTF-8");
+		reader.onload = readerEvent => {
+			SetState(readerEvent.target.result, canvasobj);
+		}
+	}
+	hiddenInputElem.click();
 }
 
 if (window.document.documentMode) {
@@ -556,7 +710,9 @@ function MainMenu() {
 	mainMenuButtons[4].setCallback("ButtonsRouter(2)");
 	
 	cvs.image(this, 0, 0, this.width, this.height);
-	cvs.text("Útěk z Olomouckého kraje", 50, 50);	
+	cvs.setfontweight("bold");
+	cvs.text("Escape from the Olomouc Region", 50, 50);	
+	cvs.resetfontweight();
 }
 
 //game stuff
@@ -566,11 +722,12 @@ function Intro() {
 	ap.playTrack(1);
 	cvs.clear("black");
     cvs.setnewcolor("white");
+	cvs.setfontweight("bold");
 	cvs.text("Backstory", 50, 50);
+	cvs.resetfontweight();
 	for(let i = 0; i < mainMenuButtons.length; i++) {
 		mainMenuButtons[i].deleteButton();
     }
-    mainMenuButtons[1].changeText();
     cvs.setnewfont("Arial, FreeSans", "32");
     cvs.textml("It is the 1st of May 1997 and the Slovak minority has just\n"
                 +"declared independence from the young republic of Czechia.\n\n"
@@ -595,6 +752,11 @@ function MapSceneLoad(arrowobj) {
 }
 function MapScene() {
 	cvs.image(this, 0, 0, cvs.canvas.width, cvs.canvas.height);
+	cvs.setnewcolor("#333399");
+	cvs.setfontweight("bold");
+	cvs.textml("Day 1\nHranice na Morave", 50, 50);
+	cvs.resetfontweight();
+	cvs.setnewcolor("#000000");
 	introarrow2 = new Arrow(700, 400, 100, 100, ArrowDirections.Right, cvs);
 	introarrow2.setCallback("StartMainGame(introarrow2)");
     introarrow2.draw(cvs);

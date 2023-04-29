@@ -1,7 +1,7 @@
 function Credits(canvasobj) {
 	canvasobj.setnewcolor("purple");
 	canvasobj.box(0, 0, canvasobj.canvas.width, canvasobj.canvas.height);
-	canvasobj.setnewcolor("#333399");
+	//images of katowice and stuff, music = waltz vivace!
 }
 
 function CreditsButtonRegister(canvasobj) {
