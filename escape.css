@@ -15,6 +15,14 @@ a {
 
 /* Escape game related */
 
+#errinfo {
+	background-color: green;
+	border-left: 10px solid lightgreen;
+	padding-top: 10px;
+	padding-bottom: 10px;
+	padding-left: 20px;
+}
+
 #canvas_container {
      position: relative;
 }

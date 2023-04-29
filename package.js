@@ -326,13 +326,22 @@ function addMoney(amount) {
 function removeMoney(amount) {
 	MoneyCount -= amount;
 }
+
+function setMoney(amount) {
+	MoneyCount = amount;
+}
 class Character {
 	constructor() {
 		this.image = new Image();
 		this.image.src = "res/Character.png";
+		this.image.onload = this.setisloaded;
+		this.loaded = false;
 	}
-	draw(xoffset, yoffset, canvas) {
-		canvas.image(image, xoffset, yoffset);
+	draw(xoffset, yoffset, scale, canvas) {
+		canvas.image(this.image, xoffset, yoffset, 256 * scale, 512 * scale);
+	}
+	setisloaded() {
+		this.loaded = true;
 	}
 };
 let chr = new Character();
@@ -439,13 +448,13 @@ function HraniceNaMorave(canvas) {
 	
 	ap.playTrack(2);
 
-	PauseButton.append(canvas);
 	PauseButton.button.addEventListener("click", () => {
 		Pause(canvas);
 	});	
 	
 	canvas.clear("purple");
 	canvas.image(hnm_Locations[0], 0, 0, canvas.canvas.width, canvas.canvas.height);
+	chr.draw(600, 100, 0.65, canvas);		
 	
 	let FirstDialogue = new Dialogue();
 	FirstDialogue.begin(canvas, 2000);
@@ -458,6 +467,7 @@ function HraniceNaMorave(canvas) {
 	FirstDialogue.end();		
 	
 	setTimeout(function() {	
+		PauseButton.append(canvas);
 		AllowedToPause = true;	
 		HraniceNaMoraveDomov(canvas);
 	}, ((5 * 2000) + 1000));
@@ -467,6 +477,7 @@ function HraniceNaMoraveDomov(canvas) {
 	console.log("hnm domov");
 	LocalLocationId = 0;
 	canvas.image(hnm_Locations[0], 0, 0, canvas.canvas.width, canvas.canvas.height);
+	chr.draw(600, 100, 0.65, canvas);	
 	let ArrowToNamesti = new Arrow(700, 400, 100, 100, ArrowDirections.Right, canvas);
 	ArrowToNamesti.draw(canvas);
 	ArrowToNamesti.button.addEventListener("click", () => {
@@ -496,6 +507,7 @@ function HraniceNaMoraveNamesti(canvas) {
     	HraniceNaMoraveNadrazi(canvas);
 	});
 	canvas.image(hnm_Locations[1], 0, 0, canvas.canvas.width, canvas.canvas.height);
+	chr.draw(550, 320, 0.2, canvas);
 	ArrowToDomov.draw(canvas);
 	ArrowToNadrazi.draw(canvas);
 	PauseButton.draw(canvas);
@@ -530,6 +542,7 @@ function HraniceNaMoraveNadrazi(canvas) {
     	HraniceNaMoraveRestaurace(canvas);
 	});
 	canvas.image(hnm_Locations[2], 0, 0, canvas.canvas.width, canvas.canvas.height);
+	chr.draw(320, 210, 0.17, canvas);
 	ArrowToNamesti.draw(canvas);
 	ArrowToNastupiste.draw(canvas);
 	ArrowToRestaurace.draw(canvas);
@@ -547,6 +560,7 @@ function HraniceNaMoraveNastupiste(canvas) {
     	HraniceNaMoraveNadrazi(canvas);
 	});
 	canvas.image(hnm_Locations[3], 0, 0, canvas.canvas.width, canvas.canvas.height);
+	chr.draw(550, 250, 0.35, canvas);
 	ArrowToNadrazi.draw(canvas);
 	PauseButton.draw(canvas);
 	drawMoneyCount(canvas);
@@ -562,6 +576,7 @@ function HraniceNaMoraveRestaurace(canvas) {
     	HraniceNaMoraveNadrazi(canvas);
 	});
 	canvas.image(hnm_Locations[4], 0, 0, canvas.canvas.width, canvas.canvas.height);
+	chr.draw(540, 170, 0.5, canvas);
 	ArrowToNadrazi.draw(canvas);
 	PauseButton.draw(canvas);
 	drawMoneyCount(canvas);
@@ -643,7 +658,7 @@ function Pause(canvasobj) {
 		location.reload();
 	});
 	
-	canvasobj.textml("Press escape or click the\nbutton to unpause.", 320, 380);
+	canvasobj.textml("Press escape or click the\nbutton again to unpause.", 320, 380);
 	canvasobj.setnewfont("Arial, FreeSans", "48");
 }
 
@@ -710,6 +725,7 @@ function MainMenu() {
 	mainMenuButtons[4].setCallback("ButtonsRouter(2)");
 	
 	cvs.image(this, 0, 0, this.width, this.height);
+	chr.draw(350, 350, 0.25, cvs);	
 	cvs.setfontweight("bold");
 	cvs.text("Escape from the Olomouc Region", 50, 50);	
 	cvs.resetfontweight();

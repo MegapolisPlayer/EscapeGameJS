@@ -27,6 +27,7 @@ function MainMenu() {
 	mainMenuButtons[4].setCallback("ButtonsRouter(2)");
 	
 	cvs.image(this, 0, 0, this.width, this.height);
+	chr.draw(350, 350, 0.25, cvs);	
 	cvs.setfontweight("bold");
 	cvs.text("Escape from the Olomouc Region", 50, 50);	
 	cvs.resetfontweight();

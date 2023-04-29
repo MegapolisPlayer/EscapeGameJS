@@ -2,9 +2,14 @@ class Character {
 	constructor() {
 		this.image = new Image();
 		this.image.src = "res/Character.png";
+		this.image.onload = this.setisloaded;
+		this.loaded = false;
 	}
-	draw(xoffset, yoffset, canvas) {
-		canvas.image(image, xoffset, yoffset);
+	draw(xoffset, yoffset, scale, canvas) {
+		canvas.image(this.image, xoffset, yoffset, 256 * scale, 512 * scale);
+	}
+	setisloaded() {
+		this.loaded = true;
 	}
 };
 let chr = new Character();

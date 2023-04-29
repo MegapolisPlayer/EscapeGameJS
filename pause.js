@@ -75,7 +75,7 @@ function Pause(canvasobj) {
 		location.reload();
 	});
 	
-	canvasobj.textml("Press escape or click the\nbutton to unpause.", 320, 380);
+	canvasobj.textml("Press escape or click the\nbutton again to unpause.", 320, 380);
 	canvasobj.setnewfont("Arial, FreeSans", "48");
 }
 
