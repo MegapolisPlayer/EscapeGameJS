@@ -365,7 +365,6 @@ class Dialogue {
   		}
 		else {
 		this.can_proceed = false;
-		console.log(this.counter);
 		let NextArrow = new Arrow(this.canvas_info.canvas.width - 140, (this.canvas_info.canvas.height * 0.8) + 10, 100, 100, ArrowDirections.Right, this.canvas_info);
 		this.canvas_info.setnewcolor("white");
 		this.makeBox();
@@ -376,7 +375,6 @@ class Dialogue {
 			NextArrow.deleteButton();
 			this.counter++;
 			this.can_proceed = true;
-			console.log("CN"+this.counter+" CPRO"+this.can_proceed);
 			return;
 		}, this);
 		}
@@ -388,10 +386,27 @@ class Dialogue {
 	}
 };
 let SettingsValues = {
-	Difficulty:1, //1 - easy, 2 - medium, 3 - hard
-	ChanceOfInstantLoss:1000, //chance if instant loss per day
-	MoneyCostIncrease:1, //value to multiply costs with, easy = 0,5, medium = 1, hard = 1,5
+	Difficulty:2, //1 - easy, 2 - medium, 3 - hard
+	ChanceOfInstantLoss: 5000, //chance if instant loss per day, easy = 10000, medium = 5000, hard = 1000
+	MoneyCostIncrease: 1, //value to multiply costs with, easy = 0,75, medium = 1, hard = 1,25
 };
+
+function UpdateSettingsValues() {
+	switch(SettingsValues.Difficulty) {
+		case 1:
+		SettingsValues.ChanceOfInstantLoss = 10000;
+		SettingsValues.MoneyCostIncrease = 0.75;
+		break;
+		case 2:
+		SettingsValues.ChanceOfInstantLoss = 5000;
+		SettingsValues.MoneyCostIncrease = 1;
+		break;
+		case 3:
+		SettingsValues.ChanceOfInstantLoss = 1000;
+		SettingsValues.MoneyCostIncrease = 1.25;
+		break;
+	}
+}
 
 function Settings(canvasobj) {
 	canvasobj.setnewcolor("#dddddd");
@@ -422,8 +437,8 @@ function CreditsButtonRegister(canvasobj) {
 }
 //global for all locations, HnM is just first
 
-let LocationId = 0; //HnM, Prerov, etc... (HnM = 1, 0 is for main menu)
-let LocalLocationId = 0; //railway station, house, etc... (HnM house = 0, starts from 0)
+let locationId = 0; //HnM, Prerov, etc... (HnM = 1, 0 is for main menu)
+let localLocationId = 0; //railway station, house, etc... (HnM house = 0, starts from 0)
 
 let PauseButton = new Arrow(10, 10, 50, 50, ArrowDirections.Pause, null);
 
@@ -436,9 +451,9 @@ function HraniceNaMoraveImageLoaded() {
 	hnm_AmountLoadedImages += 1;
 }
 
-function HraniceNaMoraveLoad(canvas) {
+function HraniceNaMoraveLoad(canvas, calledbysetstate = false) {
 	cvs.clear("purple");
-	LocationId = 1;
+	locationId = 1;
 	for(let Id = 0; Id < 5; Id++) {
 		hnm_Locations.push(new Image());
 		hnm_Locations[Id].onload = HraniceNaMoraveImageLoaded;
@@ -448,7 +463,9 @@ function HraniceNaMoraveLoad(canvas) {
 	hnm_Locations[2].src = "res/hnm/nadrazi.png";
 	hnm_Locations[3].src = "res/hnm/nastupiste.png";
 	hnm_Locations[4].src = "res/hnm/restaurace.png";
-	HraniceNaMorave(canvas);
+	if(calledbysetstate !== true) {
+		HraniceNaMorave(canvas);
+	}
 }
 
 function HraniceNaMorave(canvas) {
@@ -491,7 +508,7 @@ function HraniceNaMorave(canvas) {
 
 function HraniceNaMoraveDomov(canvas) {
 	console.log("hnm domov");
-	LocalLocationId = 0;
+	localLocationId = 0;
 	canvas.image(hnm_Locations[0], 0, 0, canvas.canvas.width, canvas.canvas.height);
 	chr.draw(600, 100, 0.65, canvas);	
 	let ArrowToNamesti = new Arrow(700, 400, 100, 100, ArrowDirections.Right, canvas);
@@ -506,7 +523,7 @@ function HraniceNaMoraveDomov(canvas) {
 }
 function HraniceNaMoraveNamesti(canvas) {
 	console.log("hnm namesti");
-	LocalLocationId = 1;
+	localLocationId = 1;
 	canvas.clear("purple");
 	let ArrowToDomov = new Arrow(300, 400, 100, 100, ArrowDirections.Left, canvas);
 	let ArrowToNadrazi = new Arrow(700, 400, 100, 100, ArrowDirections.Right, canvas);
@@ -531,7 +548,7 @@ function HraniceNaMoraveNamesti(canvas) {
 }
 function HraniceNaMoraveNadrazi(canvas) {
 	console.log("hnm nadrazi");
-	LocalLocationId = 2;
+	localLocationId = 2;
 	canvas.clear("purple");
 	let ArrowToNamesti = new Arrow(100, 400, 100, 100, ArrowDirections.Left, canvas);
 	let ArrowToNastupiste = new Arrow(300, 300, 100, 100, ArrowDirections.Up, canvas);
@@ -567,7 +584,7 @@ function HraniceNaMoraveNadrazi(canvas) {
 }
 function HraniceNaMoraveNastupiste(canvas) {
 	console.log("hnm nastupiste");
-	LocalLocationId = 3;
+	localLocationId = 3;
 	canvas.clear("purple");
 	let ArrowToNadrazi = new Arrow(700, 400, 100, 100, ArrowDirections.Down, canvas);
 	ArrowToNadrazi.button.addEventListener("click", () => {
@@ -583,7 +600,7 @@ function HraniceNaMoraveNastupiste(canvas) {
 }
 function HraniceNaMoraveRestaurace(canvas) {
 	console.log("hnm restaurace");
-	LocalLocationId = 4;
+	localLocationId = 4;
 	canvas.clear("purple");
 	let ArrowToNadrazi = new Arrow(500, 400, 100, 100, ArrowDirections.Down, canvas);
 	ArrowToNadrazi.button.addEventListener("click", () => {
@@ -606,40 +623,63 @@ function HraniceNaMoraveRestauraceJob(canvas) {
 let GamePaused = false;
 let AllowedToPause = true;
 
+function SetState(canvasobj) {
+	switch(locationId) {
+		case 1:
+			switch(localLocationId) {
+				case 0:
+					HraniceNaMoraveDomov(canvasobj);	
+				break;
+				case 1:
+					HraniceNaMoraveNamesti(canvasobj);	
+				break;
+				case 2:
+					HraniceNaMoraveNadrazi(canvasobj);
+				break;
+				case 3:
+					HraniceNaMoraveNastupiste(canvasobj);
+				break;
+				case 4:
+					HraniceNaMoraveRestaurace(canvasobj);
+				break;
+			}
+	}
+	return;	
+}
+
 function Pause(canvasobj) {
 	if(GamePaused) {
 		//unpause
 		GamePaused = false;
+		clearInterval(Pause.thisInterval);
 		Pause.buttonAudio.deleteButton();
 		Pause.buttonRestart.deleteButton();
 		Pause.buttonCode.deleteButton();
 		Pause.buttonSave.deleteButton();
 		Pause.buttonLoad.deleteButton();
 		Pause.buttonQuit.deleteButton();
-		switch(LocationId) {
-		case 1:
-			switch(LocalLocationId) {
-			case 0:
-				HraniceNaMoraveDomov(canvasobj);	
-				break;
-			case 1:
-				HraniceNaMoraveNamesti(canvasobj);	
-				break;
-			case 2:
-				HraniceNaMoraveNadrazi(canvasobj);
-				break;
-			case 3:
-				HraniceNaMoraveNastupiste(canvasobj);
-				break;
-			case 4:
-				HraniceNaMoraveRestaurace(canvasobj);
-				break;
-			}
-		}
-		return;	
+		SetState(canvasobj);
+		return;
 	}
+	
 	if(!AllowedToPause) { return; }
 	GamePaused = true;
+
+	Pause.thisInterval = window.setInterval(() => {
+		if(Load.FileLoaded === true) {
+			clearInterval(Pause.thisInterval);
+			GamePaused = false;
+			Pause.buttonAudio.deleteButton();
+			Pause.buttonRestart.deleteButton();
+			Pause.buttonCode.deleteButton();
+			Pause.buttonSave.deleteButton();
+			Pause.buttonLoad.deleteButton();
+			Pause.buttonQuit.deleteButton();
+			//SetState called, no need to call anything
+		}
+	}, 100);
+	
+	
 	canvasobj.setnewcolor("#dddddd");
 	canvasobj.box(300, 50, 400, 400);
 	canvasobj.setnewcolor("#333399");
@@ -671,7 +711,7 @@ function Pause(canvasobj) {
 		window.open("https://www.github.com/MegapolisPlayer/EscapeGameJS", "_blank");
 	});
 	Pause.buttonSave.button.addEventListener("click", (event) => {
-		Save();
+		Save(locationId, localLocationId, SettingsValues.Difficulty, MoneyCount);
 	});
 	Pause.buttonLoad.button.addEventListener("click", (event) => {
 		Load(canvasobj);
@@ -684,8 +724,7 @@ function Pause(canvasobj) {
 	canvasobj.setnewfont("Arial, FreeSans", "48");
 }
 
-function SetState(filecontent, canvas) {
-	console.log("SetState");
+function SetStateFile(filecontent, canvas) {	
 	let Children = document.getElementsByClassName("CanvasInputElement");
 
 	while(Children[0]) {
@@ -694,10 +733,47 @@ function SetState(filecontent, canvas) {
 	
 	canvas.clear("purple");
 
-	//file, split with spaces
-	//info - location id, local location id, money, difficulty
-	let Data = filecontent.split('\n');
-	console.log(Data); //load using SetState() function!
+	//info - location id, local location id, difficulty, money
+	let Data = filecontent.split(' ');
+
+	if(Data[0] !== "eors1") {
+		console.error("SetStateFile: Incompatible save loaded! (Version 1 required)");
+	}	
+	
+	//data splitting
+	SettingsValues.Difficulty = Number(Data[1]);
+	locationId =                Number(Data[2]);	
+	localLocationId =           Number(Data[3]);	
+	MoneyCount =                Number(Data[4]);
+	UpdateSettingsValues();
+	
+	//pause button
+	PauseButton.append(canvas);
+	PauseButton.button.addEventListener("click", () => {
+		Pause(canvas);
+	});	
+	
+	//key buttons activation
+	window.addEventListener("keydown", (event) => {
+		if(event.key == "Escape") {
+			Pause(canvas);
+		}
+	});		
+	
+	//image loading
+	switch(locationId) {
+		case 1:
+			HraniceNaMoraveLoad(canvas, true);
+			let thisInterval = window.setInterval(() => {
+				if(hnm_AmountLoadedImages === 5) {
+					clearInterval(thisInterval);
+					SetState(canvas);
+				}
+			}, 100);
+		break;
+		
+		
+	}
 }
 
 function Save(locationId, localLocationId, difficulty, money) {
@@ -721,30 +797,23 @@ function Save(locationId, localLocationId, difficulty, money) {
 }
 
 function Load(canvasobj) {
+	Load.FileLoaded = false;
+	
 	let hiddenInputElem = document.createElement("input");
 	hiddenInputElem.id="fileuploaded";
 	hiddenInputElem.type = "file";
 	hiddenInputElem.accept = ".eors";
 	
-	if(document.getElementById("fileuploaded") === null) {
-		//no file
-		console.log("uhhh");
-	}
-	else {
-		//yes file
-   		let fileInfo = event.target.files[0]; 
+	hiddenInputElem.addEventListener("change", (event) => {
+		Load.FileLoaded = true;
 		let reader = new FileReader();
-   		reader.readAsText(fileInfo, "UTF-8");
+   		reader.readAsText(hiddenInputElem.files[0], "UTF-8");
 		reader.onload = (event) => {
-			SetState(event.target.result, canvasobj);
+			Load.FileLoaded = false; //finished load operation
+			SetStateFile(event.target.result, canvasobj);
 		}
-		reader.onerror = (event) => {
-			canvasobj.setnewcolor("#ff0000");
-			canvasobj.text("Error: Could not load file!", 100, 100);
-			canvasobj.setnewcolor("#333399");
-		}
-		hiddenInputElem.click();
-	}
+	}, false);
+	hiddenInputElem.click();
 }
 
 if (window.document.documentMode) {
@@ -796,29 +865,36 @@ function PlayMenu() {
 	
 	cvs.setnewfont("Arial, FreeSans", "32");
 	let buttonNew = new Button(50, 130, 300, 100, 25, "New Game", "canvas_container");
-	let buttonSave = new Button(350, 130, 300, 100, 25, "Load Game", "canvas_container");
+	let buttonLoad = new Button(350, 130, 300, 100, 25, "Load Game", "canvas_container");
 	let buttonBack = new Button(650, 130, 300, 100, 25, "Back", "canvas_container");
 	
+	let thisInterval = window.setInterval(() => {
+		if(Load.FileLoaded === true) {
+			clearInterval(thisInterval);
+			buttonNew.deleteButton();
+			buttonLoad.deleteButton();
+			buttonBack.deleteButton();
+			//SetState called, no need to call anything
+		}
+	}, 100);
+	
 	buttonNew.button.addEventListener("click", (event) => {
+		clearInterval(thisInterval);
 		buttonNew.deleteButton();
-		buttonSave.deleteButton();
+		buttonLoad.deleteButton();
 		buttonBack.deleteButton();
 		Intro();
 	});
-	buttonSave.button.addEventListener("click", (event) => {
-		buttonNew.deleteButton();
-		buttonSave.deleteButton();
-		buttonBack.deleteButton();
-		Load();
+	buttonLoad.button.addEventListener("click", (event) => {
+		Load(cvs);
 	});
 	buttonBack.button.addEventListener("click", (event) => {
+		clearInterval(thisInterval);
 		buttonNew.deleteButton();
-		buttonSave.deleteButton();
+		buttonLoad.deleteButton();
 		buttonBack.deleteButton();
 		MainMenu();
-	});
-	
-	
+	});	
 }
 
 //game stuff

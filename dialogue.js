@@ -37,7 +37,6 @@ class Dialogue {
   		}
 		else {
 		this.can_proceed = false;
-		console.log(this.counter);
 		let NextArrow = new Arrow(this.canvas_info.canvas.width - 140, (this.canvas_info.canvas.height * 0.8) + 10, 100, 100, ArrowDirections.Right, this.canvas_info);
 		this.canvas_info.setnewcolor("white");
 		this.makeBox();
@@ -48,7 +47,6 @@ class Dialogue {
 			NextArrow.deleteButton();
 			this.counter++;
 			this.can_proceed = true;
-			console.log("CN"+this.counter+" CPRO"+this.can_proceed);
 			return;
 		}, this);
 		}

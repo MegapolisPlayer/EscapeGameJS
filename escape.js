@@ -47,29 +47,36 @@ function PlayMenu() {
 	
 	cvs.setnewfont("Arial, FreeSans", "32");
 	let buttonNew = new Button(50, 130, 300, 100, 25, "New Game", "canvas_container");
-	let buttonSave = new Button(350, 130, 300, 100, 25, "Load Game", "canvas_container");
+	let buttonLoad = new Button(350, 130, 300, 100, 25, "Load Game", "canvas_container");
 	let buttonBack = new Button(650, 130, 300, 100, 25, "Back", "canvas_container");
 	
+	let thisInterval = window.setInterval(() => {
+		if(Load.FileLoaded === true) {
+			clearInterval(thisInterval);
+			buttonNew.deleteButton();
+			buttonLoad.deleteButton();
+			buttonBack.deleteButton();
+			//SetState called, no need to call anything
+		}
+	}, 100);
+	
 	buttonNew.button.addEventListener("click", (event) => {
+		clearInterval(thisInterval);
 		buttonNew.deleteButton();
-		buttonSave.deleteButton();
+		buttonLoad.deleteButton();
 		buttonBack.deleteButton();
 		Intro();
 	});
-	buttonSave.button.addEventListener("click", (event) => {
-		buttonNew.deleteButton();
-		buttonSave.deleteButton();
-		buttonBack.deleteButton();
-		Load();
+	buttonLoad.button.addEventListener("click", (event) => {
+		Load(cvs);
 	});
 	buttonBack.button.addEventListener("click", (event) => {
+		clearInterval(thisInterval);
 		buttonNew.deleteButton();
-		buttonSave.deleteButton();
+		buttonLoad.deleteButton();
 		buttonBack.deleteButton();
 		MainMenu();
-	});
-	
-	
+	});	
 }
 
 //game stuff

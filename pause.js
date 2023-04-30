@@ -1,40 +1,63 @@
 let GamePaused = false;
 let AllowedToPause = true;
 
+function SetState(canvasobj) {
+	switch(locationId) {
+		case 1:
+			switch(localLocationId) {
+				case 0:
+					HraniceNaMoraveDomov(canvasobj);	
+				break;
+				case 1:
+					HraniceNaMoraveNamesti(canvasobj);	
+				break;
+				case 2:
+					HraniceNaMoraveNadrazi(canvasobj);
+				break;
+				case 3:
+					HraniceNaMoraveNastupiste(canvasobj);
+				break;
+				case 4:
+					HraniceNaMoraveRestaurace(canvasobj);
+				break;
+			}
+	}
+	return;	
+}
+
 function Pause(canvasobj) {
 	if(GamePaused) {
 		//unpause
 		GamePaused = false;
+		clearInterval(Pause.thisInterval);
 		Pause.buttonAudio.deleteButton();
 		Pause.buttonRestart.deleteButton();
 		Pause.buttonCode.deleteButton();
 		Pause.buttonSave.deleteButton();
 		Pause.buttonLoad.deleteButton();
 		Pause.buttonQuit.deleteButton();
-		switch(LocationId) {
-		case 1:
-			switch(LocalLocationId) {
-			case 0:
-				HraniceNaMoraveDomov(canvasobj);	
-				break;
-			case 1:
-				HraniceNaMoraveNamesti(canvasobj);	
-				break;
-			case 2:
-				HraniceNaMoraveNadrazi(canvasobj);
-				break;
-			case 3:
-				HraniceNaMoraveNastupiste(canvasobj);
-				break;
-			case 4:
-				HraniceNaMoraveRestaurace(canvasobj);
-				break;
-			}
-		}
-		return;	
+		SetState(canvasobj);
+		return;
 	}
+	
 	if(!AllowedToPause) { return; }
 	GamePaused = true;
+
+	Pause.thisInterval = window.setInterval(() => {
+		if(Load.FileLoaded === true) {
+			clearInterval(Pause.thisInterval);
+			GamePaused = false;
+			Pause.buttonAudio.deleteButton();
+			Pause.buttonRestart.deleteButton();
+			Pause.buttonCode.deleteButton();
+			Pause.buttonSave.deleteButton();
+			Pause.buttonLoad.deleteButton();
+			Pause.buttonQuit.deleteButton();
+			//SetState called, no need to call anything
+		}
+	}, 100);
+	
+	
 	canvasobj.setnewcolor("#dddddd");
 	canvasobj.box(300, 50, 400, 400);
 	canvasobj.setnewcolor("#333399");
@@ -66,10 +89,10 @@ function Pause(canvasobj) {
 		window.open("https://www.github.com/MegapolisPlayer/EscapeGameJS", "_blank");
 	});
 	Pause.buttonSave.button.addEventListener("click", (event) => {
-		Save();
+		Save(locationId, localLocationId, SettingsValues.Difficulty, MoneyCount);
 	});
 	Pause.buttonLoad.button.addEventListener("click", (event) => {
-		Load(canvasobj);
+		GamePaused = false;
 	});
 	Pause.buttonQuit.button.addEventListener("click", (event) => {
 		location.reload();
@@ -79,8 +102,7 @@ function Pause(canvasobj) {
 	canvasobj.setnewfont("Arial, FreeSans", "48");
 }
 
-function SetState(filecontent, canvas) {
-	console.log("SetState");
+function SetStateFile(filecontent, canvas) {	
 	let Children = document.getElementsByClassName("CanvasInputElement");
 
 	while(Children[0]) {
@@ -89,10 +111,47 @@ function SetState(filecontent, canvas) {
 	
 	canvas.clear("purple");
 
-	//file, split with spaces
-	//info - location id, local location id, money, difficulty
-	let Data = filecontent.split('\n');
-	console.log(Data); //load using SetState() function!
+	//info - location id, local location id, difficulty, money
+	let Data = filecontent.split(' ');
+
+	if(Data[0] !== "eors1") {
+		console.error("SetStateFile: Incompatible save loaded! (Version 1 required)");
+	}	
+	
+	//data splitting
+	SettingsValues.Difficulty = Number(Data[1]);
+	locationId =                Number(Data[2]);	
+	localLocationId =           Number(Data[3]);	
+	MoneyCount =                Number(Data[4]);
+	UpdateSettingsValues();
+	
+	//pause button
+	PauseButton.append(canvas);
+	PauseButton.button.addEventListener("click", () => {
+		Pause(canvas);
+	});	
+	
+	//key buttons activation
+	window.addEventListener("keydown", (event) => {
+		if(event.key == "Escape") {
+			Pause(canvas);
+		}
+	});		
+	
+	//image loading
+	switch(locationId) {
+		case 1:
+			HraniceNaMoraveLoad(canvas, true);
+			let thisInterval = window.setInterval(() => {
+				if(hnm_AmountLoadedImages === 5) {
+					clearInterval(thisInterval);
+					SetState(canvas);
+				}
+			}, 100);
+		break;
+		
+		
+	}
 }
 
 function Save(locationId, localLocationId, difficulty, money) {
@@ -116,31 +175,22 @@ function Save(locationId, localLocationId, difficulty, money) {
 }
 
 function Load(canvasobj) {
+	Load.FileLoaded = false;
+	
 	let hiddenInputElem = document.createElement("input");
 	hiddenInputElem.id="fileuploaded";
 	hiddenInputElem.type = "file";
 	hiddenInputElem.accept = ".eors";
 	
-	//hiddenInputElem on change -> file uploaded
-	//detect cancel/close???
-	if(document.getElementById("fileuploaded") === null) {
-		//no file
-		console.log("uhhh");
-	}
-	else {
-		//yes file
-   		let fileInfo = event.target.files[0]; 
+	hiddenInputElem.addEventListener("change", (event) => {
+		Load.FileLoaded = true;
 		let reader = new FileReader();
-   		reader.readAsText(fileInfo, "UTF-8");
+   		reader.readAsText(hiddenInputElem.files[0], "UTF-8");
 		reader.onload = (event) => {
-			SetState(event.target.result, canvasobj);
+			Load.FileLoaded = false; //finished load operation
+			SetStateFile(event.target.result, canvasobj);
 		}
-		reader.onerror = (event) => {
-			canvasobj.setnewcolor("#ff0000");
-			canvasobj.text("Error: Could not load file!", 100, 100);
-			canvasobj.setnewcolor("#333399");
-		}
-		hiddenInputElem.click();
-	}
+	}, false);
+	hiddenInputElem.click();
 }
 

@@ -1,7 +1,7 @@
 //global for all locations, HnM is just first
 
-let LocationId = 0; //HnM, Prerov, etc... (HnM = 1, 0 is for main menu)
-let LocalLocationId = 0; //railway station, house, etc... (HnM house = 0, starts from 0)
+let locationId = 0; //HnM, Prerov, etc... (HnM = 1, 0 is for main menu)
+let localLocationId = 0; //railway station, house, etc... (HnM house = 0, starts from 0)
 
 let PauseButton = new Arrow(10, 10, 50, 50, ArrowDirections.Pause, null);
 
@@ -14,9 +14,9 @@ function HraniceNaMoraveImageLoaded() {
 	hnm_AmountLoadedImages += 1;
 }
 
-function HraniceNaMoraveLoad(canvas) {
+function HraniceNaMoraveLoad(canvas, calledbysetstate = false) {
 	cvs.clear("purple");
-	LocationId = 1;
+	locationId = 1;
 	for(let Id = 0; Id < 5; Id++) {
 		hnm_Locations.push(new Image());
 		hnm_Locations[Id].onload = HraniceNaMoraveImageLoaded;
@@ -26,7 +26,9 @@ function HraniceNaMoraveLoad(canvas) {
 	hnm_Locations[2].src = "res/hnm/nadrazi.png";
 	hnm_Locations[3].src = "res/hnm/nastupiste.png";
 	hnm_Locations[4].src = "res/hnm/restaurace.png";
-	HraniceNaMorave(canvas);
+	if(calledbysetstate !== true) {
+		HraniceNaMorave(canvas);
+	}
 }
 
 function HraniceNaMorave(canvas) {
@@ -69,7 +71,7 @@ function HraniceNaMorave(canvas) {
 
 function HraniceNaMoraveDomov(canvas) {
 	console.log("hnm domov");
-	LocalLocationId = 0;
+	localLocationId = 0;
 	canvas.image(hnm_Locations[0], 0, 0, canvas.canvas.width, canvas.canvas.height);
 	chr.draw(600, 100, 0.65, canvas);	
 	let ArrowToNamesti = new Arrow(700, 400, 100, 100, ArrowDirections.Right, canvas);
@@ -84,7 +86,7 @@ function HraniceNaMoraveDomov(canvas) {
 }
 function HraniceNaMoraveNamesti(canvas) {
 	console.log("hnm namesti");
-	LocalLocationId = 1;
+	localLocationId = 1;
 	canvas.clear("purple");
 	let ArrowToDomov = new Arrow(300, 400, 100, 100, ArrowDirections.Left, canvas);
 	let ArrowToNadrazi = new Arrow(700, 400, 100, 100, ArrowDirections.Right, canvas);
@@ -109,7 +111,7 @@ function HraniceNaMoraveNamesti(canvas) {
 }
 function HraniceNaMoraveNadrazi(canvas) {
 	console.log("hnm nadrazi");
-	LocalLocationId = 2;
+	localLocationId = 2;
 	canvas.clear("purple");
 	let ArrowToNamesti = new Arrow(100, 400, 100, 100, ArrowDirections.Left, canvas);
 	let ArrowToNastupiste = new Arrow(300, 300, 100, 100, ArrowDirections.Up, canvas);
@@ -145,7 +147,7 @@ function HraniceNaMoraveNadrazi(canvas) {
 }
 function HraniceNaMoraveNastupiste(canvas) {
 	console.log("hnm nastupiste");
-	LocalLocationId = 3;
+	localLocationId = 3;
 	canvas.clear("purple");
 	let ArrowToNadrazi = new Arrow(700, 400, 100, 100, ArrowDirections.Down, canvas);
 	ArrowToNadrazi.button.addEventListener("click", () => {
@@ -161,7 +163,7 @@ function HraniceNaMoraveNastupiste(canvas) {
 }
 function HraniceNaMoraveRestaurace(canvas) {
 	console.log("hnm restaurace");
-	LocalLocationId = 4;
+	localLocationId = 4;
 	canvas.clear("purple");
 	let ArrowToNadrazi = new Arrow(500, 400, 100, 100, ArrowDirections.Down, canvas);
 	ArrowToNadrazi.button.addEventListener("click", () => {
