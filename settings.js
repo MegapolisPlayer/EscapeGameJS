@@ -1,5 +1,5 @@
 let SettingsValues = {
-	Difficulty:1, //0 - easy, 1 - medium, 2 - hard
+	Difficulty:1, //1 - easy, 2 - medium, 3 - hard
 	ChanceOfInstantLoss:1000, //chance if instant loss per day
 	MoneyCostIncrease:1, //value to multiply costs with, easy = 0,5, medium = 1, hard = 1,5
 };

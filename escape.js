@@ -6,13 +6,16 @@ if (window.document.documentMode) {
 const cvs = new Canvas("EscapeCanvas", "Arial, FreeSans", "48", "#333399", 1000, 500);
 cvs.clear("purple");
 
-const image = new Image();
-image.src = "res/MainMenu.jpg";
-image.onload = MainMenu;
+const MainMenuImage = new Image();
+MainMenuImage.src = "res/MainMenu.jpg";
+MainMenuImage.onload = MainMenu;
 
 let mainMenuButtons = [];
 
 function MainMenu() {
+	cvs.clear("purple");
+	cvs.setnewfont("Arial, FreeSans", "48", "bold");
+	
 	mainMenuButtons.push(new Button(0,   400, 150, 100, 25, "Enable audio", "canvas_container"));
 	mainMenuButtons.push(new Button(150, 400, 150, 100, 25, "Restart track", "canvas_container"));
 	mainMenuButtons.push(new Button(600, 100, 300, 100, 50, "Play", "canvas_container"));
@@ -26,11 +29,47 @@ function MainMenu() {
 	mainMenuButtons[3].setCallback("ButtonsRouter(1)");
 	mainMenuButtons[4].setCallback("ButtonsRouter(2)");
 	
-	cvs.image(this, 0, 0, this.width, this.height);
-	chr.draw(350, 350, 0.25, cvs);	
+	cvs.image(MainMenuImage, 0, 0, cvs.canvas.width, cvs.canvas.height);
+	chr.draw(300, 300, 0.3, cvs);	
 	cvs.setfontweight("bold");
 	cvs.text("Escape from the Olomouc Region", 50, 50);	
 	cvs.resetfontweight();
+}
+
+//play menu
+
+function PlayMenu() {
+	//cvs.clear("purple");
+	cvs.image(MainMenuImage, 0, 0, cvs.canvas.width, cvs.canvas.height);
+	cvs.setnewcolor("#333399");
+	cvs.setnewfont("Arial, FreeSans", "48", "bold");
+	cvs.text("Play", 50, 50);
+	
+	cvs.setnewfont("Arial, FreeSans", "32");
+	let buttonNew = new Button(50, 130, 300, 100, 25, "New Game", "canvas_container");
+	let buttonSave = new Button(350, 130, 300, 100, 25, "Load Game", "canvas_container");
+	let buttonBack = new Button(650, 130, 300, 100, 25, "Back", "canvas_container");
+	
+	buttonNew.button.addEventListener("click", (event) => {
+		buttonNew.deleteButton();
+		buttonSave.deleteButton();
+		buttonBack.deleteButton();
+		Intro();
+	});
+	buttonSave.button.addEventListener("click", (event) => {
+		buttonNew.deleteButton();
+		buttonSave.deleteButton();
+		buttonBack.deleteButton();
+		Load();
+	});
+	buttonBack.button.addEventListener("click", (event) => {
+		buttonNew.deleteButton();
+		buttonSave.deleteButton();
+		buttonBack.deleteButton();
+		MainMenu();
+	});
+	
+	
 }
 
 //game stuff
@@ -40,12 +79,8 @@ function Intro() {
 	ap.playTrack(1);
 	cvs.clear("black");
     cvs.setnewcolor("white");
-	cvs.setfontweight("bold");
+	cvs.setnewfont("Arial, FreeSans", "48", "bold");
 	cvs.text("Backstory", 50, 50);
-	cvs.resetfontweight();
-	for(let i = 0; i < mainMenuButtons.length; i++) {
-		mainMenuButtons[i].deleteButton();
-    }
     cvs.setnewfont("Arial, FreeSans", "32");
     cvs.textml("It is the 1st of May 1997 and the Slovak minority has just\n"
                 +"declared independence from the young republic of Czechia.\n\n"
@@ -96,9 +131,10 @@ function ButtonsRouter(buttonid) {
 	for(let i = 0; i < mainMenuButtons.length; i++) {
 		mainMenuButtons[i].deleteButton();
     }
+	mainMenuButtons.length = 0;
 	switch(buttonid) {
 		case 0:
-			Intro();
+			PlayMenu();
 		break;
 		case 1:
 			Settings(cvs);

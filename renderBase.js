@@ -20,12 +20,8 @@ class Canvas {
         this.color = newcolor;
         this.context.fillStyle = this.color;
     }
-    //sets new font
-    setnewfont(font, fontsize) {
-        this.context.font = fontsize+"px "+font;
-    }
-	//sets new font - complete
-	setnewfontC(font, fontsize, weight) {
+	//sets new font
+	setnewfont(font, fontsize, weight = "normal") {
 		 this.context.font = weight+" "+fontsize+"px "+font;
 	}
 	//sets the font weight
@@ -81,12 +77,11 @@ class Canvas {
     image(image, xoffset, yoffset, dwidth, dheight) {
         this.context.drawImage(image, xoffset, yoffset, dwidth, dheight);
     }
-	//clears the canvas  - color
-    clear() {
-        this.context.fillRect(0, 0, this.canvas.width, this.canvas.height);
-    }
     //clears the canvas
-    clear(newcolor) {
+    clear(newcolor = "empty") {
+		if(newcolor === "empty") {
+			this.context.fillRect(0, 0, this.canvas.width, this.canvas.height);
+		}
         this.context.fillStyle = newcolor;
         this.context.fillRect(0, 0, this.canvas.width, this.canvas.height);
         this.context.fillStyle = this.color;

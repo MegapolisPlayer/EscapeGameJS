@@ -47,21 +47,25 @@ function HraniceNaMorave(canvas) {
 	chr.draw(600, 100, 0.65, canvas);		
 	
 	let FirstDialogue = new Dialogue();
-	FirstDialogue.begin(canvas, 2000);
+	FirstDialogue.begin(canvas);
 	FirstDialogue.makeBubble(0, "Yet another wonderful day.\nLet's read the news!");
 	FirstDialogue.makeBubble(1, "Crap. The Slovaks have rebelled and they also are just a\nfew kilometers away from Hranice!");
 	FirstDialogue.makeBubble(2, "How is this possible? The Czechs will start conscription\nsoon!");
 	FirstDialogue.makeBubble(3, "I must escape! But where do I go? I think Poland might be\na safe bet and it's the simplest to get to.");
 	FirstDialogue.makeBubble(4, "It's not like I have a choice anyway - Germany is too far\naway and too expensive and Austria is not much better.");
 	FirstDialogue.makeBubble(5, "Poland it is then!");	
-	FirstDialogue.end();		
 	
-	setTimeout(function() {	
-		PauseButton.append(canvas);
-		AllowedToPause = true;	
-		HraniceNaMoraveDomov(canvas);
-	}, ((5 * 2000) + 1000));
+	let thisInterval = window.setInterval((dialogue, canvas) => {
+		if(dialogue.counter === 6) {
+			clearInterval(thisInterval);
+			dialogue.end();		
+			PauseButton.append(canvas);
+			AllowedToPause = true;	
+			HraniceNaMoraveDomov(canvas);
+		}
+	}, 100, FirstDialogue, canvas);
 }
+
 
 function HraniceNaMoraveDomov(canvas) {
 	console.log("hnm domov");
@@ -167,7 +171,13 @@ function HraniceNaMoraveRestaurace(canvas) {
 	});
 	canvas.image(hnm_Locations[4], 0, 0, canvas.canvas.width, canvas.canvas.height);
 	chr.draw(540, 170, 0.5, canvas);
+	cook.draw(110, 110, 0.5, canvas);
 	ArrowToNadrazi.draw(canvas);
 	PauseButton.draw(canvas);
 	drawMoneyCount(canvas);
+}
+
+function HraniceNaMoraveRestauraceJob(canvas) {
+	console.log("hnm restaurace brig");
+	
 }

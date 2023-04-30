@@ -80,6 +80,7 @@ function Pause(canvasobj) {
 }
 
 function SetState(filecontent, canvas) {
+	console.log("SetState");
 	let Children = document.getElementsByClassName("CanvasInputElement");
 
 	while(Children[0]) {
@@ -94,22 +95,52 @@ function SetState(filecontent, canvas) {
 	console.log(Data); //load using SetState() function!
 }
 
-function Save() {
-
+function Save(locationId, localLocationId, difficulty, money) {
+	let finalizedSave = "eors1 ";
+	finalizedSave+=difficulty;
+	finalizedSave+=" ";
+	finalizedSave+=locationId;
+	finalizedSave+=" ";
+	finalizedSave+=localLocationId;
+	finalizedSave+=" ";
+	finalizedSave+=money;
+	
+	let hiddenAddrElem = document.createElement('a');
+    hiddenAddrElem.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(finalizedSave));
+    hiddenAddrElem.setAttribute('download', "save.eors");
+    hiddenAddrElem.style.display = 'none';
+	
+    document.body.appendChild(hiddenAddrElem);
+    hiddenAddrElem.click();
+    document.body.removeChild(hiddenAddrElem);
 }
 
 function Load(canvasobj) {
 	let hiddenInputElem = document.createElement("input");
+	hiddenInputElem.id="fileuploaded";
 	hiddenInputElem.type = "file";
-
-	hiddenInputElem.onchange = (event) => { 
+	hiddenInputElem.accept = ".eors";
+	
+	//hiddenInputElem on change -> file uploaded
+	//detect cancel/close???
+	if(document.getElementById("fileuploaded") === null) {
+		//no file
+		console.log("uhhh");
+	}
+	else {
+		//yes file
    		let fileInfo = event.target.files[0]; 
 		let reader = new FileReader();
    		reader.readAsText(fileInfo, "UTF-8");
-		reader.onload = readerEvent => {
-			SetState(readerEvent.target.result, canvasobj);
+		reader.onload = (event) => {
+			SetState(event.target.result, canvasobj);
 		}
+		reader.onerror = (event) => {
+			canvasobj.setnewcolor("#ff0000");
+			canvasobj.text("Error: Could not load file!", 100, 100);
+			canvasobj.setnewcolor("#333399");
+		}
+		hiddenInputElem.click();
 	}
-	hiddenInputElem.click();
 }
 

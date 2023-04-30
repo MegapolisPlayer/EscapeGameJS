@@ -1,26 +1,27 @@
 class Character {
-	constructor() {
+	constructor(source) {
 		this.image = new Image();
-		this.image.src = "res/Character.png";
+		this.image.src = source;
 		this.image.onload = this.setisloaded;
 		this.loaded = false;
 	}
 	draw(xoffset, yoffset, scale, canvas) {
-		canvas.image(this.image, xoffset, yoffset, 256 * scale, 512 * scale);
+		canvas.image(this.image, xoffset, yoffset, this.image.width * scale, this.image.height * scale);
 	}
 	setisloaded() {
 		this.loaded = true;
 	}
 };
-let chr = new Character();
+let chr = new Character("res/Character.png");
+let cook = new Character("res/Cook.png");
 
 class Dialogue {
 	constructor() {
-		this.delay_info = 0;
 		this.canvas_info;
+		this.counter = 0;
+		this.can_proceed = true;
 	}
-	begin(canvasobj, delay) {
-		this.delay_info = delay;
+	begin(canvasobj) {
 		this.canvas_info = canvasobj;
 	}
 	makeBox() {
@@ -30,16 +31,31 @@ class Dialogue {
 	makeText(text) {
 		this.canvas_info.textml(text, 30, (this.canvas_info.canvas.height * 0.8) + 30);
 	}
-	makeBubble(id, text) {
-		setTimeout(function(dialogueinstance, text) {
-			dialogueinstance.canvas_info.setnewcolor("white");
-			dialogueinstance.makeBox();
-			dialogueinstance.canvas_info.setnewcolor("black");
-			dialogueinstance.makeText(text);
-		}, (id * this.delay_info), this, text);
+	makeBubble(id, text, textcolor = "black") {
+		if(!(this.can_proceed && this.counter === id)) {
+   			setTimeout(this.makeBubble.bind(this), 100, id, text, textcolor);
+  		}
+		else {
+		this.can_proceed = false;
+		console.log(this.counter);
+		let NextArrow = new Arrow(this.canvas_info.canvas.width - 140, (this.canvas_info.canvas.height * 0.8) + 10, 100, 100, ArrowDirections.Right, this.canvas_info);
+		this.canvas_info.setnewcolor("white");
+		this.makeBox();
+		this.canvas_info.setnewcolor(textcolor);
+		this.makeText(text);
+		NextArrow.draw(this.canvas_info);
+		NextArrow.button.addEventListener("click", () => {
+			NextArrow.deleteButton();
+			this.counter++;
+			this.can_proceed = true;
+			console.log("CN"+this.counter+" CPRO"+this.can_proceed);
+			return;
+		}, this);
+		}
 	}
 	end() {
-		this.delay_info = 0;
 		this.canvas_info;
+		this.counter = 0;
+		this.can_proceed = false;
 	}
 };
