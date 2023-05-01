@@ -86,6 +86,20 @@ class Canvas {
         this.context.fillRect(0, 0, this.canvas.width, this.canvas.height);
         this.context.fillStyle = this.color;
     }
+	loadingMsg() {
+		this.clear("purple");
+		
+		let fontstorage = this.context.font;
+		let colorstorage = this.context.fillStyle;
+		
+		this.setnewfont("Arial, FreeSans", "72", "bold");
+		this.setnewcolor("#ffffff");
+		
+		this.text("Loading", 50, 50);
+		
+		this.context.font = fontstorage;
+		this.context.fillStyle = colorstorage;
+	}
 }
 
 
@@ -223,6 +237,16 @@ class Arrow {
 	}
 	setCallback(callback) {
 		this.button.setAttribute("onclick", callback);
+	}
+	newOffset(newxo, newyo) {
+		this.xoffset = newxo;
+		this.yoffset = newyo;
+	}
+	newXOffset(newxo) {
+		this.xoffset = newxo;
+	}
+	newYOffset(newyo) {
+		this.yoffset = newyo;
 	}
 	//image id of type ArrowDirections - set canvasobj to null if don't want to draw immediately
 	constructor(xoffset, yoffset, width, height, imageId, canvasobj) {
@@ -394,6 +418,30 @@ let SettingsValues = {
 	MoneyCostIncrease: 1, //value to multiply costs with, easy = 0,75, medium = 1, hard = 1,25
 };
 
+function randomNumber(maxRange) {
+  return Math.floor(Math.random() * maxRange);
+}
+
+function CheckInstantLoss() {
+	if(randomNumber(SettingsValues.ChanceOfInstantLoss) === 1) {
+		//game over!
+		canvas.clear("black");
+	}
+}
+
+function IncrementDifficulty() {
+	SettingsValues.Difficulty++;
+	if(SettingsValues.Difficulty === 4) {
+		SettingsValues.Difficulty = 1;
+	}
+}
+function DecrementDifficulty() {
+	SettingsValues.Difficulty--;
+	if(SettingsValues.Difficulty === 0) {
+		SettingsValues.Difficulty = 3;
+	}
+}
+
 function UpdateSettingsValues() {
 	switch(SettingsValues.Difficulty) {
 		case 1:
@@ -411,17 +459,75 @@ function UpdateSettingsValues() {
 	}
 }
 
-function Settings(canvasobj) {
+function SettingsRenderDifficultyRelatedText(canvasobj) {
 	canvasobj.setnewcolor("#dddddd");
-	canvasobj.box(0, 0, canvasobj.canvas.width, canvasobj.canvas.height);
+	canvasobj.box(420, 0, 600, 250);
+	canvasobj.box(100, 110, 250, 50);
 	canvasobj.setnewcolor("#333399");
+	switch(SettingsValues.Difficulty) {
+		case 1:
+			canvasobj.text("Easy", 150, 150);
+			canvasobj.text("0.75", 450, 200);
+			canvasobj.text("10000", 450, 250);
+		break;
+		case 2:
+			canvasobj.text("Medium", 150, 150);
+			canvasobj.text("1.00", 450, 200);
+			canvasobj.text("5000", 450, 250);
+		break;
+		case 3:
+			canvasobj.text("Hard", 150, 150);
+			canvasobj.text("1.25", 450, 200);
+			canvasobj.text("1000", 450, 250);
+		break;
+	}
+}
+
+function Settings(canvasobj) {	
+	Settings.arrowPrev = new Arrow(50, 110, 50, 50, ArrowDirections.Left, null);
+	Settings.arrowNext = new Arrow(350, 110, 50, 50, ArrowDirections.Right, null);
+	Settings.buttonBack = new Button(50, 400, 300, 100, 25, "Back to Menu", "canvas_container");
+	
+	Settings.arrowPrev.button.addEventListener("click", (event) => {
+		DecrementDifficulty();
+		UpdateSettingsValues();
+		SettingsRenderDifficultyRelatedText(canvasobj);
+	});
+	Settings.arrowNext.button.addEventListener("click", (event) => {
+		IncrementDifficulty();
+		UpdateSettingsValues();
+		SettingsRenderDifficultyRelatedText(canvasobj);
+	});
+	Settings.buttonBack.button.addEventListener("click", (event) => {
+		Settings.arrowPrev.deleteButton();
+		Settings.arrowNext.deleteButton();
+		Settings.buttonBack.deleteButton();
+		MainMenu();
+	});
+	
+	Settings.arrowPrev.append(canvasobj);
+	Settings.arrowNext.append(canvasobj);
+	
+	canvasobj.clear("#dddddd");
 	canvasobj.text("Settings", 50, 50);
 	
 	canvasobj.setnewfont("Arial, FreeSans", "32");
-	canvasobj.text("Difficulty", 50, 100);
-	canvasobj.text("Cost Multiplier", 50, 150);
-	canvasobj.text("Chance of loss", 50, 200);
+	canvasobj.setfontweight("bold");
 	
+	canvasobj.text("Difficulty", 50, 100);
+	
+	canvasobj.text("Cost Multiplier: ", 50, 200);
+	canvasobj.text("Chance of loss per day: ", 50, 250);
+
+	canvasobj.resetfontweight();
+
+	Settings.arrowPrev.draw(canvasobj);
+	Settings.arrowNext.draw(canvasobj);
+	
+	UpdateSettingsValues();
+	SettingsRenderDifficultyRelatedText(canvasobj);		
+	
+	canvasobj.textml("The difficulty determines not only the above values,\nbut also the difficulty of the minigames.\nThe difficulty cannot be changed in-game.", 50, 300);	
 }
 
 function SettingsButtonRegister(canvasobj) {
@@ -452,12 +558,11 @@ let hnm_Locations = [];
 let hnm_AmountLoadedImages = 0;
 
 function HraniceNaMoraveImageLoaded() {
-	console.log("hnm img load");
 	hnm_AmountLoadedImages += 1;
 }
 
 function HraniceNaMoraveLoad(canvas, calledbysetstate = false) {
-	cvs.clear("purple");
+	canvas.clear("purple");
 	locationId = 1;
 	for(let Id = 0; Id < 5; Id++) {
 		hnm_Locations.push(new Image());
@@ -763,13 +868,6 @@ function SetStateFile(filecontent, canvas) {
 	PauseButton = new Arrow(10, 10, 50, 50, ArrowDirections.Pause, null);
 	PauseButton.button.addEventListener("click", () => {
 		Pause(canvas);
-	});	
-	
-	//key buttons activation
-	window.addEventListener("keydown", (event) => {
-		if(event.key == "Escape") {
-			Pause(canvas);
-		}
 	});		
 	
 	//image loading
@@ -847,12 +945,12 @@ function MainMenu() {
 	cvs.clear("purple");
 	AllowedToPause = false;
 	
-	//set up key presses
+	//key buttons activation
 	window.addEventListener("keydown", (event) => {
 		if(event.key == "Escape") {
 			Pause(cvs);
 		}
-	});
+	});	
 
 	//main menu
 	
@@ -891,7 +989,7 @@ function PlayMenu() {
 	cvs.setnewfont("Arial, FreeSans", "32");
 	let buttonNew = new Button(50, 130, 300, 100, 25, "New Game", "canvas_container");
 	let buttonLoad = new Button(350, 130, 300, 100, 25, "Load Game", "canvas_container");
-	let buttonBack = new Button(650, 130, 300, 100, 25, "Back", "canvas_container");
+	let buttonBack = new Button(650, 130, 300, 100, 25, "Back to Menu", "canvas_container");
 	
 	let thisInterval = window.setInterval(() => {
 		if(Load.FileLoaded === true) {

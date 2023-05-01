@@ -15,9 +15,23 @@ a {
 
 /* Escape game related */
 
-#errinfo {
+#info {
 	background-color: green;
 	border-left: 10px solid lightgreen;
+	padding-top: 10px;
+	padding-bottom: 10px;
+	padding-left: 20px;
+}
+#warning {
+	background-color: darkorange;
+	border-left: 10px solid orange;
+	padding-top: 10px;
+	padding-bottom: 10px;
+	padding-left: 20px;
+}
+#errinfo {
+	background-color: darkred;
+	border-left: 10px solid red;
 	padding-top: 10px;
 	padding-bottom: 10px;
 	padding-left: 20px;

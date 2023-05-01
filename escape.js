@@ -16,12 +16,12 @@ function MainMenu() {
 	cvs.clear("purple");
 	AllowedToPause = false;
 	
-	//set up key presses
+	//key buttons activation
 	window.addEventListener("keydown", (event) => {
 		if(event.key == "Escape") {
 			Pause(cvs);
 		}
-	});
+	});	
 
 	//main menu
 	
@@ -60,7 +60,7 @@ function PlayMenu() {
 	cvs.setnewfont("Arial, FreeSans", "32");
 	let buttonNew = new Button(50, 130, 300, 100, 25, "New Game", "canvas_container");
 	let buttonLoad = new Button(350, 130, 300, 100, 25, "Load Game", "canvas_container");
-	let buttonBack = new Button(650, 130, 300, 100, 25, "Back", "canvas_container");
+	let buttonBack = new Button(650, 130, 300, 100, 25, "Back to Menu", "canvas_container");
 	
 	let thisInterval = window.setInterval(() => {
 		if(Load.FileLoaded === true) {

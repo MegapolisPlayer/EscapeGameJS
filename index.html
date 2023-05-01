@@ -9,30 +9,42 @@
   	<meta name="keywords" content="escape game, olomouc, poland, slovak, separatism, megapolisplayer, kohoutgd, ">
  	<meta name="author" content="Martin/MegapolisPlayer">
  	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	
 	<link rel="icon" type="image/x-icon" href="res/Icon.png">
     <link rel="stylesheet" href="./escape.css">
 </head>
 <body>
-    <div id="info">
-    <h>Escape from the Olomouc Region</h><br>
-    <p>
-	Rewritten in JavaScript because I got frustrated with Scratch. - martin<br>
-	<div id="errinfo">
-	<b>Purple means loading - please remain patient. If you suspect something is wrong, press F12,
-	go to the "Console" tab and check the error messages!</b>
-	</div>	
-	</p>
-    </div>
-    <div id="canvas_container">
-        <canvas id="EscapeCanvas" style="border:1px solid #000000"></canvas>
-        <script src="./package.js"></script>
-    </div>
-    <div id="credits">
-        <p>
-            Check out the code <a href="https://github.com/MegapolisPlayer/EscapeGameJS">here.</a><br>
-            Website code <a href="https://github.com/MegapolisPlayer/MegapolisPlayer.github.io">here.</a><br>
-            by Martin/MegapolisPlayer with a bit of help from Jiri M./KohoutGD 2023<br>
-        </p>
+	<div id="top">
+		<div id="infoheader">
+			<h>Escape from the Olomouc Region</h><br>
+			<p>
+				Rewritten in JavaScript because I got frustrated with Scratch. - martin<br>
+				<div id="info">
+					<b>The purple background means that the game is loading images. This shouldn't take more than 10s.</b>
+				</div>	
+				<div id="warning">
+					<b>Copyrighted materials (music by Kevin MacLeod) used.</b>
+				</div>	
+				<div id="errinfo">
+					<b>Photosensitivity warning: Purple flashes ranging from <5ms to >1s may occur during loading.</b>
+				</div>	
+			</p>
+		</div>
+	</div>
+	<div id="game">
+		<div id="canvas_container">
+		    <canvas id="EscapeCanvas" style="border:1px solid #000000"></canvas>
+		    <script src="./package.js"></script>
+		</div>
+		<div id="credits">
+		    <p>
+		        Check out the code <a href="https://github.com/MegapolisPlayer/EscapeGameJS">here.</a><br>
+		        Website code <a href="https://github.com/MegapolisPlayer/MegapolisPlayer.github.io">here.</a><br>
+		        by Martin/MegapolisPlayer with a bit of help from Jiri M./KohoutGD 2023<br>
+		    </p>
+		</div>
+	</div>
+	<div id="rant">
 		<h>Rant about Scratch by Martin</h>
 		<p>
             Don't get me wrong, Scratch is a wonderful way to teach children how to
@@ -64,13 +76,19 @@
 			In fairness though, Scratch is really a great tool for teaching young kids the basics of algorithms
 			(if statements, for loops, cycles, variables...) and such but it just isn't designed for anything more complex.<br>
 		</p>
-		<p>
-			<h>Resources</h>
-			<ul>
-				<li>QR Code</li>		
-			</ul>
-			<img src="res/qr.png" width=500px height=500px>
-		</p>
+	</div>
+	<div id="resources"></div>
+	<p>
+		<h>Public Resources</h>
+		<ul>
+			<li>QR Code</li>
+			<li>Icon</li>		
+		</ul>
+		<img src="res/qr.png" width=500px height=500px>
+		<img src="res/Icon.png" width=500px height=500px>
+	</p>
     </div>
+	<a href="#top">Jump to top</a><br>
+	<a href="#game">Jump to game</a><br>
 </body>
 </html>

@@ -11,12 +11,11 @@ let hnm_Locations = [];
 let hnm_AmountLoadedImages = 0;
 
 function HraniceNaMoraveImageLoaded() {
-	console.log("hnm img load");
 	hnm_AmountLoadedImages += 1;
 }
 
 function HraniceNaMoraveLoad(canvas, calledbysetstate = false) {
-	cvs.clear("purple");
+	canvas.clear("purple");
 	locationId = 1;
 	for(let Id = 0; Id < 5; Id++) {
 		hnm_Locations.push(new Image());

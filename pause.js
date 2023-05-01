@@ -134,13 +134,6 @@ function SetStateFile(filecontent, canvas) {
 	PauseButton = new Arrow(10, 10, 50, 50, ArrowDirections.Pause, null);
 	PauseButton.button.addEventListener("click", () => {
 		Pause(canvas);
-	});	
-	
-	//key buttons activation
-	window.addEventListener("keydown", (event) => {
-		if(event.key == "Escape") {
-			Pause(canvas);
-		}
 	});		
 	
 	//image loading

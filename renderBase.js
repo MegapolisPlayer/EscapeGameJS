@@ -224,6 +224,16 @@ class Arrow {
 	setCallback(callback) {
 		this.button.setAttribute("onclick", callback);
 	}
+	newOffset(newxo, newyo) {
+		this.xoffset = newxo;
+		this.yoffset = newyo;
+	}
+	newXOffset(newxo) {
+		this.xoffset = newxo;
+	}
+	newYOffset(newyo) {
+		this.yoffset = newyo;
+	}
 	//image id of type ArrowDirections - set canvasobj to null if don't want to draw immediately
 	constructor(xoffset, yoffset, width, height, imageId, canvasobj) {
 		this.button = document.createElement("button");
