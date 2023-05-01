@@ -144,6 +144,7 @@ function SetStateFile(filecontent, canvas) {
 			let thisInterval = window.setInterval(() => {
 				if(hnm_AmountLoadedImages === 5) {
 					clearInterval(thisInterval);
+					AllowedToPause = true;
 					SetState(canvas);
 				}
 			}, 100);
