@@ -11,6 +11,7 @@ let hnm_Locations = [];
 let hnm_AmountLoadedImages = 0;
 
 function HraniceNaMoraveImageLoaded() {
+	console.log("hnm img load");
 	hnm_AmountLoadedImages += 1;
 }
 
@@ -26,7 +27,14 @@ function HraniceNaMoraveLoad(canvas, calledbysetstate = false) {
 	hnm_Locations[2].src = "res/hnm/nadrazi.png";
 	hnm_Locations[3].src = "res/hnm/nastupiste.png";
 	hnm_Locations[4].src = "res/hnm/restaurace.png";
+	
+	ap.playTrack(2);
+	
 	if(calledbysetstate !== true) {
+		//if called by load and setstatefile -> setstatefile adds pause button, skip dialogue
+		PauseButton.button.addEventListener("click", () => {
+			Pause(canvas);
+		});	
 		HraniceNaMorave(canvas);
 	}
 }
@@ -37,12 +45,6 @@ function HraniceNaMorave(canvas) {
 		return;
     }
     console.log("Hranice na Morave START "+hnm_AmountLoadedImages);
-	
-	ap.playTrack(2);
-
-	PauseButton.button.addEventListener("click", () => {
-		Pause(canvas);
-	});	
 	
 	canvas.clear("purple");
 	canvas.image(hnm_Locations[0], 0, 0, canvas.canvas.width, canvas.canvas.height);
@@ -156,7 +158,8 @@ function HraniceNaMoraveNastupiste(canvas) {
     	HraniceNaMoraveNadrazi(canvas);
 	});
 	canvas.image(hnm_Locations[3], 0, 0, canvas.canvas.width, canvas.canvas.height);
-	chr.draw(550, 250, 0.35, canvas);
+	chr.draw(700, 260, 0.35, canvas);
+	traindriver.draw(500, 250, 0.35, canvas);
 	ArrowToNadrazi.draw(canvas);
 	PauseButton.draw(canvas);
 	drawMoneyCount(canvas);
@@ -181,5 +184,5 @@ function HraniceNaMoraveRestaurace(canvas) {
 
 function HraniceNaMoraveRestauraceJob(canvas) {
 	console.log("hnm restaurace brig");
-	
+	//click on cook
 }

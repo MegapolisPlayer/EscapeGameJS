@@ -38,3 +38,4 @@ function SettingsButtonRegister(canvasobj) {
 	console.log("Registered SETTINGS Button press!");
 	Settings(canvasobj);
 }
+

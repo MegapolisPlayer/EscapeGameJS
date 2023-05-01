@@ -342,6 +342,7 @@ class Character {
 };
 let chr = new Character("res/Character.png");
 let cook = new Character("res/Cook.png");
+let traindriver = new Character("res/TrainDriver.png");
 
 class Dialogue {
 	constructor() {
@@ -351,6 +352,7 @@ class Dialogue {
 	}
 	begin(canvasobj) {
 		this.canvas_info = canvasobj;
+		AllowedToPause = false;
 	}
 	makeBox() {
 		this.canvas_info.setlinethickness(5);
@@ -383,6 +385,7 @@ class Dialogue {
 		this.canvas_info;
 		this.counter = 0;
 		this.can_proceed = false;
+		AllowedToPause = true;
 	}
 };
 let SettingsValues = {
@@ -425,6 +428,7 @@ function SettingsButtonRegister(canvasobj) {
 	console.log("Registered SETTINGS Button press!");
 	Settings(canvasobj);
 }
+
 function Credits(canvasobj) {
 	canvasobj.setnewcolor("purple");
 	canvasobj.box(0, 0, canvasobj.canvas.width, canvasobj.canvas.height);
@@ -448,6 +452,7 @@ let hnm_Locations = [];
 let hnm_AmountLoadedImages = 0;
 
 function HraniceNaMoraveImageLoaded() {
+	console.log("hnm img load");
 	hnm_AmountLoadedImages += 1;
 }
 
@@ -463,7 +468,14 @@ function HraniceNaMoraveLoad(canvas, calledbysetstate = false) {
 	hnm_Locations[2].src = "res/hnm/nadrazi.png";
 	hnm_Locations[3].src = "res/hnm/nastupiste.png";
 	hnm_Locations[4].src = "res/hnm/restaurace.png";
+	
+	ap.playTrack(2);
+	
 	if(calledbysetstate !== true) {
+		//if called by load and setstatefile -> setstatefile adds pause button, skip dialogue
+		PauseButton.button.addEventListener("click", () => {
+			Pause(canvas);
+		});	
 		HraniceNaMorave(canvas);
 	}
 }
@@ -474,12 +486,6 @@ function HraniceNaMorave(canvas) {
 		return;
     }
     console.log("Hranice na Morave START "+hnm_AmountLoadedImages);
-	
-	ap.playTrack(2);
-
-	PauseButton.button.addEventListener("click", () => {
-		Pause(canvas);
-	});	
 	
 	canvas.clear("purple");
 	canvas.image(hnm_Locations[0], 0, 0, canvas.canvas.width, canvas.canvas.height);
@@ -593,7 +599,8 @@ function HraniceNaMoraveNastupiste(canvas) {
     	HraniceNaMoraveNadrazi(canvas);
 	});
 	canvas.image(hnm_Locations[3], 0, 0, canvas.canvas.width, canvas.canvas.height);
-	chr.draw(550, 250, 0.35, canvas);
+	chr.draw(700, 260, 0.35, canvas);
+	traindriver.draw(500, 250, 0.35, canvas);
 	ArrowToNadrazi.draw(canvas);
 	PauseButton.draw(canvas);
 	drawMoneyCount(canvas);
@@ -618,12 +625,21 @@ function HraniceNaMoraveRestaurace(canvas) {
 
 function HraniceNaMoraveRestauraceJob(canvas) {
 	console.log("hnm restaurace brig");
-	
+	//click on cook
 }
 let GamePaused = false;
 let AllowedToPause = true;
 
+function deleteCanvasInputElems() {
+	let inputElems = document.getElementsByClassName("CanvasInputElement");
+	while(inputElems[0]) {
+   		inputElems[0].parentNode.removeChild(inputElems[0]);
+	}
+}
+
 function SetState(canvasobj) {
+	deleteCanvasInputElems();
+	PauseButton.append(canvasobj);
 	switch(locationId) {
 		case 1:
 			switch(localLocationId) {
@@ -724,12 +740,8 @@ function Pause(canvasobj) {
 	canvasobj.setnewfont("Arial, FreeSans", "48");
 }
 
-function SetStateFile(filecontent, canvas) {	
-	let Children = document.getElementsByClassName("CanvasInputElement");
-
-	while(Children[0]) {
-   		Children[0].parentNode.removeChild(Children[0]);
-	}
+function SetStateFile(filecontent, canvas) {
+	GamePaused = false;
 	
 	canvas.clear("purple");
 
@@ -748,7 +760,7 @@ function SetStateFile(filecontent, canvas) {
 	UpdateSettingsValues();
 	
 	//pause button
-	PauseButton.append(canvas);
+	PauseButton = new Arrow(10, 10, 50, 50, ArrowDirections.Pause, null);
 	PauseButton.button.addEventListener("click", () => {
 		Pause(canvas);
 	});	
@@ -763,6 +775,7 @@ function SetStateFile(filecontent, canvas) {
 	//image loading
 	switch(locationId) {
 		case 1:
+			hnm_AmountLoadedImages = 0;
 			HraniceNaMoraveLoad(canvas, true);
 			let thisInterval = window.setInterval(() => {
 				if(hnm_AmountLoadedImages === 5) {
@@ -832,6 +845,17 @@ let mainMenuButtons = [];
 
 function MainMenu() {
 	cvs.clear("purple");
+	AllowedToPause = false;
+	
+	//set up key presses
+	window.addEventListener("keydown", (event) => {
+		if(event.key == "Escape") {
+			Pause(cvs);
+		}
+	});
+
+	//main menu
+	
 	cvs.setnewfont("Arial, FreeSans", "48", "bold");
 	
 	mainMenuButtons.push(new Button(0,   400, 150, 100, 25, "Enable audio", "canvas_container"));
@@ -857,7 +881,8 @@ function MainMenu() {
 //play menu
 
 function PlayMenu() {
-	//cvs.clear("purple");
+	cvs.clear("purple");
+	
 	cvs.image(MainMenuImage, 0, 0, cvs.canvas.width, cvs.canvas.height);
 	cvs.setnewcolor("#333399");
 	cvs.setnewfont("Arial, FreeSans", "48", "bold");
@@ -941,12 +966,7 @@ function MapScene() {
 }
 function StartMainGame(arrowobj) {
     arrowobj.deleteButton();
-	AllowedToPause = false;
-	window.addEventListener("keydown", (event) => {
-		if(event.key == "Escape") {
-			Pause(cvs);
-		}
-	});	
+	AllowedToPause = false;	
     HraniceNaMoraveLoad(cvs);
 }
 

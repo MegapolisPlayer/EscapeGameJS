@@ -1,7 +1,16 @@
 let GamePaused = false;
 let AllowedToPause = true;
 
+function deleteCanvasInputElems() {
+	let inputElems = document.getElementsByClassName("CanvasInputElement");
+	while(inputElems[0]) {
+   		inputElems[0].parentNode.removeChild(inputElems[0]);
+	}
+}
+
 function SetState(canvasobj) {
+	deleteCanvasInputElems();
+	PauseButton.append(canvasobj);
 	switch(locationId) {
 		case 1:
 			switch(localLocationId) {
@@ -92,7 +101,7 @@ function Pause(canvasobj) {
 		Save(locationId, localLocationId, SettingsValues.Difficulty, MoneyCount);
 	});
 	Pause.buttonLoad.button.addEventListener("click", (event) => {
-		GamePaused = false;
+		Load(canvasobj);
 	});
 	Pause.buttonQuit.button.addEventListener("click", (event) => {
 		location.reload();
@@ -102,12 +111,8 @@ function Pause(canvasobj) {
 	canvasobj.setnewfont("Arial, FreeSans", "48");
 }
 
-function SetStateFile(filecontent, canvas) {	
-	let Children = document.getElementsByClassName("CanvasInputElement");
-
-	while(Children[0]) {
-   		Children[0].parentNode.removeChild(Children[0]);
-	}
+function SetStateFile(filecontent, canvas) {
+	GamePaused = false;
 	
 	canvas.clear("purple");
 
@@ -126,7 +131,7 @@ function SetStateFile(filecontent, canvas) {
 	UpdateSettingsValues();
 	
 	//pause button
-	PauseButton.append(canvas);
+	PauseButton = new Arrow(10, 10, 50, 50, ArrowDirections.Pause, null);
 	PauseButton.button.addEventListener("click", () => {
 		Pause(canvas);
 	});	
@@ -141,6 +146,7 @@ function SetStateFile(filecontent, canvas) {
 	//image loading
 	switch(locationId) {
 		case 1:
+			hnm_AmountLoadedImages = 0;
 			HraniceNaMoraveLoad(canvas, true);
 			let thisInterval = window.setInterval(() => {
 				if(hnm_AmountLoadedImages === 5) {

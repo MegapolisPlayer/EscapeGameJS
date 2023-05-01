@@ -14,6 +14,7 @@ class Character {
 };
 let chr = new Character("res/Character.png");
 let cook = new Character("res/Cook.png");
+let traindriver = new Character("res/TrainDriver.png");
 
 class Dialogue {
 	constructor() {
@@ -23,6 +24,7 @@ class Dialogue {
 	}
 	begin(canvasobj) {
 		this.canvas_info = canvasobj;
+		AllowedToPause = false;
 	}
 	makeBox() {
 		this.canvas_info.setlinethickness(5);
@@ -55,5 +57,6 @@ class Dialogue {
 		this.canvas_info;
 		this.counter = 0;
 		this.can_proceed = false;
+		AllowedToPause = true;
 	}
 };

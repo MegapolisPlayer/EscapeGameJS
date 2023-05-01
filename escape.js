@@ -14,6 +14,17 @@ let mainMenuButtons = [];
 
 function MainMenu() {
 	cvs.clear("purple");
+	AllowedToPause = false;
+	
+	//set up key presses
+	window.addEventListener("keydown", (event) => {
+		if(event.key == "Escape") {
+			Pause(cvs);
+		}
+	});
+
+	//main menu
+	
 	cvs.setnewfont("Arial, FreeSans", "48", "bold");
 	
 	mainMenuButtons.push(new Button(0,   400, 150, 100, 25, "Enable audio", "canvas_container"));
@@ -39,7 +50,8 @@ function MainMenu() {
 //play menu
 
 function PlayMenu() {
-	//cvs.clear("purple");
+	cvs.clear("purple");
+	
 	cvs.image(MainMenuImage, 0, 0, cvs.canvas.width, cvs.canvas.height);
 	cvs.setnewcolor("#333399");
 	cvs.setnewfont("Arial, FreeSans", "48", "bold");
@@ -123,12 +135,7 @@ function MapScene() {
 }
 function StartMainGame(arrowobj) {
     arrowobj.deleteButton();
-	AllowedToPause = false;
-	window.addEventListener("keydown", (event) => {
-		if(event.key == "Escape") {
-			Pause(cvs);
-		}
-	});	
+	AllowedToPause = false;	
     HraniceNaMoraveLoad(cvs);
 }
 
