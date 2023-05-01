@@ -86,20 +86,6 @@ class Canvas {
         this.context.fillRect(0, 0, this.canvas.width, this.canvas.height);
         this.context.fillStyle = this.color;
     }
-	loadingMsg() {
-		this.clear("purple");
-		
-		let fontstorage = this.context.font;
-		let colorstorage = this.context.fillStyle;
-		
-		this.setnewfont("Arial, FreeSans", "72", "bold");
-		this.setnewcolor("#ffffff");
-		
-		this.text("Loading", 50, 50);
-		
-		this.context.font = fontstorage;
-		this.context.fillStyle = colorstorage;
-	}
 }
 
 
