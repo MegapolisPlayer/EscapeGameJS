@@ -15,7 +15,7 @@ function HraniceNaMoraveImageLoaded() {
 }
 
 function HraniceNaMoraveLoad(canvas, calledbysetstate = false) {
-	canvas.clear("purple");
+	canvas.loadingMsg();
 	locationId = 1;
 	for(let Id = 0; Id < 5; Id++) {
 		hnm_Locations.push(new Image());
@@ -45,7 +45,7 @@ function HraniceNaMorave(canvas) {
     }
     console.log("Hranice na Morave START "+hnm_AmountLoadedImages);
 	
-	canvas.clear("purple");
+	canvas.loadingMsg();
 	canvas.image(hnm_Locations[0], 0, 0, canvas.canvas.width, canvas.canvas.height);
 	chr.draw(600, 100, 0.65, canvas);		
 	
@@ -88,7 +88,6 @@ function HraniceNaMoraveDomov(canvas) {
 function HraniceNaMoraveNamesti(canvas) {
 	console.log("hnm namesti");
 	localLocationId = 1;
-	canvas.clear("purple");
 	let ArrowToDomov = new Arrow(300, 400, 100, 100, ArrowDirections.Left, canvas);
 	let ArrowToNadrazi = new Arrow(700, 400, 100, 100, ArrowDirections.Right, canvas);
 	ArrowToDomov.button.addEventListener("click", () => {
@@ -113,7 +112,6 @@ function HraniceNaMoraveNamesti(canvas) {
 function HraniceNaMoraveNadrazi(canvas) {
 	console.log("hnm nadrazi");
 	localLocationId = 2;
-	canvas.clear("purple");
 	let ArrowToNamesti = new Arrow(100, 400, 100, 100, ArrowDirections.Left, canvas);
 	let ArrowToNastupiste = new Arrow(300, 300, 100, 100, ArrowDirections.Up, canvas);
 	let ArrowToRestaurace = new Arrow(700, 400, 100, 100, ArrowDirections.Right, canvas);
@@ -149,7 +147,12 @@ function HraniceNaMoraveNadrazi(canvas) {
 function HraniceNaMoraveNastupiste(canvas) {
 	console.log("hnm nastupiste");
 	localLocationId = 3;
-	canvas.clear("purple");
+	traindriver.button.addEventListener("click", () => {
+		traindriver.deleteButton();
+		ArrowToNadrazi.deleteButton();
+		HraniceNaMoraveNastupisteDialogue(canvas);
+	});
+	traindriver.append(canvas);
 	let ArrowToNadrazi = new Arrow(700, 400, 100, 100, ArrowDirections.Down, canvas);
 	ArrowToNadrazi.button.addEventListener("click", () => {
 		if(GamePaused) { return; }
@@ -166,10 +169,16 @@ function HraniceNaMoraveNastupiste(canvas) {
 function HraniceNaMoraveRestaurace(canvas) {
 	console.log("hnm restaurace");
 	localLocationId = 4;
-	canvas.clear("purple");
+	cook.button.addEventListener("click", () => {
+		cook.deleteButton();
+		ArrowToNadrazi.deleteButton();
+		HraniceNaMoraveRestauraceJob(canvas);
+	});
+	cook.append(canvas);
 	let ArrowToNadrazi = new Arrow(500, 400, 100, 100, ArrowDirections.Down, canvas);
 	ArrowToNadrazi.button.addEventListener("click", () => {
 		if(GamePaused) { return; }
+		cook.deleteButton();
 		ArrowToNadrazi.deleteButton();
     	HraniceNaMoraveNadrazi(canvas);
 	});
@@ -182,6 +191,26 @@ function HraniceNaMoraveRestaurace(canvas) {
 }
 
 function HraniceNaMoraveRestauraceJob(canvas) {
-	console.log("hnm restaurace brig");
-	//click on cook
+	console.log("hnm restaurace job");
+	AllowedToPause = false;
+	let dialogue = new Dialogue();
+	dialogue.begin(canvas);
+	dialogue.makeBubble(0, "Our waiter just left us. Want to take up the position?");
+	dialogue.makeBubble(1, "I will pay you 500 CZK, deal?");
+	addMoney(500);
+	
+	let thisInterval = window.setInterval((dialogue, canvas) => {
+		if(dialogue.counter === 2) {
+			clearInterval(thisInterval);
+			dialogue.end();		
+			AllowedToPause = true;	
+			HraniceNaMoraveRestaurace(canvas);
+		}
+	}, 100, dialogue, canvas);
+}
+
+function HraniceNaMoraveNastupisteDialogue(canvas) {
+	console.log("hnm nastupiste dlg");
+	//AllowedToPause = false;
+	HraniceNaMoraveNastupiste(canvas);
 }

@@ -81,10 +81,25 @@ class Canvas {
     clear(newcolor = "empty") {
 		if(newcolor === "empty") {
 			this.context.fillRect(0, 0, this.canvas.width, this.canvas.height);
+			return;
 		}
         this.context.fillStyle = newcolor;
         this.context.fillRect(0, 0, this.canvas.width, this.canvas.height);
         this.context.fillStyle = this.color;
+    }
+	loadingMsg() {
+        let colorstorage = this.context.fillStyle;
+		let fontstorage = this.context.font;
+		
+		this.context.fillStyle = "purple";
+		this.context.fillRect(0, 0, this.canvas.width, this.canvas.height);
+		
+		this.context.fillStyle = "white";
+		this.context.font = "bold 48px Arial, FreeSans";
+		this.text("Loading...", 100, 100);
+		
+        this.context.fillStyle = colorstorage;
+		this.context.font = fontstorage;
     }
 }
 
@@ -170,7 +185,7 @@ ArrowImages[5].src = "res/pause.png";
 class Arrow {
     insert(canvasobj) {
 		if((typeof this.button === "undefined")) { 
-			console.error("Button: Object not initialized.");
+			console.error("Arrow: Object not initialized.");
 			return;
 		}
 		if((typeof canvasobj === "undefined")) { 
@@ -342,9 +357,29 @@ class Character {
 		this.image.src = source;
 		this.image.onload = this.setisloaded;
 		this.loaded = false;
+		this.button = document.createElement("button");
 	}
-	draw(xoffset, yoffset, scale, canvas) {
-		canvas.image(this.image, xoffset, yoffset, this.image.width * scale, this.image.height * scale);
+	draw(xoffset, yoffset, scale, canvasobj) {
+		canvasobj.image(this.image, xoffset, yoffset, this.image.width * scale, this.image.height * scale);
+		this.button.setAttribute("class", "CanvasArrow CanvasInputElement");  //canvas arrow -> transparency
+		this.button.style.setProperty("width", (this.image.width * scale)+"px");
+		this.button.style.setProperty("height", (this.image.height * scale)+"px");
+		this.button.style.setProperty("left", xoffset+"px");
+		this.button.style.setProperty("top", yoffset+"px");
+	}
+	append(canvasobj) {
+		if((typeof this.button === "undefined")) { 
+			console.error("Arrow: Object not initialized.");
+			return;
+		}
+		if((typeof canvasobj === "undefined")) { 
+			console.error("Arrow: Argument to function not provided.");
+			return;
+		}
+		canvasobj.canvas.parentElement.appendChild(this.button);
+	}
+	deleteButton() {
+		this.button.remove();
 	}
 	setisloaded() {
 		this.loaded = true;
@@ -398,10 +433,36 @@ class Dialogue {
 		AllowedToPause = true;
 	}
 };
+//Codes
+//Czech - CZ
+//English - EN
+//Russian - RU
+//German - DE
+
+let TranslatedText = [];
+let AmountTranslations = 0;
+
+function TranslationLoad(lang, lid) {
+	TranslatedText.push([]);
+	let req = new XMLHttpRequest();
+	req.open("GET", "lang/text"+lang+".txt");
+	req.onload = (event) => {
+		let splittext = req.responseText.split('\n');
+		for(let Id = 0; Id < splittext.length; Id++) {
+			if(splittext[Id].length !== 0) {
+				(TranslatedText[lid]).push(splittext[Id]);
+			}
+		}
+		AmountTranslations++;
+		console.log(TranslatedText[lid]);
+	}
+	req.send();
+}
 let SettingsValues = {
 	Difficulty:2, //1 - easy, 2 - medium, 3 - hard
 	ChanceOfInstantLoss: 5000, //chance if instant loss per day, easy = 10000, medium = 5000, hard = 1000
 	MoneyCostIncrease: 1, //value to multiply costs with, easy = 0,75, medium = 1, hard = 1,25
+	Language: 0 //0 - English, 1 - Czech, 2 - German, 3 - Russian
 };
 
 function randomNumber(maxRange) {
@@ -427,6 +488,18 @@ function DecrementDifficulty() {
 		SettingsValues.Difficulty = 3;
 	}
 }
+function IncrementLanguage() {
+	SettingsValues.Language++;
+	if(SettingsValues.Language === 4) {
+		SettingsValues.Language = 0;
+	}
+}
+function DecrementLanguage() {
+	SettingsValues.Language--;
+	if(SettingsValues.Language === -1) {
+		SettingsValues.Language = 3;
+	}
+}
 
 function UpdateSettingsValues() {
 	switch(SettingsValues.Difficulty) {
@@ -447,32 +520,55 @@ function UpdateSettingsValues() {
 
 function SettingsRenderDifficultyRelatedText(canvasobj) {
 	canvasobj.setnewcolor("#dddddd");
-	canvasobj.box(420, 0, 600, 250);
-	canvasobj.box(100, 110, 250, 50);
+	canvasobj.box(420, 150, 200, 120);
+	canvasobj.box(100, 110, 200, 50);
 	canvasobj.setnewcolor("#333399");
 	switch(SettingsValues.Difficulty) {
 		case 1:
-			canvasobj.text("Easy", 150, 150);
+			canvasobj.text(TranslatedText[SettingsValues.Language][11], 150, 150);
 			canvasobj.text("0.75", 450, 200);
-			canvasobj.text("10000", 450, 250);
+			canvasobj.text("1:10000", 450, 250);
 		break;
 		case 2:
-			canvasobj.text("Medium", 150, 150);
+			canvasobj.text(TranslatedText[SettingsValues.Language][12], 150, 150);
 			canvasobj.text("1.00", 450, 200);
-			canvasobj.text("5000", 450, 250);
+			canvasobj.text("1:5000", 450, 250);
 		break;
 		case 3:
-			canvasobj.text("Hard", 150, 150);
+			canvasobj.text(TranslatedText[SettingsValues.Language][13], 150, 150);
 			canvasobj.text("1.25", 450, 200);
-			canvasobj.text("1000", 450, 250);
+			canvasobj.text("1:1000", 450, 250);
+		break;
+	}
+}
+
+function SettingsRenderLanguageRelatedText(canvasobj) {
+	canvasobj.setnewcolor("#dddddd");
+	canvasobj.box(650, 110, 200, 50);
+	canvasobj.setnewcolor("#333399");
+	switch(SettingsValues.Language) {
+		case 0:
+			canvasobj.text("English", 700, 150);
+		break;
+		case 1:
+			canvasobj.text("Čeština", 700, 150);
+		break;
+		case 2:
+			canvasobj.text("Deutsch", 700, 150);
+		break;
+		case 3:
+			canvasobj.text("Русский", 700, 150);
 		break;
 	}
 }
 
 function Settings(canvasobj) {	
 	Settings.arrowPrev = new Arrow(50, 110, 50, 50, ArrowDirections.Left, null);
-	Settings.arrowNext = new Arrow(350, 110, 50, 50, ArrowDirections.Right, null);
-	Settings.buttonBack = new Button(50, 400, 300, 100, 25, "Back to Menu", "canvas_container");
+	Settings.arrowNext = new Arrow(300, 110, 50, 50, ArrowDirections.Right, null);
+	Settings.buttonBack = new Button(50, 400, 300, 100, 25, TranslatedText[SettingsValues.Language][9], "canvas_container");
+	//language
+	Settings.arrowPrevL = new Arrow(600, 110, 50, 50, ArrowDirections.Left, null);
+	Settings.arrowNextL = new Arrow(850, 110, 50, 50, ArrowDirections.Right, null);
 	
 	Settings.arrowPrev.button.addEventListener("click", (event) => {
 		DecrementDifficulty();
@@ -490,30 +586,49 @@ function Settings(canvasobj) {
 		Settings.buttonBack.deleteButton();
 		MainMenu();
 	});
+	Settings.arrowPrevL.button.addEventListener("click", (event) => {
+		DecrementLanguage();
+		SettingsRenderLanguageRelatedText(canvasobj);
+	});
+	Settings.arrowNextL.button.addEventListener("click", (event) => {
+		IncrementLanguage();
+		SettingsRenderLanguageRelatedText(canvasobj);
+	});
 	
 	Settings.arrowPrev.append(canvasobj);
 	Settings.arrowNext.append(canvasobj);
+	Settings.arrowPrevL.append(canvasobj);
+	Settings.arrowNextL.append(canvasobj);
 	
 	canvasobj.clear("#dddddd");
-	canvasobj.text("Settings", 50, 50);
-	
-	canvasobj.setnewfont("Arial, FreeSans", "32");
 	canvasobj.setfontweight("bold");
+	canvasobj.text(TranslatedText[SettingsValues.Language][2], 50, 50);
 	
-	canvasobj.text("Difficulty", 50, 100);
+	canvasobj.setnewfont("Arial, FreeSans", "32", "bold");
 	
-	canvasobj.text("Cost Multiplier: ", 50, 200);
-	canvasobj.text("Chance of loss per day: ", 50, 250);
+	canvasobj.text(TranslatedText[SettingsValues.Language][10], 50, 100);
+	
+	canvasobj.text(TranslatedText[SettingsValues.Language][14], 50, 200);
+	canvasobj.text(TranslatedText[SettingsValues.Language][15], 50, 250);
+
+	canvasobj.text(TranslatedText[SettingsValues.Language][19], 650, 50);
 
 	canvasobj.resetfontweight();
 
 	Settings.arrowPrev.draw(canvasobj);
 	Settings.arrowNext.draw(canvasobj);
+
+	Settings.arrowPrevL.draw(canvasobj);
+	Settings.arrowNextL.draw(canvasobj);
 	
 	UpdateSettingsValues();
 	SettingsRenderDifficultyRelatedText(canvasobj);		
+	SettingsRenderLanguageRelatedText(canvasobj);
 	
-	canvasobj.textml("The difficulty determines not only the above values,\nbut also the difficulty of the minigames.\nThe difficulty cannot be changed in-game.", 50, 300);	
+	canvasobj.textml(
+	"The difficulty determines not only the above values, but also the\n"+
+	"difficulty of the minigames. The difficulty or the language cannot\n"+
+	"be changed during the game. All values will be saved.", 50, 300);	
 }
 
 function SettingsButtonRegister(canvasobj) {
@@ -521,15 +636,22 @@ function SettingsButtonRegister(canvasobj) {
 	Settings(canvasobj);
 }
 
+let finalCreditsImage = new Image();
+
 function Credits(canvasobj) {
-	canvasobj.setnewcolor("purple");
-	canvasobj.box(0, 0, canvasobj.canvas.width, canvasobj.canvas.height);
-	//images of katowice and stuff, music = waltz vivace!
+	ap.playTrack(9); //waltz vivace
+	canvasobj.setnewcolor("#333399");
+	canvasobj.setnewfont("Arial, FreeSans", "48", "bold");
+	canvasobj.image(finalCreditsImage, 0, 0, canvasobj.canvas.width, canvasobj.canvas.height);
+	canvasobj.text(TranslatedText[SettingsValues.Language][0], 50, 50);	
+	canvasobj.resetfontweight();
 }
 
 function CreditsButtonRegister(canvasobj) {
 	console.log("Registered CREDITS Button press!");
-	Credits(canvasobj);
+	canvasobj.loadingMsg();
+	finalCreditsImage.src = "res/Credits.jpg";
+	finalCreditsImage.onload = Credits(canvasobj);
 }
 //global for all locations, HnM is just first
 
@@ -548,7 +670,7 @@ function HraniceNaMoraveImageLoaded() {
 }
 
 function HraniceNaMoraveLoad(canvas, calledbysetstate = false) {
-	canvas.clear("purple");
+	canvas.loadingMsg();
 	locationId = 1;
 	for(let Id = 0; Id < 5; Id++) {
 		hnm_Locations.push(new Image());
@@ -578,7 +700,7 @@ function HraniceNaMorave(canvas) {
     }
     console.log("Hranice na Morave START "+hnm_AmountLoadedImages);
 	
-	canvas.clear("purple");
+	canvas.loadingMsg();
 	canvas.image(hnm_Locations[0], 0, 0, canvas.canvas.width, canvas.canvas.height);
 	chr.draw(600, 100, 0.65, canvas);		
 	
@@ -621,7 +743,6 @@ function HraniceNaMoraveDomov(canvas) {
 function HraniceNaMoraveNamesti(canvas) {
 	console.log("hnm namesti");
 	localLocationId = 1;
-	canvas.clear("purple");
 	let ArrowToDomov = new Arrow(300, 400, 100, 100, ArrowDirections.Left, canvas);
 	let ArrowToNadrazi = new Arrow(700, 400, 100, 100, ArrowDirections.Right, canvas);
 	ArrowToDomov.button.addEventListener("click", () => {
@@ -646,7 +767,6 @@ function HraniceNaMoraveNamesti(canvas) {
 function HraniceNaMoraveNadrazi(canvas) {
 	console.log("hnm nadrazi");
 	localLocationId = 2;
-	canvas.clear("purple");
 	let ArrowToNamesti = new Arrow(100, 400, 100, 100, ArrowDirections.Left, canvas);
 	let ArrowToNastupiste = new Arrow(300, 300, 100, 100, ArrowDirections.Up, canvas);
 	let ArrowToRestaurace = new Arrow(700, 400, 100, 100, ArrowDirections.Right, canvas);
@@ -682,7 +802,12 @@ function HraniceNaMoraveNadrazi(canvas) {
 function HraniceNaMoraveNastupiste(canvas) {
 	console.log("hnm nastupiste");
 	localLocationId = 3;
-	canvas.clear("purple");
+	traindriver.button.addEventListener("click", () => {
+		traindriver.deleteButton();
+		ArrowToNadrazi.deleteButton();
+		HraniceNaMoraveNastupisteDialogue(canvas);
+	});
+	traindriver.append(canvas);
 	let ArrowToNadrazi = new Arrow(700, 400, 100, 100, ArrowDirections.Down, canvas);
 	ArrowToNadrazi.button.addEventListener("click", () => {
 		if(GamePaused) { return; }
@@ -699,10 +824,16 @@ function HraniceNaMoraveNastupiste(canvas) {
 function HraniceNaMoraveRestaurace(canvas) {
 	console.log("hnm restaurace");
 	localLocationId = 4;
-	canvas.clear("purple");
+	cook.button.addEventListener("click", () => {
+		cook.deleteButton();
+		ArrowToNadrazi.deleteButton();
+		HraniceNaMoraveRestauraceJob(canvas);
+	});
+	cook.append(canvas);
 	let ArrowToNadrazi = new Arrow(500, 400, 100, 100, ArrowDirections.Down, canvas);
 	ArrowToNadrazi.button.addEventListener("click", () => {
 		if(GamePaused) { return; }
+		cook.deleteButton();
 		ArrowToNadrazi.deleteButton();
     	HraniceNaMoraveNadrazi(canvas);
 	});
@@ -715,8 +846,28 @@ function HraniceNaMoraveRestaurace(canvas) {
 }
 
 function HraniceNaMoraveRestauraceJob(canvas) {
-	console.log("hnm restaurace brig");
-	//click on cook
+	console.log("hnm restaurace job");
+	AllowedToPause = false;
+	let dialogue = new Dialogue();
+	dialogue.begin(canvas);
+	dialogue.makeBubble(0, "Our waiter just left us. Want to take up the position?");
+	dialogue.makeBubble(1, "I will pay you 500 CZK, deal?");
+	addMoney(500);
+	
+	let thisInterval = window.setInterval((dialogue, canvas) => {
+		if(dialogue.counter === 2) {
+			clearInterval(thisInterval);
+			dialogue.end();		
+			AllowedToPause = true;	
+			HraniceNaMoraveRestaurace(canvas);
+		}
+	}, 100, dialogue, canvas);
+}
+
+function HraniceNaMoraveNastupisteDialogue(canvas) {
+	console.log("hnm nastupiste dlg");
+	//AllowedToPause = false;
+	HraniceNaMoraveNastupiste(canvas);
 }
 let GamePaused = false;
 let AllowedToPause = true;
@@ -806,24 +957,24 @@ function Pause(canvasobj) {
 	if(ap.allowed) { Pause.buttonAudio.changeText("Disable audio"); }
 	else { Pause.buttonAudio.changeText("Enable audio"); }
 	
-	Pause.buttonAudio.button.addEventListener("click", (event) => {
+	Pause.buttonAudio.button.addEventListener("click", () => {
 		ap.toggleSound();
 		if(ap.allowed) { Pause.buttonAudio.changeText("Disable audio"); }
 		else { Pause.buttonAudio.changeText("Enable audio"); }
 	});	
-	Pause.buttonRestart.button.addEventListener("click", (event) => {
+	Pause.buttonRestart.button.addEventListener("click", () => {
 		ap.resetTrack();
 	});
-	Pause.buttonCode.button.addEventListener("click", (event) => {
+	Pause.buttonCode.button.addEventListener("click", () => {
 		window.open("https://www.github.com/MegapolisPlayer/EscapeGameJS", "_blank");
 	});
-	Pause.buttonSave.button.addEventListener("click", (event) => {
+	Pause.buttonSave.button.addEventListener("click", () => {
 		Save(locationId, localLocationId, SettingsValues.Difficulty, MoneyCount);
 	});
-	Pause.buttonLoad.button.addEventListener("click", (event) => {
+	Pause.buttonLoad.button.addEventListener("click", () => {
 		Load(canvasobj);
 	});
-	Pause.buttonQuit.button.addEventListener("click", (event) => {
+	Pause.buttonQuit.button.addEventListener("click", () => {
 		location.reload();
 	});
 	
@@ -834,7 +985,7 @@ function Pause(canvasobj) {
 function SetStateFile(filecontent, canvas) {
 	GamePaused = false;
 	
-	canvas.clear("purple");
+	canvas.loadingMsg();
 
 	//info - location id, local location id, difficulty, money
 	let Data = filecontent.split(' ');
@@ -848,6 +999,7 @@ function SetStateFile(filecontent, canvas) {
 	locationId =                Number(Data[2]);	
 	localLocationId =           Number(Data[3]);	
 	MoneyCount =                Number(Data[4]);
+	SettingsValues.Language =   Number(Data[5]);
 	UpdateSettingsValues();
 	
 	//pause button
@@ -869,13 +1021,13 @@ function SetStateFile(filecontent, canvas) {
 				}
 			}, 100);
 		break;
-		
-		
 	}
 }
 
-function Save(locationId, localLocationId, difficulty, money) {
+function Save(locationId, localLocationId, difficulty, money, language) {
 	let finalizedSave = "eors1 ";
+	finalizedSave+=language;
+	finalizedSave+=" ";
 	finalizedSave+=difficulty;
 	finalizedSave+=" ";
 	finalizedSave+=locationId;
@@ -886,7 +1038,7 @@ function Save(locationId, localLocationId, difficulty, money) {
 	
 	let hiddenAddrElem = document.createElement('a');
     hiddenAddrElem.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(finalizedSave));
-    hiddenAddrElem.setAttribute('download', "save.eors");
+    hiddenAddrElem.setAttribute('download', "save.eors1");
     hiddenAddrElem.style.display = 'none';
 	
     document.body.appendChild(hiddenAddrElem);
@@ -896,11 +1048,10 @@ function Save(locationId, localLocationId, difficulty, money) {
 
 function Load(canvasobj) {
 	Load.FileLoaded = false;
-	
 	let hiddenInputElem = document.createElement("input");
 	hiddenInputElem.id="fileuploaded";
 	hiddenInputElem.type = "file";
-	hiddenInputElem.accept = ".eors";
+	hiddenInputElem.accept = ".eors1";
 	
 	hiddenInputElem.addEventListener("change", (event) => {
 		Load.FileLoaded = true;
@@ -924,30 +1075,45 @@ cvs.clear("purple");
 
 const MainMenuImage = new Image();
 MainMenuImage.src = "res/MainMenu.jpg";
-MainMenuImage.onload = MainMenu;
+MainMenuImage.onload = MainMenuSetup;
 
 let mainMenuButtons = [];
 
-function MainMenu() {
-	cvs.clear("purple");
+function MainMenuSetup() {
+	cvs.loadingMsg();
 	AllowedToPause = false;
+	//translations
 	
+	TranslationLoad("EN", 0);
+	TranslationLoad("CZ", 1);
+	TranslationLoad("DE", 2);
+	TranslationLoad("RU", 3);
+
 	//key buttons activation
 	window.addEventListener("keydown", (event) => {
 		if(event.key == "Escape") {
 			Pause(cvs);
 		}
 	});	
+	
+	let thisInterval = window.setInterval(() => {
+		if(AmountTranslations === 4) {
+			clearInterval(thisInterval);
+			MainMenu();
+		}
+	}, 100);
+}
 
+function MainMenu() {	
 	//main menu
 	
 	cvs.setnewfont("Arial, FreeSans", "48", "bold");
 	
-	mainMenuButtons.push(new Button(0,   400, 150, 100, 25, "Enable audio", "canvas_container"));
-	mainMenuButtons.push(new Button(150, 400, 150, 100, 25, "Restart track", "canvas_container"));
-	mainMenuButtons.push(new Button(600, 100, 300, 100, 50, "Play", "canvas_container"));
-	mainMenuButtons.push(new Button(600, 200, 300, 100, 50, "Settings", "canvas_container"));
-	mainMenuButtons.push(new Button(600, 300, 300, 100, 50, "Credits", "canvas_container"));
+	mainMenuButtons.push(new Button(0,   400, 150, 100, 25, TranslatedText[SettingsValues.Language][4], "canvas_container"));
+	mainMenuButtons.push(new Button(150, 400, 150, 100, 25, TranslatedText[SettingsValues.Language][6], "canvas_container"));
+	mainMenuButtons.push(new Button(600, 100, 300, 100, 50, TranslatedText[SettingsValues.Language][1], "canvas_container"));
+	mainMenuButtons.push(new Button(600, 200, 300, 100, 50, TranslatedText[SettingsValues.Language][2], "canvas_container"));
+	mainMenuButtons.push(new Button(600, 300, 300, 100, 50, TranslatedText[SettingsValues.Language][3], "canvas_container"));
 
 	mainMenuButtons[0].setCallback("AudioEnabler()");
 	mainMenuButtons[1].setCallback("ap.resetTrack()");
@@ -959,24 +1125,29 @@ function MainMenu() {
 	cvs.image(MainMenuImage, 0, 0, cvs.canvas.width, cvs.canvas.height);
 	chr.draw(300, 300, 0.3, cvs);	
 	cvs.setfontweight("bold");
-	cvs.text("Escape from the Olomouc Region", 50, 50);	
+	cvs.text(TranslatedText[SettingsValues.Language][0], 50, 50);	
 	cvs.resetfontweight();
+	cvs.setnewfont("Arial, FreeSans", "16");
+	cvs.setnewcolor("white");
+	cvs.text("build date 02/05/2023, prerelease version", 650, 492);
+	cvs.setnewcolor("#333399");
+	cvs.setnewfont("Arial, FreeSans", "48");
 }
 
 //play menu
 
 function PlayMenu() {
-	cvs.clear("purple");
+	cvs.loadingMsg();
 	
 	cvs.image(MainMenuImage, 0, 0, cvs.canvas.width, cvs.canvas.height);
 	cvs.setnewcolor("#333399");
 	cvs.setnewfont("Arial, FreeSans", "48", "bold");
-	cvs.text("Play", 50, 50);
+	cvs.text(TranslatedText[SettingsValues.Language][1], 50, 50);
 	
 	cvs.setnewfont("Arial, FreeSans", "32");
-	let buttonNew = new Button(50, 130, 300, 100, 25, "New Game", "canvas_container");
-	let buttonLoad = new Button(350, 130, 300, 100, 25, "Load Game", "canvas_container");
-	let buttonBack = new Button(650, 130, 300, 100, 25, "Back to Menu", "canvas_container");
+	let buttonNew = new Button(50, 130, 300, 100, 25, TranslatedText[SettingsValues.Language][7], "canvas_container");
+	let buttonLoad = new Button(350, 130, 300, 100, 25, TranslatedText[SettingsValues.Language][8], "canvas_container");
+	let buttonBack = new Button(650, 130, 300, 100, 25, TranslatedText[SettingsValues.Language][9], "canvas_container");
 	
 	let thisInterval = window.setInterval(() => {
 		if(Load.FileLoaded === true) {
@@ -1004,7 +1175,7 @@ function PlayMenu() {
 		buttonLoad.deleteButton();
 		buttonBack.deleteButton();
 		MainMenu();
-	});	
+	});
 }
 
 //game stuff
@@ -1015,7 +1186,7 @@ function Intro() {
 	cvs.clear("black");
     cvs.setnewcolor("white");
 	cvs.setnewfont("Arial, FreeSans", "48", "bold");
-	cvs.text("Backstory", 50, 50);
+	cvs.text(TranslatedText[SettingsValues.Language][21], 50, 50);
     cvs.setnewfont("Arial, FreeSans", "32");
     cvs.textml("It is the 1st of May 1997 and the Slovak minority has just\n"
                 +"declared independence from the young republic of Czechia.\n\n"
@@ -1033,7 +1204,7 @@ function Intro() {
 
 function MapSceneLoad(arrowobj) {
 	arrowobj.deleteButton();
-	cvs.clear("purple");
+	cvs.loadingMsg();
     const mapimage = new Image();
 	mapimage.src = "res/map1.png";
 	mapimage.onload = MapScene; 
@@ -1067,10 +1238,10 @@ function ButtonsRouter(buttonid) {
 			PlayMenu();
 		break;
 		case 1:
-			Settings(cvs);
+			SettingsButtonRegister(cvs);
 		break;
 		case 2:
-			Credits(cvs);
+			CreditsButtonRegister(cvs);
 		break;
 	}
 }
@@ -1080,10 +1251,10 @@ function ButtonsRouter(buttonid) {
 function AudioEnabler() {
 	ap.toggleSound();
 	if(ap.allowed) { 
-		mainMenuButtons[0].changeText("Disable audio");
+		mainMenuButtons[0].changeText(TranslatedText[SettingsValues.Language][5]);
 		ap.playTrack(0);
     }
 	else { 
-		mainMenuButtons[0].changeText("Enable audio");
+		mainMenuButtons[0].changeText(TranslatedText[SettingsValues.Language][4]);
 	 }
 }

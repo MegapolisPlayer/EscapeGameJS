@@ -1,0 +1,23 @@
+Útěk z Olomouckého Kraje
+Hrát
+Nastavení
+Titulky
+Zapnout zvuk
+Vypnout zvuk
+Restartovat skladbu
+Nová hra
+Načíst hru
+Zpátky
+Obtiížnost
+Lehké
+Střední
+Težké
+Násobitel ceny:
+Šance prohry za den:
+Obtížnost neurčuje pouze hodnoty vypsané výše, ale také obtížnost
+miniher. Obtížnost nebo jazyk není možné během hry změnít.
+Všechny hodnoty budou uloženy.
+Jazyk
+Pauzové menu
+Příběh
+Den

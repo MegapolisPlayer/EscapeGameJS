@@ -8,30 +8,45 @@ cvs.clear("purple");
 
 const MainMenuImage = new Image();
 MainMenuImage.src = "res/MainMenu.jpg";
-MainMenuImage.onload = MainMenu;
+MainMenuImage.onload = MainMenuSetup;
 
 let mainMenuButtons = [];
 
-function MainMenu() {
-	cvs.clear("purple");
+function MainMenuSetup() {
+	cvs.loadingMsg();
 	AllowedToPause = false;
+	//translations
 	
+	TranslationLoad("EN", 0);
+	TranslationLoad("CZ", 1);
+	TranslationLoad("DE", 2);
+	TranslationLoad("RU", 3);
+
 	//key buttons activation
 	window.addEventListener("keydown", (event) => {
 		if(event.key == "Escape") {
 			Pause(cvs);
 		}
 	});	
+	
+	let thisInterval = window.setInterval(() => {
+		if(AmountTranslations === 4) {
+			clearInterval(thisInterval);
+			MainMenu();
+		}
+	}, 100);
+}
 
+function MainMenu() {	
 	//main menu
 	
 	cvs.setnewfont("Arial, FreeSans", "48", "bold");
 	
-	mainMenuButtons.push(new Button(0,   400, 150, 100, 25, "Enable audio", "canvas_container"));
-	mainMenuButtons.push(new Button(150, 400, 150, 100, 25, "Restart track", "canvas_container"));
-	mainMenuButtons.push(new Button(600, 100, 300, 100, 50, "Play", "canvas_container"));
-	mainMenuButtons.push(new Button(600, 200, 300, 100, 50, "Settings", "canvas_container"));
-	mainMenuButtons.push(new Button(600, 300, 300, 100, 50, "Credits", "canvas_container"));
+	mainMenuButtons.push(new Button(0,   400, 150, 100, 25, TranslatedText[SettingsValues.Language][4], "canvas_container"));
+	mainMenuButtons.push(new Button(150, 400, 150, 100, 25, TranslatedText[SettingsValues.Language][6], "canvas_container"));
+	mainMenuButtons.push(new Button(600, 100, 300, 100, 50, TranslatedText[SettingsValues.Language][1], "canvas_container"));
+	mainMenuButtons.push(new Button(600, 200, 300, 100, 50, TranslatedText[SettingsValues.Language][2], "canvas_container"));
+	mainMenuButtons.push(new Button(600, 300, 300, 100, 50, TranslatedText[SettingsValues.Language][3], "canvas_container"));
 
 	mainMenuButtons[0].setCallback("AudioEnabler()");
 	mainMenuButtons[1].setCallback("ap.resetTrack()");
@@ -43,24 +58,29 @@ function MainMenu() {
 	cvs.image(MainMenuImage, 0, 0, cvs.canvas.width, cvs.canvas.height);
 	chr.draw(300, 300, 0.3, cvs);	
 	cvs.setfontweight("bold");
-	cvs.text("Escape from the Olomouc Region", 50, 50);	
+	cvs.text(TranslatedText[SettingsValues.Language][0], 50, 50);	
 	cvs.resetfontweight();
+	cvs.setnewfont("Arial, FreeSans", "16");
+	cvs.setnewcolor("white");
+	cvs.text("build date 02/05/2023, prerelease version", 650, 492);
+	cvs.setnewcolor("#333399");
+	cvs.setnewfont("Arial, FreeSans", "48");
 }
 
 //play menu
 
 function PlayMenu() {
-	cvs.clear("purple");
+	cvs.loadingMsg();
 	
 	cvs.image(MainMenuImage, 0, 0, cvs.canvas.width, cvs.canvas.height);
 	cvs.setnewcolor("#333399");
 	cvs.setnewfont("Arial, FreeSans", "48", "bold");
-	cvs.text("Play", 50, 50);
+	cvs.text(TranslatedText[SettingsValues.Language][1], 50, 50);
 	
 	cvs.setnewfont("Arial, FreeSans", "32");
-	let buttonNew = new Button(50, 130, 300, 100, 25, "New Game", "canvas_container");
-	let buttonLoad = new Button(350, 130, 300, 100, 25, "Load Game", "canvas_container");
-	let buttonBack = new Button(650, 130, 300, 100, 25, "Back to Menu", "canvas_container");
+	let buttonNew = new Button(50, 130, 300, 100, 25, TranslatedText[SettingsValues.Language][7], "canvas_container");
+	let buttonLoad = new Button(350, 130, 300, 100, 25, TranslatedText[SettingsValues.Language][8], "canvas_container");
+	let buttonBack = new Button(650, 130, 300, 100, 25, TranslatedText[SettingsValues.Language][9], "canvas_container");
 	
 	let thisInterval = window.setInterval(() => {
 		if(Load.FileLoaded === true) {
@@ -88,7 +108,7 @@ function PlayMenu() {
 		buttonLoad.deleteButton();
 		buttonBack.deleteButton();
 		MainMenu();
-	});	
+	});
 }
 
 //game stuff
@@ -99,7 +119,7 @@ function Intro() {
 	cvs.clear("black");
     cvs.setnewcolor("white");
 	cvs.setnewfont("Arial, FreeSans", "48", "bold");
-	cvs.text("Backstory", 50, 50);
+	cvs.text(TranslatedText[SettingsValues.Language][21], 50, 50);
     cvs.setnewfont("Arial, FreeSans", "32");
     cvs.textml("It is the 1st of May 1997 and the Slovak minority has just\n"
                 +"declared independence from the young republic of Czechia.\n\n"
@@ -117,7 +137,7 @@ function Intro() {
 
 function MapSceneLoad(arrowobj) {
 	arrowobj.deleteButton();
-	cvs.clear("purple");
+	cvs.loadingMsg();
     const mapimage = new Image();
 	mapimage.src = "res/map1.png";
 	mapimage.onload = MapScene; 
@@ -151,10 +171,10 @@ function ButtonsRouter(buttonid) {
 			PlayMenu();
 		break;
 		case 1:
-			Settings(cvs);
+			SettingsButtonRegister(cvs);
 		break;
 		case 2:
-			Credits(cvs);
+			CreditsButtonRegister(cvs);
 		break;
 	}
 }
@@ -164,10 +184,10 @@ function ButtonsRouter(buttonid) {
 function AudioEnabler() {
 	ap.toggleSound();
 	if(ap.allowed) { 
-		mainMenuButtons[0].changeText("Disable audio");
+		mainMenuButtons[0].changeText(TranslatedText[SettingsValues.Language][5]);
 		ap.playTrack(0);
     }
 	else { 
-		mainMenuButtons[0].changeText("Enable audio");
+		mainMenuButtons[0].changeText(TranslatedText[SettingsValues.Language][4]);
 	 }
 }

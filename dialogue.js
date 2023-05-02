@@ -4,9 +4,29 @@ class Character {
 		this.image.src = source;
 		this.image.onload = this.setisloaded;
 		this.loaded = false;
+		this.button = document.createElement("button");
 	}
-	draw(xoffset, yoffset, scale, canvas) {
-		canvas.image(this.image, xoffset, yoffset, this.image.width * scale, this.image.height * scale);
+	draw(xoffset, yoffset, scale, canvasobj) {
+		canvasobj.image(this.image, xoffset, yoffset, this.image.width * scale, this.image.height * scale);
+		this.button.setAttribute("class", "CanvasArrow CanvasInputElement");  //canvas arrow -> transparency
+		this.button.style.setProperty("width", (this.image.width * scale)+"px");
+		this.button.style.setProperty("height", (this.image.height * scale)+"px");
+		this.button.style.setProperty("left", xoffset+"px");
+		this.button.style.setProperty("top", yoffset+"px");
+	}
+	append(canvasobj) {
+		if((typeof this.button === "undefined")) { 
+			console.error("Arrow: Object not initialized.");
+			return;
+		}
+		if((typeof canvasobj === "undefined")) { 
+			console.error("Arrow: Argument to function not provided.");
+			return;
+		}
+		canvasobj.canvas.parentElement.appendChild(this.button);
+	}
+	deleteButton() {
+		this.button.remove();
 	}
 	setisloaded() {
 		this.loaded = true;

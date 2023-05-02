@@ -86,24 +86,24 @@ function Pause(canvasobj) {
 	if(ap.allowed) { Pause.buttonAudio.changeText("Disable audio"); }
 	else { Pause.buttonAudio.changeText("Enable audio"); }
 	
-	Pause.buttonAudio.button.addEventListener("click", (event) => {
+	Pause.buttonAudio.button.addEventListener("click", () => {
 		ap.toggleSound();
 		if(ap.allowed) { Pause.buttonAudio.changeText("Disable audio"); }
 		else { Pause.buttonAudio.changeText("Enable audio"); }
 	});	
-	Pause.buttonRestart.button.addEventListener("click", (event) => {
+	Pause.buttonRestart.button.addEventListener("click", () => {
 		ap.resetTrack();
 	});
-	Pause.buttonCode.button.addEventListener("click", (event) => {
+	Pause.buttonCode.button.addEventListener("click", () => {
 		window.open("https://www.github.com/MegapolisPlayer/EscapeGameJS", "_blank");
 	});
-	Pause.buttonSave.button.addEventListener("click", (event) => {
+	Pause.buttonSave.button.addEventListener("click", () => {
 		Save(locationId, localLocationId, SettingsValues.Difficulty, MoneyCount);
 	});
-	Pause.buttonLoad.button.addEventListener("click", (event) => {
+	Pause.buttonLoad.button.addEventListener("click", () => {
 		Load(canvasobj);
 	});
-	Pause.buttonQuit.button.addEventListener("click", (event) => {
+	Pause.buttonQuit.button.addEventListener("click", () => {
 		location.reload();
 	});
 	
@@ -114,7 +114,7 @@ function Pause(canvasobj) {
 function SetStateFile(filecontent, canvas) {
 	GamePaused = false;
 	
-	canvas.clear("purple");
+	canvas.loadingMsg();
 
 	//info - location id, local location id, difficulty, money
 	let Data = filecontent.split(' ');
@@ -128,6 +128,7 @@ function SetStateFile(filecontent, canvas) {
 	locationId =                Number(Data[2]);	
 	localLocationId =           Number(Data[3]);	
 	MoneyCount =                Number(Data[4]);
+	SettingsValues.Language =   Number(Data[5]);
 	UpdateSettingsValues();
 	
 	//pause button
@@ -149,13 +150,13 @@ function SetStateFile(filecontent, canvas) {
 				}
 			}, 100);
 		break;
-		
-		
 	}
 }
 
-function Save(locationId, localLocationId, difficulty, money) {
+function Save(locationId, localLocationId, difficulty, money, language) {
 	let finalizedSave = "eors1 ";
+	finalizedSave+=language;
+	finalizedSave+=" ";
 	finalizedSave+=difficulty;
 	finalizedSave+=" ";
 	finalizedSave+=locationId;
@@ -166,7 +167,7 @@ function Save(locationId, localLocationId, difficulty, money) {
 	
 	let hiddenAddrElem = document.createElement('a');
     hiddenAddrElem.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(finalizedSave));
-    hiddenAddrElem.setAttribute('download', "save.eors");
+    hiddenAddrElem.setAttribute('download', "save.eors1");
     hiddenAddrElem.style.display = 'none';
 	
     document.body.appendChild(hiddenAddrElem);
@@ -176,11 +177,10 @@ function Save(locationId, localLocationId, difficulty, money) {
 
 function Load(canvasobj) {
 	Load.FileLoaded = false;
-	
 	let hiddenInputElem = document.createElement("input");
 	hiddenInputElem.id="fileuploaded";
 	hiddenInputElem.type = "file";
-	hiddenInputElem.accept = ".eors";
+	hiddenInputElem.accept = ".eors1";
 	
 	hiddenInputElem.addEventListener("change", (event) => {
 		Load.FileLoaded = true;

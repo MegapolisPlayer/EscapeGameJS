@@ -1,0 +1,23 @@
+Escape from Olomouc Region
+Play
+Settings
+Credits
+Enable audio
+Disable audio
+Restart track
+New Game
+Load Game
+Back to Menu
+Difficulty
+Easy
+Medium
+Hard
+Cost multiplier:
+Chance of loss per day:
+The difficulty determines not only the above values, but also the
+difficulty of the minigames. The difficulty or the language cannot
+be changed during the game. All values will be saved.
+Language
+Game paused
+Backstory
+Day

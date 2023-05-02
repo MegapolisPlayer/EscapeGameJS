@@ -81,10 +81,25 @@ class Canvas {
     clear(newcolor = "empty") {
 		if(newcolor === "empty") {
 			this.context.fillRect(0, 0, this.canvas.width, this.canvas.height);
+			return;
 		}
         this.context.fillStyle = newcolor;
         this.context.fillRect(0, 0, this.canvas.width, this.canvas.height);
         this.context.fillStyle = this.color;
+    }
+	loadingMsg() {
+        let colorstorage = this.context.fillStyle;
+		let fontstorage = this.context.font;
+		
+		this.context.fillStyle = "purple";
+		this.context.fillRect(0, 0, this.canvas.width, this.canvas.height);
+		
+		this.context.fillStyle = "white";
+		this.context.font = "bold 48px Arial, FreeSans";
+		this.text("Loading...", 100, 100);
+		
+        this.context.fillStyle = colorstorage;
+		this.context.font = fontstorage;
     }
 }
 
@@ -170,7 +185,7 @@ ArrowImages[5].src = "res/pause.png";
 class Arrow {
     insert(canvasobj) {
 		if((typeof this.button === "undefined")) { 
-			console.error("Button: Object not initialized.");
+			console.error("Arrow: Object not initialized.");
 			return;
 		}
 		if((typeof canvasobj === "undefined")) { 

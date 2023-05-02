@@ -9,6 +9,7 @@ cp /dev/null "package.js"
 cat "renderBase.js" >> "package.js"
 cat "money.js" >> "package.js"
 cat "dialogue.js" >> "package.js"
+cat "translation.js" >> "package.js"
 
 #gui files
 cat "soundmgr.js" >> "package.js"
