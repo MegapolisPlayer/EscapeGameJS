@@ -5,6 +5,7 @@ class Character {
 		this.image.onload = this.setisloaded;
 		this.loaded = false;
 		this.button = document.createElement("button");
+		this.evtlistener = null;
 	}
 	draw(xoffset, yoffset, scale, canvasobj) {
 		canvasobj.image(this.image, xoffset, yoffset, this.image.width * scale, this.image.height * scale);
@@ -24,6 +25,9 @@ class Character {
 			return;
 		}
 		canvasobj.canvas.parentElement.appendChild(this.button);
+	}
+	deleteListener() {
+		this.button.removeEventListener("click", this.evtlistener);
 	}
 	deleteButton() {
 		this.button.remove();
@@ -69,6 +73,7 @@ class Dialogue {
 			NextArrow.deleteButton();
 			this.counter++;
 			this.can_proceed = true;
+			NextArrow.deleteButton();
 			return;
 		}, this);
 		}

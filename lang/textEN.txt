@@ -1,23 +1,37 @@
-Escape from Olomouc Region
+Escape from the Olomouc Region
 Play
 Settings
 Credits
 Enable audio
 Disable audio
 Restart track
+
+Pause menu
 New Game
+Save Game
 Load Game
-Back to Menu
+
 Difficulty
 Easy
 Medium
 Hard
 Cost multiplier:
 Chance of loss per day:
+Language
+
+Backstory
+Day
+
 The difficulty determines not only the above values, but also the
 difficulty of the minigames. The difficulty or the language cannot
 be changed during the game. All values will be saved.
-Language
-Game paused
-Backstory
-Day
+
+It is the 1st of May 1997 and the Slovak minority has just
+declared independence from the young republic of Czechia.
+With the support of the Slovak Republic the separatists are
+now pushing deep into the Moravian heartlands. They have
+also poisoned the Bečva river along the way and are now
+standing just a few kilometers away from Hranice.
+It is time to escape.
+
+Back

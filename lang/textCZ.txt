@@ -5,19 +5,33 @@ Titulky
 Zapnout zvuk
 Vypnout zvuk
 Restartovat skladbu
+
+Pauzové menu
 Nová hra
+Uložit hru
 Načíst hru
-Zpátky
-Obtiížnost
+
+Obtížnost
 Lehké
 Střední
 Težké
 Násobitel ceny:
 Šance prohry za den:
-Obtížnost neurčuje pouze hodnoty vypsané výše, ale také obtížnost
-miniher. Obtížnost nebo jazyk není možné během hry změnít.
-Všechny hodnoty budou uloženy.
 Jazyk
-Pauzové menu
+
 Příběh
 Den
+
+Obtížnost neurčuje pouze hodnoty vypsané výše, ale také
+obtížnost miniher. Obtížnost nebo jazyk není možné během
+hry změnit. Všechny hodnoty budou uloženy.
+
+Je 1. května 1997 a slovenská menšina právě prohlásila
+nezávislost od mladé České republiky. S podporou Slovenské
+republiky separatisti už postupují hluboko do vnitrozemí
+Moravy. Na cestě už také otravíli řeku Bečvu a jsou už
+jenom pár kilometrů od Hranice na Moravě, kde se právě
+necházíme.
+Je čas utéct.
+
+Zpátky

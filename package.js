@@ -251,7 +251,7 @@ class Arrow {
 	}
 	//image id of type ArrowDirections - set canvasobj to null if don't want to draw immediately
 	constructor(xoffset, yoffset, width, height, imageId, canvasobj) {
-		this.button = document.createElement("button");
+		this.button = document.createElement("button"); //new button, no need to del event listeners
 		this.imageId = imageId;
 	    
 		this.width = width;
@@ -328,12 +328,12 @@ class AudioPlayer {
 };
 const ap = new AudioPlayer();
 
-let MoneyCount = 0;
+let MoneyAmount = 0;
 
 function drawMoneyCount(canvasobj) {
 	canvasobj.setnewfont("Arial, FreeSans", "32");
 	canvasobj.setnewcolor("#ffffff");
-	let text = "Money: "+MoneyCount+" ";
+	let text = "Money: "+MoneyAmount+" ";
 	let metrics = canvasobj.context.measureText(text);
 	canvasobj.box(1000 - metrics.width - 20, 0, metrics.width + 20, 50);
 	canvasobj.setnewcolor("#333399");
@@ -341,15 +341,15 @@ function drawMoneyCount(canvasobj) {
 }
 
 function addMoney(amount) {
-	MoneyCount += amount;
+	MoneyAmount += amount;
 }
 
 function removeMoney(amount) {
-	MoneyCount -= amount;
+	MoneyAmount -= amount;
 }
 
 function setMoney(amount) {
-	MoneyCount = amount;
+	MoneyAmount = amount;
 }
 class Character {
 	constructor(source) {
@@ -358,6 +358,7 @@ class Character {
 		this.image.onload = this.setisloaded;
 		this.loaded = false;
 		this.button = document.createElement("button");
+		this.evtlistener = null;
 	}
 	draw(xoffset, yoffset, scale, canvasobj) {
 		canvasobj.image(this.image, xoffset, yoffset, this.image.width * scale, this.image.height * scale);
@@ -377,6 +378,9 @@ class Character {
 			return;
 		}
 		canvasobj.canvas.parentElement.appendChild(this.button);
+	}
+	deleteListener() {
+		this.button.removeEventListener("click", this.evtlistener);
 	}
 	deleteButton() {
 		this.button.remove();
@@ -422,6 +426,7 @@ class Dialogue {
 			NextArrow.deleteButton();
 			this.counter++;
 			this.can_proceed = true;
+			NextArrow.deleteButton();
 			return;
 		}, this);
 		}
@@ -458,8 +463,18 @@ function TranslationLoad(lang, lid) {
 	}
 	req.send();
 }
+
+function TranslationGetMultipleLines(lid, idf, amount) {
+	let tempResult = "";
+	for(let Id = 0; Id < amount; Id++) {
+		tempResult += TranslatedText[lid][idf + Id];
+		tempResult += '\n';
+	}
+	console.log(tempResult);
+	return tempResult;
+}
 let SettingsValues = {
-	Difficulty:2, //1 - easy, 2 - medium, 3 - hard
+	Difficulty: 2, //1 - easy, 2 - medium, 3 - hard
 	ChanceOfInstantLoss: 5000, //chance if instant loss per day, easy = 10000, medium = 5000, hard = 1000
 	MoneyCostIncrease: 1, //value to multiply costs with, easy = 0,75, medium = 1, hard = 1,25
 	Language: 0 //0 - English, 1 - Czech, 2 - German, 3 - Russian
@@ -525,17 +540,17 @@ function SettingsRenderDifficultyRelatedText(canvasobj) {
 	canvasobj.setnewcolor("#333399");
 	switch(SettingsValues.Difficulty) {
 		case 1:
-			canvasobj.text(TranslatedText[SettingsValues.Language][11], 150, 150);
+			canvasobj.text(TranslatedText[SettingsValues.Language][12], 150, 150);
 			canvasobj.text("0.75", 450, 200);
 			canvasobj.text("1:10000", 450, 250);
 		break;
 		case 2:
-			canvasobj.text(TranslatedText[SettingsValues.Language][12], 150, 150);
+			canvasobj.text(TranslatedText[SettingsValues.Language][13], 150, 150);
 			canvasobj.text("1.00", 450, 200);
 			canvasobj.text("1:5000", 450, 250);
 		break;
 		case 3:
-			canvasobj.text(TranslatedText[SettingsValues.Language][13], 150, 150);
+			canvasobj.text(TranslatedText[SettingsValues.Language][14], 150, 150);
 			canvasobj.text("1.25", 450, 200);
 			canvasobj.text("1:1000", 450, 250);
 		break;
@@ -565,7 +580,7 @@ function SettingsRenderLanguageRelatedText(canvasobj) {
 function Settings(canvasobj) {	
 	Settings.arrowPrev = new Arrow(50, 110, 50, 50, ArrowDirections.Left, null);
 	Settings.arrowNext = new Arrow(300, 110, 50, 50, ArrowDirections.Right, null);
-	Settings.buttonBack = new Button(50, 400, 300, 100, 25, TranslatedText[SettingsValues.Language][9], "canvas_container");
+	Settings.buttonBack = new Button(50, 400, 300, 100, 25, TranslatedText[SettingsValues.Language][30], "canvas_container");
 	//language
 	Settings.arrowPrevL = new Arrow(600, 110, 50, 50, ArrowDirections.Left, null);
 	Settings.arrowNextL = new Arrow(850, 110, 50, 50, ArrowDirections.Right, null);
@@ -584,6 +599,8 @@ function Settings(canvasobj) {
 		Settings.arrowPrev.deleteButton();
 		Settings.arrowNext.deleteButton();
 		Settings.buttonBack.deleteButton();
+		Settings.arrowPrevL.deleteButton();
+		Settings.arrowNextL.deleteButton();
 		MainMenu();
 	});
 	Settings.arrowPrevL.button.addEventListener("click", (event) => {
@@ -606,12 +623,12 @@ function Settings(canvasobj) {
 	
 	canvasobj.setnewfont("Arial, FreeSans", "32", "bold");
 	
-	canvasobj.text(TranslatedText[SettingsValues.Language][10], 50, 100);
+	canvasobj.text(TranslatedText[SettingsValues.Language][11], 50, 100);
 	
-	canvasobj.text(TranslatedText[SettingsValues.Language][14], 50, 200);
-	canvasobj.text(TranslatedText[SettingsValues.Language][15], 50, 250);
+	canvasobj.text(TranslatedText[SettingsValues.Language][15], 50, 200);
+	canvasobj.text(TranslatedText[SettingsValues.Language][16], 50, 250);
 
-	canvasobj.text(TranslatedText[SettingsValues.Language][19], 650, 50);
+	canvasobj.text(TranslatedText[SettingsValues.Language][17], 650, 50);
 
 	canvasobj.resetfontweight();
 
@@ -625,10 +642,7 @@ function Settings(canvasobj) {
 	SettingsRenderDifficultyRelatedText(canvasobj);		
 	SettingsRenderLanguageRelatedText(canvasobj);
 	
-	canvasobj.textml(
-	"The difficulty determines not only the above values, but also the\n"+
-	"difficulty of the minigames. The difficulty or the language cannot\n"+
-	"be changed during the game. All values will be saved.", 50, 300);	
+	canvasobj.textml(TranslationGetMultipleLines(SettingsValues.Language, 20, 3), 50, 300);	
 }
 
 function SettingsButtonRegister(canvasobj) {
@@ -802,15 +816,19 @@ function HraniceNaMoraveNadrazi(canvas) {
 function HraniceNaMoraveNastupiste(canvas) {
 	console.log("hnm nastupiste");
 	localLocationId = 3;
+	
 	traindriver.button.addEventListener("click", () => {
+		if(GamePaused) { return; }
 		traindriver.deleteButton();
 		ArrowToNadrazi.deleteButton();
 		HraniceNaMoraveNastupisteDialogue(canvas);
-	});
+	}, { once: true });
 	traindriver.append(canvas);
+	
 	let ArrowToNadrazi = new Arrow(700, 400, 100, 100, ArrowDirections.Down, canvas);
 	ArrowToNadrazi.button.addEventListener("click", () => {
 		if(GamePaused) { return; }
+		traindriver.deleteButton();
 		ArrowToNadrazi.deleteButton();
     	HraniceNaMoraveNadrazi(canvas);
 	});
@@ -824,12 +842,15 @@ function HraniceNaMoraveNastupiste(canvas) {
 function HraniceNaMoraveRestaurace(canvas) {
 	console.log("hnm restaurace");
 	localLocationId = 4;
+	
 	cook.button.addEventListener("click", () => {
+		if(GamePaused) { return; }
 		cook.deleteButton();
 		ArrowToNadrazi.deleteButton();
 		HraniceNaMoraveRestauraceJob(canvas);
-	});
+	}, { once: true });
 	cook.append(canvas);
+	
 	let ArrowToNadrazi = new Arrow(500, 400, 100, 100, ArrowDirections.Down, canvas);
 	ArrowToNadrazi.button.addEventListener("click", () => {
 		if(GamePaused) { return; }
@@ -851,8 +872,8 @@ function HraniceNaMoraveRestauraceJob(canvas) {
 	let dialogue = new Dialogue();
 	dialogue.begin(canvas);
 	dialogue.makeBubble(0, "Our waiter just left us. Want to take up the position?");
-	dialogue.makeBubble(1, "I will pay you 500 CZK, deal?");
-	addMoney(500);
+	dialogue.makeBubble(1, "I will pay you 700 CZK, deal?");
+	addMoney(700);
 	
 	let thisInterval = window.setInterval((dialogue, canvas) => {
 		if(dialogue.counter === 2) {
@@ -1145,9 +1166,9 @@ function PlayMenu() {
 	cvs.text(TranslatedText[SettingsValues.Language][1], 50, 50);
 	
 	cvs.setnewfont("Arial, FreeSans", "32");
-	let buttonNew = new Button(50, 130, 300, 100, 25, TranslatedText[SettingsValues.Language][7], "canvas_container");
-	let buttonLoad = new Button(350, 130, 300, 100, 25, TranslatedText[SettingsValues.Language][8], "canvas_container");
-	let buttonBack = new Button(650, 130, 300, 100, 25, TranslatedText[SettingsValues.Language][9], "canvas_container");
+	let buttonNew = new Button(50, 130, 300, 100, 25, TranslatedText[SettingsValues.Language][1], "canvas_container");
+	let buttonLoad = new Button(350, 130, 300, 100, 25, TranslatedText[SettingsValues.Language][10], "canvas_container");
+	let buttonBack = new Button(650, 130, 300, 100, 25, TranslatedText[SettingsValues.Language][30], "canvas_container");
 	
 	let thisInterval = window.setInterval(() => {
 		if(Load.FileLoaded === true) {
@@ -1186,16 +1207,9 @@ function Intro() {
 	cvs.clear("black");
     cvs.setnewcolor("white");
 	cvs.setnewfont("Arial, FreeSans", "48", "bold");
-	cvs.text(TranslatedText[SettingsValues.Language][21], 50, 50);
+	cvs.text(TranslatedText[SettingsValues.Language][18], 50, 50);
     cvs.setnewfont("Arial, FreeSans", "32");
-    cvs.textml("It is the 1st of May 1997 and the Slovak minority has just\n"
-                +"declared independence from the young republic of Czechia.\n\n"
-                +"With the support of the Slovak Republic the separatists are\n"
-                +"now pushing deep into the Moravian heartlands. They have\n"
-                +"also poisoned the Bečva river along the way and are now\n"
-                +"standing just a few kilometers away from Hranice.\n\n"
-                +"It is time to escape.\n"
-    , 100, 100);
+    cvs.textml(TranslationGetMultipleLines(SettingsValues.Language, 23, 7), 100, 100);
 	
 	introarrow1 = new Arrow(700, 400, 100, 100, ArrowDirections.Right, cvs);
 	introarrow1.setCallback("MapSceneLoad(introarrow1)");
@@ -1213,7 +1227,7 @@ function MapScene() {
 	cvs.image(this, 0, 0, cvs.canvas.width, cvs.canvas.height);
 	cvs.setnewcolor("#333399");
 	cvs.setfontweight("bold");
-	cvs.textml("Day 1\nHranice na Morave", 50, 50);
+	cvs.textml(TranslatedText[SettingsValues.Language][19]+" 1\nHranice na Moravě", 50, 50);
 	cvs.resetfontweight();
 	cvs.setnewcolor("#000000");
 	introarrow2 = new Arrow(700, 400, 100, 100, ArrowDirections.Right, cvs);

@@ -251,7 +251,7 @@ class Arrow {
 	}
 	//image id of type ArrowDirections - set canvasobj to null if don't want to draw immediately
 	constructor(xoffset, yoffset, width, height, imageId, canvasobj) {
-		this.button = document.createElement("button");
+		this.button = document.createElement("button"); //new button, no need to del event listeners
 		this.imageId = imageId;
 	    
 		this.width = width;

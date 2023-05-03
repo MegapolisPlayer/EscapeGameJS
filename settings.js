@@ -1,5 +1,5 @@
 let SettingsValues = {
-	Difficulty:2, //1 - easy, 2 - medium, 3 - hard
+	Difficulty: 2, //1 - easy, 2 - medium, 3 - hard
 	ChanceOfInstantLoss: 5000, //chance if instant loss per day, easy = 10000, medium = 5000, hard = 1000
 	MoneyCostIncrease: 1, //value to multiply costs with, easy = 0,75, medium = 1, hard = 1,25
 	Language: 0 //0 - English, 1 - Czech, 2 - German, 3 - Russian
@@ -65,17 +65,17 @@ function SettingsRenderDifficultyRelatedText(canvasobj) {
 	canvasobj.setnewcolor("#333399");
 	switch(SettingsValues.Difficulty) {
 		case 1:
-			canvasobj.text(TranslatedText[SettingsValues.Language][11], 150, 150);
+			canvasobj.text(TranslatedText[SettingsValues.Language][12], 150, 150);
 			canvasobj.text("0.75", 450, 200);
 			canvasobj.text("1:10000", 450, 250);
 		break;
 		case 2:
-			canvasobj.text(TranslatedText[SettingsValues.Language][12], 150, 150);
+			canvasobj.text(TranslatedText[SettingsValues.Language][13], 150, 150);
 			canvasobj.text("1.00", 450, 200);
 			canvasobj.text("1:5000", 450, 250);
 		break;
 		case 3:
-			canvasobj.text(TranslatedText[SettingsValues.Language][13], 150, 150);
+			canvasobj.text(TranslatedText[SettingsValues.Language][14], 150, 150);
 			canvasobj.text("1.25", 450, 200);
 			canvasobj.text("1:1000", 450, 250);
 		break;
@@ -105,7 +105,7 @@ function SettingsRenderLanguageRelatedText(canvasobj) {
 function Settings(canvasobj) {	
 	Settings.arrowPrev = new Arrow(50, 110, 50, 50, ArrowDirections.Left, null);
 	Settings.arrowNext = new Arrow(300, 110, 50, 50, ArrowDirections.Right, null);
-	Settings.buttonBack = new Button(50, 400, 300, 100, 25, TranslatedText[SettingsValues.Language][9], "canvas_container");
+	Settings.buttonBack = new Button(50, 400, 300, 100, 25, TranslatedText[SettingsValues.Language][30], "canvas_container");
 	//language
 	Settings.arrowPrevL = new Arrow(600, 110, 50, 50, ArrowDirections.Left, null);
 	Settings.arrowNextL = new Arrow(850, 110, 50, 50, ArrowDirections.Right, null);
@@ -124,6 +124,8 @@ function Settings(canvasobj) {
 		Settings.arrowPrev.deleteButton();
 		Settings.arrowNext.deleteButton();
 		Settings.buttonBack.deleteButton();
+		Settings.arrowPrevL.deleteButton();
+		Settings.arrowNextL.deleteButton();
 		MainMenu();
 	});
 	Settings.arrowPrevL.button.addEventListener("click", (event) => {
@@ -146,12 +148,12 @@ function Settings(canvasobj) {
 	
 	canvasobj.setnewfont("Arial, FreeSans", "32", "bold");
 	
-	canvasobj.text(TranslatedText[SettingsValues.Language][10], 50, 100);
+	canvasobj.text(TranslatedText[SettingsValues.Language][11], 50, 100);
 	
-	canvasobj.text(TranslatedText[SettingsValues.Language][14], 50, 200);
-	canvasobj.text(TranslatedText[SettingsValues.Language][15], 50, 250);
+	canvasobj.text(TranslatedText[SettingsValues.Language][15], 50, 200);
+	canvasobj.text(TranslatedText[SettingsValues.Language][16], 50, 250);
 
-	canvasobj.text(TranslatedText[SettingsValues.Language][19], 650, 50);
+	canvasobj.text(TranslatedText[SettingsValues.Language][17], 650, 50);
 
 	canvasobj.resetfontweight();
 
@@ -165,10 +167,7 @@ function Settings(canvasobj) {
 	SettingsRenderDifficultyRelatedText(canvasobj);		
 	SettingsRenderLanguageRelatedText(canvasobj);
 	
-	canvasobj.textml(
-	"The difficulty determines not only the above values, but also the\n"+
-	"difficulty of the minigames. The difficulty or the language cannot\n"+
-	"be changed during the game. All values will be saved.", 50, 300);	
+	canvasobj.textml(TranslationGetMultipleLines(SettingsValues.Language, 20, 3), 50, 300);	
 }
 
 function SettingsButtonRegister(canvasobj) {

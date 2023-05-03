@@ -147,15 +147,19 @@ function HraniceNaMoraveNadrazi(canvas) {
 function HraniceNaMoraveNastupiste(canvas) {
 	console.log("hnm nastupiste");
 	localLocationId = 3;
+	
 	traindriver.button.addEventListener("click", () => {
+		if(GamePaused) { return; }
 		traindriver.deleteButton();
 		ArrowToNadrazi.deleteButton();
 		HraniceNaMoraveNastupisteDialogue(canvas);
-	});
+	}, { once: true });
 	traindriver.append(canvas);
+	
 	let ArrowToNadrazi = new Arrow(700, 400, 100, 100, ArrowDirections.Down, canvas);
 	ArrowToNadrazi.button.addEventListener("click", () => {
 		if(GamePaused) { return; }
+		traindriver.deleteButton();
 		ArrowToNadrazi.deleteButton();
     	HraniceNaMoraveNadrazi(canvas);
 	});
@@ -169,12 +173,15 @@ function HraniceNaMoraveNastupiste(canvas) {
 function HraniceNaMoraveRestaurace(canvas) {
 	console.log("hnm restaurace");
 	localLocationId = 4;
+	
 	cook.button.addEventListener("click", () => {
+		if(GamePaused) { return; }
 		cook.deleteButton();
 		ArrowToNadrazi.deleteButton();
 		HraniceNaMoraveRestauraceJob(canvas);
-	});
+	}, { once: true });
 	cook.append(canvas);
+	
 	let ArrowToNadrazi = new Arrow(500, 400, 100, 100, ArrowDirections.Down, canvas);
 	ArrowToNadrazi.button.addEventListener("click", () => {
 		if(GamePaused) { return; }
@@ -196,8 +203,8 @@ function HraniceNaMoraveRestauraceJob(canvas) {
 	let dialogue = new Dialogue();
 	dialogue.begin(canvas);
 	dialogue.makeBubble(0, "Our waiter just left us. Want to take up the position?");
-	dialogue.makeBubble(1, "I will pay you 500 CZK, deal?");
-	addMoney(500);
+	dialogue.makeBubble(1, "I will pay you 700 CZK, deal?");
+	addMoney(700);
 	
 	let thisInterval = window.setInterval((dialogue, canvas) => {
 		if(dialogue.counter === 2) {
