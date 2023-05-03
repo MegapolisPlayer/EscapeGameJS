@@ -416,7 +416,12 @@ class Dialogue {
   		}
 		else {
 		this.can_proceed = false;
+		let dlgInputElems = document.getElementsByClassName("DialogueArrow"); //remove all at beginning to avoid duplicates
+		while(dlgInputElems[0]) {
+   			dlgInputElems[0].parentNode.removeChild(dlgInputElems[0]);
+		}
 		let NextArrow = new Arrow(this.canvas_info.canvas.width - 140, (this.canvas_info.canvas.height * 0.8) + 10, 100, 100, ArrowDirections.Right, this.canvas_info);
+		NextArrow.button.setAttribute("class", NextArrow.button.getAttribute("class")+" DialogueArrow");
 		this.canvas_info.setnewcolor("white");
 		this.makeBox();
 		this.canvas_info.setnewcolor(textcolor);
@@ -443,6 +448,7 @@ class Dialogue {
 //English - EN
 //Russian - RU
 //German - DE
+//Skolstina - AL
 
 let TranslatedText = [];
 let AmountTranslations = 0;
@@ -470,7 +476,6 @@ function TranslationGetMultipleLines(lid, idf, amount) {
 		tempResult += TranslatedText[lid][idf + Id];
 		tempResult += '\n';
 	}
-	console.log(tempResult);
 	return tempResult;
 }
 let SettingsValues = {
@@ -540,17 +545,17 @@ function SettingsRenderDifficultyRelatedText(canvasobj) {
 	canvasobj.setnewcolor("#333399");
 	switch(SettingsValues.Difficulty) {
 		case 1:
-			canvasobj.text(TranslatedText[SettingsValues.Language][12], 150, 150);
+			canvasobj.text(TranslatedText[SettingsValues.Language][13], 150, 150);
 			canvasobj.text("0.75", 450, 200);
 			canvasobj.text("1:10000", 450, 250);
 		break;
 		case 2:
-			canvasobj.text(TranslatedText[SettingsValues.Language][13], 150, 150);
+			canvasobj.text(TranslatedText[SettingsValues.Language][14], 150, 150);
 			canvasobj.text("1.00", 450, 200);
 			canvasobj.text("1:5000", 450, 250);
 		break;
 		case 3:
-			canvasobj.text(TranslatedText[SettingsValues.Language][14], 150, 150);
+			canvasobj.text(TranslatedText[SettingsValues.Language][15], 150, 150);
 			canvasobj.text("1.25", 450, 200);
 			canvasobj.text("1:1000", 450, 250);
 		break;
@@ -580,7 +585,7 @@ function SettingsRenderLanguageRelatedText(canvasobj) {
 function Settings(canvasobj) {	
 	Settings.arrowPrev = new Arrow(50, 110, 50, 50, ArrowDirections.Left, null);
 	Settings.arrowNext = new Arrow(300, 110, 50, 50, ArrowDirections.Right, null);
-	Settings.buttonBack = new Button(50, 400, 300, 100, 25, TranslatedText[SettingsValues.Language][30], "canvas_container");
+	Settings.buttonBack = new Button(50, 400, 300, 100, 25, TranslatedText[SettingsValues.Language][31], "canvas_container");
 	//language
 	Settings.arrowPrevL = new Arrow(600, 110, 50, 50, ArrowDirections.Left, null);
 	Settings.arrowNextL = new Arrow(850, 110, 50, 50, ArrowDirections.Right, null);
@@ -623,12 +628,12 @@ function Settings(canvasobj) {
 	
 	canvasobj.setnewfont("Arial, FreeSans", "32", "bold");
 	
-	canvasobj.text(TranslatedText[SettingsValues.Language][11], 50, 100);
+	canvasobj.text(TranslatedText[SettingsValues.Language][12], 50, 100);
 	
-	canvasobj.text(TranslatedText[SettingsValues.Language][15], 50, 200);
-	canvasobj.text(TranslatedText[SettingsValues.Language][16], 50, 250);
+	canvasobj.text(TranslatedText[SettingsValues.Language][16], 50, 200);
+	canvasobj.text(TranslatedText[SettingsValues.Language][17], 50, 250);
 
-	canvasobj.text(TranslatedText[SettingsValues.Language][17], 650, 50);
+	canvasobj.text(TranslatedText[SettingsValues.Language][18], 650, 50);
 
 	canvasobj.resetfontweight();
 
@@ -642,7 +647,7 @@ function Settings(canvasobj) {
 	SettingsRenderDifficultyRelatedText(canvasobj);		
 	SettingsRenderLanguageRelatedText(canvasobj);
 	
-	canvasobj.textml(TranslationGetMultipleLines(SettingsValues.Language, 20, 3), 50, 300);	
+	canvasobj.textml(TranslationGetMultipleLines(SettingsValues.Language, 21, 3), 50, 300);	
 }
 
 function SettingsButtonRegister(canvasobj) {
@@ -720,12 +725,12 @@ function HraniceNaMorave(canvas) {
 	
 	let FirstDialogue = new Dialogue();
 	FirstDialogue.begin(canvas);
-	FirstDialogue.makeBubble(0, "Yet another wonderful day.\nLet's read the news!");
-	FirstDialogue.makeBubble(1, "Crap. The Slovaks have rebelled and they also are just a\nfew kilometers away from Hranice!");
-	FirstDialogue.makeBubble(2, "How is this possible? The Czechs will start conscription\nsoon!");
-	FirstDialogue.makeBubble(3, "I must escape! But where do I go? I think Poland might be\na safe bet and it's the simplest to get to.");
-	FirstDialogue.makeBubble(4, "It's not like I have a choice anyway - Germany is too far\naway and too expensive and Austria is not much better.");
-	FirstDialogue.makeBubble(5, "Poland it is then!");	
+	FirstDialogue.makeBubble(0, TranslationGetMultipleLines(SettingsValues.Language, 32, 2));
+	FirstDialogue.makeBubble(1, TranslationGetMultipleLines(SettingsValues.Language, 34, 2));
+	FirstDialogue.makeBubble(2, TranslationGetMultipleLines(SettingsValues.Language, 36, 2));
+	FirstDialogue.makeBubble(3, TranslationGetMultipleLines(SettingsValues.Language, 38, 2));
+	FirstDialogue.makeBubble(4, TranslationGetMultipleLines(SettingsValues.Language, 40, 2));
+	FirstDialogue.makeBubble(5, TranslatedText[SettingsValues.Language][42]);	
 	
 	let thisInterval = window.setInterval((dialogue, canvas) => {
 		if(dialogue.counter === 6) {
@@ -964,24 +969,24 @@ function Pause(canvasobj) {
 	canvasobj.setnewcolor("#333399");
 	
 	canvasobj.setnewfont("Arial, FreeSans", "48");
-	canvasobj.text("Game paused", 320, 100);
+	canvasobj.text(TranslatedText[SettingsValues.Language][7], 320, 100);
 	
 	canvasobj.setnewfont("Arial, FreeSans", "32");
 	
 	Pause.buttonAudio = new Button(320, 130, 100, 100, 25, "", "canvas_container");
-	Pause.buttonRestart = new Button(420, 130, 100, 100, 25, "Restart Track", "canvas_container");
-	Pause.buttonCode = new Button(520, 130, 100, 100, 25, "View source code", "canvas_container");
-	Pause.buttonSave = new Button(320, 230, 100, 100, 25, "Save Game", "canvas_container");
-	Pause.buttonLoad = new Button(420, 230, 100, 100, 25, "Load Game", "canvas_container");
-	Pause.buttonQuit = new Button(520, 230, 100, 100, 25, "Exit Game", "canvas_container");
+	Pause.buttonRestart = new Button(420, 130, 100, 100, 25, TranslatedText[SettingsValues.Language][6], "canvas_container");
+	Pause.buttonCode = new Button(520, 130, 100, 100, 25, TranslatedText[SettingsValues.Language][45], "canvas_container");
+	Pause.buttonSave = new Button(320, 230, 100, 100, 25, TranslatedText[SettingsValues.Language][9], "canvas_container");
+	Pause.buttonLoad = new Button(420, 230, 100, 100, 25, TranslatedText[SettingsValues.Language][10], "canvas_container");
+	Pause.buttonQuit = new Button(520, 230, 100, 100, 25, TranslatedText[SettingsValues.Language][11], "canvas_container");
 	
-	if(ap.allowed) { Pause.buttonAudio.changeText("Disable audio"); }
-	else { Pause.buttonAudio.changeText("Enable audio"); }
+	if(ap.allowed) { Pause.buttonAudio.changeText(TranslatedText[SettingsValues.Language][5]); }
+	else { Pause.buttonAudio.changeText(TranslatedText[SettingsValues.Language][4]); }
 	
 	Pause.buttonAudio.button.addEventListener("click", () => {
 		ap.toggleSound();
-		if(ap.allowed) { Pause.buttonAudio.changeText("Disable audio"); }
-		else { Pause.buttonAudio.changeText("Enable audio"); }
+		if(ap.allowed) { Pause.buttonAudio.changeText(TranslatedText[SettingsValues.Language][5]); }
+		else { Pause.buttonAudio.changeText(TranslatedText[SettingsValues.Language][4]); }
 	});	
 	Pause.buttonRestart.button.addEventListener("click", () => {
 		ap.resetTrack();
@@ -990,7 +995,7 @@ function Pause(canvasobj) {
 		window.open("https://www.github.com/MegapolisPlayer/EscapeGameJS", "_blank");
 	});
 	Pause.buttonSave.button.addEventListener("click", () => {
-		Save(locationId, localLocationId, SettingsValues.Difficulty, MoneyCount);
+		Save(locationId, localLocationId, SettingsValues.Difficulty, MoneyAmount, SettingsValues.Language);
 	});
 	Pause.buttonLoad.button.addEventListener("click", () => {
 		Load(canvasobj);
@@ -999,7 +1004,7 @@ function Pause(canvasobj) {
 		location.reload();
 	});
 	
-	canvasobj.textml("Press escape or click the\nbutton again to unpause.", 320, 380);
+	canvasobj.textml(TranslationGetMultipleLines(SettingsValues.Language, 43, 2), 320, 380);
 	canvasobj.setnewfont("Arial, FreeSans", "48");
 }
 
@@ -1007,6 +1012,7 @@ function SetStateFile(filecontent, canvas) {
 	GamePaused = false;
 	
 	canvas.loadingMsg();
+	deleteCanvasInputElems();
 
 	//info - location id, local location id, difficulty, money
 	let Data = filecontent.split(' ');
@@ -1015,12 +1021,14 @@ function SetStateFile(filecontent, canvas) {
 		console.error("SetStateFile: Incompatible save loaded! (Version 1 required)");
 	}	
 	
+	console.log("Save loaded: "+filecontent);
+	
 	//data splitting
-	SettingsValues.Difficulty = Number(Data[1]);
-	locationId =                Number(Data[2]);	
-	localLocationId =           Number(Data[3]);	
-	MoneyCount =                Number(Data[4]);
-	SettingsValues.Language =   Number(Data[5]);
+	SettingsValues.Language =   Number(Data[1]);
+	SettingsValues.Difficulty = Number(Data[2]);
+	locationId =                Number(Data[3]);	
+	localLocationId =           Number(Data[4]);	
+	MoneyCount =                Number(Data[5]);
 	UpdateSettingsValues();
 	
 	//pause button
@@ -1168,7 +1176,7 @@ function PlayMenu() {
 	cvs.setnewfont("Arial, FreeSans", "32");
 	let buttonNew = new Button(50, 130, 300, 100, 25, TranslatedText[SettingsValues.Language][1], "canvas_container");
 	let buttonLoad = new Button(350, 130, 300, 100, 25, TranslatedText[SettingsValues.Language][10], "canvas_container");
-	let buttonBack = new Button(650, 130, 300, 100, 25, TranslatedText[SettingsValues.Language][30], "canvas_container");
+	let buttonBack = new Button(650, 130, 300, 100, 25, TranslatedText[SettingsValues.Language][31], "canvas_container");
 	
 	let thisInterval = window.setInterval(() => {
 		if(Load.FileLoaded === true) {
@@ -1207,9 +1215,9 @@ function Intro() {
 	cvs.clear("black");
     cvs.setnewcolor("white");
 	cvs.setnewfont("Arial, FreeSans", "48", "bold");
-	cvs.text(TranslatedText[SettingsValues.Language][18], 50, 50);
+	cvs.text(TranslatedText[SettingsValues.Language][19], 50, 50);
     cvs.setnewfont("Arial, FreeSans", "32");
-    cvs.textml(TranslationGetMultipleLines(SettingsValues.Language, 23, 7), 100, 100);
+    cvs.textml(TranslationGetMultipleLines(SettingsValues.Language, 24, 7), 100, 100);
 	
 	introarrow1 = new Arrow(700, 400, 100, 100, ArrowDirections.Right, cvs);
 	introarrow1.setCallback("MapSceneLoad(introarrow1)");
@@ -1227,7 +1235,7 @@ function MapScene() {
 	cvs.image(this, 0, 0, cvs.canvas.width, cvs.canvas.height);
 	cvs.setnewcolor("#333399");
 	cvs.setfontweight("bold");
-	cvs.textml(TranslatedText[SettingsValues.Language][19]+" 1\nHranice na Moravě", 50, 50);
+	cvs.textml(TranslatedText[SettingsValues.Language][20]+" 1\nHranice na Moravě", 50, 50);
 	cvs.resetfontweight();
 	cvs.setnewcolor("#000000");
 	introarrow2 = new Arrow(700, 400, 100, 100, ArrowDirections.Right, cvs);

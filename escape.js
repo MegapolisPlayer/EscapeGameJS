@@ -80,7 +80,7 @@ function PlayMenu() {
 	cvs.setnewfont("Arial, FreeSans", "32");
 	let buttonNew = new Button(50, 130, 300, 100, 25, TranslatedText[SettingsValues.Language][1], "canvas_container");
 	let buttonLoad = new Button(350, 130, 300, 100, 25, TranslatedText[SettingsValues.Language][10], "canvas_container");
-	let buttonBack = new Button(650, 130, 300, 100, 25, TranslatedText[SettingsValues.Language][30], "canvas_container");
+	let buttonBack = new Button(650, 130, 300, 100, 25, TranslatedText[SettingsValues.Language][31], "canvas_container");
 	
 	let thisInterval = window.setInterval(() => {
 		if(Load.FileLoaded === true) {
@@ -119,9 +119,9 @@ function Intro() {
 	cvs.clear("black");
     cvs.setnewcolor("white");
 	cvs.setnewfont("Arial, FreeSans", "48", "bold");
-	cvs.text(TranslatedText[SettingsValues.Language][18], 50, 50);
+	cvs.text(TranslatedText[SettingsValues.Language][19], 50, 50);
     cvs.setnewfont("Arial, FreeSans", "32");
-    cvs.textml(TranslationGetMultipleLines(SettingsValues.Language, 23, 7), 100, 100);
+    cvs.textml(TranslationGetMultipleLines(SettingsValues.Language, 24, 7), 100, 100);
 	
 	introarrow1 = new Arrow(700, 400, 100, 100, ArrowDirections.Right, cvs);
 	introarrow1.setCallback("MapSceneLoad(introarrow1)");
@@ -139,7 +139,7 @@ function MapScene() {
 	cvs.image(this, 0, 0, cvs.canvas.width, cvs.canvas.height);
 	cvs.setnewcolor("#333399");
 	cvs.setfontweight("bold");
-	cvs.textml(TranslatedText[SettingsValues.Language][19]+" 1\nHranice na Moravě", 50, 50);
+	cvs.textml(TranslatedText[SettingsValues.Language][20]+" 1\nHranice na Moravě", 50, 50);
 	cvs.resetfontweight();
 	cvs.setnewcolor("#000000");
 	introarrow2 = new Arrow(700, 400, 100, 100, ArrowDirections.Right, cvs);

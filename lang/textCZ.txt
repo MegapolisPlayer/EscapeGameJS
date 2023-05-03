@@ -2,14 +2,15 @@
 Hrát
 Nastavení
 Titulky
-Zapnout zvuk
-Vypnout zvuk
-Restartovat skladbu
+Zapn. zvuk
+Vypn. zvuk
+Přehrát znova
 
 Pauzové menu
 Nová hra
 Uložit hru
 Načíst hru
+Vypn. hru
 
 Obtížnost
 Lehké
@@ -28,10 +29,27 @@ hry změnit. Všechny hodnoty budou uloženy.
 
 Je 1. května 1997 a slovenská menšina právě prohlásila
 nezávislost od mladé České republiky. S podporou Slovenské
-republiky separatisti už postupují hluboko do vnitrozemí
-Moravy. Na cestě už také otravíli řeku Bečvu a jsou už
+republiky už postupují hluboko do vnitrozemí Moravy. Na
+cestě už také poškodili ekosystém řeky Bečvy a jsou už
 jenom pár kilometrů od Hranice na Moravě, kde se právě
 necházíme.
 Je čas utéct.
 
 Zpátky
+
+Zase další výborný den!
+Tak přečtem zprávy.
+Sakra. Slováci se vzpouřili a jsou jen pár kilometrů
+od Hranice na Moravě.
+Jak se tohle mohle stát? Naši skoro začnou najímat do 
+armády!
+Musím utéct! Ale kam? Myslím že Polsko je dost bezpečné
+a je to nejlehčí možnost.
+I když vlastně nemám žadnou jinou možnost - Německo je
+daleko a je příliš drahé, Rakousko je na tom stejně.
+Tak do Polska asi!
+
+Pro návrat do hry znovu
+stiskněte tlačítko/Esc.
+
+Zdroj. kod

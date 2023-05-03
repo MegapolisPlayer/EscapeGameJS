@@ -63,7 +63,12 @@ class Dialogue {
   		}
 		else {
 		this.can_proceed = false;
+		let dlgInputElems = document.getElementsByClassName("DialogueArrow"); //remove all at beginning to avoid duplicates
+		while(dlgInputElems[0]) {
+   			dlgInputElems[0].parentNode.removeChild(dlgInputElems[0]);
+		}
 		let NextArrow = new Arrow(this.canvas_info.canvas.width - 140, (this.canvas_info.canvas.height * 0.8) + 10, 100, 100, ArrowDirections.Right, this.canvas_info);
+		NextArrow.button.setAttribute("class", NextArrow.button.getAttribute("class")+" DialogueArrow");
 		this.canvas_info.setnewcolor("white");
 		this.makeBox();
 		this.canvas_info.setnewcolor(textcolor);

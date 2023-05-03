@@ -72,24 +72,24 @@ function Pause(canvasobj) {
 	canvasobj.setnewcolor("#333399");
 	
 	canvasobj.setnewfont("Arial, FreeSans", "48");
-	canvasobj.text("Game paused", 320, 100);
+	canvasobj.text(TranslatedText[SettingsValues.Language][7], 320, 100);
 	
 	canvasobj.setnewfont("Arial, FreeSans", "32");
 	
 	Pause.buttonAudio = new Button(320, 130, 100, 100, 25, "", "canvas_container");
-	Pause.buttonRestart = new Button(420, 130, 100, 100, 25, "Restart Track", "canvas_container");
-	Pause.buttonCode = new Button(520, 130, 100, 100, 25, "View source code", "canvas_container");
-	Pause.buttonSave = new Button(320, 230, 100, 100, 25, "Save Game", "canvas_container");
-	Pause.buttonLoad = new Button(420, 230, 100, 100, 25, "Load Game", "canvas_container");
-	Pause.buttonQuit = new Button(520, 230, 100, 100, 25, "Exit Game", "canvas_container");
+	Pause.buttonRestart = new Button(420, 130, 100, 100, 25, TranslatedText[SettingsValues.Language][6], "canvas_container");
+	Pause.buttonCode = new Button(520, 130, 100, 100, 25, TranslatedText[SettingsValues.Language][45], "canvas_container");
+	Pause.buttonSave = new Button(320, 230, 100, 100, 25, TranslatedText[SettingsValues.Language][9], "canvas_container");
+	Pause.buttonLoad = new Button(420, 230, 100, 100, 25, TranslatedText[SettingsValues.Language][10], "canvas_container");
+	Pause.buttonQuit = new Button(520, 230, 100, 100, 25, TranslatedText[SettingsValues.Language][11], "canvas_container");
 	
-	if(ap.allowed) { Pause.buttonAudio.changeText("Disable audio"); }
-	else { Pause.buttonAudio.changeText("Enable audio"); }
+	if(ap.allowed) { Pause.buttonAudio.changeText(TranslatedText[SettingsValues.Language][5]); }
+	else { Pause.buttonAudio.changeText(TranslatedText[SettingsValues.Language][4]); }
 	
 	Pause.buttonAudio.button.addEventListener("click", () => {
 		ap.toggleSound();
-		if(ap.allowed) { Pause.buttonAudio.changeText("Disable audio"); }
-		else { Pause.buttonAudio.changeText("Enable audio"); }
+		if(ap.allowed) { Pause.buttonAudio.changeText(TranslatedText[SettingsValues.Language][5]); }
+		else { Pause.buttonAudio.changeText(TranslatedText[SettingsValues.Language][4]); }
 	});	
 	Pause.buttonRestart.button.addEventListener("click", () => {
 		ap.resetTrack();
@@ -98,7 +98,7 @@ function Pause(canvasobj) {
 		window.open("https://www.github.com/MegapolisPlayer/EscapeGameJS", "_blank");
 	});
 	Pause.buttonSave.button.addEventListener("click", () => {
-		Save(locationId, localLocationId, SettingsValues.Difficulty, MoneyCount);
+		Save(locationId, localLocationId, SettingsValues.Difficulty, MoneyAmount, SettingsValues.Language);
 	});
 	Pause.buttonLoad.button.addEventListener("click", () => {
 		Load(canvasobj);
@@ -107,7 +107,7 @@ function Pause(canvasobj) {
 		location.reload();
 	});
 	
-	canvasobj.textml("Press escape or click the\nbutton again to unpause.", 320, 380);
+	canvasobj.textml(TranslationGetMultipleLines(SettingsValues.Language, 43, 2), 320, 380);
 	canvasobj.setnewfont("Arial, FreeSans", "48");
 }
 
@@ -115,6 +115,7 @@ function SetStateFile(filecontent, canvas) {
 	GamePaused = false;
 	
 	canvas.loadingMsg();
+	deleteCanvasInputElems();
 
 	//info - location id, local location id, difficulty, money
 	let Data = filecontent.split(' ');
@@ -123,12 +124,14 @@ function SetStateFile(filecontent, canvas) {
 		console.error("SetStateFile: Incompatible save loaded! (Version 1 required)");
 	}	
 	
+	console.log("Save loaded: "+filecontent);
+	
 	//data splitting
-	SettingsValues.Difficulty = Number(Data[1]);
-	locationId =                Number(Data[2]);	
-	localLocationId =           Number(Data[3]);	
-	MoneyCount =                Number(Data[4]);
-	SettingsValues.Language =   Number(Data[5]);
+	SettingsValues.Language =   Number(Data[1]);
+	SettingsValues.Difficulty = Number(Data[2]);
+	locationId =                Number(Data[3]);	
+	localLocationId =           Number(Data[4]);	
+	MoneyCount =                Number(Data[5]);
 	UpdateSettingsValues();
 	
 	//pause button

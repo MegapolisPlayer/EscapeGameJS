@@ -10,6 +10,7 @@ Pause menu
 New Game
 Save Game
 Load Game
+Quit Game
 
 Difficulty
 Easy
@@ -30,8 +31,25 @@ It is the 1st of May 1997 and the Slovak minority has just
 declared independence from the young republic of Czechia.
 With the support of the Slovak Republic the separatists are
 now pushing deep into the Moravian heartlands. They have
-also poisoned the Bečva river along the way and are now
-standing just a few kilometers away from Hranice.
+also contaminated the Bečva river along the way and are
+now standing just a few kilometers away from Hranice.
 It is time to escape.
 
 Back
+
+Yet another wonderful day.
+Let's read the news!
+Crap. The Slovaks have rebeled and they are just a few
+kilometers away from Hranice!
+How is this possible? The Czechs will start conscription
+soon!
+I must escape! But where do I go? I think Poland might be
+a safe bet and it's the easiest option out there.
+It's not like I have a choice anyway - Germany is too far
+away and too expensive and Austria is not much better.
+Poland it is then!
+
+Press escape or click the
+button again to unpause.
+
+Source code

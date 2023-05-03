@@ -3,6 +3,7 @@
 //English - EN
 //Russian - RU
 //German - DE
+//Skolstina - AL
 
 let TranslatedText = [];
 let AmountTranslations = 0;
@@ -30,6 +31,5 @@ function TranslationGetMultipleLines(lid, idf, amount) {
 		tempResult += TranslatedText[lid][idf + Id];
 		tempResult += '\n';
 	}
-	console.log(tempResult);
 	return tempResult;
 }
