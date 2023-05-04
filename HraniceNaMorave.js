@@ -216,6 +216,10 @@ function HraniceNaMoraveRestauraceJob(canvas) {
 	}, 100, dialogue, canvas);
 }
 
+function HraniceNaMoraveRestauraceJobGame(canvas) {
+	
+}
+
 function HraniceNaMoraveNastupisteDialogue(canvas) {
 	console.log("hnm nastupiste dlg");
 	//AllowedToPause = false;

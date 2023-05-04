@@ -53,3 +53,11 @@ Pro návrat do hry znovu
 stiskněte tlačítko/Esc.
 
 Zdroj. kod
+
+Náš čišník zrovna odešel.
+Pomůžes mi roznést jídlo?
+Dám ti za to 700 Kč.
+Souhlasíš s tím?
+Ok, jdem na to.
+Tak jo, fajn.
+Můžes si to rozmyslet a vratit se.

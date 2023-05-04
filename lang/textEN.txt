@@ -53,3 +53,11 @@ Press escape or click the
 button again to unpause.
 
 Source code
+
+Our waiter just left us. 
+Will you help me deliver the food to the tables?
+I will pay you 700 CZK for it.
+Do you agree?
+Ok, let's go!
+If you change your mind you can return.
+I'm free at any time.
