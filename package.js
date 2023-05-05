@@ -358,7 +358,6 @@ class Character {
 		this.image.onload = this.setisloaded;
 		this.loaded = false;
 		this.button = document.createElement("button");
-		this.evtlistener = null;
 	}
 	draw(xoffset, yoffset, scale, canvasobj) {
 		canvasobj.image(this.image, xoffset, yoffset, this.image.width * scale, this.image.height * scale);
@@ -378,9 +377,6 @@ class Character {
 			return;
 		}
 		canvasobj.canvas.parentElement.appendChild(this.button);
-	}
-	deleteListener() {
-		this.button.removeEventListener("click", this.evtlistener);
 	}
 	deleteButton() {
 		this.button.remove();
@@ -413,12 +409,14 @@ class Dialogue {
 	makeBubble(id, text, textcolor = "black") {
 		if(!(this.can_proceed && this.counter === id)) {
    			setTimeout(this.makeBubble.bind(this), 100, id, text, textcolor);
+			return;
   		}
 		else {
-		this.can_proceed = false;
+			this.can_proceed = false;
+		}
 		let dlgInputElems = document.getElementsByClassName("DialogueArrow"); //remove all at beginning to avoid duplicates
 		while(dlgInputElems[0]) {
-   			dlgInputElems[0].parentNode.removeChild(dlgInputElems[0]);
+		  	dlgInputElems[0].parentNode.removeChild(dlgInputElems[0]);
 		}
 		let NextArrow = new Arrow(this.canvas_info.canvas.width - 140, (this.canvas_info.canvas.height * 0.8) + 10, 100, 100, ArrowDirections.Right, this.canvas_info);
 		NextArrow.button.setAttribute("class", NextArrow.button.getAttribute("class")+" DialogueArrow");
@@ -428,15 +426,20 @@ class Dialogue {
 		this.makeText(text);
 		NextArrow.draw(this.canvas_info);
 		NextArrow.button.addEventListener("click", () => {
-			NextArrow.deleteButton();
 			this.counter++;
 			this.can_proceed = true;
 			NextArrow.deleteButton();
-			return;
-		}, this);
-		}
+		}, this, { once: true });
+	}
+	//returns boolean
+	makeChoice() {
+		
 	}
 	end() {
+		let dlgInputElems = document.getElementsByClassName("DialogueArrow"); //remove all at beginning to avoid duplicates
+		while(dlgInputElems[0]) {
+		  	dlgInputElems[0].parentNode.removeChild(dlgInputElems[0]);
+		}
 		this.canvas_info;
 		this.counter = 0;
 		this.can_proceed = false;
@@ -755,7 +758,7 @@ function HraniceNaMoraveDomov(canvas) {
 		if(GamePaused) { return; }
 		ArrowToNamesti.deleteButton();
     	HraniceNaMoraveNamesti(canvas);
-	});
+	}, { once: true });
 	PauseButton.draw(canvas);
 	drawMoneyCount(canvas);
 }
@@ -769,13 +772,13 @@ function HraniceNaMoraveNamesti(canvas) {
 		ArrowToDomov.deleteButton();
 		ArrowToNadrazi.deleteButton();
     	HraniceNaMoraveDomov(canvas);
-	});
+	}, { once: true });
 	ArrowToNadrazi.button.addEventListener("click", () => {
 		if(GamePaused) { return; }
 		ArrowToDomov.deleteButton();
 		ArrowToNadrazi.deleteButton();
     	HraniceNaMoraveNadrazi(canvas);
-	});
+	}, { once: true });
 	canvas.image(hnm_Locations[1], 0, 0, canvas.canvas.width, canvas.canvas.height);
 	chr.draw(550, 320, 0.2, canvas);
 	ArrowToDomov.draw(canvas);
@@ -795,21 +798,21 @@ function HraniceNaMoraveNadrazi(canvas) {
 		ArrowToNastupiste.deleteButton();
 		ArrowToRestaurace.deleteButton();
     	HraniceNaMoraveNamesti(canvas);
-	});
+	}, { once: true });
 	ArrowToNastupiste.button.addEventListener("click", () => {
 		if(GamePaused) { return; }
 		ArrowToNamesti.deleteButton();
 		ArrowToNastupiste.deleteButton();
 		ArrowToRestaurace.deleteButton();
     	HraniceNaMoraveNastupiste(canvas);
-	});
+	}, { once: true });
 	ArrowToRestaurace.button.addEventListener("click", () => {
 		if(GamePaused) { return; }
 		ArrowToNamesti.deleteButton();
 		ArrowToNastupiste.deleteButton();
 		ArrowToRestaurace.deleteButton();
     	HraniceNaMoraveRestaurace(canvas);
-	});
+	}, { once: true });
 	canvas.image(hnm_Locations[2], 0, 0, canvas.canvas.width, canvas.canvas.height);
 	chr.draw(320, 210, 0.17, canvas);
 	ArrowToNamesti.draw(canvas);
@@ -836,7 +839,7 @@ function HraniceNaMoraveNastupiste(canvas) {
 		traindriver.deleteButton();
 		ArrowToNadrazi.deleteButton();
     	HraniceNaMoraveNadrazi(canvas);
-	});
+	}, { once: true });
 	canvas.image(hnm_Locations[3], 0, 0, canvas.canvas.width, canvas.canvas.height);
 	chr.draw(700, 260, 0.35, canvas);
 	traindriver.draw(500, 250, 0.35, canvas);
@@ -844,25 +847,30 @@ function HraniceNaMoraveNastupiste(canvas) {
 	PauseButton.draw(canvas);
 	drawMoneyCount(canvas);
 }
+
+HraniceNaMoraveRestaurace.hascooklistener = false;
 function HraniceNaMoraveRestaurace(canvas) {
 	console.log("hnm restaurace");
 	localLocationId = 4;
 	
-	cook.button.addEventListener("click", () => {
-		if(GamePaused) { return; }
-		cook.deleteButton();
-		ArrowToNadrazi.deleteButton();
-		HraniceNaMoraveRestauraceJob(canvas);
-	}, { once: true });
+	if(!HraniceNaMoraveRestaurace.hascooklistener) {
+		HraniceNaMoraveRestaurace.hascooklistener = true;
+		cook.button.addEventListener("click", (event) => {
+			if(GamePaused) { return; }
+			cook.deleteButton();
+			ArrowToNadrazi.deleteButton();
+			HraniceNaMoraveRestauraceJob(canvas);
+		});
+	}
 	cook.append(canvas);
 	
 	let ArrowToNadrazi = new Arrow(500, 400, 100, 100, ArrowDirections.Down, canvas);
-	ArrowToNadrazi.button.addEventListener("click", () => {
+	ArrowToNadrazi.button.addEventListener("click", (event) => {
 		if(GamePaused) { return; }
 		cook.deleteButton();
 		ArrowToNadrazi.deleteButton();
     	HraniceNaMoraveNadrazi(canvas);
-	});
+	}, { once: true });
 	canvas.image(hnm_Locations[4], 0, 0, canvas.canvas.width, canvas.canvas.height);
 	chr.draw(540, 170, 0.5, canvas);
 	cook.draw(110, 110, 0.5, canvas);
@@ -876,8 +884,10 @@ function HraniceNaMoraveRestauraceJob(canvas) {
 	AllowedToPause = false;
 	let dialogue = new Dialogue();
 	dialogue.begin(canvas);
-	dialogue.makeBubble(0, "Our waiter just left us. Want to take up the position?");
-	dialogue.makeBubble(1, "I will pay you 700 CZK, deal?");
+	dialogue.makeBubble(0, TranslationGetMultipleLines(SettingsValues.Language, 46, 2));
+	dialogue.makeBubble(1, TranslationGetMultipleLines(SettingsValues.Language, 48, 2));
+	dialogue.makeBubble(2, TranslatedText[SettingsValues.Language][50]);
+	dialogue.makeBubble(3, TranslationGetMultipleLines(SettingsValues.Language, 51, 2));
 	addMoney(700);
 	
 	let thisInterval = window.setInterval((dialogue, canvas) => {
@@ -887,7 +897,7 @@ function HraniceNaMoraveRestauraceJob(canvas) {
 			AllowedToPause = true;	
 			HraniceNaMoraveRestaurace(canvas);
 		}
-	}, 100, dialogue, canvas);
+	}, 100, dialogue, canvas, { once: true });
 }
 
 function HraniceNaMoraveRestauraceJobGame(canvas) {
@@ -1032,7 +1042,7 @@ function SetStateFile(filecontent, canvas) {
 	SettingsValues.Difficulty = Number(Data[2]);
 	locationId =                Number(Data[3]);	
 	localLocationId =           Number(Data[4]);	
-	MoneyCount =                Number(Data[5]);
+	MoneyAmount =                Number(Data[5]);
 	UpdateSettingsValues();
 	
 	//pause button

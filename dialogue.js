@@ -5,7 +5,6 @@ class Character {
 		this.image.onload = this.setisloaded;
 		this.loaded = false;
 		this.button = document.createElement("button");
-		this.evtlistener = null;
 	}
 	draw(xoffset, yoffset, scale, canvasobj) {
 		canvasobj.image(this.image, xoffset, yoffset, this.image.width * scale, this.image.height * scale);
@@ -25,9 +24,6 @@ class Character {
 			return;
 		}
 		canvasobj.canvas.parentElement.appendChild(this.button);
-	}
-	deleteListener() {
-		this.button.removeEventListener("click", this.evtlistener);
 	}
 	deleteButton() {
 		this.button.remove();
@@ -60,12 +56,14 @@ class Dialogue {
 	makeBubble(id, text, textcolor = "black") {
 		if(!(this.can_proceed && this.counter === id)) {
    			setTimeout(this.makeBubble.bind(this), 100, id, text, textcolor);
+			return;
   		}
 		else {
-		this.can_proceed = false;
+			this.can_proceed = false;
+		}
 		let dlgInputElems = document.getElementsByClassName("DialogueArrow"); //remove all at beginning to avoid duplicates
 		while(dlgInputElems[0]) {
-   			dlgInputElems[0].parentNode.removeChild(dlgInputElems[0]);
+		  	dlgInputElems[0].parentNode.removeChild(dlgInputElems[0]);
 		}
 		let NextArrow = new Arrow(this.canvas_info.canvas.width - 140, (this.canvas_info.canvas.height * 0.8) + 10, 100, 100, ArrowDirections.Right, this.canvas_info);
 		NextArrow.button.setAttribute("class", NextArrow.button.getAttribute("class")+" DialogueArrow");
@@ -75,15 +73,20 @@ class Dialogue {
 		this.makeText(text);
 		NextArrow.draw(this.canvas_info);
 		NextArrow.button.addEventListener("click", () => {
-			NextArrow.deleteButton();
 			this.counter++;
 			this.can_proceed = true;
 			NextArrow.deleteButton();
-			return;
-		}, this);
-		}
+		}, this, { once: true });
+	}
+	//returns boolean
+	makeChoice() {
+		
 	}
 	end() {
+		let dlgInputElems = document.getElementsByClassName("DialogueArrow"); //remove all at beginning to avoid duplicates
+		while(dlgInputElems[0]) {
+		  	dlgInputElems[0].parentNode.removeChild(dlgInputElems[0]);
+		}
 		this.canvas_info;
 		this.counter = 0;
 		this.can_proceed = false;

@@ -131,7 +131,7 @@ function SetStateFile(filecontent, canvas) {
 	SettingsValues.Difficulty = Number(Data[2]);
 	locationId =                Number(Data[3]);	
 	localLocationId =           Number(Data[4]);	
-	MoneyCount =                Number(Data[5]);
+	MoneyAmount =                Number(Data[5]);
 	UpdateSettingsValues();
 	
 	//pause button
