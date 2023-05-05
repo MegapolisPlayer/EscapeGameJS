@@ -158,7 +158,7 @@ class Button {
 	}
 };
 
-//Arrow object
+//Arrow/Symbol object
 
 const ArrowDirections = {
 	Center: 0,
@@ -166,11 +166,13 @@ const ArrowDirections = {
 	Right: 2,
 	Down: 3,
 	Left: 4,
-	Pause: 5
+	Pause: 5,
+	Yes: 6,
+	No: 7
 }
 
 const ArrowImages = [];
-for(let ArrowImagesId = 0; ArrowImagesId < 6; ArrowImagesId++) {
+for(let ArrowImagesId = 0; ArrowImagesId < 8; ArrowImagesId++) {
 	ArrowImages.push(new Image());
 }
 
@@ -181,6 +183,8 @@ ArrowImages[2].src = "res/arrow_right.png";
 ArrowImages[3].src = "res/arrow_down.png";
 ArrowImages[4].src = "res/arrow_left.png";
 ArrowImages[5].src = "res/pause.png";
+ArrowImages[6].src = "res/yes.png";
+ArrowImages[7].src = "res/no.png";
 
 class Arrow {
     insert(canvasobj) {
@@ -418,13 +422,12 @@ class Dialogue {
 		while(dlgInputElems[0]) {
 		  	dlgInputElems[0].parentNode.removeChild(dlgInputElems[0]);
 		}
-		let NextArrow = new Arrow(this.canvas_info.canvas.width - 140, (this.canvas_info.canvas.height * 0.8) + 10, 100, 100, ArrowDirections.Right, this.canvas_info);
-		NextArrow.button.setAttribute("class", NextArrow.button.getAttribute("class")+" DialogueArrow");
 		this.canvas_info.setnewcolor("white");
 		this.makeBox();
 		this.canvas_info.setnewcolor(textcolor);
 		this.makeText(text);
-		NextArrow.draw(this.canvas_info);
+		let NextArrow = new Arrow(this.canvas_info.canvas.width - 140, (this.canvas_info.canvas.height * 0.8) + 10, 100, 100, ArrowDirections.Right, this.canvas_info);
+		NextArrow.button.setAttribute("class", NextArrow.button.getAttribute("class")+" DialogueArrow");
 		NextArrow.button.addEventListener("click", () => {
 			this.counter++;
 			this.can_proceed = true;
@@ -432,8 +435,40 @@ class Dialogue {
 		}, this, { once: true });
 	}
 	//returns boolean
-	makeChoice() {
+	makeChoice(id) {
+		if(!(this.can_proceed && this.counter === id)) {
+   			setTimeout(this.makeChoice.bind(this), 100, id);
+			return;
+  		}
+		else {
+			this.can_proceed = false;
+		}
+		let dlgInputElems = document.getElementsByClassName("DialogueArrow"); //remove all at beginning to avoid duplicates
+		while(dlgInputElems[0]) {
+		  	dlgInputElems[0].parentNode.removeChild(dlgInputElems[0]);
+		}
+		this.canvas_info.setnewcolor("white");
+		this.makeBox();
+		let NoButton = new Arrow(this.canvas_info.canvas.width - 140, (this.canvas_info.canvas.height * 0.8), 100, 100, ArrowDirections.No, this.canvas_info);
+		let YesButton = new Arrow(140, (this.canvas_info.canvas.height * 0.8), 100, 100, ArrowDirections.Yes, this.canvas_info);
 		
+		makeChoice.Result = -1;		
+		YesButton.button.addEventListener("click", () => {
+			makeChoice.Result = 1;
+		}, this, { once: true });
+		NoButton.button.addEventListener("click", () => {
+			makeChoice.Result = 0;
+		}, this, { once: true });
+		
+		let thisInterval = window.setInterval((dialogue) => {
+			if(makeChoice.Result !== -1) {
+				clearInterval(thisInterval);
+				YesButton.deleteButton();
+				NoButton.deleteButton();
+				dialogue.counter++;
+				dialogue.can_proceed = true;	
+			}
+		}, 100, this, { once: true });
 	}
 	end() {
 		let dlgInputElems = document.getElementsByClassName("DialogueArrow"); //remove all at beginning to avoid duplicates
@@ -853,6 +888,14 @@ function HraniceNaMoraveRestaurace(canvas) {
 	console.log("hnm restaurace");
 	localLocationId = 4;
 	
+	let ArrowToNadrazi = new Arrow(500, 400, 100, 100, ArrowDirections.Down, canvas);
+	ArrowToNadrazi.button.addEventListener("click", (event) => {
+		if(GamePaused) { return; }
+		cook.deleteButton();
+		ArrowToNadrazi.deleteButton();
+    	HraniceNaMoraveNadrazi(canvas);
+	}, { once: true });
+	
 	if(!HraniceNaMoraveRestaurace.hascooklistener) {
 		HraniceNaMoraveRestaurace.hascooklistener = true;
 		cook.button.addEventListener("click", (event) => {
@@ -863,14 +906,6 @@ function HraniceNaMoraveRestaurace(canvas) {
 		});
 	}
 	cook.append(canvas);
-	
-	let ArrowToNadrazi = new Arrow(500, 400, 100, 100, ArrowDirections.Down, canvas);
-	ArrowToNadrazi.button.addEventListener("click", (event) => {
-		if(GamePaused) { return; }
-		cook.deleteButton();
-		ArrowToNadrazi.deleteButton();
-    	HraniceNaMoraveNadrazi(canvas);
-	}, { once: true });
 	canvas.image(hnm_Locations[4], 0, 0, canvas.canvas.width, canvas.canvas.height);
 	chr.draw(540, 170, 0.5, canvas);
 	cook.draw(110, 110, 0.5, canvas);
@@ -886,12 +921,23 @@ function HraniceNaMoraveRestauraceJob(canvas) {
 	dialogue.begin(canvas);
 	dialogue.makeBubble(0, TranslationGetMultipleLines(SettingsValues.Language, 46, 2));
 	dialogue.makeBubble(1, TranslationGetMultipleLines(SettingsValues.Language, 48, 2));
-	dialogue.makeBubble(2, TranslatedText[SettingsValues.Language][50]);
-	dialogue.makeBubble(3, TranslationGetMultipleLines(SettingsValues.Language, 51, 2));
-	addMoney(700);
+	dialogue.makeChoice(2);
+	
+	let dWaitInterval = window.setInterval((dialogue) => {
+		if(dialogue.makeChoice.Result !== -1) {
+			clearInterval(dWaitInterval);
+			if(dialogue.makeChoice.Result) {
+				dialogue.makeBubble(3, TranslatedText[SettingsValues.Language][50]);
+				addMoney(700);
+			}
+			else {
+				dialogue.makeBubble(3, TranslationGetMultipleLines(SettingsValues.Language, 51, 2));		
+			}
+		}
+	}, 100, dialogue, { once: true });
 	
 	let thisInterval = window.setInterval((dialogue, canvas) => {
-		if(dialogue.counter === 2) {
+		if(dialogue.counter === 4) {
 			clearInterval(thisInterval);
 			dialogue.end();		
 			AllowedToPause = true;	
@@ -1113,6 +1159,8 @@ if (window.document.documentMode) {
     alert("You seem to be using Internet Explorer.\nThe game might not work properly.\nDebug reports from IE will be ignored.\n");
 }
 
+console.log("Escape from Olomouc\nPlease do not enter anything here.", "color: red; font-weight: bold;");
+
 const cvs = new Canvas("EscapeCanvas", "Arial, FreeSans", "48", "#333399", 1000, 500);
 cvs.clear("purple");
 
@@ -1131,6 +1179,7 @@ function MainMenuSetup() {
 	TranslationLoad("CZ", 1);
 	TranslationLoad("DE", 2);
 	TranslationLoad("RU", 3);
+	//TranslationLoad("SUS", 4); //jirkas custom lang
 
 	//key buttons activation
 	window.addEventListener("keydown", (event) => {
@@ -1172,6 +1221,7 @@ function MainMenu() {
 	cvs.resetfontweight();
 	cvs.setnewfont("Arial, FreeSans", "16");
 	cvs.setnewcolor("white");
+	cvs.text("(c) Martin/MegapolisPlayer, Jiri/KohoutGD", 600, 492);
 	cvs.text("build date 02/05/2023, prerelease version", 650, 492);
 	cvs.setnewcolor("#333399");
 	cvs.setnewfont("Arial, FreeSans", "48");

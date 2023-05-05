@@ -3,6 +3,8 @@ if (window.document.documentMode) {
     alert("You seem to be using Internet Explorer.\nThe game might not work properly.\nDebug reports from IE will be ignored.\n");
 }
 
+console.log("Escape from Olomouc\nPlease do not enter anything here.", "color: red; font-weight: bold;");
+
 const cvs = new Canvas("EscapeCanvas", "Arial, FreeSans", "48", "#333399", 1000, 500);
 cvs.clear("purple");
 
@@ -21,6 +23,7 @@ function MainMenuSetup() {
 	TranslationLoad("CZ", 1);
 	TranslationLoad("DE", 2);
 	TranslationLoad("RU", 3);
+	//TranslationLoad("SUS", 4); //jirkas custom lang
 
 	//key buttons activation
 	window.addEventListener("keydown", (event) => {
@@ -62,6 +65,7 @@ function MainMenu() {
 	cvs.resetfontweight();
 	cvs.setnewfont("Arial, FreeSans", "16");
 	cvs.setnewcolor("white");
+	cvs.text("(c) Martin/MegapolisPlayer, Jiri/KohoutGD", 600, 492);
 	cvs.text("build date 02/05/2023, prerelease version", 650, 492);
 	cvs.setnewcolor("#333399");
 	cvs.setnewfont("Arial, FreeSans", "48");

@@ -158,7 +158,7 @@ class Button {
 	}
 };
 
-//Arrow object
+//Arrow/Symbol object
 
 const ArrowDirections = {
 	Center: 0,
@@ -166,11 +166,13 @@ const ArrowDirections = {
 	Right: 2,
 	Down: 3,
 	Left: 4,
-	Pause: 5
+	Pause: 5,
+	Yes: 6,
+	No: 7
 }
 
 const ArrowImages = [];
-for(let ArrowImagesId = 0; ArrowImagesId < 6; ArrowImagesId++) {
+for(let ArrowImagesId = 0; ArrowImagesId < 8; ArrowImagesId++) {
 	ArrowImages.push(new Image());
 }
 
@@ -181,6 +183,8 @@ ArrowImages[2].src = "res/arrow_right.png";
 ArrowImages[3].src = "res/arrow_down.png";
 ArrowImages[4].src = "res/arrow_left.png";
 ArrowImages[5].src = "res/pause.png";
+ArrowImages[6].src = "res/yes.png";
+ArrowImages[7].src = "res/no.png";
 
 class Arrow {
     insert(canvasobj) {

@@ -65,13 +65,12 @@ class Dialogue {
 		while(dlgInputElems[0]) {
 		  	dlgInputElems[0].parentNode.removeChild(dlgInputElems[0]);
 		}
-		let NextArrow = new Arrow(this.canvas_info.canvas.width - 140, (this.canvas_info.canvas.height * 0.8) + 10, 100, 100, ArrowDirections.Right, this.canvas_info);
-		NextArrow.button.setAttribute("class", NextArrow.button.getAttribute("class")+" DialogueArrow");
 		this.canvas_info.setnewcolor("white");
 		this.makeBox();
 		this.canvas_info.setnewcolor(textcolor);
 		this.makeText(text);
-		NextArrow.draw(this.canvas_info);
+		let NextArrow = new Arrow(this.canvas_info.canvas.width - 140, (this.canvas_info.canvas.height * 0.8) + 10, 100, 100, ArrowDirections.Right, this.canvas_info);
+		NextArrow.button.setAttribute("class", NextArrow.button.getAttribute("class")+" DialogueArrow");
 		NextArrow.button.addEventListener("click", () => {
 			this.counter++;
 			this.can_proceed = true;
@@ -79,8 +78,44 @@ class Dialogue {
 		}, this, { once: true });
 	}
 	//returns boolean
-	makeChoice() {
+	makeChoice(id) {
+		if(!(this.can_proceed && this.counter === id)) {
+   			setTimeout(this.makeChoice.bind(this), 100, id);
+			return;
+  		}
+		else {
+			this.can_proceed = false;
+		}
+		let dlgInputElems = document.getElementsByClassName("DialogueArrow"); //remove all at beginning to avoid duplicates
+		while(dlgInputElems[0]) {
+		  	dlgInputElems[0].parentNode.removeChild(dlgInputElems[0]);
+		}
+		this.canvas_info.setnewcolor("white");
+		this.makeBox();
+		let YesButton = new Arrow(140, (this.canvas_info.canvas.height * 0.8), 100, 100, ArrowDirections.Yes, this.canvas_info);
+		let NoButton = new Arrow(this.canvas_info.canvas.width - 140, (this.canvas_info.canvas.height * 0.8), 100, 100, ArrowDirections.No, this.canvas_info);
+		YesButton.button.setAttribute("class", YesButton.button.getAttribute("class")+" DialogueArrow");
+		NoButton.button.setAttribute("class", NoButton.button.getAttribute("class")+" DialogueArrow");		
 		
+		//todo: fix
+		
+		makeChoice.Result = -1;		
+		YesButton.button.addEventListener("click", () => {
+			makeChoice.Result = 1;
+		}, this, { once: true });
+		NoButton.button.addEventListener("click", () => {
+			makeChoice.Result = 0;
+		}, this, { once: true });
+		
+		let thisInterval = window.setInterval((dialogue) => {
+			if(makeChoice.Result !== -1) {
+				clearInterval(thisInterval);
+				YesButton.deleteButton();
+				NoButton.deleteButton();
+				dialogue.counter++;
+				dialogue.can_proceed = true;	
+			}
+		}, 100, this, { once: true });
 	}
 	end() {
 		let dlgInputElems = document.getElementsByClassName("DialogueArrow"); //remove all at beginning to avoid duplicates

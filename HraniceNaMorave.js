@@ -176,6 +176,14 @@ function HraniceNaMoraveRestaurace(canvas) {
 	console.log("hnm restaurace");
 	localLocationId = 4;
 	
+	let ArrowToNadrazi = new Arrow(500, 400, 100, 100, ArrowDirections.Down, canvas);
+	ArrowToNadrazi.button.addEventListener("click", (event) => {
+		if(GamePaused) { return; }
+		cook.deleteButton();
+		ArrowToNadrazi.deleteButton();
+    	HraniceNaMoraveNadrazi(canvas);
+	}, { once: true });
+	
 	if(!HraniceNaMoraveRestaurace.hascooklistener) {
 		HraniceNaMoraveRestaurace.hascooklistener = true;
 		cook.button.addEventListener("click", (event) => {
@@ -186,14 +194,6 @@ function HraniceNaMoraveRestaurace(canvas) {
 		});
 	}
 	cook.append(canvas);
-	
-	let ArrowToNadrazi = new Arrow(500, 400, 100, 100, ArrowDirections.Down, canvas);
-	ArrowToNadrazi.button.addEventListener("click", (event) => {
-		if(GamePaused) { return; }
-		cook.deleteButton();
-		ArrowToNadrazi.deleteButton();
-    	HraniceNaMoraveNadrazi(canvas);
-	}, { once: true });
 	canvas.image(hnm_Locations[4], 0, 0, canvas.canvas.width, canvas.canvas.height);
 	chr.draw(540, 170, 0.5, canvas);
 	cook.draw(110, 110, 0.5, canvas);
@@ -209,12 +209,23 @@ function HraniceNaMoraveRestauraceJob(canvas) {
 	dialogue.begin(canvas);
 	dialogue.makeBubble(0, TranslationGetMultipleLines(SettingsValues.Language, 46, 2));
 	dialogue.makeBubble(1, TranslationGetMultipleLines(SettingsValues.Language, 48, 2));
-	dialogue.makeBubble(2, TranslatedText[SettingsValues.Language][50]);
-	dialogue.makeBubble(3, TranslationGetMultipleLines(SettingsValues.Language, 51, 2));
-	addMoney(700);
+	dialogue.makeChoice(2);
+	
+	let dWaitInterval = window.setInterval((dialogue) => {
+		if(dialogue.makeChoice.Result !== -1) {
+			clearInterval(dWaitInterval);
+			if(dialogue.makeChoice.Result) {
+				dialogue.makeBubble(3, TranslatedText[SettingsValues.Language][50]);
+				addMoney(700);
+			}
+			else {
+				dialogue.makeBubble(3, TranslationGetMultipleLines(SettingsValues.Language, 51, 2));		
+			}
+		}
+	}, 100, dialogue, { once: true });
 	
 	let thisInterval = window.setInterval((dialogue, canvas) => {
-		if(dialogue.counter === 2) {
+		if(dialogue.counter === 4) {
 			clearInterval(thisInterval);
 			dialogue.end();		
 			AllowedToPause = true;	
