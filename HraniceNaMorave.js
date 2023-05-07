@@ -171,28 +171,26 @@ function HraniceNaMoraveNastupiste(canvas) {
 	drawMoneyCount(canvas);
 }
 
-HraniceNaMoraveRestaurace.hascooklistener = false;
 function HraniceNaMoraveRestaurace(canvas) {
 	console.log("hnm restaurace");
-	localLocationId = 4;
-	
+	localLocationId = 4;	
+		
 	let ArrowToNadrazi = new Arrow(500, 400, 100, 100, ArrowDirections.Down, canvas);
+	
 	ArrowToNadrazi.button.addEventListener("click", (event) => {
 		if(GamePaused) { return; }
 		cook.deleteButton();
 		ArrowToNadrazi.deleteButton();
     	HraniceNaMoraveNadrazi(canvas);
+	});
+	
+	cook.button.addEventListener("click", (event) => {
+		if(GamePaused) { return; }
+		cook.deleteButton();
+		ArrowToNadrazi.deleteButton();
+		HraniceNaMoraveRestauraceJob(canvas);
 	}, { once: true });
 	
-	if(!HraniceNaMoraveRestaurace.hascooklistener) {
-		HraniceNaMoraveRestaurace.hascooklistener = true;
-		cook.button.addEventListener("click", (event) => {
-			if(GamePaused) { return; }
-			cook.deleteButton();
-			ArrowToNadrazi.deleteButton();
-			HraniceNaMoraveRestauraceJob(canvas);
-		});
-	}
 	cook.append(canvas);
 	canvas.image(hnm_Locations[4], 0, 0, canvas.canvas.width, canvas.canvas.height);
 	chr.draw(540, 170, 0.5, canvas);
@@ -207,22 +205,24 @@ function HraniceNaMoraveRestauraceJob(canvas) {
 	AllowedToPause = false;
 	let dialogue = new Dialogue();
 	dialogue.begin(canvas);
-	dialogue.makeBubble(0, TranslationGetMultipleLines(SettingsValues.Language, 46, 2));
-	dialogue.makeBubble(1, TranslationGetMultipleLines(SettingsValues.Language, 48, 2));
+	dialogue.makeBubble(0, TranslationGetMultipleLines(SettingsValues.Language, 47, 2));
+	dialogue.makeBubble(1, TranslationGetMultipleLines(SettingsValues.Language, 49, 2));
 	dialogue.makeChoice(2);
 	
 	let dWaitInterval = window.setInterval((dialogue) => {
-		if(dialogue.makeChoice.Result !== -1) {
+		if(dialogue.choice_result !== -1) {
 			clearInterval(dWaitInterval);
-			if(dialogue.makeChoice.Result) {
-				dialogue.makeBubble(3, TranslatedText[SettingsValues.Language][50]);
+			if(dialogue.choice_result === 1) {
+				dialogue.makeBubble(3, TranslatedText[SettingsValues.Language][51]);
 				addMoney(700);
+				return;
 			}
 			else {
-				dialogue.makeBubble(3, TranslationGetMultipleLines(SettingsValues.Language, 51, 2));		
+				dialogue.makeBubble(3, TranslationGetMultipleLines(SettingsValues.Language, 52, 2));
+				return;
 			}
 		}
-	}, 100, dialogue, { once: true });
+	}, 100, dialogue);
 	
 	let thisInterval = window.setInterval((dialogue, canvas) => {
 		if(dialogue.counter === 4) {
@@ -231,11 +231,11 @@ function HraniceNaMoraveRestauraceJob(canvas) {
 			AllowedToPause = true;	
 			HraniceNaMoraveRestaurace(canvas);
 		}
-	}, 100, dialogue, canvas, { once: true });
+	}, 100, dialogue, canvas);
 }
 
 function HraniceNaMoraveRestauraceJobGame(canvas) {
-	
+	//you are a waiter, food stuff, take orders, maybe new file minigame.js?
 }
 
 function HraniceNaMoraveNastupisteDialogue(canvas) {

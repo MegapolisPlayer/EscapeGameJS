@@ -41,6 +41,7 @@ class Dialogue {
 		this.canvas_info;
 		this.counter = 0;
 		this.can_proceed = true;
+		this.choice_result = -1;
 	}
 	begin(canvasobj) {
 		this.canvas_info = canvasobj;
@@ -86,6 +87,7 @@ class Dialogue {
 		else {
 			this.can_proceed = false;
 		}
+		this.choice_result = -1;
 		let dlgInputElems = document.getElementsByClassName("DialogueArrow"); //remove all at beginning to avoid duplicates
 		while(dlgInputElems[0]) {
 		  	dlgInputElems[0].parentNode.removeChild(dlgInputElems[0]);
@@ -97,18 +99,15 @@ class Dialogue {
 		YesButton.button.setAttribute("class", YesButton.button.getAttribute("class")+" DialogueArrow");
 		NoButton.button.setAttribute("class", NoButton.button.getAttribute("class")+" DialogueArrow");		
 		
-		//todo: fix
-		
-		makeChoice.Result = -1;		
 		YesButton.button.addEventListener("click", () => {
-			makeChoice.Result = 1;
+			this.choice_result = 1;
 		}, this, { once: true });
 		NoButton.button.addEventListener("click", () => {
-			makeChoice.Result = 0;
+			this.choice_result = 0;
 		}, this, { once: true });
 		
 		let thisInterval = window.setInterval((dialogue) => {
-			if(makeChoice.Result !== -1) {
+			if(this.choice_result !== -1) {
 				clearInterval(thisInterval);
 				YesButton.deleteButton();
 				NoButton.deleteButton();

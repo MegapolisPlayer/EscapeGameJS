@@ -203,7 +203,7 @@ class Arrow {
 		this.button.style.setProperty("left", this.xoffset+"px");
 		this.button.style.setProperty("top", this.yoffset+"px");
 		
-		if(canvasobj != null) {
+		if(canvasobj !== null) {
 			canvasobj.canvas.parentElement.appendChild(this.button);
         	canvasobj.context.drawImage(ArrowImages[this.imageId], this.xoffset, this.yoffset, this.width, this.height);
 		}
@@ -216,6 +216,10 @@ class Arrow {
 		
 	}
 	deleteButton() {
+		if((typeof this.button === "undefined")) { 
+			console.error("Arrow: Object not initialized.");
+			return;
+		}
 		this.button.remove();
 	}
 	draw(canvasobj) {
@@ -398,6 +402,7 @@ class Dialogue {
 		this.canvas_info;
 		this.counter = 0;
 		this.can_proceed = true;
+		this.choice_result = -1;
 	}
 	begin(canvasobj) {
 		this.canvas_info = canvasobj;
@@ -443,25 +448,27 @@ class Dialogue {
 		else {
 			this.can_proceed = false;
 		}
+		this.choice_result = -1;
 		let dlgInputElems = document.getElementsByClassName("DialogueArrow"); //remove all at beginning to avoid duplicates
 		while(dlgInputElems[0]) {
 		  	dlgInputElems[0].parentNode.removeChild(dlgInputElems[0]);
 		}
 		this.canvas_info.setnewcolor("white");
 		this.makeBox();
-		let NoButton = new Arrow(this.canvas_info.canvas.width - 140, (this.canvas_info.canvas.height * 0.8), 100, 100, ArrowDirections.No, this.canvas_info);
 		let YesButton = new Arrow(140, (this.canvas_info.canvas.height * 0.8), 100, 100, ArrowDirections.Yes, this.canvas_info);
+		let NoButton = new Arrow(this.canvas_info.canvas.width - 140, (this.canvas_info.canvas.height * 0.8), 100, 100, ArrowDirections.No, this.canvas_info);
+		YesButton.button.setAttribute("class", YesButton.button.getAttribute("class")+" DialogueArrow");
+		NoButton.button.setAttribute("class", NoButton.button.getAttribute("class")+" DialogueArrow");		
 		
-		makeChoice.Result = -1;		
 		YesButton.button.addEventListener("click", () => {
-			makeChoice.Result = 1;
+			this.choice_result = 1;
 		}, this, { once: true });
 		NoButton.button.addEventListener("click", () => {
-			makeChoice.Result = 0;
+			this.choice_result = 0;
 		}, this, { once: true });
 		
 		let thisInterval = window.setInterval((dialogue) => {
-			if(makeChoice.Result !== -1) {
+			if(this.choice_result !== -1) {
 				clearInterval(thisInterval);
 				YesButton.deleteButton();
 				NoButton.deleteButton();
@@ -693,9 +700,10 @@ function SettingsButtonRegister(canvasobj) {
 	Settings(canvasobj);
 }
 
-let finalCreditsImage = new Image();
+const finalCreditsImage = new Image();
 
-function Credits(canvasobj) {
+//if iscalledfrommm true means called from main menu, dont show achievements and such
+function Credits(iscalledfrommm, canvasobj) {
 	ap.playTrack(9); //waltz vivace
 	canvasobj.setnewcolor("#333399");
 	canvasobj.setnewfont("Arial, FreeSans", "48", "bold");
@@ -708,7 +716,7 @@ function CreditsButtonRegister(canvasobj) {
 	console.log("Registered CREDITS Button press!");
 	canvasobj.loadingMsg();
 	finalCreditsImage.src = "res/Credits.jpg";
-	finalCreditsImage.onload = Credits(canvasobj);
+	finalCreditsImage.onload = () => { Credits(true, canvasobj); };
 }
 //global for all locations, HnM is just first
 
@@ -883,28 +891,26 @@ function HraniceNaMoraveNastupiste(canvas) {
 	drawMoneyCount(canvas);
 }
 
-HraniceNaMoraveRestaurace.hascooklistener = false;
 function HraniceNaMoraveRestaurace(canvas) {
 	console.log("hnm restaurace");
-	localLocationId = 4;
-	
+	localLocationId = 4;	
+		
 	let ArrowToNadrazi = new Arrow(500, 400, 100, 100, ArrowDirections.Down, canvas);
+	
 	ArrowToNadrazi.button.addEventListener("click", (event) => {
 		if(GamePaused) { return; }
 		cook.deleteButton();
 		ArrowToNadrazi.deleteButton();
     	HraniceNaMoraveNadrazi(canvas);
+	});
+	
+	cook.button.addEventListener("click", (event) => {
+		if(GamePaused) { return; }
+		cook.deleteButton();
+		ArrowToNadrazi.deleteButton();
+		HraniceNaMoraveRestauraceJob(canvas);
 	}, { once: true });
 	
-	if(!HraniceNaMoraveRestaurace.hascooklistener) {
-		HraniceNaMoraveRestaurace.hascooklistener = true;
-		cook.button.addEventListener("click", (event) => {
-			if(GamePaused) { return; }
-			cook.deleteButton();
-			ArrowToNadrazi.deleteButton();
-			HraniceNaMoraveRestauraceJob(canvas);
-		});
-	}
 	cook.append(canvas);
 	canvas.image(hnm_Locations[4], 0, 0, canvas.canvas.width, canvas.canvas.height);
 	chr.draw(540, 170, 0.5, canvas);
@@ -919,22 +925,24 @@ function HraniceNaMoraveRestauraceJob(canvas) {
 	AllowedToPause = false;
 	let dialogue = new Dialogue();
 	dialogue.begin(canvas);
-	dialogue.makeBubble(0, TranslationGetMultipleLines(SettingsValues.Language, 46, 2));
-	dialogue.makeBubble(1, TranslationGetMultipleLines(SettingsValues.Language, 48, 2));
+	dialogue.makeBubble(0, TranslationGetMultipleLines(SettingsValues.Language, 47, 2));
+	dialogue.makeBubble(1, TranslationGetMultipleLines(SettingsValues.Language, 49, 2));
 	dialogue.makeChoice(2);
 	
 	let dWaitInterval = window.setInterval((dialogue) => {
-		if(dialogue.makeChoice.Result !== -1) {
+		if(dialogue.choice_result !== -1) {
 			clearInterval(dWaitInterval);
-			if(dialogue.makeChoice.Result) {
-				dialogue.makeBubble(3, TranslatedText[SettingsValues.Language][50]);
+			if(dialogue.choice_result === 1) {
+				dialogue.makeBubble(3, TranslatedText[SettingsValues.Language][51]);
 				addMoney(700);
+				return;
 			}
 			else {
-				dialogue.makeBubble(3, TranslationGetMultipleLines(SettingsValues.Language, 51, 2));		
+				dialogue.makeBubble(3, TranslationGetMultipleLines(SettingsValues.Language, 52, 2));
+				return;
 			}
 		}
-	}, 100, dialogue, { once: true });
+	}, 100, dialogue);
 	
 	let thisInterval = window.setInterval((dialogue, canvas) => {
 		if(dialogue.counter === 4) {
@@ -943,11 +951,11 @@ function HraniceNaMoraveRestauraceJob(canvas) {
 			AllowedToPause = true;	
 			HraniceNaMoraveRestaurace(canvas);
 		}
-	}, 100, dialogue, canvas, { once: true });
+	}, 100, dialogue, canvas);
 }
 
 function HraniceNaMoraveRestauraceJobGame(canvas) {
-	
+	//you are a waiter, food stuff, take orders, maybe new file minigame.js?
 }
 
 function HraniceNaMoraveNastupisteDialogue(canvas) {
@@ -1159,7 +1167,7 @@ if (window.document.documentMode) {
     alert("You seem to be using Internet Explorer.\nThe game might not work properly.\nDebug reports from IE will be ignored.\n");
 }
 
-console.log("Escape from Olomouc\nPlease do not enter anything here.", "color: red; font-weight: bold;");
+console.log("Escape from Olomouc\n%cPlease do not enter anything here.", "color: red; font-weight: bold;");
 
 const cvs = new Canvas("EscapeCanvas", "Arial, FreeSans", "48", "#333399", 1000, 500);
 cvs.clear("purple");
@@ -1221,8 +1229,8 @@ function MainMenu() {
 	cvs.resetfontweight();
 	cvs.setnewfont("Arial, FreeSans", "16");
 	cvs.setnewcolor("white");
-	cvs.text("(c) Martin/MegapolisPlayer, Jiri/KohoutGD", 600, 492);
-	cvs.text("build date 02/05/2023, prerelease version", 650, 492);
+	cvs.text("(c) Martin/MegapolisPlayer, Jiri/KohoutGD", 650, 472);
+	cvs.text("build date 07/05/2023, prerelease version", 650, 492);
 	cvs.setnewcolor("#333399");
 	cvs.setnewfont("Arial, FreeSans", "48");
 }

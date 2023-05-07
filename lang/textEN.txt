@@ -53,6 +53,7 @@ Press escape or click the
 button again to unpause.
 
 Source code
+Money
 
 Our waiter just left us. 
 Will you help me deliver the food to the tables?

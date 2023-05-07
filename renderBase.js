@@ -203,7 +203,7 @@ class Arrow {
 		this.button.style.setProperty("left", this.xoffset+"px");
 		this.button.style.setProperty("top", this.yoffset+"px");
 		
-		if(canvasobj != null) {
+		if(canvasobj !== null) {
 			canvasobj.canvas.parentElement.appendChild(this.button);
         	canvasobj.context.drawImage(ArrowImages[this.imageId], this.xoffset, this.yoffset, this.width, this.height);
 		}
@@ -216,6 +216,10 @@ class Arrow {
 		
 	}
 	deleteButton() {
+		if((typeof this.button === "undefined")) { 
+			console.error("Arrow: Object not initialized.");
+			return;
+		}
 		this.button.remove();
 	}
 	draw(canvasobj) {

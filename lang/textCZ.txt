@@ -53,6 +53,7 @@ Pro návrat do hry znovu
 stiskněte tlačítko/Esc.
 
 Zdroj. kod
+Peníze
 
 Náš čišník zrovna odešel.
 Pomůžes mi roznést jídlo?

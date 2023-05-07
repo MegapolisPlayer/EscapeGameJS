@@ -3,7 +3,7 @@ let MoneyAmount = 0;
 function drawMoneyCount(canvasobj) {
 	canvasobj.setnewfont("Arial, FreeSans", "32");
 	canvasobj.setnewcolor("#ffffff");
-	let text = "Money: "+MoneyAmount+" ";
+	let text = TranslatedText[SettingsValues.Language][46]+": "+MoneyAmount+" ";
 	let metrics = canvasobj.context.measureText(text);
 	canvasobj.box(1000 - metrics.width - 20, 0, metrics.width + 20, 50);
 	canvasobj.setnewcolor("#333399");
