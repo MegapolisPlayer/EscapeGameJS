@@ -1,13 +1,6 @@
 let GamePaused = false;
 let AllowedToPause = true;
 
-function deleteCanvasInputElems() {
-	let inputElems = document.getElementsByClassName("CanvasInputElement");
-	while(inputElems[0]) {
-   		inputElems[0].parentNode.removeChild(inputElems[0]);
-	}
-}
-
 function SetState(canvasobj) {
 	deleteCanvasInputElems();
 	PauseButton.append(canvasobj);

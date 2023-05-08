@@ -23,9 +23,9 @@ function HraniceNaMoraveLoad(canvas, calledbysetstate = false) {
 	}
 	hnm_Locations[0].src = "res/hnm/domov.png";
 	hnm_Locations[1].src = "res/hnm/namesti.png";
-	hnm_Locations[2].src = "res/hnm/nadrazi.png";
-	hnm_Locations[3].src = "res/hnm/nastupiste.png";
-	hnm_Locations[4].src = "res/hnm/restaurace.png";
+	hnm_Locations[2].src = "res/hnm/nadrazi.jpg";
+	hnm_Locations[3].src = "res/hnm/nastupiste.jpg";
+	hnm_Locations[4].src = "res/hnm/restaurace.jpg";
 	
 	ap.playTrack(2);
 	
@@ -44,6 +44,7 @@ function HraniceNaMorave(canvas) {
 		return;
     }
     console.log("Hranice na Morave START "+hnm_AmountLoadedImages);
+	CheckInstantLoss(canvas);	
 	
 	canvas.loadingMsg();
 	canvas.image(hnm_Locations[0], 0, 0, canvas.canvas.width, canvas.canvas.height);
@@ -113,8 +114,8 @@ function HraniceNaMoraveNadrazi(canvas) {
 	console.log("hnm nadrazi");
 	localLocationId = 2;
 	let ArrowToNamesti = new Arrow(100, 400, 100, 100, ArrowDirections.Left, canvas);
-	let ArrowToNastupiste = new Arrow(300, 300, 100, 100, ArrowDirections.Up, canvas);
-	let ArrowToRestaurace = new Arrow(700, 400, 100, 100, ArrowDirections.Right, canvas);
+	let ArrowToNastupiste = new Arrow(800, 400, 100, 100, ArrowDirections.Down, canvas);
+	let ArrowToRestaurace = new Arrow(900, 320, 100, 100, ArrowDirections.Up, canvas);
 	ArrowToNamesti.button.addEventListener("click", () => {
 		if(GamePaused) { return; }
 		ArrowToNamesti.deleteButton();
@@ -137,7 +138,7 @@ function HraniceNaMoraveNadrazi(canvas) {
     	HraniceNaMoraveRestaurace(canvas);
 	}, { once: true });
 	canvas.image(hnm_Locations[2], 0, 0, canvas.canvas.width, canvas.canvas.height);
-	chr.draw(320, 210, 0.17, canvas);
+	chr.draw(150, 250, 0.35, canvas);
 	ArrowToNamesti.draw(canvas);
 	ArrowToNastupiste.draw(canvas);
 	ArrowToRestaurace.draw(canvas);
@@ -164,8 +165,8 @@ function HraniceNaMoraveNastupiste(canvas) {
     	HraniceNaMoraveNadrazi(canvas);
 	}, { once: true });
 	canvas.image(hnm_Locations[3], 0, 0, canvas.canvas.width, canvas.canvas.height);
-	chr.draw(700, 260, 0.35, canvas);
-	traindriver.draw(500, 250, 0.35, canvas);
+	chr.draw(570, 260, 0.35, canvas);
+	traindriver.draw(320, 260, 0.35, canvas);
 	ArrowToNadrazi.draw(canvas);
 	PauseButton.draw(canvas);
 	drawMoneyCount(canvas);
@@ -193,8 +194,8 @@ function HraniceNaMoraveRestaurace(canvas) {
 	
 	cook.append(canvas);
 	canvas.image(hnm_Locations[4], 0, 0, canvas.canvas.width, canvas.canvas.height);
-	chr.draw(540, 170, 0.5, canvas);
-	cook.draw(110, 110, 0.5, canvas);
+	chr.draw(450, 300, 0.75, canvas);
+	cook.draw(820, 110, 0.5, canvas);
 	ArrowToNadrazi.draw(canvas);
 	PauseButton.draw(canvas);
 	drawMoneyCount(canvas);

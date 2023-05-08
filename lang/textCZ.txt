@@ -62,3 +62,22 @@ Souhlasíš s tím?
 Ok, jdem na to.
 Tak jo, fajn.
 Můžes si to rozmyslet a vratit se.
+
+KONEC HRY
+Artilérie zníčila vlak.
+Byli jste na tom vlaku.
+Slováci vzali vaše město.
+Šance útěku je nulová.
+Při výstupu nastala rvačka.
+Byli jste jedna ze strát.
+Česká armáda vás poslala na frontu.
+S toho se už opravdu nedá utéct.
+Byli jste zatčeni za kolaboraci.
+Budete popraveni za hodinu.
+
+autoři hry
+autoři obrázků
+autoři audia a SFX
+autoři překladů
+licenze:
+Vaše dostižení:

@@ -341,7 +341,7 @@ let MoneyAmount = 0;
 function drawMoneyCount(canvasobj) {
 	canvasobj.setnewfont("Arial, FreeSans", "32");
 	canvasobj.setnewcolor("#ffffff");
-	let text = "Money: "+MoneyAmount+" ";
+	let text = TranslatedText[SettingsValues.Language][46]+": "+MoneyAmount+" ";
 	let metrics = canvasobj.context.measureText(text);
 	canvasobj.box(1000 - metrics.width - 20, 0, metrics.width + 20, 50);
 	canvasobj.setnewcolor("#333399");
@@ -530,14 +530,40 @@ let SettingsValues = {
 	Language: 0 //0 - English, 1 - Czech, 2 - German, 3 - Russian
 };
 
+function deleteCanvasInputElems() {
+	let inputElems = document.getElementsByClassName("CanvasInputElement");
+	while(inputElems[0]) {
+   		inputElems[0].parentNode.removeChild(inputElems[0]);
+	}
+}
+
 function randomNumber(maxRange) {
   return Math.floor(Math.random() * maxRange);
 }
 
-function CheckInstantLoss() {
-	if(randomNumber(SettingsValues.ChanceOfInstantLoss) === 1) {
+function InstantLossScreen(eventNo, canvasobj) {
+	deleteCanvasInputElems();
+	canvasobj.clear("black");
+	ap.playTrack(1);
+	canvasobj.context.textAlign = "center"; 
+	canvasobj.setnewfont("Arial, FreeSans", "48", "bold");
+	canvasobj.setnewcolor("#ff0000");
+	canvasobj.text(TranslatedText[SettingsValues.Language][54], 500, 100);
+	canvasobj.resetfontweight();
+	canvasobj.setnewcolor("#ffffff");
+	canvasobj.textml(TranslationGetMultipleLines(SettingsValues.Language, 55+(eventNo*2), 2), 500, 200);
+	InstantLossScreen.Quit = new Button(700, 400, 300, 100, 25, TranslatedText[SettingsValues.Language][11], "canvas_container");
+	InstantLossScreen.Quit.button.addEventListener("click", (event) => {
+		location.reload();
+	});
+}
+
+function CheckInstantLoss(canvasobj) {
+	let eventNo = randomNumber(SettingsValues.ChanceOfInstantLoss);
+	console.log("random loss event no: "+eventNo);
+	if(eventNo < 5) {
 		//game over!
-		canvas.clear("black");
+		InstantLossScreen(eventNo, canvasobj);
 	}
 }
 
@@ -708,8 +734,59 @@ function Credits(iscalledfrommm, canvasobj) {
 	canvasobj.setnewcolor("#333399");
 	canvasobj.setnewfont("Arial, FreeSans", "48", "bold");
 	canvasobj.image(finalCreditsImage, 0, 0, canvasobj.canvas.width, canvasobj.canvas.height);
-	canvasobj.text(TranslatedText[SettingsValues.Language][0], 50, 50);	
+	canvasobj.text(TranslatedText[SettingsValues.Language][0], 50, 190);	
+	canvasobj.setnewfont("Arial, FreeSans", "32", "normal");
+	
+	//game by
+	canvasobj.image(finalCreditsImage, 0, 0, canvasobj.canvas.width, canvasobj.canvas.height);
+	canvasobj.text(TranslatedText[SettingsValues.Language][65], 50, 190);
+	canvasobj.setfontweight("bold");
+	canvasobj.textml("Martin (MegapolisPlayer)\nJirka (KohoutGD)", 200, 230);
 	canvasobj.resetfontweight();
+	
+	setTimeout(() => {
+		//images
+		canvasobj.image(finalCreditsImage, 0, 0, canvasobj.canvas.width, canvasobj.canvas.height);
+		canvasobj.text(TranslatedText[SettingsValues.Language][66], 50, 190);
+		canvasobj.setfontweight("bold");
+		canvasobj.textml("Google Maps Street View, SReality, Pixabay\nWikipedia Commons:\nPalickap, Marie Čchiedzeová\nAll pixel-art assets are custom-made.\nFor more information check out /res/ folder on GitHub.", 100, 230);
+		canvasobj.resetfontweight();
+	}, 2500);	
+
+	setTimeout(() => {
+		//music
+		canvasobj.image(finalCreditsImage, 0, 0, canvasobj.canvas.width, canvasobj.canvas.height);
+		canvasobj.text(TranslatedText[SettingsValues.Language][67], 50, 190);
+		canvasobj.setfontweight("bold");
+		canvasobj.textml("All music by Kevin Macleod @ incompetech.com/music", 100, 230);
+		canvasobj.resetfontweight();
+	}, 5000);
+
+	setTimeout(() => {
+		//translations
+		canvasobj.image(finalCreditsImage, 0, 0, canvasobj.canvas.width, canvasobj.canvas.height);
+		canvasobj.text(TranslatedText[SettingsValues.Language][68], 50, 190);
+		canvasobj.setfontweight("bold");
+		canvasobj.textml("Čeština - Martin\nEnglish - Martin\nDeutsch - Jirka\nРусский - Martin\nSus Language - Jirka", 100, 230);
+		canvasobj.resetfontweight();
+	}, 7500);
+
+	setTimeout(() => {
+		//translations
+		canvasobj.image(finalCreditsImage, 0, 0, canvasobj.canvas.width, canvasobj.canvas.height);
+		canvasobj.text(TranslatedText[SettingsValues.Language][69], 50, 190); //nice 69 is a license...
+		canvasobj.setfontweight("bold");
+		canvasobj.textml("Licensed under CC-BY-SA 4.0\nImages - Content License, CC-BY-SA 4.0\nMusic - CC-BY 4.0", 100, 230);
+		canvasobj.resetfontweight();
+	}, 10000);
+	
+	if(!iscalledfrommm) {
+		setTimeout(() => {
+			//achievements
+			canvasobj.image(finalCreditsImage, 0, 0, canvasobj.canvas.width, canvasobj.canvas.height);
+			canvasobj.text(TranslatedText[SettingsValues.Language][70], 50, 190); 
+		}, 12500);
+	}
 }
 
 function CreditsButtonRegister(canvasobj) {
@@ -743,9 +820,9 @@ function HraniceNaMoraveLoad(canvas, calledbysetstate = false) {
 	}
 	hnm_Locations[0].src = "res/hnm/domov.png";
 	hnm_Locations[1].src = "res/hnm/namesti.png";
-	hnm_Locations[2].src = "res/hnm/nadrazi.png";
-	hnm_Locations[3].src = "res/hnm/nastupiste.png";
-	hnm_Locations[4].src = "res/hnm/restaurace.png";
+	hnm_Locations[2].src = "res/hnm/nadrazi.jpg";
+	hnm_Locations[3].src = "res/hnm/nastupiste.jpg";
+	hnm_Locations[4].src = "res/hnm/restaurace.jpg";
 	
 	ap.playTrack(2);
 	
@@ -764,6 +841,7 @@ function HraniceNaMorave(canvas) {
 		return;
     }
     console.log("Hranice na Morave START "+hnm_AmountLoadedImages);
+	CheckInstantLoss(canvas);	
 	
 	canvas.loadingMsg();
 	canvas.image(hnm_Locations[0], 0, 0, canvas.canvas.width, canvas.canvas.height);
@@ -833,8 +911,8 @@ function HraniceNaMoraveNadrazi(canvas) {
 	console.log("hnm nadrazi");
 	localLocationId = 2;
 	let ArrowToNamesti = new Arrow(100, 400, 100, 100, ArrowDirections.Left, canvas);
-	let ArrowToNastupiste = new Arrow(300, 300, 100, 100, ArrowDirections.Up, canvas);
-	let ArrowToRestaurace = new Arrow(700, 400, 100, 100, ArrowDirections.Right, canvas);
+	let ArrowToNastupiste = new Arrow(800, 400, 100, 100, ArrowDirections.Down, canvas);
+	let ArrowToRestaurace = new Arrow(900, 320, 100, 100, ArrowDirections.Up, canvas);
 	ArrowToNamesti.button.addEventListener("click", () => {
 		if(GamePaused) { return; }
 		ArrowToNamesti.deleteButton();
@@ -857,7 +935,7 @@ function HraniceNaMoraveNadrazi(canvas) {
     	HraniceNaMoraveRestaurace(canvas);
 	}, { once: true });
 	canvas.image(hnm_Locations[2], 0, 0, canvas.canvas.width, canvas.canvas.height);
-	chr.draw(320, 210, 0.17, canvas);
+	chr.draw(150, 250, 0.35, canvas);
 	ArrowToNamesti.draw(canvas);
 	ArrowToNastupiste.draw(canvas);
 	ArrowToRestaurace.draw(canvas);
@@ -884,8 +962,8 @@ function HraniceNaMoraveNastupiste(canvas) {
     	HraniceNaMoraveNadrazi(canvas);
 	}, { once: true });
 	canvas.image(hnm_Locations[3], 0, 0, canvas.canvas.width, canvas.canvas.height);
-	chr.draw(700, 260, 0.35, canvas);
-	traindriver.draw(500, 250, 0.35, canvas);
+	chr.draw(570, 260, 0.35, canvas);
+	traindriver.draw(320, 260, 0.35, canvas);
 	ArrowToNadrazi.draw(canvas);
 	PauseButton.draw(canvas);
 	drawMoneyCount(canvas);
@@ -913,8 +991,8 @@ function HraniceNaMoraveRestaurace(canvas) {
 	
 	cook.append(canvas);
 	canvas.image(hnm_Locations[4], 0, 0, canvas.canvas.width, canvas.canvas.height);
-	chr.draw(540, 170, 0.5, canvas);
-	cook.draw(110, 110, 0.5, canvas);
+	chr.draw(450, 300, 0.75, canvas);
+	cook.draw(820, 110, 0.5, canvas);
 	ArrowToNadrazi.draw(canvas);
 	PauseButton.draw(canvas);
 	drawMoneyCount(canvas);
@@ -965,13 +1043,6 @@ function HraniceNaMoraveNastupisteDialogue(canvas) {
 }
 let GamePaused = false;
 let AllowedToPause = true;
-
-function deleteCanvasInputElems() {
-	let inputElems = document.getElementsByClassName("CanvasInputElement");
-	while(inputElems[0]) {
-   		inputElems[0].parentNode.removeChild(inputElems[0]);
-	}
-}
 
 function SetState(canvasobj) {
 	deleteCanvasInputElems();
@@ -1173,7 +1244,7 @@ const cvs = new Canvas("EscapeCanvas", "Arial, FreeSans", "48", "#333399", 1000,
 cvs.clear("purple");
 
 const MainMenuImage = new Image();
-MainMenuImage.src = "res/MainMenu.jpg";
+MainMenuImage.src = "res/prerov/nastupiste.jpg";
 MainMenuImage.onload = MainMenuSetup;
 
 let mainMenuButtons = [];
@@ -1223,14 +1294,14 @@ function MainMenu() {
 	mainMenuButtons[4].setCallback("ButtonsRouter(2)");
 	
 	cvs.image(MainMenuImage, 0, 0, cvs.canvas.width, cvs.canvas.height);
-	chr.draw(300, 300, 0.3, cvs);	
+	chr.draw(360, 100, 0.25, cvs);	
 	cvs.setfontweight("bold");
 	cvs.text(TranslatedText[SettingsValues.Language][0], 50, 50);	
 	cvs.resetfontweight();
 	cvs.setnewfont("Arial, FreeSans", "16");
 	cvs.setnewcolor("white");
 	cvs.text("(c) Martin/MegapolisPlayer, Jiri/KohoutGD", 650, 472);
-	cvs.text("build date 07/05/2023, prerelease version", 650, 492);
+	cvs.text("build date 08/05/2023, prerelease version", 650, 492);
 	cvs.setnewcolor("#333399");
 	cvs.setnewfont("Arial, FreeSans", "48");
 }

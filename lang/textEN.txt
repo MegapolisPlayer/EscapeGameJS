@@ -62,3 +62,22 @@ Do you agree?
 Ok, let's go!
 If you change your mind you can return.
 I'm free at any time.
+
+GAME OVER
+An artillery strike destroyed a train.
+You were on that train.
+The Slovaks captured the city you were in.
+Any chances of escape are gone.
+A stampede occured when disembarking.
+You were one of the casualties.
+The Czech Army sent you to the front.
+You really cannot escape that.
+You were arrested for collaborating.
+Your execution is to be carried out in 1h.
+
+a game by
+images by
+music and audio effects by
+translations by
+license:
+Your achievements:

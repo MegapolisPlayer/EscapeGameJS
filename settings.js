@@ -5,14 +5,40 @@ let SettingsValues = {
 	Language: 0 //0 - English, 1 - Czech, 2 - German, 3 - Russian
 };
 
+function deleteCanvasInputElems() {
+	let inputElems = document.getElementsByClassName("CanvasInputElement");
+	while(inputElems[0]) {
+   		inputElems[0].parentNode.removeChild(inputElems[0]);
+	}
+}
+
 function randomNumber(maxRange) {
   return Math.floor(Math.random() * maxRange);
 }
 
-function CheckInstantLoss() {
-	if(randomNumber(SettingsValues.ChanceOfInstantLoss) === 1) {
+function InstantLossScreen(eventNo, canvasobj) {
+	deleteCanvasInputElems();
+	canvasobj.clear("black");
+	ap.playTrack(1);
+	canvasobj.context.textAlign = "center"; 
+	canvasobj.setnewfont("Arial, FreeSans", "48", "bold");
+	canvasobj.setnewcolor("#ff0000");
+	canvasobj.text(TranslatedText[SettingsValues.Language][54], 500, 100);
+	canvasobj.resetfontweight();
+	canvasobj.setnewcolor("#ffffff");
+	canvasobj.textml(TranslationGetMultipleLines(SettingsValues.Language, 55+(eventNo*2), 2), 500, 200);
+	InstantLossScreen.Quit = new Button(700, 400, 300, 100, 25, TranslatedText[SettingsValues.Language][11], "canvas_container");
+	InstantLossScreen.Quit.button.addEventListener("click", (event) => {
+		location.reload();
+	});
+}
+
+function CheckInstantLoss(canvasobj) {
+	let eventNo = randomNumber(SettingsValues.ChanceOfInstantLoss);
+	console.log("random loss event no: "+eventNo);
+	if(eventNo < 5) {
 		//game over!
-		canvas.clear("black");
+		InstantLossScreen(eventNo, canvasobj);
 	}
 }
 

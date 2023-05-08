@@ -9,7 +9,7 @@ const cvs = new Canvas("EscapeCanvas", "Arial, FreeSans", "48", "#333399", 1000,
 cvs.clear("purple");
 
 const MainMenuImage = new Image();
-MainMenuImage.src = "res/MainMenu.jpg";
+MainMenuImage.src = "res/prerov/nastupiste.jpg";
 MainMenuImage.onload = MainMenuSetup;
 
 let mainMenuButtons = [];
@@ -59,14 +59,14 @@ function MainMenu() {
 	mainMenuButtons[4].setCallback("ButtonsRouter(2)");
 	
 	cvs.image(MainMenuImage, 0, 0, cvs.canvas.width, cvs.canvas.height);
-	chr.draw(300, 300, 0.3, cvs);	
+	chr.draw(360, 100, 0.25, cvs);	
 	cvs.setfontweight("bold");
 	cvs.text(TranslatedText[SettingsValues.Language][0], 50, 50);	
 	cvs.resetfontweight();
 	cvs.setnewfont("Arial, FreeSans", "16");
 	cvs.setnewcolor("white");
 	cvs.text("(c) Martin/MegapolisPlayer, Jiri/KohoutGD", 650, 472);
-	cvs.text("build date 07/05/2023, prerelease version", 650, 492);
+	cvs.text("build date 08/05/2023, prerelease version", 650, 492);
 	cvs.setnewcolor("#333399");
 	cvs.setnewfont("Arial, FreeSans", "48");
 }
