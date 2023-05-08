@@ -1,59 +1,30 @@
 Flucht aus der Region Olomouc
 Spielen
 Einstellungen
-NICHTS
-NICHTS
-NICHTS
-NICHTS
-NICHTS
-NICHTS
-NICHTS
-NICHTS
-NICHTS
-NICHTS
-NICHTS
-NICHTS
-NICHTS
-NICHTS
-NICHTS
-NICHTS
-NICHTS
-NICHTS
-NICHTS
-NICHTS
-NICHTS
-NICHTS
-NICHTS
-NICHTS
-NICHTS
-NICHTS
-NICHTS
-NICHTS
-NICHTS
-NICHTS
-NICHTS
-NICHTS
-NICHTS
-NICHTS
-NICHTS
-NICHTS
-NICHTS
-NICHTS
-NICHTS
-NICHTS
-NICHTS
-NICHTS
-NICHTS
-NICHTS
-NICHTS
-NICHTS
-NICHTS
-NICHTS
-NICHTS
-NICHTS
-NICHTS
-NICHTS
-NICHTS
-NICHTS
-NICHTS
-NICHTS
+Kredite
+Spiel Musik
+Stop die Musik
+Wiederherstellen
+
+Pausenmenü
+Spielen
+Spiel speichern
+Spiel laden
+Spile enden
+
+Schwierigkeit
+Leicht
+Mittelschwer
+Schwer
+Kostenmultiplikator
+Verlustwahrscheinlichkeit pro Tag
+Sprache
+
+Hintergrundgeschichte
+Tag
+
+
+Die Schwierigkeit bestimmt nicht nur die oben genannten Werte, sondern auch
+die Schwierigkeit der Minispiele. Die Schwierigkeit oder die Sprache können
+es nicht während des Spiels geändert werden. Alle Werte werden gespeichert.
+
