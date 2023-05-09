@@ -22,7 +22,7 @@ function HraniceNaMoraveLoad(canvas, calledbysetstate = false) {
 		hnm_Locations[Id].onload = HraniceNaMoraveImageLoaded;
 	}
 	hnm_Locations[0].src = "res/hnm/domov.png";
-	hnm_Locations[1].src = "res/hnm/namesti.png";
+	hnm_Locations[1].src = "res/hnm/namesti.jpg";
 	hnm_Locations[2].src = "res/hnm/nadrazi.jpg";
 	hnm_Locations[3].src = "res/hnm/nastupiste.jpg";
 	hnm_Locations[4].src = "res/hnm/restaurace.jpg";
@@ -104,7 +104,7 @@ function HraniceNaMoraveNamesti(canvas) {
     	HraniceNaMoraveNadrazi(canvas);
 	}, { once: true });
 	canvas.image(hnm_Locations[1], 0, 0, canvas.canvas.width, canvas.canvas.height);
-	chr.draw(550, 320, 0.2, canvas);
+	chr.draw(550, 270, 0.3, canvas);
 	ArrowToDomov.draw(canvas);
 	ArrowToNadrazi.draw(canvas);
 	PauseButton.draw(canvas);
@@ -153,7 +153,7 @@ function HraniceNaMoraveNastupiste(canvas) {
 		if(GamePaused) { return; }
 		traindriver.deleteButton();
 		ArrowToNadrazi.deleteButton();
-		HraniceNaMoraveNastupisteDialogue(canvas);
+		HraniceNaMoraveNastupisteJob(canvas);
 	}, { once: true });
 	traindriver.append(canvas);
 	
@@ -176,7 +176,7 @@ function HraniceNaMoraveRestaurace(canvas) {
 	console.log("hnm restaurace");
 	localLocationId = 4;	
 		
-	let ArrowToNadrazi = new Arrow(500, 400, 100, 100, ArrowDirections.Down, canvas);
+	let ArrowToNadrazi = new Arrow(850, 400, 100, 100, ArrowDirections.Down, canvas);
 	
 	ArrowToNadrazi.button.addEventListener("click", (event) => {
 		if(GamePaused) { return; }
@@ -215,7 +215,7 @@ function HraniceNaMoraveRestauraceJob(canvas) {
 			clearInterval(dWaitInterval);
 			if(dialogue.choice_result === 1) {
 				dialogue.makeBubble(3, TranslatedText[SettingsValues.Language][51]);
-				addMoney(700);
+				WaiterGame(canvas);
 				return;
 			}
 			else {
@@ -235,12 +235,13 @@ function HraniceNaMoraveRestauraceJob(canvas) {
 	}, 100, dialogue, canvas);
 }
 
-function HraniceNaMoraveRestauraceJobGame(canvas) {
-	//you are a waiter, food stuff, take orders, maybe new file minigame.js?
-}
-
-function HraniceNaMoraveNastupisteDialogue(canvas) {
-	console.log("hnm nastupiste dlg");
-	//AllowedToPause = false;
+function HraniceNaMoraveNastupisteJob(canvas) {
+	console.log("hnm nastupiste job");
+	AllowedToPause = false;
+	let dialogue = new Dialogue();
+	dialogue.begin(canvas);
+	dialogue.makeBubble(0, TranslationGetMultipleLines(SettingsValues.Language, 47, 2));
+	dialogue.makeBubble(1, TranslationGetMultipleLines(SettingsValues.Language, 49, 2));
+	dialogue.makeChoice(2);
 	HraniceNaMoraveNastupiste(canvas);
 }

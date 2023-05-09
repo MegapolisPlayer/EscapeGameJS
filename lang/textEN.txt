@@ -75,9 +75,22 @@ You really cannot escape that.
 You were arrested for collaborating.
 Your execution is to be carried out in 1h.
 
+You escaped from the Olomouc Region!
+
 a game by
 images by
 music and audio effects by
 translations by
 license:
 Your achievements:
+Medal for speed
+You finished the game in under 10 minutes1
+Waiter's medal
+You did all the waiter minigames!
+Helper's medal
+You helped people find their way home!
+Susština medal
+You completed the game in susština!
+Click anywhere to quit game.
+UNLOCKED
+LOCKED

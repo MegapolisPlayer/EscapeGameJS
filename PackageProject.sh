@@ -12,9 +12,10 @@ cat "dialogue.js" >> "package.js"
 cat "translation.js" >> "package.js"
 
 #gui files
-cat "soundmgr.js" >> "package.js"
 cat "settings.js" >> "package.js"
 cat "credits.js" >> "package.js"
+
+cat "minigame.js" >> "package.js"
 
 #location files
 cat "HraniceNaMorave.js" >> "package.js"

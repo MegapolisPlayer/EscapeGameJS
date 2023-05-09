@@ -75,9 +75,22 @@ S toho se už opravdu nedá utéct.
 Byli jste zatčeni za kolaboraci.
 Budete popraveni za hodinu.
 
+Utekl jsi!
+
 autoři hry
 autoři obrázků
 autoři audia a SFX
 autoři překladů
 licenze:
 Vaše dostižení:
+Medalie za rychlost
+Dokončil/a si hru za méně než 10 minut!
+Medaile čišníka
+Dokončil/a si všechny minihry čišníka!
+Medaile pomocníka
+Pomohl/a si lidem najít cestu domů!
+Medaile susská
+Dokončil/a si hru v susštině!
+Klikněte kamkoliv pro odchod ze hry.
+NEDOSTIŽENO
+DOSTIŽENO

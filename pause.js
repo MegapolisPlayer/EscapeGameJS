@@ -91,7 +91,7 @@ function Pause(canvasobj) {
 		window.open("https://www.github.com/MegapolisPlayer/EscapeGameJS", "_blank");
 	});
 	Pause.buttonSave.button.addEventListener("click", () => {
-		Save(locationId, localLocationId, SettingsValues.Difficulty, MoneyAmount, SettingsValues.Language);
+		Save(locationId, localLocationId, SettingsValues.Difficulty, MoneyAmount, SettingsValues.Language, );
 	});
 	Pause.buttonLoad.button.addEventListener("click", () => {
 		Load(canvasobj);
@@ -116,15 +116,22 @@ function SetStateFile(filecontent, canvas) {
 	if(Data[0] !== "eors1") {
 		console.error("SetStateFile: Incompatible save loaded! (Version 1 required)");
 	}	
+	if(Data.length != 10) {
+		console.error("SetStateFile: Invalid save loaded!");
+	}
 	
 	console.log("Save loaded: "+filecontent);
 	
 	//data splitting
-	SettingsValues.Language =   Number(Data[1]);
-	SettingsValues.Difficulty = Number(Data[2]);
-	locationId =                Number(Data[3]);	
-	localLocationId =           Number(Data[4]);	
-	MoneyAmount =                Number(Data[5]);
+	SettingsValues.Language =            Number(Data[1]);
+	SettingsValues.Difficulty =          Number(Data[2]);
+	locationId =                         Number(Data[3]);	
+	localLocationId =                    Number(Data[4]);	
+	MoneyAmount =                        Number(Data[5]);
+	CreditsValues.gotAchievementSpeed =  Number(Data[6]);
+	CreditsValues.gotAchievementWaiter = Number(Data[7]);
+	CreditsValues.gotAchievementHelp =   Number(Data[8]);
+	CreditsValues.gotAchievementSus =    Number(Data[9]);
 	UpdateSettingsValues();
 	
 	//pause button
@@ -149,7 +156,7 @@ function SetStateFile(filecontent, canvas) {
 	}
 }
 
-function Save(locationId, localLocationId, difficulty, money, language) {
+function Save(locationId, localLocationId, difficulty, money, language, achievementValues) {
 	let finalizedSave = "eors1 ";
 	finalizedSave+=language;
 	finalizedSave+=" ";
@@ -160,6 +167,14 @@ function Save(locationId, localLocationId, difficulty, money, language) {
 	finalizedSave+=localLocationId;
 	finalizedSave+=" ";
 	finalizedSave+=money;
+	finalizedSave+=" ";
+	finalizedSave+=achievementValues.gotAchievementSpeed;
+	finalizedSave+=" ";
+	finalizedSave+=achievementValues.gotAchievementWaiter;
+	finalizedSave+=" ";
+	finalizedSave+=achievementValues.gotAchievementHelp;
+	finalizedSave+=" ";
+	finalizedSave+=achievementValues.gotAchievementSus;
 	
 	let hiddenAddrElem = document.createElement('a');
     hiddenAddrElem.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(finalizedSave));

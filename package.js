@@ -726,67 +726,120 @@ function SettingsButtonRegister(canvasobj) {
 	Settings(canvasobj);
 }
 
+let CreditsValues = {
+	gotAchievementSpeed: 0,
+	gotAchievementWaiter: 0,
+	gotAchievementHelp: 0,
+	gotAchievementSus: 0
+};
+
 const finalCreditsImage = new Image();
 
 //if iscalledfrommm true means called from main menu, dont show achievements and such
 function Credits(iscalledfrommm, canvasobj) {
+	deleteCanvasInputElems();
 	ap.playTrack(9); //waltz vivace
-	canvasobj.setnewcolor("#333399");
-	canvasobj.setnewfont("Arial, FreeSans", "48", "bold");
+	canvasobj.setnewcolor("#ffffff");
 	canvasobj.image(finalCreditsImage, 0, 0, canvasobj.canvas.width, canvasobj.canvas.height);
-	canvasobj.text(TranslatedText[SettingsValues.Language][0], 50, 190);	
-	canvasobj.setnewfont("Arial, FreeSans", "32", "normal");
-	
+	let delay = 2500;
+		
+	if(!iscalledfrommm) {
+		canvasobj.setnewfont("Arial, FreeSans", "48", "bold");
+		canvasobj.image(finalCreditsImage, 0, 0, canvasobj.canvas.width, canvasobj.canvas.height);
+		canvasobj.textml(TranslatedText[SettingsValues.Language][65], 50, 190);
+		canvasobj.setnewfont("Arial, FreeSans", "32", "normal");
+	}
+	else {
+		canvasobj.setnewfont("Arial, FreeSans", "48", "bold");
+		canvasobj.image(finalCreditsImage, 0, 0, canvasobj.canvas.width, canvasobj.canvas.height);
+		canvasobj.textml(TranslatedText[SettingsValues.Language][0], 50, 190);
+		canvasobj.setnewfont("Arial, FreeSans", "32", "normal");
+	}
+
 	//game by
-	canvasobj.image(finalCreditsImage, 0, 0, canvasobj.canvas.width, canvasobj.canvas.height);
-	canvasobj.text(TranslatedText[SettingsValues.Language][65], 50, 190);
-	canvasobj.setfontweight("bold");
-	canvasobj.textml("Martin (MegapolisPlayer)\nJirka (KohoutGD)", 200, 230);
-	canvasobj.resetfontweight();
+	setTimeout(() => {
+		canvasobj.image(finalCreditsImage, 0, 0, canvasobj.canvas.width, canvasobj.canvas.height);
+		canvasobj.text(TranslatedText[SettingsValues.Language][66], 50, 190);
+		canvasobj.setfontweight("bold");
+		canvasobj.textml("Martin (MegapolisPlayer)\nJirka (KohoutGD)", 200, 230);
+		canvasobj.resetfontweight();
+	}, 1 * delay);
 	
 	setTimeout(() => {
 		//images
 		canvasobj.image(finalCreditsImage, 0, 0, canvasobj.canvas.width, canvasobj.canvas.height);
-		canvasobj.text(TranslatedText[SettingsValues.Language][66], 50, 190);
+		canvasobj.text(TranslatedText[SettingsValues.Language][67], 50, 190);
 		canvasobj.setfontweight("bold");
-		canvasobj.textml("Google Maps Street View, SReality, Pixabay\nWikipedia Commons:\nPalickap, Marie Čchiedzeová\nAll pixel-art assets are custom-made.\nFor more information check out /res/ folder on GitHub.", 100, 230);
+		canvasobj.textml("Google Maps Street View, SReality, Pixabay\nWikipedia Commons:\nPalickap, Marie Čchiedzeová, Vojtěch Dočkal\nAll pixel-art assets are custom-made.\nFor more information check out /res/ folder on GitHub.", 100, 230);
 		canvasobj.resetfontweight();
-	}, 2500);	
+	}, 2 * delay);	
 
 	setTimeout(() => {
 		//music
 		canvasobj.image(finalCreditsImage, 0, 0, canvasobj.canvas.width, canvasobj.canvas.height);
-		canvasobj.text(TranslatedText[SettingsValues.Language][67], 50, 190);
+		canvasobj.text(TranslatedText[SettingsValues.Language][68], 50, 190);
 		canvasobj.setfontweight("bold");
-		canvasobj.textml("All music by Kevin Macleod @ incompetech.com/music", 100, 230);
+		canvasobj.textml("All music by Kevin Macleod (incompetech.com)\nLicensed under CC-BY 3.0", 100, 230);
 		canvasobj.resetfontweight();
-	}, 5000);
+	}, 3 * delay);
 
 	setTimeout(() => {
 		//translations
 		canvasobj.image(finalCreditsImage, 0, 0, canvasobj.canvas.width, canvasobj.canvas.height);
-		canvasobj.text(TranslatedText[SettingsValues.Language][68], 50, 190);
+		canvasobj.text(TranslatedText[SettingsValues.Language][69], 50, 190);
 		canvasobj.setfontweight("bold");
 		canvasobj.textml("Čeština - Martin\nEnglish - Martin\nDeutsch - Jirka\nРусский - Martin\nSus Language - Jirka", 100, 230);
 		canvasobj.resetfontweight();
-	}, 7500);
+	}, 4 * delay);
 
 	setTimeout(() => {
 		//translations
 		canvasobj.image(finalCreditsImage, 0, 0, canvasobj.canvas.width, canvasobj.canvas.height);
-		canvasobj.text(TranslatedText[SettingsValues.Language][69], 50, 190); //nice 69 is a license...
+		canvasobj.text(TranslatedText[SettingsValues.Language][70], 50, 190);
 		canvasobj.setfontweight("bold");
 		canvasobj.textml("Licensed under CC-BY-SA 4.0\nImages - Content License, CC-BY-SA 4.0\nMusic - CC-BY 4.0", 100, 230);
 		canvasobj.resetfontweight();
-	}, 10000);
+	}, 5 * delay);
 	
-	if(!iscalledfrommm) {
-		setTimeout(() => {
-			//achievements
-			canvasobj.image(finalCreditsImage, 0, 0, canvasobj.canvas.width, canvasobj.canvas.height);
-			canvasobj.text(TranslatedText[SettingsValues.Language][70], 50, 190); 
-		}, 12500);
-	}
+	setTimeout(() => {
+		//achievements
+		canvasobj.image(finalCreditsImage, 0, 0, canvasobj.canvas.width, canvasobj.canvas.height);
+		canvasobj.text(TranslatedText[SettingsValues.Language][71], 50, 190); 
+	}, 6 * delay);
+	
+	setTimeout(() => {
+		//achievements - medal for speed
+		canvasobj.image(finalCreditsImage, 0, 0, canvasobj.canvas.width, canvasobj.canvas.height);
+		canvasobj.text(TranslatedText[SettingsValues.Language][72], 50, 190); 
+	}, 7 * delay);
+
+	setTimeout(() => {
+		//achievements - waiters medal
+		canvasobj.image(finalCreditsImage, 0, 0, canvasobj.canvas.width, canvasobj.canvas.height);
+		canvasobj.text(TranslatedText[SettingsValues.Language][74], 50, 190); 
+	}, 8 * delay);
+
+	setTimeout(() => {
+		//achievements - help medal
+		canvasobj.image(finalCreditsImage, 0, 0, canvasobj.canvas.width, canvasobj.canvas.height);
+		canvasobj.text(TranslatedText[SettingsValues.Language][76], 50, 190); 
+	}, 9 * delay);
+	
+	setTimeout(() => {
+		//achievements - sus medal
+		canvasobj.image(finalCreditsImage, 0, 0, canvasobj.canvas.width, canvasobj.canvas.height);
+		canvasobj.text(TranslatedText[SettingsValues.Language][78], 50, 190); 
+	}, 10 * delay);
+
+	setTimeout(() => {
+		//quit game
+		canvasobj.image(finalCreditsImage, 0, 0, canvasobj.canvas.width, canvasobj.canvas.height);
+		canvasobj.text(TranslatedText[SettingsValues.Language][80], 50, 190); 
+		window.addEventListener("click", function(event) {
+			location.reload();		
+		});
+	}, 11 * delay);
+	
 }
 
 function CreditsButtonRegister(canvasobj) {
@@ -794,6 +847,15 @@ function CreditsButtonRegister(canvasobj) {
 	canvasobj.loadingMsg();
 	finalCreditsImage.src = "res/Credits.jpg";
 	finalCreditsImage.onload = () => { Credits(true, canvasobj); };
+}
+
+function debug_CreditsLoadImage(iscalledfrommm, canvasobj) {
+	canvasobj.loadingMsg();
+	finalCreditsImage.src = "res/Credits.jpg";
+	finalCreditsImage.onload = () => { Credits(iscalledfrommm, canvasobj); };
+}
+function WaiterGame(canvas) {
+	addMoney(700);
 }
 //global for all locations, HnM is just first
 
@@ -819,7 +881,7 @@ function HraniceNaMoraveLoad(canvas, calledbysetstate = false) {
 		hnm_Locations[Id].onload = HraniceNaMoraveImageLoaded;
 	}
 	hnm_Locations[0].src = "res/hnm/domov.png";
-	hnm_Locations[1].src = "res/hnm/namesti.png";
+	hnm_Locations[1].src = "res/hnm/namesti.jpg";
 	hnm_Locations[2].src = "res/hnm/nadrazi.jpg";
 	hnm_Locations[3].src = "res/hnm/nastupiste.jpg";
 	hnm_Locations[4].src = "res/hnm/restaurace.jpg";
@@ -901,7 +963,7 @@ function HraniceNaMoraveNamesti(canvas) {
     	HraniceNaMoraveNadrazi(canvas);
 	}, { once: true });
 	canvas.image(hnm_Locations[1], 0, 0, canvas.canvas.width, canvas.canvas.height);
-	chr.draw(550, 320, 0.2, canvas);
+	chr.draw(550, 270, 0.3, canvas);
 	ArrowToDomov.draw(canvas);
 	ArrowToNadrazi.draw(canvas);
 	PauseButton.draw(canvas);
@@ -950,7 +1012,7 @@ function HraniceNaMoraveNastupiste(canvas) {
 		if(GamePaused) { return; }
 		traindriver.deleteButton();
 		ArrowToNadrazi.deleteButton();
-		HraniceNaMoraveNastupisteDialogue(canvas);
+		HraniceNaMoraveNastupisteJob(canvas);
 	}, { once: true });
 	traindriver.append(canvas);
 	
@@ -973,7 +1035,7 @@ function HraniceNaMoraveRestaurace(canvas) {
 	console.log("hnm restaurace");
 	localLocationId = 4;	
 		
-	let ArrowToNadrazi = new Arrow(500, 400, 100, 100, ArrowDirections.Down, canvas);
+	let ArrowToNadrazi = new Arrow(850, 400, 100, 100, ArrowDirections.Down, canvas);
 	
 	ArrowToNadrazi.button.addEventListener("click", (event) => {
 		if(GamePaused) { return; }
@@ -1012,7 +1074,7 @@ function HraniceNaMoraveRestauraceJob(canvas) {
 			clearInterval(dWaitInterval);
 			if(dialogue.choice_result === 1) {
 				dialogue.makeBubble(3, TranslatedText[SettingsValues.Language][51]);
-				addMoney(700);
+				WaiterGame(canvas);
 				return;
 			}
 			else {
@@ -1032,13 +1094,14 @@ function HraniceNaMoraveRestauraceJob(canvas) {
 	}, 100, dialogue, canvas);
 }
 
-function HraniceNaMoraveRestauraceJobGame(canvas) {
-	//you are a waiter, food stuff, take orders, maybe new file minigame.js?
-}
-
-function HraniceNaMoraveNastupisteDialogue(canvas) {
-	console.log("hnm nastupiste dlg");
-	//AllowedToPause = false;
+function HraniceNaMoraveNastupisteJob(canvas) {
+	console.log("hnm nastupiste job");
+	AllowedToPause = false;
+	let dialogue = new Dialogue();
+	dialogue.begin(canvas);
+	dialogue.makeBubble(0, TranslationGetMultipleLines(SettingsValues.Language, 47, 2));
+	dialogue.makeBubble(1, TranslationGetMultipleLines(SettingsValues.Language, 49, 2));
+	dialogue.makeChoice(2);
 	HraniceNaMoraveNastupiste(canvas);
 }
 let GamePaused = false;
@@ -1134,7 +1197,7 @@ function Pause(canvasobj) {
 		window.open("https://www.github.com/MegapolisPlayer/EscapeGameJS", "_blank");
 	});
 	Pause.buttonSave.button.addEventListener("click", () => {
-		Save(locationId, localLocationId, SettingsValues.Difficulty, MoneyAmount, SettingsValues.Language);
+		Save(locationId, localLocationId, SettingsValues.Difficulty, MoneyAmount, SettingsValues.Language, );
 	});
 	Pause.buttonLoad.button.addEventListener("click", () => {
 		Load(canvasobj);
@@ -1159,15 +1222,22 @@ function SetStateFile(filecontent, canvas) {
 	if(Data[0] !== "eors1") {
 		console.error("SetStateFile: Incompatible save loaded! (Version 1 required)");
 	}	
+	if(Data.length != 10) {
+		console.error("SetStateFile: Invalid save loaded!");
+	}
 	
 	console.log("Save loaded: "+filecontent);
 	
 	//data splitting
-	SettingsValues.Language =   Number(Data[1]);
-	SettingsValues.Difficulty = Number(Data[2]);
-	locationId =                Number(Data[3]);	
-	localLocationId =           Number(Data[4]);	
-	MoneyAmount =                Number(Data[5]);
+	SettingsValues.Language =            Number(Data[1]);
+	SettingsValues.Difficulty =          Number(Data[2]);
+	locationId =                         Number(Data[3]);	
+	localLocationId =                    Number(Data[4]);	
+	MoneyAmount =                        Number(Data[5]);
+	CreditsValues.gotAchievementSpeed =  Number(Data[6]);
+	CreditsValues.gotAchievementWaiter = Number(Data[7]);
+	CreditsValues.gotAchievementHelp =   Number(Data[8]);
+	CreditsValues.gotAchievementSus =    Number(Data[9]);
 	UpdateSettingsValues();
 	
 	//pause button
@@ -1192,7 +1262,7 @@ function SetStateFile(filecontent, canvas) {
 	}
 }
 
-function Save(locationId, localLocationId, difficulty, money, language) {
+function Save(locationId, localLocationId, difficulty, money, language, achievementValues) {
 	let finalizedSave = "eors1 ";
 	finalizedSave+=language;
 	finalizedSave+=" ";
@@ -1203,6 +1273,14 @@ function Save(locationId, localLocationId, difficulty, money, language) {
 	finalizedSave+=localLocationId;
 	finalizedSave+=" ";
 	finalizedSave+=money;
+	finalizedSave+=" ";
+	finalizedSave+=achievementValues.gotAchievementSpeed;
+	finalizedSave+=" ";
+	finalizedSave+=achievementValues.gotAchievementWaiter;
+	finalizedSave+=" ";
+	finalizedSave+=achievementValues.gotAchievementHelp;
+	finalizedSave+=" ";
+	finalizedSave+=achievementValues.gotAchievementSus;
 	
 	let hiddenAddrElem = document.createElement('a');
     hiddenAddrElem.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(finalizedSave));
@@ -1301,7 +1379,7 @@ function MainMenu() {
 	cvs.setnewfont("Arial, FreeSans", "16");
 	cvs.setnewcolor("white");
 	cvs.text("(c) Martin/MegapolisPlayer, Jiri/KohoutGD", 650, 472);
-	cvs.text("build date 08/05/2023, prerelease version", 650, 492);
+	cvs.text("build date 09/05/2023, prerelease version", 650, 492);
 	cvs.setnewcolor("#333399");
 	cvs.setnewfont("Arial, FreeSans", "48");
 }
