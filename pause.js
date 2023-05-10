@@ -91,7 +91,7 @@ function Pause(canvasobj) {
 		window.open("https://www.github.com/MegapolisPlayer/EscapeGameJS", "_blank");
 	});
 	Pause.buttonSave.button.addEventListener("click", () => {
-		Save(locationId, localLocationId, SettingsValues.Difficulty, MoneyAmount, SettingsValues.Language, );
+		Save(locationId, localLocationId, SettingsValues.Difficulty, MoneyAmount, SettingsValues.Language, CreditsValues);
 	});
 	Pause.buttonLoad.button.addEventListener("click", () => {
 		Load(canvasobj);

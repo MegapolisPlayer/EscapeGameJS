@@ -66,7 +66,7 @@ function MainMenu() {
 	cvs.setnewfont("Arial, FreeSans", "16");
 	cvs.setnewcolor("white");
 	cvs.text("(c) Martin/MegapolisPlayer, Jiri/KohoutGD", 650, 472);
-	cvs.text("build date 09/05/2023, prerelease version", 650, 492);
+	cvs.text("build date 10/05/2023, prerelease version", 650, 492);
 	cvs.setnewcolor("#333399");
 	cvs.setnewfont("Arial, FreeSans", "48");
 }

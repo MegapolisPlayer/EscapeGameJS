@@ -91,6 +91,7 @@ Helper's medal
 You helped people find their way home!
 Susština medal
 You completed the game in susština!
+Thanks for playing!
 Click anywhere to quit game.
 UNLOCKED
 LOCKED

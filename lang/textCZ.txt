@@ -91,6 +91,7 @@ Medaile pomocníka
 Pomohl/a si lidem najít cestu domů!
 Medaile susská
 Dokončil/a si hru v susštině!
+Děkujeme že jste si zahrali.
 Klikněte kamkoliv pro odchod ze hry.
 NEDOSTIŽENO
 DOSTIŽENO
