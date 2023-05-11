@@ -96,7 +96,7 @@ Click anywhere to quit game.
 UNLOCKED
 LOCKED
 
-...you need a ticket right?
+...you need a ticket, right?
 To go to Přerov it would cost
 If you want to buy a ticket,
 be quick, we will depart soon.
