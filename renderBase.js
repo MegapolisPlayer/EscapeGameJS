@@ -33,7 +33,7 @@ class Canvas {
 	resetfontweight() {
 		this.context.font = this.context.font.substring(this.context.font.indexOf(" ") + 1);
 	}
-	 //sets new border (color only is enough)
+	//sets new border (color only is enough)
     setnewborder(newborder) {
 		this.border = newborder;
         this.context.strokeStyle = this.border;
@@ -59,6 +59,10 @@ class Canvas {
     //draws text
     text(text, xoffset, yoffset) {
 		this.context.fillText(text, xoffset, yoffset);
+    }
+	//draws text border
+	textborder(text, xoffset, yoffset) {
+		this.context.strokeText(text, xoffset, yoffset);
     }
 	//draws multiline text
     textml(mltext, xoffset, yoffset, padding) {

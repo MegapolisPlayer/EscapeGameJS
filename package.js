@@ -33,7 +33,7 @@ class Canvas {
 	resetfontweight() {
 		this.context.font = this.context.font.substring(this.context.font.indexOf(" ") + 1);
 	}
-	 //sets new border (color only is enough)
+	//sets new border (color only is enough)
     setnewborder(newborder) {
 		this.border = newborder;
         this.context.strokeStyle = this.border;
@@ -59,6 +59,10 @@ class Canvas {
     //draws text
     text(text, xoffset, yoffset) {
 		this.context.fillText(text, xoffset, yoffset);
+    }
+	//draws text border
+	textborder(text, xoffset, yoffset) {
+		this.context.strokeText(text, xoffset, yoffset);
     }
 	//draws multiline text
     textml(mltext, xoffset, yoffset, padding) {
@@ -439,7 +443,6 @@ class Dialogue {
 			NextArrow.deleteButton();
 		}, this, { once: true });
 	}
-	//returns boolean
 	makeChoice(id) {
 		if(!(this.can_proceed && this.counter === id)) {
    			setTimeout(this.makeChoice.bind(this), 100, id);
@@ -1144,10 +1147,46 @@ function HraniceNaMoraveNastupisteJob(canvas) {
 	AllowedToPause = false;
 	let dialogue = new Dialogue();
 	dialogue.begin(canvas);
-	dialogue.makeBubble(0, TranslationGetMultipleLines(SettingsValues.Language, 47, 2));
-	dialogue.makeBubble(1, TranslationGetMultipleLines(SettingsValues.Language, 49, 2));
-	dialogue.makeChoice(2);
-	HraniceNaMoraveNastupiste(canvas);
+	dialogue.makeBubble(0, TranslationGetMultipleLines(SettingsValues.Language, 84, 2).slice(0, -1) + " " + Math.floor(650 * SettingsValues.MoneyCostIncrease) + " CZK");
+	dialogue.makeBubble(1, TranslationGetMultipleLines(SettingsValues.Language, 86, 2));
+	dialogue.makeBubble(2, TranslatedText[SettingsValues.Language][88]);
+	dialogue.makeChoice(3);
+	
+	let dWaitInterval = window.setInterval((dialogue) => {
+		if(dialogue.choice_result !== -1) {
+			clearInterval(dWaitInterval);
+			if(dialogue.choice_result === 1) {
+				if(MoneyAmount >= 650) {
+					removeMoney(650);
+					dialogue.makeBubble(4, TranslatedText[SettingsValues.Language][89]);
+				}
+				else {
+					dialogue.makeBubble(4, TranslationGetMultipleLines(SettingsValues.Language, 90, 2));
+				}
+				return;
+			}
+			else {
+				dialogue.makeBubble(4, TranslationGetMultipleLines(SettingsValues.Language, 92, 2));
+				return;
+			}
+		}
+	}, 100, dialogue);
+
+	let thisInterval = window.setInterval((dialogue, canvas) => {
+		if(dialogue.counter === 5) {
+			clearInterval(thisInterval);
+			dialogue.end();		
+			AllowedToPause = true;	
+			HraniceNaMoraveNastupiste(canvas);
+		}
+	}, 100, dialogue, canvas);
+}
+function PrerovLoad(canvas) {
+
+}
+
+function Prerov() {
+	
 }
 let GamePaused = false;
 let AllowedToPause = true;
@@ -1402,6 +1441,8 @@ function MainMenu() {
 	//main menu
 	
 	cvs.setnewfont("Arial, FreeSans", "48", "bold");
+	cvs.setnewborder("#ffffff");
+	cvs.setnewcolor("#333399");
 	
 	mainMenuButtons.push(new Button(0,   400, 150, 100, 25, TranslatedText[SettingsValues.Language][4], "canvas_container"));
 	mainMenuButtons.push(new Button(150, 400, 150, 100, 25, TranslatedText[SettingsValues.Language][6], "canvas_container"));
@@ -1419,14 +1460,20 @@ function MainMenu() {
 	cvs.image(MainMenuImage, 0, 0, cvs.canvas.width, cvs.canvas.height);
 	chr.draw(360, 100, 0.25, cvs);	
 	cvs.setfontweight("bold");
-	cvs.text(TranslatedText[SettingsValues.Language][0], 50, 50);	
+
+	cvs.text(TranslatedText[SettingsValues.Language][0], 50, 50);
+	cvs.textborder(TranslatedText[SettingsValues.Language][0], 50, 50);
+	
 	cvs.resetfontweight();
+	cvs.setnewcolor("#ffffff");
 	cvs.setnewfont("Arial, FreeSans", "16");
-	cvs.setnewcolor("white");
+	
 	cvs.text("(c) Martin/MegapolisPlayer, Jiri/KohoutGD", 650, 472);
 	cvs.text("build date 10/05/2023, prerelease version", 650, 492);
+	
 	cvs.setnewcolor("#333399");
 	cvs.setnewfont("Arial, FreeSans", "48");
+	cvs.setnewborder("#000000");
 }
 
 //play menu

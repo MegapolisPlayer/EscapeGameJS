@@ -95,3 +95,14 @@ Thanks for playing!
 Click anywhere to quit game.
 UNLOCKED
 LOCKED
+
+...you need a ticket right?
+To go to Přerov it would cost
+If you want to buy a ticket,
+be quick, we will depart soon.
+So do you want to buy the ticket and depart?
+Ok, here you go!
+Wait, that's not enough you thief!
+Good luck catching the next train!
+We are departing now, hopefully you catch the next one!
+Good luck!

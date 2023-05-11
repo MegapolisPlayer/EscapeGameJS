@@ -44,6 +44,8 @@ function MainMenu() {
 	//main menu
 	
 	cvs.setnewfont("Arial, FreeSans", "48", "bold");
+	cvs.setnewborder("#ffffff");
+	cvs.setnewcolor("#333399");
 	
 	mainMenuButtons.push(new Button(0,   400, 150, 100, 25, TranslatedText[SettingsValues.Language][4], "canvas_container"));
 	mainMenuButtons.push(new Button(150, 400, 150, 100, 25, TranslatedText[SettingsValues.Language][6], "canvas_container"));
@@ -61,14 +63,20 @@ function MainMenu() {
 	cvs.image(MainMenuImage, 0, 0, cvs.canvas.width, cvs.canvas.height);
 	chr.draw(360, 100, 0.25, cvs);	
 	cvs.setfontweight("bold");
-	cvs.text(TranslatedText[SettingsValues.Language][0], 50, 50);	
+
+	cvs.text(TranslatedText[SettingsValues.Language][0], 50, 50);
+	cvs.textborder(TranslatedText[SettingsValues.Language][0], 50, 50);
+	
 	cvs.resetfontweight();
+	cvs.setnewcolor("#ffffff");
 	cvs.setnewfont("Arial, FreeSans", "16");
-	cvs.setnewcolor("white");
+	
 	cvs.text("(c) Martin/MegapolisPlayer, Jiri/KohoutGD", 650, 472);
 	cvs.text("build date 10/05/2023, prerelease version", 650, 492);
+	
 	cvs.setnewcolor("#333399");
 	cvs.setnewfont("Arial, FreeSans", "48");
+	cvs.setnewborder("#000000");
 }
 
 //play menu

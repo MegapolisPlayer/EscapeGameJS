@@ -78,7 +78,6 @@ class Dialogue {
 			NextArrow.deleteButton();
 		}, this, { once: true });
 	}
-	//returns boolean
 	makeChoice(id) {
 		if(!(this.can_proceed && this.counter === id)) {
    			setTimeout(this.makeChoice.bind(this), 100, id);

@@ -240,8 +240,37 @@ function HraniceNaMoraveNastupisteJob(canvas) {
 	AllowedToPause = false;
 	let dialogue = new Dialogue();
 	dialogue.begin(canvas);
-	dialogue.makeBubble(0, TranslationGetMultipleLines(SettingsValues.Language, 47, 2));
-	dialogue.makeBubble(1, TranslationGetMultipleLines(SettingsValues.Language, 49, 2));
-	dialogue.makeChoice(2);
-	HraniceNaMoraveNastupiste(canvas);
+	dialogue.makeBubble(0, TranslationGetMultipleLines(SettingsValues.Language, 84, 2).slice(0, -1) + " " + Math.floor(650 * SettingsValues.MoneyCostIncrease) + " CZK");
+	dialogue.makeBubble(1, TranslationGetMultipleLines(SettingsValues.Language, 86, 2));
+	dialogue.makeBubble(2, TranslatedText[SettingsValues.Language][88]);
+	dialogue.makeChoice(3);
+	
+	let dWaitInterval = window.setInterval((dialogue) => {
+		if(dialogue.choice_result !== -1) {
+			clearInterval(dWaitInterval);
+			if(dialogue.choice_result === 1) {
+				if(MoneyAmount >= 650) {
+					removeMoney(650);
+					dialogue.makeBubble(4, TranslatedText[SettingsValues.Language][89]);
+				}
+				else {
+					dialogue.makeBubble(4, TranslationGetMultipleLines(SettingsValues.Language, 90, 2));
+				}
+				return;
+			}
+			else {
+				dialogue.makeBubble(4, TranslationGetMultipleLines(SettingsValues.Language, 92, 2));
+				return;
+			}
+		}
+	}, 100, dialogue);
+
+	let thisInterval = window.setInterval((dialogue, canvas) => {
+		if(dialogue.counter === 5) {
+			clearInterval(thisInterval);
+			dialogue.end();		
+			AllowedToPause = true;	
+			HraniceNaMoraveNastupiste(canvas);
+		}
+	}, 100, dialogue, canvas);
 }
