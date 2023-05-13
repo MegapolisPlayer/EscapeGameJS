@@ -106,3 +106,13 @@ Wait, that's not enough you thief!
 Good luck catching the next train!
 We are departing now, hopefully you catch the next one!
 Good luck!
+
+Welcome to Přerov.
+Sadly, the track to Olomouc is closed.
+You will have to go through a few cities
+to get to Olomouc.
+Also the city has quite a criminal history,
+so good luck and leave as soon as possible.
+Due to inflation the tickets rose in price.
+The tickets to Němcice cost 
+Good luck!

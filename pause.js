@@ -23,6 +23,24 @@ function SetState(canvasobj) {
 					HraniceNaMoraveRestaurace(canvasobj);
 				break;
 			}
+		case 2:
+			switch(localLocationId) {
+				case 0:
+					HraniceNaMoraveDomov(canvasobj);	
+				break;
+				case 1:
+					HraniceNaMoraveNamesti(canvasobj);	
+				break;
+				case 2:
+					HraniceNaMoraveNadrazi(canvasobj);
+				break;
+				case 3:
+					HraniceNaMoraveNastupiste(canvasobj);
+				break;
+				case 4:
+					HraniceNaMoraveRestaurace(canvasobj);
+				break;
+			}
 	}
 	return;	
 }

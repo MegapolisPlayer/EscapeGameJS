@@ -20,6 +20,7 @@ function TranslationLoad(lang, lid) {
 			}
 		}
 		AmountTranslations++;
+		console.log("Language code "+lang+": ");
 		console.log(TranslatedText[lid]);
 	}
 	req.send();

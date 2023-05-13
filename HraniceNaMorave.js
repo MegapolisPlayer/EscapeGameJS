@@ -16,6 +16,7 @@ function HraniceNaMoraveImageLoaded() {
 
 function HraniceNaMoraveLoad(canvas, calledbysetstate = false) {
 	canvas.loadingMsg();
+	CheckInstantLoss(canvas);
 	locationId = 1;
 	for(let Id = 0; Id < 5; Id++) {
 		hnm_Locations.push(new Image());
@@ -26,8 +27,6 @@ function HraniceNaMoraveLoad(canvas, calledbysetstate = false) {
 	hnm_Locations[2].src = "res/hnm/nadrazi.jpg";
 	hnm_Locations[3].src = "res/hnm/nastupiste.jpg";
 	hnm_Locations[4].src = "res/hnm/restaurace.jpg";
-	
-	ap.playTrack(2);
 	
 	if(calledbysetstate !== true) {
 		//if called by load and setstatefile -> setstatefile adds pause button, skip dialogue
@@ -44,9 +43,9 @@ function HraniceNaMorave(canvas) {
 		return;
     }
     console.log("Hranice na Morave START "+hnm_AmountLoadedImages);
-	CheckInstantLoss(canvas);	
 	
 	canvas.loadingMsg();
+	ap.playTrack(2);
 	canvas.image(hnm_Locations[0], 0, 0, canvas.canvas.width, canvas.canvas.height);
 	chr.draw(600, 100, 0.65, canvas);		
 	
@@ -268,9 +267,14 @@ function HraniceNaMoraveNastupisteJob(canvas) {
 	let thisInterval = window.setInterval((dialogue, canvas) => {
 		if(dialogue.counter === 5) {
 			clearInterval(thisInterval);
-			dialogue.end();		
+			dialogue.end();
 			AllowedToPause = true;	
-			HraniceNaMoraveNastupiste(canvas);
+			if(dialogue.choice_result === 1) {
+				PrerovLoad(canvas); //replace by cutscene, just give ticket in cutscene? also add arrow to train?
+			}
+			else {
+				HraniceNaMoraveNastupiste(canvas);
+			}
 		}
 	}, 100, dialogue, canvas);
 }

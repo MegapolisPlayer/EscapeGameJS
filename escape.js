@@ -1,9 +1,20 @@
+//ENTRY POINT FILE
+//three-letter city codes:
+//HNM - Hranice Na Morave, ID 1
+//PRE - Prerov, ID 2
+//NEM - Nemcice nad Hanou, ID 3
+//PRO - Prostejov, ID 4
+//OLO - Olomouc, ID 5
+//STU - Studenka, ID 6
+//OST - Ostrava, ID 7
+//KTW - Katowice (PL) - end, no code
+
 if (window.document.documentMode) {
     //internet explorer
     alert("You seem to be using Internet Explorer.\nThe game might not work properly.\nDebug reports from IE will be ignored.\n");
 }
 
-console.log("Escape from Olomouc\n%cPlease do not enter anything here.", "color: red; font-weight: bold;");
+console.log("Escape from Olomouc\n%cPlease do not enter anything here.\nThis is strictly for debugging or error logging.\nIf you see an error (large red box) please report it to the author.", "color: red; font-weight: bold;");
 
 const cvs = new Canvas("EscapeCanvas", "Arial, FreeSans", "48", "#333399", 1000, 500);
 cvs.clear("purple");

@@ -53,13 +53,14 @@ function Credits(iscalledfrommm, canvasobj) {
 	}, 1 * delay);
 	
 	setTimeout(() => {
-		//images
+		//images - main, hranice na morave, prerov
 		canvasobj.image(finalCreditsImage, 0, 0, canvasobj.canvas.width, canvasobj.canvas.height);
 		canvasobj.text(TranslatedText[SettingsValues.Language][67], 50, 190);
 		canvasobj.setfontweight("bold");
-		canvasobj.textml("Google Maps Street View, SReality, Pixabay\nWikipedia Commons:\nPalickap, Marie Čchiedzeová, Vojtěch Dočkal\nAll pixel-art assets are custom-made.\nFor more information check out /res/ folder on GitHub.", 100, 230);
+		canvasobj.textml("SReality, Pixabay, VlakemJednoduse.cz, Freepik: jcomp\nWikipedia Commons: Palickap, Marie Čchiedzeová,\nVojtěch Dočkal, Jiří Komárek\nAll pixel-art assets are custom-made.", 100, 230);
 		canvasobj.resetfontweight();
 	}, 2 * delay);	
+
 
 	setTimeout(() => {
 		//music
@@ -88,43 +89,45 @@ function Credits(iscalledfrommm, canvasobj) {
 		canvasobj.resetfontweight();
 	}, 5 * delay);
 	
-	setTimeout(() => {
-		//achievements
-		canvasobj.context.textAlign = "center"; 
-		canvasobj.setnewfont("Arial, FreeSans", "48", "bold");
-		canvasobj.image(finalCreditsImage, 0, 0, canvasobj.canvas.width, canvasobj.canvas.height);
-		canvasobj.text(TranslatedText[SettingsValues.Language][71], 500, 250); 
-		canvasobj.setnewfont("Arial, FreeSans", "32", "normal");
-		canvasobj.context.textAlign = "left"; 
-	}, 6 * delay);
-	
-	setTimeout(() => {
-		//achievements - medal for speed
-		canvasobj.image(finalCreditsImage, 0, 0, canvasobj.canvas.width, canvasobj.canvas.height);
-		canvasobj.text(TranslatedText[SettingsValues.Language][72], 100, 250); 
-		CreditsRenderAchievement(CreditsValues.gotAchievementSpeed, credits_Achievements[1], credits_Achievements[0], canvasobj);
-	}, 7 * delay);
+	if(!iscalledfrommm) {
+		setTimeout(() => {
+			//achievements
+			canvasobj.context.textAlign = "center"; 
+			canvasobj.setnewfont("Arial, FreeSans", "48", "bold");
+			canvasobj.image(finalCreditsImage, 0, 0, canvasobj.canvas.width, canvasobj.canvas.height);
+			canvasobj.text(TranslatedText[SettingsValues.Language][71], 500, 250); 
+			canvasobj.setnewfont("Arial, FreeSans", "32", "normal");
+			canvasobj.context.textAlign = "left"; 
+		}, 6 * delay);
+		
+		setTimeout(() => {
+			//achievements - medal for speed
+			canvasobj.image(finalCreditsImage, 0, 0, canvasobj.canvas.width, canvasobj.canvas.height);
+			canvasobj.text(TranslatedText[SettingsValues.Language][72], 100, 250); 
+			CreditsRenderAchievement(CreditsValues.gotAchievementSpeed, credits_Achievements[1], credits_Achievements[0], canvasobj);
+		}, 7 * delay);
 
-	setTimeout(() => {
-		//achievements - waiters medal
-		canvasobj.image(finalCreditsImage, 0, 0, canvasobj.canvas.width, canvasobj.canvas.height);
-		canvasobj.text(TranslatedText[SettingsValues.Language][74], 100, 250); 
-		CreditsRenderAchievement(CreditsValues.gotAchievementWaiter, credits_Achievements[2], credits_Achievements[0], canvasobj);
-	}, 8 * delay);
+		setTimeout(() => {
+			//achievements - waiters medal
+			canvasobj.image(finalCreditsImage, 0, 0, canvasobj.canvas.width, canvasobj.canvas.height);
+			canvasobj.text(TranslatedText[SettingsValues.Language][74], 100, 250); 
+			CreditsRenderAchievement(CreditsValues.gotAchievementWaiter, credits_Achievements[2], credits_Achievements[0], canvasobj);
+		}, 8 * delay);
 
-	setTimeout(() => {
-		//achievements - help medal
-		canvasobj.image(finalCreditsImage, 0, 0, canvasobj.canvas.width, canvasobj.canvas.height);
-		canvasobj.text(TranslatedText[SettingsValues.Language][76], 100, 250);
-		CreditsRenderAchievement(CreditsValues.gotAchievementHelp, credits_Achievements[3], credits_Achievements[0], canvasobj);
-	}, 9 * delay);
-	
-	setTimeout(() => {
-		//achievements - sus medal
-		canvasobj.image(finalCreditsImage, 0, 0, canvasobj.canvas.width, canvasobj.canvas.height);
-		canvasobj.text(TranslatedText[SettingsValues.Language][78], 100, 250);
-		CreditsRenderAchievement(CreditsValues.gotAchievementSus, credits_Achievements[4], credits_Achievements[0], canvasobj);
-	}, 10 * delay);
+		setTimeout(() => {
+			//achievements - help medal
+			canvasobj.image(finalCreditsImage, 0, 0, canvasobj.canvas.width, canvasobj.canvas.height);
+			canvasobj.text(TranslatedText[SettingsValues.Language][76], 100, 250);
+			CreditsRenderAchievement(CreditsValues.gotAchievementHelp, credits_Achievements[3], credits_Achievements[0], canvasobj);
+		}, 9 * delay);
+		
+		setTimeout(() => {
+			//achievements - sus medal
+			canvasobj.image(finalCreditsImage, 0, 0, canvasobj.canvas.width, canvasobj.canvas.height);
+			canvasobj.text(TranslatedText[SettingsValues.Language][78], 100, 250);
+			CreditsRenderAchievement(CreditsValues.gotAchievementSus, credits_Achievements[4], credits_Achievements[0], canvasobj);
+		}, 10 * delay);
+	}
 
 	setTimeout(() => {
 		//quit game
@@ -133,7 +136,7 @@ function Credits(iscalledfrommm, canvasobj) {
 		window.addEventListener("click", function(event) {
 			location.reload();		
 		});
-	}, 11 * delay);
+	}, (iscalledfrommm ? 6 : 11) * delay);
 	
 }
 
@@ -166,7 +169,7 @@ function CreditsButtonRegister(canvasobj) {
 	finalCreditsImage.onload = () => { CreditsLoadImages(true, canvasobj); };
 }
 
-function debug_CreditsLoad(iscalledfrommm, canvasobj) {
+function debug_Credits(iscalledfrommm, canvasobj) {
 	canvasobj.loadingMsg();
 	finalCreditsImage.src = "res/Credits.jpg";
 	finalCreditsImage.onload = () => { CreditsLoadImages(iscalledfrommm, canvasobj); };

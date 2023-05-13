@@ -513,6 +513,7 @@ function TranslationLoad(lang, lid) {
 			}
 		}
 		AmountTranslations++;
+		console.log("Language code "+lang+": ");
 		console.log(TranslatedText[lid]);
 	}
 	req.send();
@@ -784,13 +785,14 @@ function Credits(iscalledfrommm, canvasobj) {
 	}, 1 * delay);
 	
 	setTimeout(() => {
-		//images
+		//images - main, hranice na morave, prerov
 		canvasobj.image(finalCreditsImage, 0, 0, canvasobj.canvas.width, canvasobj.canvas.height);
 		canvasobj.text(TranslatedText[SettingsValues.Language][67], 50, 190);
 		canvasobj.setfontweight("bold");
-		canvasobj.textml("Google Maps Street View, SReality, Pixabay\nWikipedia Commons:\nPalickap, Marie Čchiedzeová, Vojtěch Dočkal\nAll pixel-art assets are custom-made.\nFor more information check out /res/ folder on GitHub.", 100, 230);
+		canvasobj.textml("SReality, Pixabay, VlakemJednoduse.cz, Freepik: jcomp\nWikipedia Commons: Palickap, Marie Čchiedzeová,\nVojtěch Dočkal, Jiří Komárek\nAll pixel-art assets are custom-made.", 100, 230);
 		canvasobj.resetfontweight();
 	}, 2 * delay);	
+
 
 	setTimeout(() => {
 		//music
@@ -819,43 +821,45 @@ function Credits(iscalledfrommm, canvasobj) {
 		canvasobj.resetfontweight();
 	}, 5 * delay);
 	
-	setTimeout(() => {
-		//achievements
-		canvasobj.context.textAlign = "center"; 
-		canvasobj.setnewfont("Arial, FreeSans", "48", "bold");
-		canvasobj.image(finalCreditsImage, 0, 0, canvasobj.canvas.width, canvasobj.canvas.height);
-		canvasobj.text(TranslatedText[SettingsValues.Language][71], 500, 250); 
-		canvasobj.setnewfont("Arial, FreeSans", "32", "normal");
-		canvasobj.context.textAlign = "left"; 
-	}, 6 * delay);
-	
-	setTimeout(() => {
-		//achievements - medal for speed
-		canvasobj.image(finalCreditsImage, 0, 0, canvasobj.canvas.width, canvasobj.canvas.height);
-		canvasobj.text(TranslatedText[SettingsValues.Language][72], 100, 250); 
-		CreditsRenderAchievement(CreditsValues.gotAchievementSpeed, credits_Achievements[1], credits_Achievements[0], canvasobj);
-	}, 7 * delay);
+	if(!iscalledfrommm) {
+		setTimeout(() => {
+			//achievements
+			canvasobj.context.textAlign = "center"; 
+			canvasobj.setnewfont("Arial, FreeSans", "48", "bold");
+			canvasobj.image(finalCreditsImage, 0, 0, canvasobj.canvas.width, canvasobj.canvas.height);
+			canvasobj.text(TranslatedText[SettingsValues.Language][71], 500, 250); 
+			canvasobj.setnewfont("Arial, FreeSans", "32", "normal");
+			canvasobj.context.textAlign = "left"; 
+		}, 6 * delay);
+		
+		setTimeout(() => {
+			//achievements - medal for speed
+			canvasobj.image(finalCreditsImage, 0, 0, canvasobj.canvas.width, canvasobj.canvas.height);
+			canvasobj.text(TranslatedText[SettingsValues.Language][72], 100, 250); 
+			CreditsRenderAchievement(CreditsValues.gotAchievementSpeed, credits_Achievements[1], credits_Achievements[0], canvasobj);
+		}, 7 * delay);
 
-	setTimeout(() => {
-		//achievements - waiters medal
-		canvasobj.image(finalCreditsImage, 0, 0, canvasobj.canvas.width, canvasobj.canvas.height);
-		canvasobj.text(TranslatedText[SettingsValues.Language][74], 100, 250); 
-		CreditsRenderAchievement(CreditsValues.gotAchievementWaiter, credits_Achievements[2], credits_Achievements[0], canvasobj);
-	}, 8 * delay);
+		setTimeout(() => {
+			//achievements - waiters medal
+			canvasobj.image(finalCreditsImage, 0, 0, canvasobj.canvas.width, canvasobj.canvas.height);
+			canvasobj.text(TranslatedText[SettingsValues.Language][74], 100, 250); 
+			CreditsRenderAchievement(CreditsValues.gotAchievementWaiter, credits_Achievements[2], credits_Achievements[0], canvasobj);
+		}, 8 * delay);
 
-	setTimeout(() => {
-		//achievements - help medal
-		canvasobj.image(finalCreditsImage, 0, 0, canvasobj.canvas.width, canvasobj.canvas.height);
-		canvasobj.text(TranslatedText[SettingsValues.Language][76], 100, 250);
-		CreditsRenderAchievement(CreditsValues.gotAchievementHelp, credits_Achievements[3], credits_Achievements[0], canvasobj);
-	}, 9 * delay);
-	
-	setTimeout(() => {
-		//achievements - sus medal
-		canvasobj.image(finalCreditsImage, 0, 0, canvasobj.canvas.width, canvasobj.canvas.height);
-		canvasobj.text(TranslatedText[SettingsValues.Language][78], 100, 250);
-		CreditsRenderAchievement(CreditsValues.gotAchievementSus, credits_Achievements[4], credits_Achievements[0], canvasobj);
-	}, 10 * delay);
+		setTimeout(() => {
+			//achievements - help medal
+			canvasobj.image(finalCreditsImage, 0, 0, canvasobj.canvas.width, canvasobj.canvas.height);
+			canvasobj.text(TranslatedText[SettingsValues.Language][76], 100, 250);
+			CreditsRenderAchievement(CreditsValues.gotAchievementHelp, credits_Achievements[3], credits_Achievements[0], canvasobj);
+		}, 9 * delay);
+		
+		setTimeout(() => {
+			//achievements - sus medal
+			canvasobj.image(finalCreditsImage, 0, 0, canvasobj.canvas.width, canvasobj.canvas.height);
+			canvasobj.text(TranslatedText[SettingsValues.Language][78], 100, 250);
+			CreditsRenderAchievement(CreditsValues.gotAchievementSus, credits_Achievements[4], credits_Achievements[0], canvasobj);
+		}, 10 * delay);
+	}
 
 	setTimeout(() => {
 		//quit game
@@ -864,7 +868,7 @@ function Credits(iscalledfrommm, canvasobj) {
 		window.addEventListener("click", function(event) {
 			location.reload();		
 		});
-	}, 11 * delay);
+	}, (iscalledfrommm ? 6 : 11) * delay);
 	
 }
 
@@ -897,7 +901,7 @@ function CreditsButtonRegister(canvasobj) {
 	finalCreditsImage.onload = () => { CreditsLoadImages(true, canvasobj); };
 }
 
-function debug_CreditsLoad(iscalledfrommm, canvasobj) {
+function debug_Credits(iscalledfrommm, canvasobj) {
 	canvasobj.loadingMsg();
 	finalCreditsImage.src = "res/Credits.jpg";
 	finalCreditsImage.onload = () => { CreditsLoadImages(iscalledfrommm, canvasobj); };
@@ -923,6 +927,7 @@ function HraniceNaMoraveImageLoaded() {
 
 function HraniceNaMoraveLoad(canvas, calledbysetstate = false) {
 	canvas.loadingMsg();
+	CheckInstantLoss(canvas);
 	locationId = 1;
 	for(let Id = 0; Id < 5; Id++) {
 		hnm_Locations.push(new Image());
@@ -933,8 +938,6 @@ function HraniceNaMoraveLoad(canvas, calledbysetstate = false) {
 	hnm_Locations[2].src = "res/hnm/nadrazi.jpg";
 	hnm_Locations[3].src = "res/hnm/nastupiste.jpg";
 	hnm_Locations[4].src = "res/hnm/restaurace.jpg";
-	
-	ap.playTrack(2);
 	
 	if(calledbysetstate !== true) {
 		//if called by load and setstatefile -> setstatefile adds pause button, skip dialogue
@@ -951,9 +954,9 @@ function HraniceNaMorave(canvas) {
 		return;
     }
     console.log("Hranice na Morave START "+hnm_AmountLoadedImages);
-	CheckInstantLoss(canvas);	
 	
 	canvas.loadingMsg();
+	ap.playTrack(2);
 	canvas.image(hnm_Locations[0], 0, 0, canvas.canvas.width, canvas.canvas.height);
 	chr.draw(600, 100, 0.65, canvas);		
 	
@@ -1175,18 +1178,81 @@ function HraniceNaMoraveNastupisteJob(canvas) {
 	let thisInterval = window.setInterval((dialogue, canvas) => {
 		if(dialogue.counter === 5) {
 			clearInterval(thisInterval);
-			dialogue.end();		
+			dialogue.end();
 			AllowedToPause = true;	
-			HraniceNaMoraveNastupiste(canvas);
+			if(dialogue.choice_result === 1) {
+				PrerovLoad(canvas); //replace by cutscene, just give ticket in cutscene? also add arrow to train?
+			}
+			else {
+				HraniceNaMoraveNastupiste(canvas);
+			}
 		}
 	}, 100, dialogue, canvas);
 }
-function PrerovLoad(canvas) {
+let pre_Locations = [];
+let pre_AmountLoadedImages = 0;
 
+function PrerovImageLoaded() {
+	pre_AmountLoadedImages += 1;
 }
 
-function Prerov() {
+function PrerovLoad(canvas, calledbysetstate = false) {
+	canvas.loadingMsg(); //replace by cutscene?
+	CheckInstantLoss(canvas);
+	locationId = 2;
+	for(let Id = 0; Id < 5; Id++) {
+		pre_Locations.push(new Image());
+		pre_Locations[Id].onload = PrerovImageLoaded;
+	}
+	pre_Locations[0].src = "res/hnm/domov.png";
+	pre_Locations[1].src = "res/hnm/namesti.jpg";
+	pre_Locations[2].src = "res/hnm/nadrazi.jpg";
+	pre_Locations[3].src = "res/hnm/nastupiste.jpg";
+	pre_Locations[4].src = "res/hnm/restaurace.jpg";
 	
+	if(calledbysetstate !== true) {
+		//if called by load and setstatefile -> setstatefile adds pause button
+		PauseButton.button.addEventListener("click", () => {
+			Pause(canvas);
+		});	
+		Prerov(canvas);
+	}
+}
+
+function Prerov(canvas) {
+	if(pre_AmountLoadedImages != 5) {
+      	window.setTimeout(Prerov, 100, canvas); // this checks the flag every 100 milliseconds
+		return;
+    }
+    console.log("Prerov START "+pre_AmountLoadedImages);
+	canvas.loadingMsg();
+	ap.playTrack(3);
+	
+	canvas.image(pre_Locations[0], 0, 0, canvas.canvas.width, canvas.canvas.height);
+	chr.draw(360, 100, 0.25, cvs);
+	
+	let FirstDialogue = new Dialogue();
+	FirstDialogue.begin(canvas);
+	FirstDialogue.makeBubble(0, TranslationGetMultipleLines(SettingsValues.Language, 94, 2));
+	FirstDialogue.makeBubble(1, TranslationGetMultipleLines(SettingsValues.Language, 96, 2));
+	FirstDialogue.makeBubble(2, TranslationGetMultipleLines(SettingsValues.Language, 98, 2));
+	FirstDialogue.makeBubble(3, TranslationGetMultipleLines(SettingsValues.Language, 100, 2));
+	FirstDialogue.makeBubble(5, TranslatedText[SettingsValues.Language][102]);	
+	
+	let thisInterval = window.setInterval((dialogue, canvas) => {
+		if(dialogue.counter === 6) {
+			clearInterval(thisInterval);
+			dialogue.end();		
+			PauseButton.append(canvas);
+			AllowedToPause = true;	
+			PrerovNastupiste(canvas);
+		}
+	}, 100, FirstDialogue, canvas);
+}
+
+function PrerovNastupiste(canvas) {
+	console.log("pre nastupiste");
+	localLocationId = 0;
 }
 let GamePaused = false;
 let AllowedToPause = true;
@@ -1196,6 +1262,24 @@ function SetState(canvasobj) {
 	PauseButton.append(canvasobj);
 	switch(locationId) {
 		case 1:
+			switch(localLocationId) {
+				case 0:
+					HraniceNaMoraveDomov(canvasobj);	
+				break;
+				case 1:
+					HraniceNaMoraveNamesti(canvasobj);	
+				break;
+				case 2:
+					HraniceNaMoraveNadrazi(canvasobj);
+				break;
+				case 3:
+					HraniceNaMoraveNastupiste(canvasobj);
+				break;
+				case 4:
+					HraniceNaMoraveRestaurace(canvasobj);
+				break;
+			}
+		case 2:
 			switch(localLocationId) {
 				case 0:
 					HraniceNaMoraveDomov(canvasobj);	
@@ -1395,12 +1479,23 @@ function Load(canvasobj) {
 	hiddenInputElem.click();
 }
 
+//ENTRY POINT FILE
+//three-letter city codes:
+//HNM - Hranice Na Morave, ID 1
+//PRE - Prerov, ID 2
+//NEM - Nemcice nad Hanou, ID 3
+//PRO - Prostejov, ID 4
+//OLO - Olomouc, ID 5
+//STU - Studenka, ID 6
+//OST - Ostrava, ID 7
+//KTW - Katowice (PL) - end, no code
+
 if (window.document.documentMode) {
     //internet explorer
     alert("You seem to be using Internet Explorer.\nThe game might not work properly.\nDebug reports from IE will be ignored.\n");
 }
 
-console.log("Escape from Olomouc\n%cPlease do not enter anything here.", "color: red; font-weight: bold;");
+console.log("Escape from Olomouc\n%cPlease do not enter anything here.\nThis is strictly for debugging or error logging.\nIf you see an error (large red box) please report it to the author.", "color: red; font-weight: bold;");
 
 const cvs = new Canvas("EscapeCanvas", "Arial, FreeSans", "48", "#333399", 1000, 500);
 cvs.clear("purple");
