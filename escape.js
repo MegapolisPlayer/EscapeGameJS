@@ -53,6 +53,7 @@ function MainMenuSetup() {
 
 function MainMenu() {	
 	//main menu
+	AllowedToPause = false;
 	
 	cvs.setnewfont("Arial, FreeSans", "48", "bold");
 	cvs.setnewborder("#ffffff");
@@ -146,33 +147,12 @@ function Intro() {
     cvs.setnewfont("Arial, FreeSans", "32");
     cvs.textml(TranslationGetMultipleLines(SettingsValues.Language, 24, 7), 100, 100);
 	
-	introarrow1 = new Arrow(700, 400, 100, 100, ArrowDirections.Right, cvs);
-	introarrow1.setCallback("MapSceneLoad(introarrow1)");
-    introarrow1.draw(cvs);
-}
-
-function MapSceneLoad(arrowobj) {
-	arrowobj.deleteButton();
-	cvs.loadingMsg();
-    const mapimage = new Image();
-	mapimage.src = "res/map1.png";
-	mapimage.onload = MapScene; 
-}
-function MapScene() {
-	cvs.image(this, 0, 0, cvs.canvas.width, cvs.canvas.height);
-	cvs.setnewcolor("#333399");
-	cvs.setfontweight("bold");
-	cvs.textml(TranslatedText[SettingsValues.Language][20]+" 1\nHranice na Moravě", 50, 50);
-	cvs.resetfontweight();
-	cvs.setnewcolor("#000000");
-	introarrow2 = new Arrow(700, 400, 100, 100, ArrowDirections.Right, cvs);
-	introarrow2.setCallback("StartMainGame(introarrow2)");
-    introarrow2.draw(cvs);
-}
-function StartMainGame(arrowobj) {
-    arrowobj.deleteButton();
-	AllowedToPause = false;	
-    HraniceNaMoraveLoad(cvs);
+	introarrow = new Arrow(700, 400, 100, 100, ArrowDirections.Right, cvs);
+	introarrow.button.addEventListener("click", (event) => {
+		introarrow.deleteButton();
+   	 	HraniceNaMoraveLoad(cvs);
+	});
+    introarrow.draw(cvs);
 }
 
 //main menu stuff

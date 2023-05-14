@@ -3,6 +3,8 @@
 let locationId = 0; //HnM, Prerov, etc... (HnM = 1, 0 is for main menu)
 let localLocationId = 0; //railway station, house, etc... (HnM house = 0, starts from 0)
 
+let doesHaveTicket = false;
+
 let PauseButton = new Arrow(10, 10, 50, 50, ArrowDirections.Pause, null);
 
 //HnM specific
@@ -16,9 +18,9 @@ function HraniceNaMoraveImageLoaded() {
 
 function HraniceNaMoraveLoad(canvas, calledbysetstate = false) {
 	canvas.loadingMsg();
-	CheckInstantLoss(canvas);
+	
 	locationId = 1;
-	for(let Id = 0; Id < 5; Id++) {
+	for(let Id = 0; Id < 6; Id++) {
 		hnm_Locations.push(new Image());
 		hnm_Locations[Id].onload = HraniceNaMoraveImageLoaded;
 	}
@@ -27,22 +29,40 @@ function HraniceNaMoraveLoad(canvas, calledbysetstate = false) {
 	hnm_Locations[2].src = "res/hnm/nadrazi.jpg";
 	hnm_Locations[3].src = "res/hnm/nastupiste.jpg";
 	hnm_Locations[4].src = "res/hnm/restaurace.jpg";
+	hnm_Locations[5].src = "res/map/1.png";
 	
 	if(calledbysetstate !== true) {
 		//if called by load and setstatefile -> setstatefile adds pause button, skip dialogue
 		PauseButton.button.addEventListener("click", () => {
 			Pause(canvas);
 		});	
-		HraniceNaMorave(canvas);
+		HraniceNaMoraveMap(canvas);
 	}
 }
 
-function HraniceNaMorave(canvas) {
-	if(hnm_AmountLoadedImages != 5) {
-      	window.setTimeout(HraniceNaMorave, 100, canvas); // this checks the flag every 100 milliseconds
+function HraniceNaMoraveMap(canvas) {
+	if(hnm_AmountLoadedImages != 6) {
+      	window.setTimeout(HraniceNaMoraveMap, 100, canvas); // this checks the flag every 100 milliseconds
 		return;
     }
+	//map scene
+	canvas.setnewcolor("#333399");
+	cvs.setnewfont("Arial, FreeSans", "32", "bold");
+	canvas.image(hnm_Locations[5], 0, 0, canvas.canvas.width, canvas.canvas.height);
+	canvas.textml(TranslatedText[SettingsValues.Language][20]+" 1\nHranice na Moravě", 50, 50);
+	canvas.resetfontweight();
+	maparrow = new Arrow(700, 400, 100, 100, ArrowDirections.Right, canvas);
+	maparrow.button.addEventListener("click", (event) => {
+		maparrow.deleteButton();
+		HraniceNaMorave(canvas);
+	});
+    maparrow.draw(canvas);
+}
+
+function HraniceNaMorave(canvas) {
+	canvas.setnewcolor("#000000");
     console.log("Hranice na Morave START "+hnm_AmountLoadedImages);
+	CheckInstantLoss(canvas);
 	
 	canvas.loadingMsg();
 	ap.playTrack(2);
@@ -161,12 +181,25 @@ function HraniceNaMoraveNastupiste(canvas) {
 		if(GamePaused) { return; }
 		traindriver.deleteButton();
 		ArrowToNadrazi.deleteButton();
+		ArrowToTrain.deleteButton();
     	HraniceNaMoraveNadrazi(canvas);
 	}, { once: true });
+	let ArrowToTrain = new Arrow(300, 200, 50, 50, ArrowDirections.Left, canvas);
+	ArrowToTrain.button.addEventListener("click", () => {
+		if(GamePaused) { return; }
+		if(doesHaveTicket) {
+			traindriver.deleteButton();
+			ArrowToNadrazi.deleteButton();
+			ArrowToTrain.deleteButton();
+    		PrerovLoad(canvas);
+		}
+	}, { once: true });
+	
 	canvas.image(hnm_Locations[3], 0, 0, canvas.canvas.width, canvas.canvas.height);
 	chr.draw(570, 260, 0.35, canvas);
 	traindriver.draw(320, 260, 0.35, canvas);
 	ArrowToNadrazi.draw(canvas);
+	ArrowToTrain.draw(canvas);
 	PauseButton.draw(canvas);
 	drawMoneyCount(canvas);
 }
@@ -269,12 +302,7 @@ function HraniceNaMoraveNastupisteJob(canvas) {
 			clearInterval(thisInterval);
 			dialogue.end();
 			AllowedToPause = true;	
-			if(dialogue.choice_result === 1) {
-				PrerovLoad(canvas); //replace by cutscene, just give ticket in cutscene? also add arrow to train?
-			}
-			else {
-				HraniceNaMoraveNastupiste(canvas);
-			}
+			HraniceNaMoraveNastupiste(canvas);
 		}
 	}, 100, dialogue, canvas);
 }
