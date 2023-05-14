@@ -103,9 +103,10 @@ urychli se, budeme skoro odjiždět.
 Takže, chceš koupit jízdenku a odjet?
 Ok, tady to máš.
 Hej, to není dostatek peněz, podvodníku!
-Hodně štestí aby jsi se dostal na jiný vlak!
-Tak odjíždíme, snad se dostaneš na další vlak.
-Hodně štěstí.
+Vypadni!
+Ok, snad se zase uvidíme!
+
+Hej! Kup si nejdřív jízdenku!
 
 Vítejte ve Přerově.
 Bohužel je trať do Olomouce uzavřena.

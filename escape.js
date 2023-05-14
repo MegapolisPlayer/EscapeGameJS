@@ -44,7 +44,7 @@ function MainMenuSetup() {
 	});	
 	
 	let thisInterval = window.setInterval(() => {
-		if(AmountTranslations === 4) {
+		if(AmountTranslations === 4 && TicketImagesLoaded === 2 && AchievementImagesLoaded === 5) {
 			clearInterval(thisInterval);
 			MainMenu();
 		}
@@ -53,7 +53,6 @@ function MainMenuSetup() {
 
 function MainMenu() {	
 	//main menu
-	AllowedToPause = false;
 	
 	cvs.setnewfont("Arial, FreeSans", "48", "bold");
 	cvs.setnewborder("#ffffff");
@@ -83,8 +82,8 @@ function MainMenu() {
 	cvs.setnewcolor("#ffffff");
 	cvs.setnewfont("Arial, FreeSans", "16");
 	
-	cvs.text("(c) Martin/MegapolisPlayer, Jiri/KohoutGD", 650, 472);
-	cvs.text("build date 10/05/2023, prerelease version", 650, 492);
+	cvs.text("(c) Martin/MegapolisPlayer, Jiri/KohoutGD 2023", 650, 472);
+	cvs.text("build date 15/05/2023, prerelease test version", 650, 492);
 	
 	cvs.setnewcolor("#333399");
 	cvs.setnewfont("Arial, FreeSans", "48");

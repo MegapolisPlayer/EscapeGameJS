@@ -84,7 +84,7 @@ translations by
 license:
 Your achievements:
 Medal for speed
-You finished the game in under 10 minutes1
+You finished the game in under 10 minutes
 Waiter's medal
 You did all the waiter minigames!
 Helper's medal
@@ -96,16 +96,17 @@ Click anywhere to quit game.
 UNLOCKED
 LOCKED
 
-...you need a ticket, right?
+So you want to buy a ticket, right?
 To go to Přerov it would cost
 If you want to buy a ticket,
 be quick, we will depart soon.
-So do you want to buy the ticket and depart?
+So do you want to buy the ticket?
 Ok, here you go!
 Wait, that's not enough you thief!
-Good luck catching the next train!
-We are departing now, hopefully you catch the next one!
-Good luck!
+Get out of here!
+Okay, see you later!
+
+Hey! Buy a ticket first!
 
 Welcome to Přerov.
 Sadly, the track to Olomouc is closed.

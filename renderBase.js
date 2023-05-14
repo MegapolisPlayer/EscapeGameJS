@@ -172,11 +172,12 @@ const ArrowDirections = {
 	Left: 4,
 	Pause: 5,
 	Yes: 6,
-	No: 7
+	No: 7,
+	Here: 8
 }
 
 const ArrowImages = [];
-for(let ArrowImagesId = 0; ArrowImagesId < 8; ArrowImagesId++) {
+for(let ArrowImagesId = 0; ArrowImagesId < 9; ArrowImagesId++) {
 	ArrowImages.push(new Image());
 }
 
@@ -189,6 +190,7 @@ ArrowImages[4].src = "res/arrow_left.png";
 ArrowImages[5].src = "res/pause.png";
 ArrowImages[6].src = "res/yes.png";
 ArrowImages[7].src = "res/no.png";
+ArrowImages[8].src = "res/arrow_here.png";
 
 class Arrow {
     insert(canvasobj) {

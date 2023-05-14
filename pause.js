@@ -2,44 +2,44 @@ let GamePaused = false;
 let AllowedToPause = true;
 
 function SetState(canvasobj) {
-	deleteCanvasInputElems();
+	deleteCanvasInputElems(); //local functions will remake
 	PauseButton.append(canvasobj);
 	switch(locationId) {
 		case 1:
 			switch(localLocationId) {
 				case 0:
 					HraniceNaMoraveDomov(canvasobj);	
-				break;
+					return;
 				case 1:
 					HraniceNaMoraveNamesti(canvasobj);	
-				break;
+					return;
 				case 2:
 					HraniceNaMoraveNadrazi(canvasobj);
-				break;
+					return;
 				case 3:
 					HraniceNaMoraveNastupiste(canvasobj);
-				break;
+					return;
 				case 4:
 					HraniceNaMoraveRestaurace(canvasobj);
-				break;
+					return;
 			}
 		case 2:
 			switch(localLocationId) {
 				case 0:
-					HraniceNaMoraveDomov(canvasobj);	
-				break;
+					PrerovNastupiste(canvasobj);	
+					return;
 				case 1:
-					HraniceNaMoraveNamesti(canvasobj);	
-				break;
+					PrerovNadrazi(canvasobj);	
+					return;
 				case 2:
-					HraniceNaMoraveNadrazi(canvasobj);
-				break;
+					PrerovNamesti(canvasobj);
+					return;
 				case 3:
-					HraniceNaMoraveNastupiste(canvasobj);
-				break;
+					PrerovAutobus(canvasobj);
+					return;
 				case 4:
-					HraniceNaMoraveRestaurace(canvasobj);
-				break;
+					PrerovBecva(canvasobj);
+					return;
 			}
 	}
 	return;	
@@ -62,7 +62,7 @@ function Pause(canvasobj) {
 	
 	if(!AllowedToPause) { return; }
 	GamePaused = true;
-
+	
 	Pause.thisInterval = window.setInterval(() => {
 		if(Load.FileLoaded === true) {
 			clearInterval(Pause.thisInterval);
@@ -109,7 +109,7 @@ function Pause(canvasobj) {
 		window.open("https://www.github.com/MegapolisPlayer/EscapeGameJS", "_blank");
 	});
 	Pause.buttonSave.button.addEventListener("click", () => {
-		Save(locationId, localLocationId, SettingsValues.Difficulty, MoneyAmount, SettingsValues.Language, CreditsValues);
+		Save();
 	});
 	Pause.buttonLoad.button.addEventListener("click", () => {
 		Load(canvasobj);
@@ -134,7 +134,7 @@ function SetStateFile(filecontent, canvas) {
 	if(Data[0] !== "eors1") {
 		console.error("SetStateFile: Incompatible save loaded! (Version 1 required)");
 	}	
-	if(Data.length != 10) {
+	if(Data.length != 11) {
 		console.error("SetStateFile: Invalid save loaded!");
 	}
 	
@@ -146,11 +146,14 @@ function SetStateFile(filecontent, canvas) {
 	locationId =                         Number(Data[3]);	
 	localLocationId =                    Number(Data[4]);	
 	MoneyAmount =                        Number(Data[5]);
-	CreditsValues.gotAchievementSpeed =  Number(Data[6]);
-	CreditsValues.gotAchievementWaiter = Number(Data[7]);
-	CreditsValues.gotAchievementHelp =   Number(Data[8]);
-	CreditsValues.gotAchievementSus =    Number(Data[9]);
+	doesHaveTicket =                     Number(Data[6]);
+	CreditsValues.gotAchievementSpeed =  Number(Data[7]);
+	CreditsValues.gotAchievementWaiter = Number(Data[8]);
+	CreditsValues.gotAchievementHelp =   Number(Data[9]);
+	CreditsValues.gotAchievementSus =    Number(Data[10]);
 	UpdateSettingsValues();
+
+	console.log("Data split!");
 	
 	//pause button
 	PauseButton = new Arrow(10, 10, 50, 50, ArrowDirections.Pause, null);
@@ -158,15 +161,28 @@ function SetStateFile(filecontent, canvas) {
 		Pause(canvas);
 	});		
 	
-	//image loading
+	//image loading - dont forget to add stuff here
 	switch(locationId) {
 		case 1:
 			hnm_AmountLoadedImages = 0;
 			HraniceNaMoraveLoad(canvas, true);
-			let thisInterval = window.setInterval(() => {
-				if(hnm_AmountLoadedImages === 5) {
-					clearInterval(thisInterval);
+			let thisInterval1 = window.setInterval(() => {
+				if(hnm_AmountLoadedImages === 6) {
+					clearInterval(thisInterval1);
 					AllowedToPause = true;
+					ap.playTrack(2);
+					SetState(canvas);
+				}
+			}, 100);
+		break;
+		case 2:
+			pre_AmountLoadedImages = 0;
+			PrerovLoad(canvas, true);
+			let thisInterval2 = window.setInterval(() => {
+				if(pre_AmountLoadedImages === 6) {
+					clearInterval(thisInterval2);
+					AllowedToPause = true;
+					ap.playTrack(3);
 					SetState(canvas);
 				}
 			}, 100);
@@ -174,29 +190,31 @@ function SetStateFile(filecontent, canvas) {
 	}
 }
 
-function Save(locationId, localLocationId, difficulty, money, language, achievementValues) {
+function Save() {
 	let finalizedSave = "eors1 ";
-	finalizedSave+=language;
+	finalizedSave+=Number(SettingsValues.Language);
 	finalizedSave+=" ";
-	finalizedSave+=difficulty;
+	finalizedSave+=Number(SettingsValues.Difficulty);
 	finalizedSave+=" ";
-	finalizedSave+=locationId;
+	finalizedSave+=Number(locationId);
 	finalizedSave+=" ";
-	finalizedSave+=localLocationId;
+	finalizedSave+=Number(localLocationId);
 	finalizedSave+=" ";
-	finalizedSave+=money;
+	finalizedSave+=Number(MoneyAmount);
 	finalizedSave+=" ";
-	finalizedSave+=achievementValues.gotAchievementSpeed;
+	finalizedSave+=Number(doesHaveTicket);
 	finalizedSave+=" ";
-	finalizedSave+=achievementValues.gotAchievementWaiter;
+	finalizedSave+=Number(CreditsValues.gotAchievementSpeed);
 	finalizedSave+=" ";
-	finalizedSave+=achievementValues.gotAchievementHelp;
+	finalizedSave+=Number(CreditsValues.gotAchievementWaiter);
 	finalizedSave+=" ";
-	finalizedSave+=achievementValues.gotAchievementSus;
+	finalizedSave+=Number(CreditsValues.gotAchievementHelp);
+	finalizedSave+=" ";
+	finalizedSave+=Number(CreditsValues.gotAchievementSus);
 	
 	let hiddenAddrElem = document.createElement('a');
     hiddenAddrElem.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(finalizedSave));
-    hiddenAddrElem.setAttribute('download', "save.eors1");
+    hiddenAddrElem.setAttribute('download', "savefile.eors1");
     hiddenAddrElem.style.display = 'none';
 	
     document.body.appendChild(hiddenAddrElem);

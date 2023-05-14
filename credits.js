@@ -1,8 +1,8 @@
 let CreditsValues = {
-	gotAchievementSpeed: 0,
-	gotAchievementWaiter: 0,
-	gotAchievementHelp: 0,
-	gotAchievementSus: 0
+	gotAchievementSpeed: false,
+	gotAchievementWaiter: false,
+	gotAchievementHelp: false,
+	gotAchievementSus: false
 };
 
 const finalCreditsImage = new Image();
@@ -104,28 +104,28 @@ function Credits(iscalledfrommm, canvasobj) {
 			//achievements - medal for speed
 			canvasobj.image(finalCreditsImage, 0, 0, canvasobj.canvas.width, canvasobj.canvas.height);
 			canvasobj.text(TranslatedText[SettingsValues.Language][72], 100, 250); 
-			CreditsRenderAchievement(CreditsValues.gotAchievementSpeed, credits_Achievements[1], credits_Achievements[0], canvasobj);
+			CreditsRenderAchievement(CreditsValues.gotAchievementSpeed, AchievementImages[1], AchievementImages[0], canvasobj);
 		}, 7 * delay);
 
 		setTimeout(() => {
 			//achievements - waiters medal
 			canvasobj.image(finalCreditsImage, 0, 0, canvasobj.canvas.width, canvasobj.canvas.height);
 			canvasobj.text(TranslatedText[SettingsValues.Language][74], 100, 250); 
-			CreditsRenderAchievement(CreditsValues.gotAchievementWaiter, credits_Achievements[2], credits_Achievements[0], canvasobj);
+			CreditsRenderAchievement(CreditsValues.gotAchievementWaiter, AchievementImages[2], AchievementImages[0], canvasobj);
 		}, 8 * delay);
 
 		setTimeout(() => {
 			//achievements - help medal
 			canvasobj.image(finalCreditsImage, 0, 0, canvasobj.canvas.width, canvasobj.canvas.height);
 			canvasobj.text(TranslatedText[SettingsValues.Language][76], 100, 250);
-			CreditsRenderAchievement(CreditsValues.gotAchievementHelp, credits_Achievements[3], credits_Achievements[0], canvasobj);
+			CreditsRenderAchievement(CreditsValues.gotAchievementHelp, AchievementImages[3], AchievementImages[0], canvasobj);
 		}, 9 * delay);
 		
 		setTimeout(() => {
 			//achievements - sus medal
 			canvasobj.image(finalCreditsImage, 0, 0, canvasobj.canvas.width, canvasobj.canvas.height);
 			canvasobj.text(TranslatedText[SettingsValues.Language][78], 100, 250);
-			CreditsRenderAchievement(CreditsValues.gotAchievementSus, credits_Achievements[4], credits_Achievements[0], canvasobj);
+			CreditsRenderAchievement(CreditsValues.gotAchievementSus, AchievementImages[4], AchievementImages[0], canvasobj);
 		}, 10 * delay);
 	}
 
@@ -140,37 +140,15 @@ function Credits(iscalledfrommm, canvasobj) {
 	
 }
 
-let credits_Achievements = [];
-let credits_AmountLoadedImages = 0;
-
-function CreditsLoadImages(iscalledfrommm, canvasobj) {
-	for(let Id = 0; Id < 5; Id++) {
-		credits_Achievements.push(new Image());
-		credits_Achievements[Id].onload = () => { credits_AmountLoadedImages++; };
-	}
-	credits_Achievements[0].src = "res/achievements/medal_unknown.png";
-	credits_Achievements[1].src = "res/achievements/medal_speed.png";
-	credits_Achievements[2].src = "res/achievements/medal_waiter.png";
-	credits_Achievements[3].src = "res/achievements/medal_help.png";
-	credits_Achievements[4].src = "res/achievements/medal_sus.png";
-	
-	let thisInterval = window.setInterval(() => {
-		if(credits_AmountLoadedImages === 5) {
-			clearInterval(thisInterval);
-			Credits(iscalledfrommm, canvasobj);
-		}
-	}, 100);
-}
-
 function CreditsButtonRegister(canvasobj) {
 	console.log("Registered CREDITS Button press!");
 	canvasobj.loadingMsg();
 	finalCreditsImage.src = "res/Credits.jpg";
-	finalCreditsImage.onload = () => { CreditsLoadImages(true, canvasobj); };
+	finalCreditsImage.onload = () => { Credits(true, canvasobj); };
 }
 
 function debug_Credits(iscalledfrommm, canvasobj) {
 	canvasobj.loadingMsg();
 	finalCreditsImage.src = "res/Credits.jpg";
-	finalCreditsImage.onload = () => { CreditsLoadImages(iscalledfrommm, canvasobj); };
+	finalCreditsImage.onload = () => { Credits(iscalledfrommm, canvasobj); };
 }

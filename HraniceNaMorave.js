@@ -3,9 +3,37 @@
 let locationId = 0; //HnM, Prerov, etc... (HnM = 1, 0 is for main menu)
 let localLocationId = 0; //railway station, house, etc... (HnM house = 0, starts from 0)
 
+let PauseButton = new Arrow(10, 10, 50, 50, ArrowDirections.Pause, null);
+let TicketImages = [];
+let TicketImagesLoaded = 0;
+for(let Id = 0; Id < 2; Id++)  {
+	TicketImages.push(new Image());
+	TicketImages[Id].onload = () => { TicketImagesLoaded++; };
+}
+TicketImages[0].src = "res/noticket.png";
+TicketImages[1].src = "res/ticket.png";
 let doesHaveTicket = false;
 
-let PauseButton = new Arrow(10, 10, 50, 50, ArrowDirections.Pause, null);
+let AchievementImages = [];
+let AchievementImagesLoaded = 0;
+for(let Id = 0; Id < 5; Id++)  {
+	AchievementImages.push(new Image());
+	AchievementImages[Id].onload = () => { AchievementImagesLoaded++; };
+}
+AchievementImages[0].src = "res/achievements/medal_unknown.png";
+AchievementImages[1].src = "res/achievements/medal_speed.png";
+AchievementImages[2].src = "res/achievements/medal_waiter.png";
+AchievementImages[3].src = "res/achievements/medal_help.png";
+AchievementImages[4].src = "res/achievements/medal_sus.png";
+
+
+function RenderStatus(canvas) {
+	canvas.image(TicketImages[Number(doesHaveTicket)], 965, 210, 30, 30);
+	canvas.image(AchievementImages[CreditsValues.gotAchievementSpeed ? 1 : 0], 965, 250, 30, 30);
+	canvas.image(AchievementImages[CreditsValues.gotAchievementWaiter ? 2 : 0], 965, 290, 30, 30);
+	canvas.image(AchievementImages[CreditsValues.gotAchievementHelp ? 3 : 0], 965, 330, 30, 30);
+	canvas.image(AchievementImages[CreditsValues.gotAchievementSus ? 4 : 0], 965, 370, 30, 30);
+}
 
 //HnM specific
 
@@ -17,6 +45,7 @@ function HraniceNaMoraveImageLoaded() {
 }
 
 function HraniceNaMoraveLoad(canvas, calledbysetstate = false) {
+	AllowedToPause = false;	
 	canvas.loadingMsg();
 	
 	locationId = 1;
@@ -46,8 +75,9 @@ function HraniceNaMoraveMap(canvas) {
 		return;
     }
 	//map scene
+	ap.playTrack(2);
 	canvas.setnewcolor("#333399");
-	cvs.setnewfont("Arial, FreeSans", "32", "bold");
+	canvas.setnewfont("Arial, FreeSans", "32", "bold");
 	canvas.image(hnm_Locations[5], 0, 0, canvas.canvas.width, canvas.canvas.height);
 	canvas.textml(TranslatedText[SettingsValues.Language][20]+" 1\nHranice na Moravě", 50, 50);
 	canvas.resetfontweight();
@@ -60,12 +90,9 @@ function HraniceNaMoraveMap(canvas) {
 }
 
 function HraniceNaMorave(canvas) {
-	canvas.setnewcolor("#000000");
     console.log("Hranice na Morave START "+hnm_AmountLoadedImages);
 	CheckInstantLoss(canvas);
 	
-	canvas.loadingMsg();
-	ap.playTrack(2);
 	canvas.image(hnm_Locations[0], 0, 0, canvas.canvas.width, canvas.canvas.height);
 	chr.draw(600, 100, 0.65, canvas);		
 	
@@ -93,17 +120,18 @@ function HraniceNaMorave(canvas) {
 function HraniceNaMoraveDomov(canvas) {
 	console.log("hnm domov");
 	localLocationId = 0;
-	canvas.image(hnm_Locations[0], 0, 0, canvas.canvas.width, canvas.canvas.height);
-	chr.draw(600, 100, 0.65, canvas);	
 	let ArrowToNamesti = new Arrow(700, 400, 100, 100, ArrowDirections.Right, canvas);
-	ArrowToNamesti.draw(canvas);
 	ArrowToNamesti.button.addEventListener("click", () => {
 		if(GamePaused) { return; }
 		ArrowToNamesti.deleteButton();
     	HraniceNaMoraveNamesti(canvas);
 	}, { once: true });
+	canvas.image(hnm_Locations[0], 0, 0, canvas.canvas.width, canvas.canvas.height);
+	chr.draw(600, 100, 0.65, canvas);	
+	ArrowToNamesti.draw(canvas);
 	PauseButton.draw(canvas);
 	drawMoneyCount(canvas);
+	RenderStatus(canvas);
 }
 function HraniceNaMoraveNamesti(canvas) {
 	console.log("hnm namesti");
@@ -128,6 +156,7 @@ function HraniceNaMoraveNamesti(canvas) {
 	ArrowToNadrazi.draw(canvas);
 	PauseButton.draw(canvas);
 	drawMoneyCount(canvas);
+	RenderStatus(canvas);
 }
 function HraniceNaMoraveNadrazi(canvas) {
 	console.log("hnm nadrazi");
@@ -163,6 +192,7 @@ function HraniceNaMoraveNadrazi(canvas) {
 	ArrowToRestaurace.draw(canvas);
 	PauseButton.draw(canvas);
 	drawMoneyCount(canvas);
+	RenderStatus(canvas);
 }
 function HraniceNaMoraveNastupiste(canvas) {
 	console.log("hnm nastupiste");
@@ -172,6 +202,7 @@ function HraniceNaMoraveNastupiste(canvas) {
 		if(GamePaused) { return; }
 		traindriver.deleteButton();
 		ArrowToNadrazi.deleteButton();
+		ArrowToTrain.deleteButton();
 		HraniceNaMoraveNastupisteJob(canvas);
 	}, { once: true });
 	traindriver.append(canvas);
@@ -184,14 +215,27 @@ function HraniceNaMoraveNastupiste(canvas) {
 		ArrowToTrain.deleteButton();
     	HraniceNaMoraveNadrazi(canvas);
 	}, { once: true });
-	let ArrowToTrain = new Arrow(300, 200, 50, 50, ArrowDirections.Left, canvas);
+	let ArrowToTrain = new Arrow(430, 250, 100, 100, ArrowDirections.Left, canvas);
 	ArrowToTrain.button.addEventListener("click", () => {
 		if(GamePaused) { return; }
+		traindriver.deleteButton();
+		ArrowToNadrazi.deleteButton();
+		ArrowToTrain.deleteButton();
 		if(doesHaveTicket) {
-			traindriver.deleteButton();
-			ArrowToNadrazi.deleteButton();
-			ArrowToTrain.deleteButton();
+			doesHaveTicket = false;
     		PrerovLoad(canvas);
+		}
+		else {
+			let dialogue = new Dialogue();
+			dialogue.begin(canvas);
+			dialogue.makeBubble(0, TranslatedText[SettingsValues.Language][93]);
+			let thisInterval = window.setInterval((dialogue, canvas) => {
+				if(dialogue.counter === 1) {
+					clearInterval(thisInterval);
+					dialogue.end();
+					HraniceNaMoraveNastupiste(canvas);
+				}
+			}, 100, dialogue, canvas);
 		}
 	}, { once: true });
 	
@@ -202,6 +246,7 @@ function HraniceNaMoraveNastupiste(canvas) {
 	ArrowToTrain.draw(canvas);
 	PauseButton.draw(canvas);
 	drawMoneyCount(canvas);
+	RenderStatus(canvas);
 }
 
 function HraniceNaMoraveRestaurace(canvas) {
@@ -231,6 +276,7 @@ function HraniceNaMoraveRestaurace(canvas) {
 	ArrowToNadrazi.draw(canvas);
 	PauseButton.draw(canvas);
 	drawMoneyCount(canvas);
+	RenderStatus(canvas);
 }
 
 function HraniceNaMoraveRestauraceJob(canvas) {
@@ -281,8 +327,9 @@ function HraniceNaMoraveNastupisteJob(canvas) {
 		if(dialogue.choice_result !== -1) {
 			clearInterval(dWaitInterval);
 			if(dialogue.choice_result === 1) {
-				if(MoneyAmount >= 650) {
-					removeMoney(650);
+				if(MoneyAmount >= Math.floor(650 * SettingsValues.MoneyCostIncrease)) {
+					removeMoney(Math.floor(650 * SettingsValues.MoneyCostIncrease));
+					doesHaveTicket = true;
 					dialogue.makeBubble(4, TranslatedText[SettingsValues.Language][89]);
 				}
 				else {
@@ -291,7 +338,7 @@ function HraniceNaMoraveNastupisteJob(canvas) {
 				return;
 			}
 			else {
-				dialogue.makeBubble(4, TranslationGetMultipleLines(SettingsValues.Language, 92, 2));
+				dialogue.makeBubble(4, TranslatedText[SettingsValues.Language][92]);
 				return;
 			}
 		}
@@ -305,4 +352,8 @@ function HraniceNaMoraveNastupisteJob(canvas) {
 			HraniceNaMoraveNastupiste(canvas);
 		}
 	}, 100, dialogue, canvas);
+}
+
+function HraniceNaMoraveTrainEntry(canvas) {
+
 }
