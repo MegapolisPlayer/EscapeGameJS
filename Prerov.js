@@ -7,6 +7,7 @@ function PrerovImageLoaded() {
 
 function PrerovLoad(canvas, calledbysetstate = false) {
 	AllowedToPause = false;	
+	timerPause();
 	canvas.loadingMsg();
 	locationId = 2;
 	for(let Id = 0; Id < 6; Id++) {
@@ -54,18 +55,19 @@ function Prerov(canvas) {
 	
 	let FirstDialogue = new Dialogue();
 	FirstDialogue.begin(canvas);
-	FirstDialogue.makeBubble(0, TranslationGetMultipleLines(SettingsValues.Language, 94, 2));
-	FirstDialogue.makeBubble(1, TranslationGetMultipleLines(SettingsValues.Language, 96, 2));
-	FirstDialogue.makeBubble(2, TranslationGetMultipleLines(SettingsValues.Language, 98, 2));
-	FirstDialogue.makeBubble(3, TranslationGetMultipleLines(SettingsValues.Language, 100, 2).slice(0, -1) + " " + Math.floor(1080 * SettingsValues.MoneyCostIncrease) + " CZK");
-	FirstDialogue.makeBubble(4, TranslatedText[SettingsValues.Language][102]);	
+	FirstDialogue.makeBubble(0, TranslationGetMultipleLines(SettingsValues.Language, 96, 2));
+	FirstDialogue.makeBubble(1, TranslationGetMultipleLines(SettingsValues.Language, 98, 2));
+	FirstDialogue.makeBubble(2, TranslationGetMultipleLines(SettingsValues.Language, 100, 2));
+	FirstDialogue.makeBubble(3, TranslationGetMultipleLines(SettingsValues.Language, 102, 2).slice(0, -1) + " " + Math.floor(1080 * SettingsValues.MoneyCostIncrease) + " " + TranslatedText[SettingsValues.Language][85]);
+	FirstDialogue.makeBubble(4, TranslatedText[SettingsValues.Language][104]);	
 	
 	let thisInterval = window.setInterval((dialogue, canvas) => {
 		if(dialogue.counter === 5) {
 			clearInterval(thisInterval);
 			dialogue.end();		
 			PauseButton.append(canvas);
-			AllowedToPause = true;	
+			AllowedToPause = true;
+			timerUnpause();	
 			PrerovNastupiste(canvas);
 		}
 	}, 100, FirstDialogue, canvas);
@@ -117,27 +119,27 @@ function PrerovNamesti(canvas) {
 	console.log("pre namesti");
 	localLocationId = 2;
 	let ArrowToNadrazi = new Arrow(100, 400, 100, 100, ArrowDirections.Down, canvas);
-	let ArrowToAutobus = new Arrow(600, 400, 100, 100, ArrowDirections.Right, canvas);
-	let ArrowToBecva = new Arrow(100, 300, 100, 100, ArrowDirections.Left, canvas);
+	let ArrowToAutobus = new Arrow(100, 300, 100, 100, ArrowDirections.Left, canvas);
+	let ArrowToBecva = new Arrow(600, 400, 100, 100, ArrowDirections.Right, canvas);
 	ArrowToNadrazi.button.addEventListener("click", () => {
 		if(GamePaused) { return; }
 		ArrowToNadrazi.deleteButton();
-		ArrowToBecva.deleteButton();
 		ArrowToAutobus.deleteButton();
+		ArrowToBecva.deleteButton();
     	PrerovNadrazi(canvas);
 	}, { once: true });
 	ArrowToAutobus.button.addEventListener("click", () => {
 		if(GamePaused) { return; }
 		ArrowToNadrazi.deleteButton();
-		ArrowToBecva.deleteButton();
 		ArrowToAutobus.deleteButton();
+		ArrowToBecva.deleteButton();
     	PrerovAutobus(canvas);
 	}, { once: true });
 	ArrowToBecva.button.addEventListener("click", () => {
 		if(GamePaused) { return; }
 		ArrowToNadrazi.deleteButton();
-		ArrowToBecva.deleteButton();
 		ArrowToAutobus.deleteButton();
+		ArrowToBecva.deleteButton();
     	PrerovBecva(canvas);
 	}, { once: true });
 	canvas.image(pre_Locations[2], 0, 0, canvas.canvas.width, canvas.canvas.height);
@@ -169,18 +171,28 @@ function PrerovBecva(canvas) {
 	console.log("pre becva");
 	localLocationId = 4;
 	let ArrowToNamesti = new Arrow(50, 350, 100, 100, ArrowDirections.Left, canvas);
+	let ArrowToBecvaJob = new Arrow(320, 370, 50, 50, ArrowDirections.Here, canvas);
 	ArrowToNamesti.button.addEventListener("click", () => {
 		if(GamePaused) { return; }
 		ArrowToNamesti.deleteButton();
+		ArrowToBecvaJob.deleteButton();
     	PrerovNamesti(canvas);
+	}, { once: true });
+	ArrowToBecvaJob.button.addEventListener("click", () => {
+		if(GamePaused) { return; }
+		ArrowToNamesti.deleteButton();
+		ArrowToBecvaJob.deleteButton();
+    	PrerovBecvaJob1(canvas);
 	}, { once: true });
 	canvas.image(pre_Locations[4], 0, 0, canvas.canvas.width, canvas.canvas.height);
 	chr.draw(170, 320, 0.25, canvas);
 	ArrowToNamesti.draw(canvas);
+	ArrowToBecvaJob.draw(canvas);
 	PauseButton.draw(canvas);
 	drawMoneyCount(canvas);
 	RenderStatus(canvas);
 }
 function PrerovBecvaJob1(canvas) {
 	//becva fishing!
+	PrerovBecva(canvas);
 }

@@ -10,6 +10,7 @@ cat "renderBase.js" >> "package.js"
 cat "money.js" >> "package.js"
 cat "dialogue.js" >> "package.js"
 cat "translation.js" >> "package.js"
+cat "timer.js" >> "package.js"
 
 #gui files
 cat "settings.js" >> "package.js"

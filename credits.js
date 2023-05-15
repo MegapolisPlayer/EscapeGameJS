@@ -8,22 +8,25 @@ let CreditsValues = {
 const finalCreditsImage = new Image();
 
 function CreditsRenderAchievement(isdone, imageyes, imageno, canvasobj) {
-	canvasobj.context.textAlign = "center"; 
 	canvasobj.setfontweight("bold");
 	if(isdone) {
+		canvasobj.context.textAlign = "center"; 
 		canvasobj.image(imageyes, 350, 100, 300, 300);
-		canvasobj.text(TranslatedText[SettingsValues.Language][82], 500, 450);
+		canvasobj.context.textAlign = "left"; 
+		canvasobj.text(TranslatedText[SettingsValues.Language][82], 100, 300);
 	}
 	else {
+		canvasobj.context.textAlign = "center"; 
 		canvasobj.image(imageno, 350, 100, 300, 300);
-		canvasobj.text(TranslatedText[SettingsValues.Language][83], 500, 450);
+		canvasobj.context.textAlign = "left"; 
+		canvasobj.text(TranslatedText[SettingsValues.Language][83], 100, 300);
 	}
 	canvasobj.resetfontweight();
-	canvasobj.context.textAlign = "left"; 
 }
 
 //if iscalledfrommm true means called from main menu, dont show achievements and such
 function Credits(iscalledfrommm, canvasobj) {
+	timerEnd();
 	deleteCanvasInputElems();
 	ap.playTrack(9); //waltz vivace
 	canvasobj.setnewcolor("#ffffff");
@@ -104,6 +107,9 @@ function Credits(iscalledfrommm, canvasobj) {
 			//achievements - medal for speed
 			canvasobj.image(finalCreditsImage, 0, 0, canvasobj.canvas.width, canvasobj.canvas.height);
 			canvasobj.text(TranslatedText[SettingsValues.Language][72], 100, 250); 
+			canvasobj.context.textAlign = "center";
+			canvasobj.text(TranslatedText[SettingsValues.Language][73], 500, 450); 
+			canvasobj.context.textAlign = "left";
 			CreditsRenderAchievement(CreditsValues.gotAchievementSpeed, AchievementImages[1], AchievementImages[0], canvasobj);
 		}, 7 * delay);
 
@@ -111,6 +117,9 @@ function Credits(iscalledfrommm, canvasobj) {
 			//achievements - waiters medal
 			canvasobj.image(finalCreditsImage, 0, 0, canvasobj.canvas.width, canvasobj.canvas.height);
 			canvasobj.text(TranslatedText[SettingsValues.Language][74], 100, 250); 
+			canvasobj.context.textAlign = "center";
+			canvasobj.text(TranslatedText[SettingsValues.Language][75], 500, 450); 
+			canvasobj.context.textAlign = "left";
 			CreditsRenderAchievement(CreditsValues.gotAchievementWaiter, AchievementImages[2], AchievementImages[0], canvasobj);
 		}, 8 * delay);
 
@@ -118,6 +127,9 @@ function Credits(iscalledfrommm, canvasobj) {
 			//achievements - help medal
 			canvasobj.image(finalCreditsImage, 0, 0, canvasobj.canvas.width, canvasobj.canvas.height);
 			canvasobj.text(TranslatedText[SettingsValues.Language][76], 100, 250);
+			canvasobj.context.textAlign = "center";
+			canvasobj.text(TranslatedText[SettingsValues.Language][77], 500, 450); 
+			canvasobj.context.textAlign = "left";
 			CreditsRenderAchievement(CreditsValues.gotAchievementHelp, AchievementImages[3], AchievementImages[0], canvasobj);
 		}, 9 * delay);
 		
@@ -125,8 +137,19 @@ function Credits(iscalledfrommm, canvasobj) {
 			//achievements - sus medal
 			canvasobj.image(finalCreditsImage, 0, 0, canvasobj.canvas.width, canvasobj.canvas.height);
 			canvasobj.text(TranslatedText[SettingsValues.Language][78], 100, 250);
+			canvasobj.context.textAlign = "center";
+			canvasobj.text(TranslatedText[SettingsValues.Language][79], 500, 450); 
+			canvasobj.context.textAlign = "left";
 			CreditsRenderAchievement(CreditsValues.gotAchievementSus, AchievementImages[4], AchievementImages[0], canvasobj);
 		}, 10 * delay);
+		setTimeout(() => {
+			//time played
+			canvasobj.image(finalCreditsImage, 0, 0, canvasobj.canvas.width, canvasobj.canvas.height);
+			canvasobj.text(TranslatedText[SettingsValues.Language][84], 50, 190); 
+			canvasobj.setfontweight("bold");
+			canvasobj.text(timerToString(), 100, 230);
+			canvasobj.resetfontweight();
+		}, 11 * delay);
 	}
 
 	setTimeout(() => {
@@ -136,7 +159,7 @@ function Credits(iscalledfrommm, canvasobj) {
 		window.addEventListener("click", function(event) {
 			location.reload();		
 		});
-	}, (iscalledfrommm ? 6 : 11) * delay);
+	}, (iscalledfrommm ? 7 : 12) * delay);
 	
 }
 

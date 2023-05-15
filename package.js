@@ -416,7 +416,7 @@ class Dialogue {
 	}
 	makeBox() {
 		this.canvas_info.setlinethickness(5);
-		this.canvas_info.boxborder(20, (this.canvas_info.canvas.height * 0.8), this.canvas_info.canvas.width - 40, this.canvas_info.canvas.height - 40);
+		this.canvas_info.boxborder(20, (this.canvas_info.canvas.height * 0.8), this.canvas_info.canvas.width - 40,  (this.canvas_info.canvas.height * 0.2));
 	}
 	makeText(text) {
 		this.canvas_info.textml(text, 30, (this.canvas_info.canvas.height * 0.8) + 30);
@@ -426,9 +426,7 @@ class Dialogue {
    			setTimeout(this.makeBubble.bind(this), 100, id, text, textcolor);
 			return;
   		}
-		else {
-			this.can_proceed = false;
-		}
+		else { this.can_proceed = false; }
 		let dlgInputElems = document.getElementsByClassName("DialogueArrow"); //remove all at beginning to avoid duplicates
 		while(dlgInputElems[0]) {
 		  	dlgInputElems[0].parentNode.removeChild(dlgInputElems[0]);
@@ -460,8 +458,9 @@ class Dialogue {
 		}
 		this.canvas_info.setnewcolor("white");
 		this.makeBox();
-		let YesButton = new Arrow(140, (this.canvas_info.canvas.height * 0.8), 100, 100, ArrowDirections.Yes, this.canvas_info);
+		let YesButton = new Arrow(40, (this.canvas_info.canvas.height * 0.8), 100, 100, ArrowDirections.Yes, this.canvas_info);
 		let NoButton = new Arrow(this.canvas_info.canvas.width - 140, (this.canvas_info.canvas.height * 0.8), 100, 100, ArrowDirections.No, this.canvas_info);
+		
 		YesButton.button.setAttribute("class", YesButton.button.getAttribute("class")+" DialogueArrow");
 		NoButton.button.setAttribute("class", NoButton.button.getAttribute("class")+" DialogueArrow");		
 		
@@ -510,6 +509,7 @@ function TranslationLoad(lang, lid) {
 	req.onload = (event) => {
 		let splittext = req.responseText.split('\n');
 		for(let Id = 0; Id < splittext.length; Id++) {
+			splittext[Id] = splittext[Id].replaceAll('\r', ''); //for windows
 			if(splittext[Id].length !== 0) {
 				(TranslatedText[lid]).push(splittext[Id]);
 			}
@@ -528,6 +528,32 @@ function TranslationGetMultipleLines(lid, idf, amount) {
 		tempResult += '\n';
 	}
 	return tempResult;
+}
+let TimerValues = {
+	StartTime: 0,
+	CurrentTime: 0,
+	PauseStartTime: 0,
+	OverallPauseTime: 0,
+	OverallTime: 0
+}
+
+function timerStart() {
+	TimerValues.StartTime = Date.now();
+}
+function timerPause() {
+	TimerValues.PauseStartTime = Date.now();
+}
+function timerUnpause() {
+	TimerValues.CurrentTime = Date.now();
+	TimerValues.OverallPauseTime += Math.abs(TimerValues.CurrentTime - TimerValues.PauseStartTime);
+	TimerValues.PauseStartTime = 0;
+}
+function timerEnd() {
+	TimerValues.CurrentTime = Date.now();
+	TimerValues.OverallTime = Math.abs((TimerValues.CurrentTime - TimerValues.StartTime - TimerValues.OverallPauseTime) / 1000);
+}
+function timerToString() {
+	return String(Math.floor(TimerValues.OverallTime / 60) + ":" + ('00'+((TimerValues.OverallTime % 60) - Math.floor(TimerValues.OverallTime / 60))).slice(-2) + " ([M]M:SS)");
 }
 let SettingsValues = {
 	Difficulty: 2, //1 - easy, 2 - medium, 3 - hard
@@ -742,22 +768,25 @@ let CreditsValues = {
 const finalCreditsImage = new Image();
 
 function CreditsRenderAchievement(isdone, imageyes, imageno, canvasobj) {
-	canvasobj.context.textAlign = "center"; 
 	canvasobj.setfontweight("bold");
 	if(isdone) {
+		canvasobj.context.textAlign = "center"; 
 		canvasobj.image(imageyes, 350, 100, 300, 300);
-		canvasobj.text(TranslatedText[SettingsValues.Language][82], 500, 450);
+		canvasobj.context.textAlign = "left"; 
+		canvasobj.text(TranslatedText[SettingsValues.Language][82], 100, 300);
 	}
 	else {
+		canvasobj.context.textAlign = "center"; 
 		canvasobj.image(imageno, 350, 100, 300, 300);
-		canvasobj.text(TranslatedText[SettingsValues.Language][83], 500, 450);
+		canvasobj.context.textAlign = "left"; 
+		canvasobj.text(TranslatedText[SettingsValues.Language][83], 100, 300);
 	}
 	canvasobj.resetfontweight();
-	canvasobj.context.textAlign = "left"; 
 }
 
 //if iscalledfrommm true means called from main menu, dont show achievements and such
 function Credits(iscalledfrommm, canvasobj) {
+	timerEnd();
 	deleteCanvasInputElems();
 	ap.playTrack(9); //waltz vivace
 	canvasobj.setnewcolor("#ffffff");
@@ -838,6 +867,9 @@ function Credits(iscalledfrommm, canvasobj) {
 			//achievements - medal for speed
 			canvasobj.image(finalCreditsImage, 0, 0, canvasobj.canvas.width, canvasobj.canvas.height);
 			canvasobj.text(TranslatedText[SettingsValues.Language][72], 100, 250); 
+			canvasobj.context.textAlign = "center";
+			canvasobj.text(TranslatedText[SettingsValues.Language][73], 500, 450); 
+			canvasobj.context.textAlign = "left";
 			CreditsRenderAchievement(CreditsValues.gotAchievementSpeed, AchievementImages[1], AchievementImages[0], canvasobj);
 		}, 7 * delay);
 
@@ -845,6 +877,9 @@ function Credits(iscalledfrommm, canvasobj) {
 			//achievements - waiters medal
 			canvasobj.image(finalCreditsImage, 0, 0, canvasobj.canvas.width, canvasobj.canvas.height);
 			canvasobj.text(TranslatedText[SettingsValues.Language][74], 100, 250); 
+			canvasobj.context.textAlign = "center";
+			canvasobj.text(TranslatedText[SettingsValues.Language][75], 500, 450); 
+			canvasobj.context.textAlign = "left";
 			CreditsRenderAchievement(CreditsValues.gotAchievementWaiter, AchievementImages[2], AchievementImages[0], canvasobj);
 		}, 8 * delay);
 
@@ -852,6 +887,9 @@ function Credits(iscalledfrommm, canvasobj) {
 			//achievements - help medal
 			canvasobj.image(finalCreditsImage, 0, 0, canvasobj.canvas.width, canvasobj.canvas.height);
 			canvasobj.text(TranslatedText[SettingsValues.Language][76], 100, 250);
+			canvasobj.context.textAlign = "center";
+			canvasobj.text(TranslatedText[SettingsValues.Language][77], 500, 450); 
+			canvasobj.context.textAlign = "left";
 			CreditsRenderAchievement(CreditsValues.gotAchievementHelp, AchievementImages[3], AchievementImages[0], canvasobj);
 		}, 9 * delay);
 		
@@ -859,8 +897,19 @@ function Credits(iscalledfrommm, canvasobj) {
 			//achievements - sus medal
 			canvasobj.image(finalCreditsImage, 0, 0, canvasobj.canvas.width, canvasobj.canvas.height);
 			canvasobj.text(TranslatedText[SettingsValues.Language][78], 100, 250);
+			canvasobj.context.textAlign = "center";
+			canvasobj.text(TranslatedText[SettingsValues.Language][79], 500, 450); 
+			canvasobj.context.textAlign = "left";
 			CreditsRenderAchievement(CreditsValues.gotAchievementSus, AchievementImages[4], AchievementImages[0], canvasobj);
 		}, 10 * delay);
+		setTimeout(() => {
+			//time played
+			canvasobj.image(finalCreditsImage, 0, 0, canvasobj.canvas.width, canvasobj.canvas.height);
+			canvasobj.text(TranslatedText[SettingsValues.Language][84], 50, 190); 
+			canvasobj.setfontweight("bold");
+			canvasobj.text(timerToString(), 100, 230);
+			canvasobj.resetfontweight();
+		}, 11 * delay);
 	}
 
 	setTimeout(() => {
@@ -870,7 +919,7 @@ function Credits(iscalledfrommm, canvasobj) {
 		window.addEventListener("click", function(event) {
 			location.reload();		
 		});
-	}, (iscalledfrommm ? 6 : 11) * delay);
+	}, (iscalledfrommm ? 7 : 12) * delay);
 	
 }
 
@@ -1001,7 +1050,8 @@ function HraniceNaMorave(canvas) {
 			clearInterval(thisInterval);
 			dialogue.end();		
 			PauseButton.append(canvas);
-			AllowedToPause = true;	
+			AllowedToPause = true;
+			timerStart();
 			HraniceNaMoraveDomov(canvas);
 		}
 	}, 100, FirstDialogue, canvas);
@@ -1119,7 +1169,7 @@ function HraniceNaMoraveNastupiste(canvas) {
 		else {
 			let dialogue = new Dialogue();
 			dialogue.begin(canvas);
-			dialogue.makeBubble(0, TranslatedText[SettingsValues.Language][93]);
+			dialogue.makeBubble(0, TranslatedText[SettingsValues.Language][95]);
 			let thisInterval = window.setInterval((dialogue, canvas) => {
 				if(dialogue.counter === 1) {
 					clearInterval(thisInterval);
@@ -1209,9 +1259,9 @@ function HraniceNaMoraveNastupisteJob(canvas) {
 	AllowedToPause = false;
 	let dialogue = new Dialogue();
 	dialogue.begin(canvas);
-	dialogue.makeBubble(0, TranslationGetMultipleLines(SettingsValues.Language, 84, 2).slice(0, -1) + " " + Math.floor(650 * SettingsValues.MoneyCostIncrease) + " CZK");
-	dialogue.makeBubble(1, TranslationGetMultipleLines(SettingsValues.Language, 86, 2));
-	dialogue.makeBubble(2, TranslatedText[SettingsValues.Language][88]);
+	dialogue.makeBubble(0, TranslationGetMultipleLines(SettingsValues.Language, 86, 2).slice(0, -1) + " " + Math.floor(650 * SettingsValues.MoneyCostIncrease) + " " + TranslatedText[SettingsValues.Language][85]);
+	dialogue.makeBubble(1, TranslationGetMultipleLines(SettingsValues.Language, 88, 2));
+	dialogue.makeBubble(2, TranslatedText[SettingsValues.Language][90]);
 	dialogue.makeChoice(3);
 	
 	let dWaitInterval = window.setInterval((dialogue) => {
@@ -1221,15 +1271,15 @@ function HraniceNaMoraveNastupisteJob(canvas) {
 				if(MoneyAmount >= Math.floor(650 * SettingsValues.MoneyCostIncrease)) {
 					removeMoney(Math.floor(650 * SettingsValues.MoneyCostIncrease));
 					doesHaveTicket = true;
-					dialogue.makeBubble(4, TranslatedText[SettingsValues.Language][89]);
+					dialogue.makeBubble(4, TranslatedText[SettingsValues.Language][91]);
 				}
 				else {
-					dialogue.makeBubble(4, TranslationGetMultipleLines(SettingsValues.Language, 90, 2));
+					dialogue.makeBubble(4, TranslationGetMultipleLines(SettingsValues.Language, 92, 2));
 				}
 				return;
 			}
 			else {
-				dialogue.makeBubble(4, TranslatedText[SettingsValues.Language][92]);
+				dialogue.makeBubble(4, TranslatedText[SettingsValues.Language][94]);
 				return;
 			}
 		}
@@ -1257,6 +1307,7 @@ function PrerovImageLoaded() {
 
 function PrerovLoad(canvas, calledbysetstate = false) {
 	AllowedToPause = false;	
+	timerPause();
 	canvas.loadingMsg();
 	locationId = 2;
 	for(let Id = 0; Id < 6; Id++) {
@@ -1304,18 +1355,19 @@ function Prerov(canvas) {
 	
 	let FirstDialogue = new Dialogue();
 	FirstDialogue.begin(canvas);
-	FirstDialogue.makeBubble(0, TranslationGetMultipleLines(SettingsValues.Language, 94, 2));
-	FirstDialogue.makeBubble(1, TranslationGetMultipleLines(SettingsValues.Language, 96, 2));
-	FirstDialogue.makeBubble(2, TranslationGetMultipleLines(SettingsValues.Language, 98, 2));
-	FirstDialogue.makeBubble(3, TranslationGetMultipleLines(SettingsValues.Language, 100, 2).slice(0, -1) + " " + Math.floor(1080 * SettingsValues.MoneyCostIncrease) + " CZK");
-	FirstDialogue.makeBubble(4, TranslatedText[SettingsValues.Language][102]);	
+	FirstDialogue.makeBubble(0, TranslationGetMultipleLines(SettingsValues.Language, 96, 2));
+	FirstDialogue.makeBubble(1, TranslationGetMultipleLines(SettingsValues.Language, 98, 2));
+	FirstDialogue.makeBubble(2, TranslationGetMultipleLines(SettingsValues.Language, 100, 2));
+	FirstDialogue.makeBubble(3, TranslationGetMultipleLines(SettingsValues.Language, 102, 2).slice(0, -1) + " " + Math.floor(1080 * SettingsValues.MoneyCostIncrease) + " " + TranslatedText[SettingsValues.Language][85]);
+	FirstDialogue.makeBubble(4, TranslatedText[SettingsValues.Language][104]);	
 	
 	let thisInterval = window.setInterval((dialogue, canvas) => {
 		if(dialogue.counter === 5) {
 			clearInterval(thisInterval);
 			dialogue.end();		
 			PauseButton.append(canvas);
-			AllowedToPause = true;	
+			AllowedToPause = true;
+			timerUnpause();	
 			PrerovNastupiste(canvas);
 		}
 	}, 100, FirstDialogue, canvas);
@@ -1367,27 +1419,27 @@ function PrerovNamesti(canvas) {
 	console.log("pre namesti");
 	localLocationId = 2;
 	let ArrowToNadrazi = new Arrow(100, 400, 100, 100, ArrowDirections.Down, canvas);
-	let ArrowToAutobus = new Arrow(600, 400, 100, 100, ArrowDirections.Right, canvas);
-	let ArrowToBecva = new Arrow(100, 300, 100, 100, ArrowDirections.Left, canvas);
+	let ArrowToAutobus = new Arrow(100, 300, 100, 100, ArrowDirections.Left, canvas);
+	let ArrowToBecva = new Arrow(600, 400, 100, 100, ArrowDirections.Right, canvas);
 	ArrowToNadrazi.button.addEventListener("click", () => {
 		if(GamePaused) { return; }
 		ArrowToNadrazi.deleteButton();
-		ArrowToBecva.deleteButton();
 		ArrowToAutobus.deleteButton();
+		ArrowToBecva.deleteButton();
     	PrerovNadrazi(canvas);
 	}, { once: true });
 	ArrowToAutobus.button.addEventListener("click", () => {
 		if(GamePaused) { return; }
 		ArrowToNadrazi.deleteButton();
-		ArrowToBecva.deleteButton();
 		ArrowToAutobus.deleteButton();
+		ArrowToBecva.deleteButton();
     	PrerovAutobus(canvas);
 	}, { once: true });
 	ArrowToBecva.button.addEventListener("click", () => {
 		if(GamePaused) { return; }
 		ArrowToNadrazi.deleteButton();
-		ArrowToBecva.deleteButton();
 		ArrowToAutobus.deleteButton();
+		ArrowToBecva.deleteButton();
     	PrerovBecva(canvas);
 	}, { once: true });
 	canvas.image(pre_Locations[2], 0, 0, canvas.canvas.width, canvas.canvas.height);
@@ -1419,20 +1471,30 @@ function PrerovBecva(canvas) {
 	console.log("pre becva");
 	localLocationId = 4;
 	let ArrowToNamesti = new Arrow(50, 350, 100, 100, ArrowDirections.Left, canvas);
+	let ArrowToBecvaJob = new Arrow(320, 370, 50, 50, ArrowDirections.Here, canvas);
 	ArrowToNamesti.button.addEventListener("click", () => {
 		if(GamePaused) { return; }
 		ArrowToNamesti.deleteButton();
+		ArrowToBecvaJob.deleteButton();
     	PrerovNamesti(canvas);
+	}, { once: true });
+	ArrowToBecvaJob.button.addEventListener("click", () => {
+		if(GamePaused) { return; }
+		ArrowToNamesti.deleteButton();
+		ArrowToBecvaJob.deleteButton();
+    	PrerovBecvaJob1(canvas);
 	}, { once: true });
 	canvas.image(pre_Locations[4], 0, 0, canvas.canvas.width, canvas.canvas.height);
 	chr.draw(170, 320, 0.25, canvas);
 	ArrowToNamesti.draw(canvas);
+	ArrowToBecvaJob.draw(canvas);
 	PauseButton.draw(canvas);
 	drawMoneyCount(canvas);
 	RenderStatus(canvas);
 }
 function PrerovBecvaJob1(canvas) {
 	//becva fishing!
+	PrerovBecva(canvas);
 }
 let GamePaused = false;
 let AllowedToPause = true;
@@ -1484,6 +1546,7 @@ function SetState(canvasobj) {
 function Pause(canvasobj) {
 	if(GamePaused) {
 		//unpause
+		timerUnpause();
 		GamePaused = false;
 		clearInterval(Pause.thisInterval);
 		Pause.buttonAudio.deleteButton();
@@ -1498,6 +1561,7 @@ function Pause(canvasobj) {
 	
 	if(!AllowedToPause) { return; }
 	GamePaused = true;
+	timerPause();	
 	
 	Pause.thisInterval = window.setInterval(() => {
 		if(Load.FileLoaded === true) {

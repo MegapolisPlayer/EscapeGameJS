@@ -48,6 +48,7 @@ function SetState(canvasobj) {
 function Pause(canvasobj) {
 	if(GamePaused) {
 		//unpause
+		timerUnpause();
 		GamePaused = false;
 		clearInterval(Pause.thisInterval);
 		Pause.buttonAudio.deleteButton();
@@ -62,6 +63,7 @@ function Pause(canvasobj) {
 	
 	if(!AllowedToPause) { return; }
 	GamePaused = true;
+	timerPause();	
 	
 	Pause.thisInterval = window.setInterval(() => {
 		if(Load.FileLoaded === true) {

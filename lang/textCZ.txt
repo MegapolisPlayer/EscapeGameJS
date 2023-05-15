@@ -95,6 +95,9 @@ Děkujeme že jste si zahrali.
 Klikněte kamkoliv pro odchod ze hry.
 NEDOSTIŽENO
 DOSTIŽENO
+Hrací čas:
+
+Kč
 
 ..potřebuješ jízdenku, tak?
 Do Přerova to stojí 

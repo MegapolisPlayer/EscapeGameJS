@@ -81,10 +81,10 @@ a game by
 images by
 music and audio effects by
 translations by
-license:
+license
 Your achievements:
 Medal for speed
-You finished the game in under 10 minutes
+You finished the game in under 10 minutes!
 Waiter's medal
 You did all the waiter minigames!
 Helper's medal
@@ -95,6 +95,9 @@ Thanks for playing!
 Click anywhere to quit game.
 UNLOCKED
 LOCKED
+Playing time:
+
+CZK
 
 So you want to buy a ticket, right?
 To go to Přerov it would cost
