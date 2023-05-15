@@ -23,7 +23,6 @@ Sprache
 Hintergrundgeschichte
 Tag
 
-
 Die Schwierigkeit bestimmt nicht nur die oben genannten Werte, sondern auch
 die Schwierigkeit der Minispiele. Die Schwierigkeit oder die Sprache können
 es nicht während des Spiels geändert werden. Alle Werte werden gespeichert.
