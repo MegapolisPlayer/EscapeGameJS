@@ -10,7 +10,7 @@ Pausenmenü
 Spielen
 Spiel speichern
 Spiel laden
-Spile enden
+Spiel enden
 
 Schwierigkeit
 Leicht
