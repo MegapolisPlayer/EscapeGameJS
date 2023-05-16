@@ -5,6 +5,7 @@ class Character {
 		this.image.onload = this.setisloaded;
 		this.loaded = false;
 		this.button = document.createElement("button");
+		this.haseventlistener = false;
 	}
 	draw(xoffset, yoffset, scale, canvasobj) {
 		canvasobj.image(this.image, xoffset, yoffset, this.image.width * scale, this.image.height * scale);
@@ -30,6 +31,11 @@ class Character {
 	}
 	setisloaded() {
 		this.loaded = true;
+	}
+	resetEventListeners() {
+		var newElem = this.button.cloneNode(true);
+		this.button.parentNode.replaceChild(newElem, this.button);
+		this.button = newElem;
 	}
 };
 let chr = new Character("res/Character.png");

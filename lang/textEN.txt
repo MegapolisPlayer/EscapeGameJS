@@ -99,6 +99,33 @@ Playing time:
 
 CZK
 
+Tasks
+Start
+
+Waiter minigame
+Click on the correct orders as fast a possible.
+For every order you will get 30CZK.
+
+Fisher minigame
+Catch as much fish as possible.
+For every fish you catch you will get 50CZK.
+
+Toilets cleaning minigame
+Just clean the toilets by swiping.
+You will get 250CZK.
+
+Translation minigame
+Translate as many words from a dialect.
+For every word you will get 5CZK.
+
+Cashier minigame
+Process as many products as possible.
+For every product you will get 5CZK.
+
+Defense minigame
+Defend Studénka!
+You will get a ticket to Ostrava.
+
 So you want to buy a ticket, right?
 To go to Přerov it would cost
 If you want to buy a ticket,
@@ -110,6 +137,7 @@ Get out of here!
 Okay, see you later!
 
 Hey! Buy a ticket first!
+Hey! You already have a ticket, don't you?
 
 Welcome to Přerov.
 Sadly, the track to Olomouc is closed.

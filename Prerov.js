@@ -55,11 +55,11 @@ function Prerov(canvas) {
 	
 	let FirstDialogue = new Dialogue();
 	FirstDialogue.begin(canvas);
-	FirstDialogue.makeBubble(0, TranslationGetMultipleLines(SettingsValues.Language, 96, 2));
-	FirstDialogue.makeBubble(1, TranslationGetMultipleLines(SettingsValues.Language, 98, 2));
-	FirstDialogue.makeBubble(2, TranslationGetMultipleLines(SettingsValues.Language, 100, 2));
-	FirstDialogue.makeBubble(3, TranslationGetMultipleLines(SettingsValues.Language, 102, 2).slice(0, -1) + " " + Math.floor(1080 * SettingsValues.MoneyCostIncrease) + " " + TranslatedText[SettingsValues.Language][85]);
-	FirstDialogue.makeBubble(4, TranslatedText[SettingsValues.Language][104]);	
+	FirstDialogue.makeBubble(0, TranslationGetMultipleLines(SettingsValues.Language, 117, 2));
+	FirstDialogue.makeBubble(1, TranslationGetMultipleLines(SettingsValues.Language, 119, 2));
+	FirstDialogue.makeBubble(2, TranslationGetMultipleLines(SettingsValues.Language, 121, 2));
+	FirstDialogue.makeBubble(3, TranslationGetMultipleLines(SettingsValues.Language, 123, 2).slice(0, -1) + " " + Math.floor(1080 * SettingsValues.MoneyCostIncrease) + " " + TranslatedText[SettingsValues.Language][85]);
+	FirstDialogue.makeBubble(4, TranslatedText[SettingsValues.Language][125]);	
 	
 	let thisInterval = window.setInterval((dialogue, canvas) => {
 		if(dialogue.counter === 5) {
@@ -193,6 +193,16 @@ function PrerovBecva(canvas) {
 	RenderStatus(canvas);
 }
 function PrerovBecvaJob1(canvas) {
-	//becva fishing!
-	PrerovBecva(canvas);
+	AllowedToPause = false;
+	PauseButton.deleteButton();
+	FishGame(canvas);
+	let thisInterval = window.setInterval((canvas) => {
+		if(FishGameValues.IsOver !== -1) {
+			clearInterval(thisInterval);
+			FishGameReset();
+			PauseButton.append(canvas);
+			AllowedToPause = true;
+			PrerovBecva(canvas);
+		}
+	}, 100, canvas);
 }

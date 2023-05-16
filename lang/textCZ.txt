@@ -57,7 +57,7 @@ Peníze
 
 Náš čišník zrovna odešel.
 Pomůžes mi roznést jídlo?
-Dám ti za to 700 Kč.
+Dám ti za to pár korun.
 Souhlasíš s tím?
 Ok, jdem na to.
 Tak jo, fajn.
@@ -99,7 +99,34 @@ Hrací čas:
 
 Kč
 
-..potřebuješ jízdenku, tak?
+Úkoly
+Začít
+
+Čišníkova minihra
+Klikej co nejrychleji na správné objednávky.
+Za každou objednávku dostaneš 30Kč.
+
+Rybářská minihra
+Vylov co nejvíc ryb za minutu.
+Za každou rybu dostaneš 50Kč.
+
+Minihra o čistění záchodů
+Vyčisti záchod.
+Dostaneš 250Kč.
+
+Minihra - Překlad
+Převeď co nejvíce slov.
+Za každé slovo dostaneš 5Kč.
+
+Minihra - Pokladník
+Zprocesuj co nejvíce produktov.
+Za každý produkt dostaneš 5Kč.
+
+Minihra - Obranná
+Obraň Studenku!
+Dostaneš jízdenku do Ostravy.
+
+...potřebuješ jízdenku, tak?
 Do Přerova to stojí 
 Pokud chceš koupit jízdenku
 urychli se, budeme skoro odjiždět.
@@ -110,6 +137,7 @@ Vypadni!
 Ok, snad se zase uvidíme!
 
 Hej! Kup si nejdřív jízdenku!
+Hej! Vždyť už máš jizdenku, ne?
 
 Vítejte ve Přerově.
 Bohužel je trať do Olomouce uzavřena.
@@ -117,6 +145,6 @@ Budeš muset jet přes hodně měst aby jsi
 ses do Olomouce dostal...
 Taky tohle město má taky dost kriminální historii,
 tak hodně štestí a odjeď so nejrychleji můžeš.
-K tomu kvůli inflaci jízdenky do 
-Němčic nad Hanou stojí až
+K tomu kvůli inflaci jízdenky do Němčic nad Hanou
+stojí až 
 Hodně štestí!
