@@ -97,6 +97,35 @@ JAAA
 NEIN
 Čas... se ti krátí...
 
+SP
+
+HausAufgaben
+start
+
+Propaganda spread
+SPREAD IT AND
+SPREAD IT MORE
+
+Le Fishe au chocolat
+I can't be bothered explaining this
+since I have bigger fish to catch...
+
+Tualet
+NOPE.
+JUST NOT HAPPENING.
+
+Moravistan game
+Doufám, že jste dávali
+pozor na hodinách ČJ...
+
+GIB GELD (capitalism simulator)
+Sell or be sold...
+That's how it works here
+
+BTD "inpired"
+normal BTD rules aply.
+why did we make this??
+
 Chceš jet naším kapitalistickým expresem?
 Unfortunately tím příjdeš o 
 Příjmeš tento risk?
@@ -108,6 +137,7 @@ Nejprve musíš nějaké získat
 Nechej to projít hlavou
 
 THAU SHALL NOT PASS
+proč bys to dělal?!?
 
 Imigroval jsi do Přerova
 Bohužel jsi přežil cestu
