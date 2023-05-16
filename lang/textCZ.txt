@@ -99,8 +99,9 @@ Hrací čas:
 
 Kč
 
-Úkoly
+Úkoly - 
 Začít
+Časový limit:
 
 Čišníkova minihra
 Klikej co nejrychleji na správné objednávky.
@@ -139,12 +140,13 @@ Ok, snad se zase uvidíme!
 Hej! Kup si nejdřív jízdenku!
 Hej! Vždyť už máš jizdenku, ne?
 
-Vítejte ve Přerově.
-Bohužel je trať do Olomouce uzavřena.
+Vítej ve Přerově. Bohužel je trať do Olomouce
+uzavřena. Snad to SŽDC fakt dají dohromady.
 Budeš muset jet přes hodně měst aby jsi
-ses do Olomouce dostal...
+ses do Olomouce dostal/a...
+Kvůli inflaci jízdenky do Němčic nad Hanou
+stojí až 
 Taky tohle město má taky dost kriminální historii,
 tak hodně štestí a odjeď so nejrychleji můžeš.
-K tomu kvůli inflaci jízdenky do Němčic nad Hanou
-stojí až 
 Hodně štestí!
+

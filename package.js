@@ -515,7 +515,7 @@ function TranslationLoad(lang, lid) {
 	req.onload = (event) => {
 		let splittext = req.responseText.split('\n');
 		for(let Id = 0; Id < splittext.length; Id++) {
-			splittext[Id] = splittext[Id].replaceAll('\r', ''); //for windows
+			splittext[Id] = splittext[Id].replaceAll('\r', ''); //for windows compatibility
 			if(splittext[Id].length !== 0) {
 				(TranslatedText[lid]).push(splittext[Id]);
 			}
@@ -551,15 +551,15 @@ function timerPause() {
 }
 function timerUnpause() {
 	TimerValues.CurrentTime = Date.now();
-	TimerValues.OverallPauseTime += Math.abs(TimerValues.CurrentTime - TimerValues.PauseStartTime);
+	TimerValues.OverallPauseTime += Math.abs(Number(TimerValues.CurrentTime) - Number(TimerValues.PauseStartTime));
 	TimerValues.PauseStartTime = 0;
 }
 function timerEnd() {
 	TimerValues.CurrentTime = Date.now();
-	TimerValues.OverallTime = Math.abs((TimerValues.CurrentTime - TimerValues.StartTime - TimerValues.OverallPauseTime) / 1000);
+	TimerValues.OverallTime = Math.floor((Math.abs(Number(TimerValues.CurrentTime) - Number(TimerValues.StartTime)) - Number(TimerValues.OverallPauseTime)) / 1000);
 }
 function timerToString() {
-	return String(Math.floor(TimerValues.OverallTime / 60) + ":" + ('00'+((TimerValues.OverallTime % 60) - Math.floor(TimerValues.OverallTime / 60))).slice(-2) + " ([M]M:SS)");
+	return String(Math.floor(TimerValues.OverallTime / 60) + ":" + String("00" + Number(TimerValues.OverallTime % 60) ).slice(-2) + " ([M]M:SS)");
 }
 let SettingsValues = {
 	Difficulty: 2, //1 - easy, 2 - medium, 3 - hard
@@ -944,36 +944,58 @@ function debug_Credits(iscalledfrommm, canvasobj) {
 //waiter game
 
 let WaiterGameValues = {
+	IsIntroEnd: false,
 	IsOver: -1
 }
 
 function WaiterGame(canvas) {
 	WaiterGameValues.IsOver = -1;
 	console.log("waiter game");
-	canvas.clear("#dddddd");
-	let ArrowEnd = new Arrow(950, 450, 50, 50, ArrowDirections.Here, canvas);
-	ArrowEnd.button.addEventListener("click", (event) => {
-		ArrowEnd.deleteButton();
-		addMoney(700);
-		WaiterGameValues.IsOver = 1;
-	}, { once: true });
-	ArrowEnd.draw(canvas);
+	WaiterGameComponentIntro(canvas);
+	let thisInterval = window.setInterval((canvas) => {
+		if(WaiterGameValues.IsIntroEnd === true) {
+			clearInterval(thisInterval);
+			WaiterGameComponentMain(canvas);
+		}
+	}, 100, canvas);
 }
 
 function WaiterGameComponentIntro(canvas) {
-	canvas.text("");
+	canvas.clear("#dddddd");
+	canvas.setnewcolor("#000000");
+	canvas.setfontweight("bold");
+	canvas.text(TranslatedText[SettingsValues.Language][86] + TranslatedText[SettingsValues.Language][89], 50, 50);
+	canvas.resetfontweight();
+	canvas.textml(TranslationGetMultipleLines(SettingsValues.Language, 90, 2), 50, 100);
+	let ArrowEnd = new Arrow(950, 450, 50, 50, ArrowDirections.Right, canvas);
+	ArrowEnd.button.addEventListener("click", (event) => {
+		ArrowEnd.deleteButton();
+		WaiterGameValues.IsIntroEnd = true;
+	}, { once: true });
+	canvas.setnewcolor("#333399");
+	canvas.context.textAlign = "right";
+	canvas.text(TranslatedText[SettingsValues.Language][87], 930, 490);
+	canvas.context.textAlign = "left";
+	ArrowEnd.draw(canvas);
+	canvas.setnewcolor("#ffffff");
 }
 function WaiterGameComponentMain(canvas) {
-	
+	canvas.clear("#dddddd");
+	canvas.setnewcolor("#000000");
+	canvas.setnewcolor("#ffffff");
+	addMoney(700);
+	WaiterGameValues.IsOver = 1;
 }
 
 function WaiterGameReset() {
+	WaiterGameValues.IsIntroEnd = false;
 	WaiterGameValues.IsOver = -1;
 }
 
 //le fish game - becva in prerov
 
 let FishGameValues = {
+	IsIntroEnd: false,
 	IsOver: -1,
 	LeFishCaught: 0
 }
@@ -982,17 +1004,45 @@ function FishGame(canvas) {
 	FishGameValues.LeFishCaught = 0;
 	FishGameValues.IsOver = -1;
 	console.log("fish game");
-	canvas.clear("#4d5234");
-	let ArrowEnd = new Arrow(950, 450, 50, 50, ArrowDirections.Here, canvas);
+	canvas.clear("#03ddff");
+	FishGameComponentIntro(canvas);
+	let thisInterval = window.setInterval((canvas) => {
+		if(FishGameValues.IsIntroEnd === true) {
+			clearInterval(thisInterval);
+			FishGameComponentMain(canvas);
+		}
+	}, 100, canvas);
+}
+
+function FishGameComponentIntro(canvas) {
+	canvas.clear("#03ddff");
+	canvas.setnewcolor("#000000");
+	canvas.setfontweight("bold");
+	canvas.text(TranslatedText[SettingsValues.Language][86] + TranslatedText[SettingsValues.Language][92], 50, 50);
+	canvas.resetfontweight();
+	canvas.textml(TranslationGetMultipleLines(SettingsValues.Language, 93, 2), 50, 100);
+	let ArrowEnd = new Arrow(950, 450, 50, 50, ArrowDirections.Right, canvas);
 	ArrowEnd.button.addEventListener("click", (event) => {
 		ArrowEnd.deleteButton();
-		FishGameValues.IsOver = 1;
+		FishGameValues.IsIntroEnd = true;
 	}, { once: true });
+	canvas.setnewcolor("#333399");
+	canvas.context.textAlign = "right";
+	canvas.text(TranslatedText[SettingsValues.Language][87], 930, 490);
+	canvas.context.textAlign = "left";
 	ArrowEnd.draw(canvas);
+	canvas.setnewcolor("#ffffff");
+}
+function FishGameComponentMain(canvas) {
+	canvas.clear("#03ddff");
+	addMoney(50);
+	FishGameValues.IsOver = 1;
 }
 
 function FishGameReset() {
+	FishGameValues.IsIntroEnd = false;
 	FishGameValues.IsOver = -1;
+	FishGameValues.LeFishCaught = 0;
 }
 
 let ToiletCleaningGameValues = {
@@ -1010,6 +1060,7 @@ function ToiletCleaningGameReset(canvas) {
 //dialect translation
 
 let DialectTranslationGameValues = {
+	IsIntroEnd: false,
 	IsOver: -1
 }
 
@@ -1018,10 +1069,10 @@ function DialectTranslationGame(canvas) {
 }
 
 function DialectTranslationGameComponentIntro(canvas) {
-
+	canvas.clear("#03ddff");
 } 
 function DialectTranslationGameComponentMain(canvas) {
-	
+	canvas.clear("#03ddff");
 }
 
 function DialectTranslationGameReset() {
@@ -1031,6 +1082,7 @@ function DialectTranslationGameReset() {
 //cashier
 
 let CashierGameValues = {
+	IsIntroEnd: false,
 	IsOver: -1
 }
 
@@ -1040,7 +1092,7 @@ function CashierGame(canvas) {
 }
 
 function CashierGameComponentIntro(canvas) {
-
+	
 } 
 function CashierGameComponentMain(canvas) {
 	
@@ -1053,6 +1105,7 @@ function CashierGameReset() {
 //cheese making
 
 let CheeseGameValues = {
+	IsIntroEnd: false,
 	IsOver: -1
 }
 
@@ -1075,6 +1128,7 @@ function CheeseGameReset() {
 //defense
 
 let DefenseGameValues = {
+	IsIntroEnd: false,
 	IsOver: -1
 }
 
@@ -1084,10 +1138,10 @@ function DefenseGame(canvas) {
 }
 
 function DefenseGameComponentIntro(canvas) {
-
+	canvas.clear("#03ddff");
 } 
 function DefenseGameComponentMain(canvas) {
-	
+	canvas.clear("#03ddff");
 }
 
 function DefenseGameReset() {
@@ -1325,7 +1379,7 @@ function HraniceNaMoraveNastupiste(canvas) {
 		else {
 			let dialogue = new Dialogue();
 			dialogue.begin(canvas);
-			dialogue.makeBubble(0, TranslatedText[SettingsValues.Language][114]);
+			dialogue.makeBubble(0, TranslatedText[SettingsValues.Language][116]);
 			let thisInterval = window.setInterval((dialogue, canvas) => {
 				if(dialogue.counter === 1) {
 					clearInterval(thisInterval);
@@ -1414,7 +1468,6 @@ function HraniceNaMoraveRestauraceJob(canvas) {
 			}
 		}
 		if(WaiterGameValues.IsOver !== -1) {
-			console.log(WaiterGameValues.IsOver + " " + dialogue.counter);
 			clearInterval(thisInterval);
 			WaiterGameReset();
 			PauseButton.append(canvas);
@@ -1429,9 +1482,9 @@ function HraniceNaMoraveNastupisteJob(canvas) {
 	AllowedToPause = false;
 	let dialogue = new Dialogue();
 	dialogue.begin(canvas);
-	dialogue.makeBubble(0, TranslationGetMultipleLines(SettingsValues.Language, 106, 2).slice(0, -1) + " " + Math.floor(650 * SettingsValues.MoneyCostIncrease) + " " + TranslatedText[SettingsValues.Language][85]);
-	dialogue.makeBubble(1, TranslationGetMultipleLines(SettingsValues.Language, 108, 2));
-	dialogue.makeBubble(2, TranslatedText[SettingsValues.Language][110]);
+	dialogue.makeBubble(0, TranslationGetMultipleLines(SettingsValues.Language, 107, 2).slice(0, -1) + " " + Math.floor(650 * SettingsValues.MoneyCostIncrease) + " " + TranslatedText[SettingsValues.Language][85]);
+	dialogue.makeBubble(1, TranslationGetMultipleLines(SettingsValues.Language, 109, 2));
+	dialogue.makeBubble(2, TranslatedText[SettingsValues.Language][111]);
 	dialogue.makeChoice(3);
 	
 	let dWaitInterval = window.setInterval((dialogue) => {
@@ -1440,22 +1493,22 @@ function HraniceNaMoraveNastupisteJob(canvas) {
 			if(dialogue.choice_result === 1) {
 				if(MoneyAmount >= Math.floor(650 * SettingsValues.MoneyCostIncrease)) {
 					if(doesHaveTicket) {
-						dialogue.makeBubble(4, TranslatedText[SettingsValues.Language][116]);
+						dialogue.makeBubble(4, TranslatedText[SettingsValues.Language][117]);
 						return;
 					}
 					removeMoney(Math.floor(650 * SettingsValues.MoneyCostIncrease));
 					doesHaveTicket = true;
-					dialogue.makeBubble(4, TranslatedText[SettingsValues.Language][111]);
+					dialogue.makeBubble(4, TranslatedText[SettingsValues.Language][112]);
 					return;
 				}
 				else {
-					dialogue.makeBubble(4, TranslationGetMultipleLines(SettingsValues.Language, 112, 2));
+					dialogue.makeBubble(4, TranslationGetMultipleLines(SettingsValues.Language, 113, 2));
 					return;
 				}
 				return;
 			}
 			else {
-				dialogue.makeBubble(4, TranslatedText[SettingsValues.Language][114]);
+				dialogue.makeBubble(4, TranslatedText[SettingsValues.Language][115]);
 				return;
 			}
 		}
@@ -1527,11 +1580,11 @@ function Prerov(canvas) {
 	
 	let FirstDialogue = new Dialogue();
 	FirstDialogue.begin(canvas);
-	FirstDialogue.makeBubble(0, TranslationGetMultipleLines(SettingsValues.Language, 117, 2));
-	FirstDialogue.makeBubble(1, TranslationGetMultipleLines(SettingsValues.Language, 119, 2));
-	FirstDialogue.makeBubble(2, TranslationGetMultipleLines(SettingsValues.Language, 121, 2));
-	FirstDialogue.makeBubble(3, TranslationGetMultipleLines(SettingsValues.Language, 123, 2).slice(0, -1) + " " + Math.floor(1080 * SettingsValues.MoneyCostIncrease) + " " + TranslatedText[SettingsValues.Language][85]);
-	FirstDialogue.makeBubble(4, TranslatedText[SettingsValues.Language][125]);	
+	FirstDialogue.makeBubble(0, TranslationGetMultipleLines(SettingsValues.Language, 118, 2));
+	FirstDialogue.makeBubble(1, TranslationGetMultipleLines(SettingsValues.Language, 120, 2));
+	FirstDialogue.makeBubble(2, TranslationGetMultipleLines(SettingsValues.Language, 122, 2).slice(0, -1) + " " + Math.floor(1080 * SettingsValues.MoneyCostIncrease) + " " + TranslatedText[SettingsValues.Language][85]);
+	FirstDialogue.makeBubble(3, TranslationGetMultipleLines(SettingsValues.Language, 124, 2));
+	FirstDialogue.makeBubble(4, TranslatedText[SettingsValues.Language][126]);	
 	
 	let thisInterval = window.setInterval((dialogue, canvas) => {
 		if(dialogue.counter === 5) {
@@ -1736,6 +1789,11 @@ function SetState(canvasobj) {
 					PrerovBecva(canvasobj);
 					return;
 			}
+		case 3:
+			switch(localLocationId) {
+				//nemcice
+			}
+			return;
 	}
 	return;	
 }

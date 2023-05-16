@@ -99,8 +99,9 @@ Playing time:
 
 CZK
 
-Tasks
+Tasks - 
 Start
+Time Limit:
 
 Waiter minigame
 Click on the correct orders as fast a possible.
@@ -139,12 +140,12 @@ Okay, see you later!
 Hey! Buy a ticket first!
 Hey! You already have a ticket, don't you?
 
-Welcome to Přerov.
-Sadly, the track to Olomouc is closed.
+Welcome to Přerov. Sadly, the track to Olomouc is
+closed. Let's hope that the SŽDC will get it together
 You will have to go through a few cities
 to get to Olomouc.
+Due to inflation the tickets rose in price significantly.
+The tickets to Němcice cost 
 Also the city has quite a criminal history,
 so good luck and leave as soon as possible.
-Due to inflation the tickets rose in price.
-The tickets to Němcice cost 
 Good luck!

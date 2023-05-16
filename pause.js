@@ -41,6 +41,11 @@ function SetState(canvasobj) {
 					PrerovBecva(canvasobj);
 					return;
 			}
+		case 3:
+			switch(localLocationId) {
+				//nemcice
+			}
+			return;
 	}
 	return;	
 }

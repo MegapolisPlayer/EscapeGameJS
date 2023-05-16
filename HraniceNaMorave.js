@@ -230,7 +230,7 @@ function HraniceNaMoraveNastupiste(canvas) {
 		else {
 			let dialogue = new Dialogue();
 			dialogue.begin(canvas);
-			dialogue.makeBubble(0, TranslatedText[SettingsValues.Language][115]);
+			dialogue.makeBubble(0, TranslatedText[SettingsValues.Language][116]);
 			let thisInterval = window.setInterval((dialogue, canvas) => {
 				if(dialogue.counter === 1) {
 					clearInterval(thisInterval);
@@ -319,7 +319,6 @@ function HraniceNaMoraveRestauraceJob(canvas) {
 			}
 		}
 		if(WaiterGameValues.IsOver !== -1) {
-			console.log(WaiterGameValues.IsOver + " " + dialogue.counter);
 			clearInterval(thisInterval);
 			WaiterGameReset();
 			PauseButton.append(canvas);
@@ -334,9 +333,9 @@ function HraniceNaMoraveNastupisteJob(canvas) {
 	AllowedToPause = false;
 	let dialogue = new Dialogue();
 	dialogue.begin(canvas);
-	dialogue.makeBubble(0, TranslationGetMultipleLines(SettingsValues.Language, 106, 2).slice(0, -1) + " " + Math.floor(650 * SettingsValues.MoneyCostIncrease) + " " + TranslatedText[SettingsValues.Language][85]);
-	dialogue.makeBubble(1, TranslationGetMultipleLines(SettingsValues.Language, 108, 2));
-	dialogue.makeBubble(2, TranslatedText[SettingsValues.Language][110]);
+	dialogue.makeBubble(0, TranslationGetMultipleLines(SettingsValues.Language, 107, 2).slice(0, -1) + " " + Math.floor(650 * SettingsValues.MoneyCostIncrease) + " " + TranslatedText[SettingsValues.Language][85]);
+	dialogue.makeBubble(1, TranslationGetMultipleLines(SettingsValues.Language, 109, 2));
+	dialogue.makeBubble(2, TranslatedText[SettingsValues.Language][111]);
 	dialogue.makeChoice(3);
 	
 	let dWaitInterval = window.setInterval((dialogue) => {
@@ -345,22 +344,22 @@ function HraniceNaMoraveNastupisteJob(canvas) {
 			if(dialogue.choice_result === 1) {
 				if(MoneyAmount >= Math.floor(650 * SettingsValues.MoneyCostIncrease)) {
 					if(doesHaveTicket) {
-						dialogue.makeBubble(4, TranslatedText[SettingsValues.Language][116]);
+						dialogue.makeBubble(4, TranslatedText[SettingsValues.Language][117]);
 						return;
 					}
 					removeMoney(Math.floor(650 * SettingsValues.MoneyCostIncrease));
 					doesHaveTicket = true;
-					dialogue.makeBubble(4, TranslatedText[SettingsValues.Language][111]);
+					dialogue.makeBubble(4, TranslatedText[SettingsValues.Language][112]);
 					return;
 				}
 				else {
-					dialogue.makeBubble(4, TranslationGetMultipleLines(SettingsValues.Language, 112, 2));
+					dialogue.makeBubble(4, TranslationGetMultipleLines(SettingsValues.Language, 113, 2));
 					return;
 				}
 				return;
 			}
 			else {
-				dialogue.makeBubble(4, TranslatedText[SettingsValues.Language][114]);
+				dialogue.makeBubble(4, TranslatedText[SettingsValues.Language][115]);
 				return;
 			}
 		}
