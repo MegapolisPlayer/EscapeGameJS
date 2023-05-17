@@ -101,6 +101,7 @@ SP
 
 HausAufgaben
 start
+rakovina plic za 
 
 Propaganda spread
 SPREAD IT AND
@@ -143,8 +144,11 @@ Imigroval jsi do Přerova
 Bohužel jsi přežil cestu
 Proto tě tu musím uvítat
 mezi občany
-Ale ne...
-Občanům se moc nelíbíš...
 Odvezu tě do NnH,
-ale příjdeš o dalších 
+ale příjdeš o dalších
+Vím, že je to mnoho ale
+inflace se tu týká i SP
+
+
+
 Ach, jak já miluju tenhle režim...
