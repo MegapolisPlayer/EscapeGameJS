@@ -347,7 +347,7 @@ let MoneyAmount = 0;
 function drawMoneyCount(canvasobj) {
 	canvasobj.setnewfont("Arial, FreeSans", "32");
 	canvasobj.setnewcolor("#ffffff");
-	let text = TranslatedText[SettingsValues.Language][46]+": "+MoneyAmount+" ";
+	let text = TranslatedText[SettingsValues.Language][51]+": "+MoneyAmount+" ";
 	let metrics = canvasobj.context.measureText(text);
 	canvasobj.box(1000 - metrics.width - 20, 0, metrics.width + 20, 50);
 	canvasobj.setnewcolor("#333399");
@@ -495,7 +495,6 @@ class Dialogue {
 		this.canvas_info;
 		this.counter = 0;
 		this.can_proceed = false;
-		AllowedToPause = true;
 	}
 };
 //Codes
@@ -561,6 +560,43 @@ function timerEnd() {
 function timerToString() {
 	return String(Math.floor(TimerValues.OverallTime / 60) + ":" + String("00" + Number(TimerValues.OverallTime % 60) ).slice(-2) + " ([M]M:SS)");
 }
+
+let TimerlimitValues = {
+	TimeLimit: 0,
+	StartTime: 0,
+	CurrentTime: 0,
+	OverallTime: 0
+}
+
+function timelimitStart(minutes, seconds) {
+	TimerlimitValues.StartTime = Date.now();
+	TimerlimitValues.TimeLimit = (minutes * 60) + seconds;
+}
+function timelimitStart(seconds) {
+	TimerlimitValues.StartTime = Date.now();
+	TimerlimitValues.TimeLimit = seconds;
+}
+function timelimitUpdate() {
+	TimerlimitValues.CurrentTime = Date.now();
+	TimerlimitValues.OverallTime = Math.floor(Math.abs(Number(TimerlimitValues.CurrentTime) - Number(TimerlimitValues.StartTime)) / 1000);
+}
+function timelimitToString() {
+	return String(
+		Number(Math.floor((TimerlimitValues.TimeLimit - TimerlimitValues.OverallTime) / 60))
+		+ ":" + String("00" + 
+		Number((TimerlimitValues.TimeLimit - TimerlimitValues.OverallTime) % 60)
+		).slice(-2));
+}
+function timelimitRender(canvasobj) {
+	timelimitUpdate();
+	canvasobj.setnewfont("Arial, FreeSans", "32");
+	canvasobj.setnewcolor("#ffffff");
+	let text = TranslatedText[SettingsValues.Language][93]+": "+timelimitToString()+" ";
+	let metrics = canvasobj.context.measureText(text);
+	canvasobj.box(1000 - metrics.width - 20, 0, metrics.width + 20, 50);
+	canvasobj.setnewcolor("#333399");
+	canvasobj.text(text, 1000 - metrics.width - 10, 40);
+}
 let SettingsValues = {
 	Difficulty: 2, //1 - easy, 2 - medium, 3 - hard
 	ChanceOfInstantLoss: 5000, //chance if instant loss per day, easy = 10000, medium = 5000, hard = 1000
@@ -586,11 +622,11 @@ function InstantLossScreen(eventNo, canvasobj) {
 	canvasobj.context.textAlign = "center"; 
 	canvasobj.setnewfont("Arial, FreeSans", "48", "bold");
 	canvasobj.setnewcolor("#ff0000");
-	canvasobj.text(TranslatedText[SettingsValues.Language][54], 500, 100);
+	canvasobj.text(TranslatedText[SettingsValues.Language][60], 500, 100);
 	canvasobj.resetfontweight();
 	canvasobj.setnewcolor("#ffffff");
 	canvasobj.textml(TranslationGetMultipleLines(SettingsValues.Language, 55+(eventNo*2), 2), 500, 200);
-	InstantLossScreen.Quit = new Button(700, 400, 300, 100, 25, TranslatedText[SettingsValues.Language][11], "canvas_container");
+	InstantLossScreen.Quit = new Button(700, 400, 300, 100, 25, TranslatedText[SettingsValues.Language][17], "canvas_container");
 	InstantLossScreen.Quit.button.addEventListener("click", (event) => {
 		location.reload();
 	});
@@ -694,7 +730,7 @@ function SettingsRenderLanguageRelatedText(canvasobj) {
 function Settings(canvasobj) {	
 	Settings.arrowPrev = new Arrow(50, 110, 50, 50, ArrowDirections.Left, null);
 	Settings.arrowNext = new Arrow(300, 110, 50, 50, ArrowDirections.Right, null);
-	Settings.buttonBack = new Button(50, 400, 300, 100, 25, TranslatedText[SettingsValues.Language][31], "canvas_container");
+	Settings.buttonBack = new Button(50, 400, 300, 100, 25, TranslatedText[SettingsValues.Language][36], "canvas_container");
 	//language
 	Settings.arrowPrevL = new Arrow(600, 110, 50, 50, ArrowDirections.Left, null);
 	Settings.arrowNextL = new Arrow(850, 110, 50, 50, ArrowDirections.Right, null);
@@ -756,7 +792,7 @@ function Settings(canvasobj) {
 	SettingsRenderDifficultyRelatedText(canvasobj);		
 	SettingsRenderLanguageRelatedText(canvasobj);
 	
-	canvasobj.textml(TranslationGetMultipleLines(SettingsValues.Language, 21, 3), 50, 300);	
+	canvasobj.textml(TranslationGetMultipleLines(SettingsValues.Language, 26, 3), 50, 300);	
 }
 
 function SettingsButtonRegister(canvasobj) {
@@ -779,13 +815,13 @@ function CreditsRenderAchievement(isdone, imageyes, imageno, canvasobj) {
 		canvasobj.context.textAlign = "center"; 
 		canvasobj.image(imageyes, 350, 100, 300, 300);
 		canvasobj.context.textAlign = "left"; 
-		canvasobj.text(TranslatedText[SettingsValues.Language][82], 100, 300);
+		canvasobj.text(TranslatedText[SettingsValues.Language][87], 100, 300);
 	}
 	else {
 		canvasobj.context.textAlign = "center"; 
 		canvasobj.image(imageno, 350, 100, 300, 300);
 		canvasobj.context.textAlign = "left"; 
-		canvasobj.text(TranslatedText[SettingsValues.Language][83], 100, 300);
+		canvasobj.text(TranslatedText[SettingsValues.Language][88], 100, 300);
 	}
 	canvasobj.resetfontweight();
 }
@@ -802,7 +838,7 @@ function Credits(iscalledfrommm, canvasobj) {
 	if(!iscalledfrommm) {
 		canvasobj.setnewfont("Arial, FreeSans", "48", "bold");
 		canvasobj.image(finalCreditsImage, 0, 0, canvasobj.canvas.width, canvasobj.canvas.height);
-		canvasobj.textml(TranslatedText[SettingsValues.Language][65], 50, 190);
+		canvasobj.textml(TranslatedText[SettingsValues.Language][70], 50, 190);
 		canvasobj.setnewfont("Arial, FreeSans", "32", "normal");
 	}
 	else {
@@ -815,7 +851,7 @@ function Credits(iscalledfrommm, canvasobj) {
 	//game by
 	setTimeout(() => {
 		canvasobj.image(finalCreditsImage, 0, 0, canvasobj.canvas.width, canvasobj.canvas.height);
-		canvasobj.text(TranslatedText[SettingsValues.Language][66], 50, 190);
+		canvasobj.text(TranslatedText[SettingsValues.Language][71], 50, 190);
 		canvasobj.setfontweight("bold");
 		canvasobj.textml("Martin (MegapolisPlayer)\nJirka (KohoutGD)", 200, 230);
 		canvasobj.resetfontweight();
@@ -824,7 +860,7 @@ function Credits(iscalledfrommm, canvasobj) {
 	setTimeout(() => {
 		//images - main, hranice na morave, prerov
 		canvasobj.image(finalCreditsImage, 0, 0, canvasobj.canvas.width, canvasobj.canvas.height);
-		canvasobj.text(TranslatedText[SettingsValues.Language][67], 50, 190);
+		canvasobj.text(TranslatedText[SettingsValues.Language][72], 50, 190);
 		canvasobj.setfontweight("bold");
 		canvasobj.textml("SReality, Pixabay, VlakemJednoduse.cz, Freepik: jcomp\nWikipedia Commons: Palickap, Marie Čchiedzeová,\nVojtěch Dočkal, Jiří Komárek\nAll pixel-art assets are custom-made.", 100, 230);
 		canvasobj.resetfontweight();
@@ -834,7 +870,7 @@ function Credits(iscalledfrommm, canvasobj) {
 	setTimeout(() => {
 		//music
 		canvasobj.image(finalCreditsImage, 0, 0, canvasobj.canvas.width, canvasobj.canvas.height);
-		canvasobj.text(TranslatedText[SettingsValues.Language][68], 50, 190);
+		canvasobj.text(TranslatedText[SettingsValues.Language][73], 50, 190);
 		canvasobj.setfontweight("bold");
 		canvasobj.textml("All music by Kevin Macleod (incompetech.com)\nLicensed under CC-BY 3.0", 100, 230);
 		canvasobj.resetfontweight();
@@ -843,7 +879,7 @@ function Credits(iscalledfrommm, canvasobj) {
 	setTimeout(() => {
 		//translations
 		canvasobj.image(finalCreditsImage, 0, 0, canvasobj.canvas.width, canvasobj.canvas.height);
-		canvasobj.text(TranslatedText[SettingsValues.Language][69], 50, 190);
+		canvasobj.text(TranslatedText[SettingsValues.Language][74], 50, 190);
 		canvasobj.setfontweight("bold");
 		canvasobj.textml("Čeština - Martin\nEnglish - Martin\nDeutsch - Jirka\nРусский - Martin\nSus Language - Jirka", 100, 230);
 		canvasobj.resetfontweight();
@@ -852,7 +888,7 @@ function Credits(iscalledfrommm, canvasobj) {
 	setTimeout(() => {
 		//translations
 		canvasobj.image(finalCreditsImage, 0, 0, canvasobj.canvas.width, canvasobj.canvas.height);
-		canvasobj.text(TranslatedText[SettingsValues.Language][70], 50, 190);
+		canvasobj.text(TranslatedText[SettingsValues.Language][75], 50, 190);
 		canvasobj.setfontweight("bold");
 		canvasobj.textml("Licensed under CC-BY-SA 4.0\nImages - Content License, CC-BY-SA 4.0\nMusic - CC-BY 4.0", 100, 230);
 		canvasobj.resetfontweight();
@@ -864,7 +900,7 @@ function Credits(iscalledfrommm, canvasobj) {
 			canvasobj.context.textAlign = "center"; 
 			canvasobj.setnewfont("Arial, FreeSans", "48", "bold");
 			canvasobj.image(finalCreditsImage, 0, 0, canvasobj.canvas.width, canvasobj.canvas.height);
-			canvasobj.text(TranslatedText[SettingsValues.Language][71], 500, 250); 
+			canvasobj.text(TranslatedText[SettingsValues.Language][76], 500, 250); 
 			canvasobj.setnewfont("Arial, FreeSans", "32", "normal");
 			canvasobj.context.textAlign = "left"; 
 		}, 6 * delay);
@@ -872,9 +908,9 @@ function Credits(iscalledfrommm, canvasobj) {
 		setTimeout(() => {
 			//achievements - medal for speed
 			canvasobj.image(finalCreditsImage, 0, 0, canvasobj.canvas.width, canvasobj.canvas.height);
-			canvasobj.text(TranslatedText[SettingsValues.Language][72], 100, 250); 
+			canvasobj.text(TranslatedText[SettingsValues.Language][77], 100, 250); 
 			canvasobj.context.textAlign = "center";
-			canvasobj.text(TranslatedText[SettingsValues.Language][73], 500, 450); 
+			canvasobj.text(TranslatedText[SettingsValues.Language][78], 500, 450); 
 			canvasobj.context.textAlign = "left";
 			CreditsRenderAchievement(CreditsValues.gotAchievementSpeed, AchievementImages[1], AchievementImages[0], canvasobj);
 		}, 7 * delay);
@@ -882,9 +918,9 @@ function Credits(iscalledfrommm, canvasobj) {
 		setTimeout(() => {
 			//achievements - waiters medal
 			canvasobj.image(finalCreditsImage, 0, 0, canvasobj.canvas.width, canvasobj.canvas.height);
-			canvasobj.text(TranslatedText[SettingsValues.Language][74], 100, 250); 
+			canvasobj.text(TranslatedText[SettingsValues.Language][79], 100, 250); 
 			canvasobj.context.textAlign = "center";
-			canvasobj.text(TranslatedText[SettingsValues.Language][75], 500, 450); 
+			canvasobj.text(TranslatedText[SettingsValues.Language][80], 500, 450); 
 			canvasobj.context.textAlign = "left";
 			CreditsRenderAchievement(CreditsValues.gotAchievementWaiter, AchievementImages[2], AchievementImages[0], canvasobj);
 		}, 8 * delay);
@@ -892,9 +928,9 @@ function Credits(iscalledfrommm, canvasobj) {
 		setTimeout(() => {
 			//achievements - help medal
 			canvasobj.image(finalCreditsImage, 0, 0, canvasobj.canvas.width, canvasobj.canvas.height);
-			canvasobj.text(TranslatedText[SettingsValues.Language][76], 100, 250);
+			canvasobj.text(TranslatedText[SettingsValues.Language][81], 100, 250);
 			canvasobj.context.textAlign = "center";
-			canvasobj.text(TranslatedText[SettingsValues.Language][77], 500, 450); 
+			canvasobj.text(TranslatedText[SettingsValues.Language][82], 500, 450); 
 			canvasobj.context.textAlign = "left";
 			CreditsRenderAchievement(CreditsValues.gotAchievementHelp, AchievementImages[3], AchievementImages[0], canvasobj);
 		}, 9 * delay);
@@ -902,16 +938,16 @@ function Credits(iscalledfrommm, canvasobj) {
 		setTimeout(() => {
 			//achievements - sus medal
 			canvasobj.image(finalCreditsImage, 0, 0, canvasobj.canvas.width, canvasobj.canvas.height);
-			canvasobj.text(TranslatedText[SettingsValues.Language][78], 100, 250);
+			canvasobj.text(TranslatedText[SettingsValues.Language][83], 100, 250);
 			canvasobj.context.textAlign = "center";
-			canvasobj.text(TranslatedText[SettingsValues.Language][79], 500, 450); 
+			canvasobj.text(TranslatedText[SettingsValues.Language][84], 500, 450); 
 			canvasobj.context.textAlign = "left";
 			CreditsRenderAchievement(CreditsValues.gotAchievementSus, AchievementImages[4], AchievementImages[0], canvasobj);
 		}, 10 * delay);
 		setTimeout(() => {
 			//time played
 			canvasobj.image(finalCreditsImage, 0, 0, canvasobj.canvas.width, canvasobj.canvas.height);
-			canvasobj.text(TranslatedText[SettingsValues.Language][84], 50, 190); 
+			canvasobj.text(TranslatedText[SettingsValues.Language][89], 50, 190); 
 			canvasobj.setfontweight("bold");
 			canvasobj.text(timerToString(), 100, 230);
 			canvasobj.resetfontweight();
@@ -921,7 +957,7 @@ function Credits(iscalledfrommm, canvasobj) {
 	setTimeout(() => {
 		//quit game
 		canvasobj.image(finalCreditsImage, 0, 0, canvasobj.canvas.width, canvasobj.canvas.height);
-		canvasobj.textml(TranslationGetMultipleLines(SettingsValues.Language, 80, 2), 100, 190); 
+		canvasobj.textml(TranslationGetMultipleLines(SettingsValues.Language, 85, 2), 100, 190); 
 		window.addEventListener("click", function(event) {
 			location.reload();		
 		});
@@ -952,9 +988,9 @@ function WaiterGame(canvas) {
 	WaiterGameValues.IsOver = -1;
 	console.log("waiter game");
 	WaiterGameComponentIntro(canvas);
-	let thisInterval = window.setInterval((canvas) => {
+	let introInterval = window.setInterval((canvas) => {
 		if(WaiterGameValues.IsIntroEnd === true) {
-			clearInterval(thisInterval);
+			clearInterval(introInterval);
 			WaiterGameComponentMain(canvas);
 		}
 	}, 100, canvas);
@@ -962,29 +998,52 @@ function WaiterGame(canvas) {
 
 function WaiterGameComponentIntro(canvas) {
 	canvas.clear("#dddddd");
-	canvas.setnewcolor("#000000");
-	canvas.setfontweight("bold");
-	canvas.text(TranslatedText[SettingsValues.Language][86] + TranslatedText[SettingsValues.Language][89], 50, 50);
-	canvas.resetfontweight();
-	canvas.textml(TranslationGetMultipleLines(SettingsValues.Language, 90, 2), 50, 100);
 	let ArrowEnd = new Arrow(950, 450, 50, 50, ArrowDirections.Right, canvas);
 	ArrowEnd.button.addEventListener("click", (event) => {
 		ArrowEnd.deleteButton();
 		WaiterGameValues.IsIntroEnd = true;
 	}, { once: true });
+	canvas.setnewcolor("#000000");
+	canvas.setfontweight("bold");
+	canvas.text(TranslatedText[SettingsValues.Language][91] + " - " + TranslatedText[SettingsValues.Language][96], 50, 50);
+	canvas.resetfontweight();
+	canvas.textml(TranslationGetMultipleLines(SettingsValues.Language, 97, 2), 50, 100);
 	canvas.setnewcolor("#333399");
 	canvas.context.textAlign = "right";
-	canvas.text(TranslatedText[SettingsValues.Language][87], 930, 490);
+	canvas.text(TranslatedText[SettingsValues.Language][92], 930, 490);
 	canvas.context.textAlign = "left";
 	ArrowEnd.draw(canvas);
-	canvas.setnewcolor("#ffffff");
-}
-function WaiterGameComponentMain(canvas) {
-	canvas.clear("#dddddd");
 	canvas.setnewcolor("#000000");
-	canvas.setnewcolor("#ffffff");
-	addMoney(700);
-	WaiterGameValues.IsOver = 1;
+}
+
+//table count: easy - 12, medium - 18, hard - 24
+
+function WaiterGameComponentMain(canvas) {
+	canvas.clear("#bd9d80");
+	timelimitStart(180);
+	let timerInterval = window.setInterval((canvas) => {
+		canvas.clear("#bd9d80");
+		canvas.setnewcolor("#5c2f06"); //table colour			
+		for(let Id = 0; Id < 16; Id++) {
+			canvas.box(50 + (250 * Math.floor(Id / 4)), 50 + ((Id % 4) * 80), 60, 60);	
+		}
+		canvas.setnewcolor("#555555");
+		canvas.box(0, canvas.canvas.height * 0.8, canvas.canvas.width, canvas.canvas.height * 0.2);
+		canvas.setnewcolor("#dddddd");
+		canvas.box(0, canvas.canvas.height * 0.8, canvas.canvas.height * 0.2, canvas.canvas.height * 0.2);
+		canvas.text("N", 0, canvas.canvas.height * 0.8);
+		canvas.setnewcolor("#000000");
+		timelimitRender(canvas);
+		if(TimerlimitValues.OverallTime  >= 180) {
+			clearInterval(timerInterval);
+			WaiterGameValues.IsOver = 1;
+			return;
+		}
+	}, 100, canvas);
+	addMoney(30);
+}
+function WaiterGameComponentSummary(canvas) {
+
 }
 
 function WaiterGameReset() {
@@ -1018,9 +1077,9 @@ function FishGameComponentIntro(canvas) {
 	canvas.clear("#03ddff");
 	canvas.setnewcolor("#000000");
 	canvas.setfontweight("bold");
-	canvas.text(TranslatedText[SettingsValues.Language][86] + TranslatedText[SettingsValues.Language][92], 50, 50);
+	canvas.text(TranslatedText[SettingsValues.Language][91] + " - " + TranslatedText[SettingsValues.Language][99], 50, 50);
 	canvas.resetfontweight();
-	canvas.textml(TranslationGetMultipleLines(SettingsValues.Language, 93, 2), 50, 100);
+	canvas.textml(TranslationGetMultipleLines(SettingsValues.Language, 100, 2), 50, 100);
 	let ArrowEnd = new Arrow(950, 450, 50, 50, ArrowDirections.Right, canvas);
 	ArrowEnd.button.addEventListener("click", (event) => {
 		ArrowEnd.deleteButton();
@@ -1028,7 +1087,7 @@ function FishGameComponentIntro(canvas) {
 	}, { once: true });
 	canvas.setnewcolor("#333399");
 	canvas.context.textAlign = "right";
-	canvas.text(TranslatedText[SettingsValues.Language][87], 930, 490);
+	canvas.text(TranslatedText[SettingsValues.Language][92], 930, 490);
 	canvas.context.textAlign = "left";
 	ArrowEnd.draw(canvas);
 	canvas.setnewcolor("#ffffff");
@@ -1038,23 +1097,14 @@ function FishGameComponentMain(canvas) {
 	addMoney(50);
 	FishGameValues.IsOver = 1;
 }
+function FishGameComponentSummary(canvas) {
+
+}
 
 function FishGameReset() {
 	FishGameValues.IsIntroEnd = false;
 	FishGameValues.IsOver = -1;
 	FishGameValues.LeFishCaught = 0;
-}
-
-let ToiletCleaningGameValues = {
-	IsOver: -1
-}
-
-function ToiletCleaningGame(canvas) {
-
-}
-
-function ToiletCleaningGameReset(canvas) {
-	ToiletCleaningGameValues.IsOver = -1;
 }
 
 //dialect translation
@@ -1074,9 +1124,36 @@ function DialectTranslationGameComponentIntro(canvas) {
 function DialectTranslationGameComponentMain(canvas) {
 	canvas.clear("#03ddff");
 }
+function DialectTranslationGameComponentSummary(canvas) {
+
+}
 
 function DialectTranslationGameReset() {
 	WaiterGameValues.IsOver = -1;
+}
+
+//toilet cleaning
+
+let ToiletCleaningGameValues = {
+	IsOver: -1
+}
+
+function ToiletCleaningGame(canvas) {
+
+}
+
+function  ToiletCleaningGameComponentIntro(canvas) {
+
+}
+function ToiletCleaningGameComponentMain(canvas) {
+
+}
+function ToiletCleaningGameComponentSummary(canvas) {
+
+}
+
+function ToiletCleaningGameReset(canvas) {
+	ToiletCleaningGameValues.IsOver = -1;
 }
 
 //cashier
@@ -1095,6 +1172,9 @@ function CashierGameComponentIntro(canvas) {
 	
 } 
 function CashierGameComponentMain(canvas) {
+	
+}
+function CashierGameComponentSummary(canvas) {
 	
 }
 
@@ -1228,7 +1308,7 @@ function HraniceNaMoraveMap(canvas) {
 	canvas.setnewcolor("#333399");
 	canvas.setnewfont("Arial, FreeSans", "32", "bold");
 	canvas.image(hnm_Locations[5], 0, 0, canvas.canvas.width, canvas.canvas.height);
-	canvas.textml(TranslatedText[SettingsValues.Language][20]+" 1\nHranice na Moravě", 50, 50);
+	canvas.textml(TranslatedText[SettingsValues.Language][25]+" 1\nHranice na Moravě", 50, 50);
 	canvas.resetfontweight();
 	maparrow = new Arrow(700, 400, 100, 100, ArrowDirections.Right, canvas);
 	maparrow.button.addEventListener("click", (event) => {
@@ -1247,12 +1327,12 @@ function HraniceNaMorave(canvas) {
 	
 	let FirstDialogue = new Dialogue();
 	FirstDialogue.begin(canvas);
-	FirstDialogue.makeBubble(0, TranslationGetMultipleLines(SettingsValues.Language, 32, 2));
-	FirstDialogue.makeBubble(1, TranslationGetMultipleLines(SettingsValues.Language, 34, 2));
-	FirstDialogue.makeBubble(2, TranslationGetMultipleLines(SettingsValues.Language, 36, 2));
-	FirstDialogue.makeBubble(3, TranslationGetMultipleLines(SettingsValues.Language, 38, 2));
-	FirstDialogue.makeBubble(4, TranslationGetMultipleLines(SettingsValues.Language, 40, 2));
-	FirstDialogue.makeBubble(5, TranslatedText[SettingsValues.Language][42]);	
+	FirstDialogue.makeBubble(0, TranslationGetMultipleLines(SettingsValues.Language, 37, 2));
+	FirstDialogue.makeBubble(1, TranslationGetMultipleLines(SettingsValues.Language, 39, 2));
+	FirstDialogue.makeBubble(2, TranslationGetMultipleLines(SettingsValues.Language, 41, 2));
+	FirstDialogue.makeBubble(3, TranslationGetMultipleLines(SettingsValues.Language, 43, 2));
+	FirstDialogue.makeBubble(4, TranslationGetMultipleLines(SettingsValues.Language, 45, 2));
+	FirstDialogue.makeBubble(5, TranslatedText[SettingsValues.Language][47]);	
 	
 	let thisInterval = window.setInterval((dialogue, canvas) => {
 		if(dialogue.counter === 6) {
@@ -1379,7 +1459,7 @@ function HraniceNaMoraveNastupiste(canvas) {
 		else {
 			let dialogue = new Dialogue();
 			dialogue.begin(canvas);
-			dialogue.makeBubble(0, TranslatedText[SettingsValues.Language][116]);
+			dialogue.makeBubble(0, TranslatedText[SettingsValues.Language][122]);
 			let thisInterval = window.setInterval((dialogue, canvas) => {
 				if(dialogue.counter === 1) {
 					clearInterval(thisInterval);
@@ -1437,19 +1517,19 @@ function HraniceNaMoraveRestauraceJob(canvas) {
 	PauseButton.deleteButton();
 	let dialogue = new Dialogue();
 	dialogue.begin(canvas);
-	dialogue.makeBubble(0, TranslationGetMultipleLines(SettingsValues.Language, 47, 2));
-	dialogue.makeBubble(1, TranslationGetMultipleLines(SettingsValues.Language, 49, 2));
+	dialogue.makeBubble(0, TranslationGetMultipleLines(SettingsValues.Language, 52, 2));
+	dialogue.makeBubble(1, TranslationGetMultipleLines(SettingsValues.Language, 54, 2));
 	dialogue.makeChoice(2);
 	
 	let dWaitInterval = window.setInterval((dialogue) => {
 		if(dialogue.choice_result !== -1) {
 			clearInterval(dWaitInterval);
 			if(dialogue.choice_result === 1) {
-				dialogue.makeBubble(3, TranslatedText[SettingsValues.Language][51]);
+				dialogue.makeBubble(3, TranslatedText[SettingsValues.Language][56]);
 				return;
 			}
 			else {
-				dialogue.makeBubble(3, TranslationGetMultipleLines(SettingsValues.Language, 52, 2));
+				dialogue.makeBubble(3, TranslationGetMultipleLines(SettingsValues.Language, 57, 2));
 				return;
 			}
 		}
@@ -1482,9 +1562,9 @@ function HraniceNaMoraveNastupisteJob(canvas) {
 	AllowedToPause = false;
 	let dialogue = new Dialogue();
 	dialogue.begin(canvas);
-	dialogue.makeBubble(0, TranslationGetMultipleLines(SettingsValues.Language, 107, 2).slice(0, -1) + " " + Math.floor(650 * SettingsValues.MoneyCostIncrease) + " " + TranslatedText[SettingsValues.Language][85]);
-	dialogue.makeBubble(1, TranslationGetMultipleLines(SettingsValues.Language, 109, 2));
-	dialogue.makeBubble(2, TranslatedText[SettingsValues.Language][111]);
+	dialogue.makeBubble(0, TranslationGetMultipleLines(SettingsValues.Language, 113, 2).slice(0, -1) + " " + Math.floor(650 * SettingsValues.MoneyCostIncrease) + " " + TranslatedText[SettingsValues.Language][90]);
+	dialogue.makeBubble(1, TranslationGetMultipleLines(SettingsValues.Language, 115, 2));
+	dialogue.makeBubble(2, TranslatedText[SettingsValues.Language][117]);
 	dialogue.makeChoice(3);
 	
 	let dWaitInterval = window.setInterval((dialogue) => {
@@ -1493,22 +1573,22 @@ function HraniceNaMoraveNastupisteJob(canvas) {
 			if(dialogue.choice_result === 1) {
 				if(MoneyAmount >= Math.floor(650 * SettingsValues.MoneyCostIncrease)) {
 					if(doesHaveTicket) {
-						dialogue.makeBubble(4, TranslatedText[SettingsValues.Language][117]);
+						dialogue.makeBubble(4, TranslatedText[SettingsValues.Language][123]);
 						return;
 					}
 					removeMoney(Math.floor(650 * SettingsValues.MoneyCostIncrease));
 					doesHaveTicket = true;
-					dialogue.makeBubble(4, TranslatedText[SettingsValues.Language][112]);
+					dialogue.makeBubble(4, TranslatedText[SettingsValues.Language][118]);
 					return;
 				}
 				else {
-					dialogue.makeBubble(4, TranslationGetMultipleLines(SettingsValues.Language, 113, 2));
+					dialogue.makeBubble(4, TranslationGetMultipleLines(SettingsValues.Language, 119, 2));
 					return;
 				}
 				return;
 			}
 			else {
-				dialogue.makeBubble(4, TranslatedText[SettingsValues.Language][115]);
+				dialogue.makeBubble(4, TranslatedText[SettingsValues.Language][121]);
 				return;
 			}
 		}
@@ -1580,11 +1660,11 @@ function Prerov(canvas) {
 	
 	let FirstDialogue = new Dialogue();
 	FirstDialogue.begin(canvas);
-	FirstDialogue.makeBubble(0, TranslationGetMultipleLines(SettingsValues.Language, 118, 2));
-	FirstDialogue.makeBubble(1, TranslationGetMultipleLines(SettingsValues.Language, 120, 2));
-	FirstDialogue.makeBubble(2, TranslationGetMultipleLines(SettingsValues.Language, 122, 2).slice(0, -1) + " " + Math.floor(1080 * SettingsValues.MoneyCostIncrease) + " " + TranslatedText[SettingsValues.Language][85]);
-	FirstDialogue.makeBubble(3, TranslationGetMultipleLines(SettingsValues.Language, 124, 2));
-	FirstDialogue.makeBubble(4, TranslatedText[SettingsValues.Language][126]);	
+	FirstDialogue.makeBubble(0, TranslationGetMultipleLines(SettingsValues.Language, 119, 2));
+	FirstDialogue.makeBubble(1, TranslationGetMultipleLines(SettingsValues.Language, 121, 2));
+	FirstDialogue.makeBubble(2, TranslationGetMultipleLines(SettingsValues.Language, 123, 2).slice(0, -1) + " " + Math.floor(1080 * SettingsValues.MoneyCostIncrease) + " " + TranslatedText[SettingsValues.Language][85]);
+	FirstDialogue.makeBubble(3, TranslationGetMultipleLines(SettingsValues.Language, 125, 2));
+	FirstDialogue.makeBubble(4, TranslatedText[SettingsValues.Language][127]);	
 	
 	let thisInterval = window.setInterval((dialogue, canvas) => {
 		if(dialogue.counter === 5) {
@@ -1746,6 +1826,34 @@ function NemciceMap(canvas) {
 function Nemcice(canvas) {
 
 }
+
+function NemciceNastupiste(canvas) {
+
+}
+
+function NemciceNadrazi(canvas) {
+
+}
+
+function NemcicePodnikVenek(canvas) {
+
+}
+
+function NemcicePodnikVnitrek(canvas) {
+
+}
+
+function NemciceZachody(canvas) {
+
+}
+
+function NemcicePodnikVnitrekJob(canvas) {
+
+}
+
+function NemciceZachodyJob(canvas) {
+
+}
 let GamePaused = false;
 let AllowedToPause = true;
 
@@ -1844,7 +1952,7 @@ function Pause(canvasobj) {
 	
 	Pause.buttonAudio = new Button(320, 130, 100, 100, 25, "", "canvas_container");
 	Pause.buttonRestart = new Button(420, 130, 100, 100, 25, TranslatedText[SettingsValues.Language][6], "canvas_container");
-	Pause.buttonCode = new Button(520, 130, 100, 100, 25, TranslatedText[SettingsValues.Language][45], "canvas_container");
+	Pause.buttonCode = new Button(520, 130, 100, 100, 25, TranslatedText[SettingsValues.Language][50], "canvas_container");
 	Pause.buttonSave = new Button(320, 230, 100, 100, 25, TranslatedText[SettingsValues.Language][9], "canvas_container");
 	Pause.buttonLoad = new Button(420, 230, 100, 100, 25, TranslatedText[SettingsValues.Language][10], "canvas_container");
 	Pause.buttonQuit = new Button(520, 230, 100, 100, 25, TranslatedText[SettingsValues.Language][11], "canvas_container");
@@ -1873,7 +1981,7 @@ function Pause(canvasobj) {
 		location.reload();
 	});
 	
-	canvasobj.textml(TranslationGetMultipleLines(SettingsValues.Language, 43, 2), 320, 380);
+	canvasobj.textml(TranslationGetMultipleLines(SettingsValues.Language, 48, 2), 320, 380);
 	canvasobj.setnewfont("Arial, FreeSans", "48");
 }
 
@@ -2016,6 +2124,7 @@ console.log("Escape from Olomouc\n%cPlease do not enter anything here.\nThis is 
 
 const cvs = new Canvas("EscapeCanvas", "Arial, FreeSans", "48", "#333399", 1000, 500);
 cvs.clear("purple");
+cvs.text("Setting up main menu...", 50, 50);
 
 const MainMenuImage = new Image();
 MainMenuImage.src = "res/prerov/nastupiste.jpg";
@@ -2042,6 +2151,7 @@ function MainMenuSetup() {
 	});	
 	
 	let thisInterval = window.setInterval(() => {
+		console.log(AmountTranslations + " " + TicketImagesLoaded + " " + AchievementImagesLoaded);
 		if(AmountTranslations === 4 && TicketImagesLoaded === 2 && AchievementImagesLoaded === 5) {
 			clearInterval(thisInterval);
 			MainMenu();
@@ -2081,7 +2191,7 @@ function MainMenu() {
 	cvs.setnewfont("Arial, FreeSans", "16");
 	
 	cvs.text("(c) Martin/MegapolisPlayer, Jiri/KohoutGD 2023", 650, 472);
-	cvs.text("build date 16/05/2023, prerelease test version", 650, 492);
+	cvs.text("build date 18/05/2023, prerelease test version", 650, 492);
 	
 	cvs.setnewcolor("#333399");
 	cvs.setnewfont("Arial, FreeSans", "48");
@@ -2101,7 +2211,7 @@ function PlayMenu() {
 	cvs.setnewfont("Arial, FreeSans", "32");
 	let buttonNew = new Button(50, 130, 300, 100, 25, TranslatedText[SettingsValues.Language][1], "canvas_container");
 	let buttonLoad = new Button(350, 130, 300, 100, 25, TranslatedText[SettingsValues.Language][10], "canvas_container");
-	let buttonBack = new Button(650, 130, 300, 100, 25, TranslatedText[SettingsValues.Language][31], "canvas_container");
+	let buttonBack = new Button(650, 130, 300, 100, 25, TranslatedText[SettingsValues.Language][36], "canvas_container");
 	
 	let thisInterval = window.setInterval(() => {
 		if(Load.FileLoaded === true) {
@@ -2135,14 +2245,32 @@ function PlayMenu() {
 //game stuff
 
 function Intro() {
-    console.log("Registered PLAY Button press!");
+	console.log("Registered PLAY Button press!");
 	ap.playTrack(1);
+	
+	cvs.clear("black");
+    cvs.setnewcolor("#cc0000");
+	cvs.setnewfont("Arial, FreeSans", "48", "bold");
+	cvs.text(TranslatedText[SettingsValues.Language][19], 50, 50);
+	cvs.setnewcolor("white");
+    cvs.setnewfont("Arial, FreeSans", "32");
+    cvs.textml(TranslationGetMultipleLines(SettingsValues.Language, 20, 4), 100, 100);
+	
+	introarrow = new Arrow(700, 400, 100, 100, ArrowDirections.Right, cvs);
+	introarrow.button.addEventListener("click", (event) => {
+		introarrow.deleteButton();
+   	 	Backstory(cvs);
+	});
+    introarrow.draw(cvs);
+}
+
+function Backstory() {
 	cvs.clear("black");
     cvs.setnewcolor("white");
 	cvs.setnewfont("Arial, FreeSans", "48", "bold");
-	cvs.text(TranslatedText[SettingsValues.Language][19], 50, 50);
+	cvs.text(TranslatedText[SettingsValues.Language][24], 50, 50);
     cvs.setnewfont("Arial, FreeSans", "32");
-    cvs.textml(TranslationGetMultipleLines(SettingsValues.Language, 24, 7), 100, 100);
+    cvs.textml(TranslationGetMultipleLines(SettingsValues.Language, 29, 7), 100, 100);
 	
 	introarrow = new Arrow(700, 400, 100, 100, ArrowDirections.Right, cvs);
 	introarrow.button.addEventListener("click", (event) => {

@@ -20,6 +20,13 @@ Cost multiplier:
 Chance of loss per day:
 Language
 
+Warning
+
+The authors of this game have no intentions to insult anyone
+or to insult any race or nationality. This game was made for
+entertainment purposes only and does not reflect the political
+views of the authors. We hope that you will enjoy this game.
+
 Backstory
 Day
 
@@ -57,8 +64,8 @@ Money
 
 Our waiter just left us. 
 Will you help me deliver the food to the tables?
-I will pay you 700 CZK for it.
-Do you agree?
+I will pay you a few crowns for it depending on
+how you perform. Do you agree?
 Ok, let's go!
 If you change your mind you can return.
 I'm free at any time.
@@ -99,12 +106,14 @@ Playing time:
 
 CZK
 
-Tasks - 
+Tasks
 Start
-Time Limit:
+Time Limit
+Time
+Earned
 
 Waiter minigame
-Click on the correct orders as fast a possible.
+Click on the correct orders as fast as possible.
 For every order you will get 30CZK.
 
 Fisher minigame

@@ -9,9 +9,9 @@ function WaiterGame(canvas) {
 	WaiterGameValues.IsOver = -1;
 	console.log("waiter game");
 	WaiterGameComponentIntro(canvas);
-	let thisInterval = window.setInterval((canvas) => {
+	let introInterval = window.setInterval((canvas) => {
 		if(WaiterGameValues.IsIntroEnd === true) {
-			clearInterval(thisInterval);
+			clearInterval(introInterval);
 			WaiterGameComponentMain(canvas);
 		}
 	}, 100, canvas);
@@ -19,29 +19,52 @@ function WaiterGame(canvas) {
 
 function WaiterGameComponentIntro(canvas) {
 	canvas.clear("#dddddd");
-	canvas.setnewcolor("#000000");
-	canvas.setfontweight("bold");
-	canvas.text(TranslatedText[SettingsValues.Language][86] + TranslatedText[SettingsValues.Language][89], 50, 50);
-	canvas.resetfontweight();
-	canvas.textml(TranslationGetMultipleLines(SettingsValues.Language, 90, 2), 50, 100);
 	let ArrowEnd = new Arrow(950, 450, 50, 50, ArrowDirections.Right, canvas);
 	ArrowEnd.button.addEventListener("click", (event) => {
 		ArrowEnd.deleteButton();
 		WaiterGameValues.IsIntroEnd = true;
 	}, { once: true });
+	canvas.setnewcolor("#000000");
+	canvas.setfontweight("bold");
+	canvas.text(TranslatedText[SettingsValues.Language][91] + " - " + TranslatedText[SettingsValues.Language][96], 50, 50);
+	canvas.resetfontweight();
+	canvas.textml(TranslationGetMultipleLines(SettingsValues.Language, 97, 2), 50, 100);
 	canvas.setnewcolor("#333399");
 	canvas.context.textAlign = "right";
-	canvas.text(TranslatedText[SettingsValues.Language][87], 930, 490);
+	canvas.text(TranslatedText[SettingsValues.Language][92], 930, 490);
 	canvas.context.textAlign = "left";
 	ArrowEnd.draw(canvas);
-	canvas.setnewcolor("#ffffff");
-}
-function WaiterGameComponentMain(canvas) {
-	canvas.clear("#dddddd");
 	canvas.setnewcolor("#000000");
-	canvas.setnewcolor("#ffffff");
-	addMoney(700);
-	WaiterGameValues.IsOver = 1;
+}
+
+//table count: easy - 12, medium - 18, hard - 24
+
+function WaiterGameComponentMain(canvas) {
+	canvas.clear("#bd9d80");
+	timelimitStart(180);
+	let timerInterval = window.setInterval((canvas) => {
+		canvas.clear("#bd9d80");
+		canvas.setnewcolor("#5c2f06"); //table colour			
+		for(let Id = 0; Id < 16; Id++) {
+			canvas.box(50 + (250 * Math.floor(Id / 4)), 50 + ((Id % 4) * 80), 60, 60);	
+		}
+		canvas.setnewcolor("#555555");
+		canvas.box(0, canvas.canvas.height * 0.8, canvas.canvas.width, canvas.canvas.height * 0.2);
+		canvas.setnewcolor("#dddddd");
+		canvas.box(0, canvas.canvas.height * 0.8, canvas.canvas.height * 0.2, canvas.canvas.height * 0.2);
+		canvas.text("N", 0, canvas.canvas.height * 0.8);
+		canvas.setnewcolor("#000000");
+		timelimitRender(canvas);
+		if(TimerlimitValues.OverallTime  >= 180) {
+			clearInterval(timerInterval);
+			WaiterGameValues.IsOver = 1;
+			return;
+		}
+	}, 100, canvas);
+	addMoney(30);
+}
+function WaiterGameComponentSummary(canvas) {
+
 }
 
 function WaiterGameReset() {
@@ -75,9 +98,9 @@ function FishGameComponentIntro(canvas) {
 	canvas.clear("#03ddff");
 	canvas.setnewcolor("#000000");
 	canvas.setfontweight("bold");
-	canvas.text(TranslatedText[SettingsValues.Language][86] + TranslatedText[SettingsValues.Language][92], 50, 50);
+	canvas.text(TranslatedText[SettingsValues.Language][91] + " - " + TranslatedText[SettingsValues.Language][99], 50, 50);
 	canvas.resetfontweight();
-	canvas.textml(TranslationGetMultipleLines(SettingsValues.Language, 93, 2), 50, 100);
+	canvas.textml(TranslationGetMultipleLines(SettingsValues.Language, 100, 2), 50, 100);
 	let ArrowEnd = new Arrow(950, 450, 50, 50, ArrowDirections.Right, canvas);
 	ArrowEnd.button.addEventListener("click", (event) => {
 		ArrowEnd.deleteButton();
@@ -85,7 +108,7 @@ function FishGameComponentIntro(canvas) {
 	}, { once: true });
 	canvas.setnewcolor("#333399");
 	canvas.context.textAlign = "right";
-	canvas.text(TranslatedText[SettingsValues.Language][87], 930, 490);
+	canvas.text(TranslatedText[SettingsValues.Language][92], 930, 490);
 	canvas.context.textAlign = "left";
 	ArrowEnd.draw(canvas);
 	canvas.setnewcolor("#ffffff");
@@ -95,23 +118,14 @@ function FishGameComponentMain(canvas) {
 	addMoney(50);
 	FishGameValues.IsOver = 1;
 }
+function FishGameComponentSummary(canvas) {
+
+}
 
 function FishGameReset() {
 	FishGameValues.IsIntroEnd = false;
 	FishGameValues.IsOver = -1;
 	FishGameValues.LeFishCaught = 0;
-}
-
-let ToiletCleaningGameValues = {
-	IsOver: -1
-}
-
-function ToiletCleaningGame(canvas) {
-
-}
-
-function ToiletCleaningGameReset(canvas) {
-	ToiletCleaningGameValues.IsOver = -1;
 }
 
 //dialect translation
@@ -131,9 +145,36 @@ function DialectTranslationGameComponentIntro(canvas) {
 function DialectTranslationGameComponentMain(canvas) {
 	canvas.clear("#03ddff");
 }
+function DialectTranslationGameComponentSummary(canvas) {
+
+}
 
 function DialectTranslationGameReset() {
 	WaiterGameValues.IsOver = -1;
+}
+
+//toilet cleaning
+
+let ToiletCleaningGameValues = {
+	IsOver: -1
+}
+
+function ToiletCleaningGame(canvas) {
+
+}
+
+function  ToiletCleaningGameComponentIntro(canvas) {
+
+}
+function ToiletCleaningGameComponentMain(canvas) {
+
+}
+function ToiletCleaningGameComponentSummary(canvas) {
+
+}
+
+function ToiletCleaningGameReset(canvas) {
+	ToiletCleaningGameValues.IsOver = -1;
 }
 
 //cashier
@@ -152,6 +193,9 @@ function CashierGameComponentIntro(canvas) {
 	
 } 
 function CashierGameComponentMain(canvas) {
+	
+}
+function CashierGameComponentSummary(canvas) {
 	
 }
 

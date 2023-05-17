@@ -55,11 +55,11 @@ function Prerov(canvas) {
 	
 	let FirstDialogue = new Dialogue();
 	FirstDialogue.begin(canvas);
-	FirstDialogue.makeBubble(0, TranslationGetMultipleLines(SettingsValues.Language, 118, 2));
-	FirstDialogue.makeBubble(1, TranslationGetMultipleLines(SettingsValues.Language, 120, 2));
-	FirstDialogue.makeBubble(2, TranslationGetMultipleLines(SettingsValues.Language, 122, 2).slice(0, -1) + " " + Math.floor(1080 * SettingsValues.MoneyCostIncrease) + " " + TranslatedText[SettingsValues.Language][85]);
-	FirstDialogue.makeBubble(3, TranslationGetMultipleLines(SettingsValues.Language, 124, 2));
-	FirstDialogue.makeBubble(4, TranslatedText[SettingsValues.Language][126]);	
+	FirstDialogue.makeBubble(0, TranslationGetMultipleLines(SettingsValues.Language, 119, 2));
+	FirstDialogue.makeBubble(1, TranslationGetMultipleLines(SettingsValues.Language, 121, 2));
+	FirstDialogue.makeBubble(2, TranslationGetMultipleLines(SettingsValues.Language, 123, 2).slice(0, -1) + " " + Math.floor(1080 * SettingsValues.MoneyCostIncrease) + " " + TranslatedText[SettingsValues.Language][85]);
+	FirstDialogue.makeBubble(3, TranslationGetMultipleLines(SettingsValues.Language, 125, 2));
+	FirstDialogue.makeBubble(4, TranslatedText[SettingsValues.Language][127]);	
 	
 	let thisInterval = window.setInterval((dialogue, canvas) => {
 		if(dialogue.counter === 5) {

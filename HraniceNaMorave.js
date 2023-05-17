@@ -79,7 +79,7 @@ function HraniceNaMoraveMap(canvas) {
 	canvas.setnewcolor("#333399");
 	canvas.setnewfont("Arial, FreeSans", "32", "bold");
 	canvas.image(hnm_Locations[5], 0, 0, canvas.canvas.width, canvas.canvas.height);
-	canvas.textml(TranslatedText[SettingsValues.Language][20]+" 1\nHranice na Moravě", 50, 50);
+	canvas.textml(TranslatedText[SettingsValues.Language][25]+" 1\nHranice na Moravě", 50, 50);
 	canvas.resetfontweight();
 	maparrow = new Arrow(700, 400, 100, 100, ArrowDirections.Right, canvas);
 	maparrow.button.addEventListener("click", (event) => {
@@ -98,12 +98,12 @@ function HraniceNaMorave(canvas) {
 	
 	let FirstDialogue = new Dialogue();
 	FirstDialogue.begin(canvas);
-	FirstDialogue.makeBubble(0, TranslationGetMultipleLines(SettingsValues.Language, 32, 2));
-	FirstDialogue.makeBubble(1, TranslationGetMultipleLines(SettingsValues.Language, 34, 2));
-	FirstDialogue.makeBubble(2, TranslationGetMultipleLines(SettingsValues.Language, 36, 2));
-	FirstDialogue.makeBubble(3, TranslationGetMultipleLines(SettingsValues.Language, 38, 2));
-	FirstDialogue.makeBubble(4, TranslationGetMultipleLines(SettingsValues.Language, 40, 2));
-	FirstDialogue.makeBubble(5, TranslatedText[SettingsValues.Language][42]);	
+	FirstDialogue.makeBubble(0, TranslationGetMultipleLines(SettingsValues.Language, 37, 2));
+	FirstDialogue.makeBubble(1, TranslationGetMultipleLines(SettingsValues.Language, 39, 2));
+	FirstDialogue.makeBubble(2, TranslationGetMultipleLines(SettingsValues.Language, 41, 2));
+	FirstDialogue.makeBubble(3, TranslationGetMultipleLines(SettingsValues.Language, 43, 2));
+	FirstDialogue.makeBubble(4, TranslationGetMultipleLines(SettingsValues.Language, 45, 2));
+	FirstDialogue.makeBubble(5, TranslatedText[SettingsValues.Language][47]);	
 	
 	let thisInterval = window.setInterval((dialogue, canvas) => {
 		if(dialogue.counter === 6) {
@@ -230,7 +230,7 @@ function HraniceNaMoraveNastupiste(canvas) {
 		else {
 			let dialogue = new Dialogue();
 			dialogue.begin(canvas);
-			dialogue.makeBubble(0, TranslatedText[SettingsValues.Language][116]);
+			dialogue.makeBubble(0, TranslatedText[SettingsValues.Language][122]);
 			let thisInterval = window.setInterval((dialogue, canvas) => {
 				if(dialogue.counter === 1) {
 					clearInterval(thisInterval);
@@ -288,19 +288,19 @@ function HraniceNaMoraveRestauraceJob(canvas) {
 	PauseButton.deleteButton();
 	let dialogue = new Dialogue();
 	dialogue.begin(canvas);
-	dialogue.makeBubble(0, TranslationGetMultipleLines(SettingsValues.Language, 47, 2));
-	dialogue.makeBubble(1, TranslationGetMultipleLines(SettingsValues.Language, 49, 2));
+	dialogue.makeBubble(0, TranslationGetMultipleLines(SettingsValues.Language, 52, 2));
+	dialogue.makeBubble(1, TranslationGetMultipleLines(SettingsValues.Language, 54, 2));
 	dialogue.makeChoice(2);
 	
 	let dWaitInterval = window.setInterval((dialogue) => {
 		if(dialogue.choice_result !== -1) {
 			clearInterval(dWaitInterval);
 			if(dialogue.choice_result === 1) {
-				dialogue.makeBubble(3, TranslatedText[SettingsValues.Language][51]);
+				dialogue.makeBubble(3, TranslatedText[SettingsValues.Language][56]);
 				return;
 			}
 			else {
-				dialogue.makeBubble(3, TranslationGetMultipleLines(SettingsValues.Language, 52, 2));
+				dialogue.makeBubble(3, TranslationGetMultipleLines(SettingsValues.Language, 57, 2));
 				return;
 			}
 		}
@@ -333,9 +333,9 @@ function HraniceNaMoraveNastupisteJob(canvas) {
 	AllowedToPause = false;
 	let dialogue = new Dialogue();
 	dialogue.begin(canvas);
-	dialogue.makeBubble(0, TranslationGetMultipleLines(SettingsValues.Language, 107, 2).slice(0, -1) + " " + Math.floor(650 * SettingsValues.MoneyCostIncrease) + " " + TranslatedText[SettingsValues.Language][85]);
-	dialogue.makeBubble(1, TranslationGetMultipleLines(SettingsValues.Language, 109, 2));
-	dialogue.makeBubble(2, TranslatedText[SettingsValues.Language][111]);
+	dialogue.makeBubble(0, TranslationGetMultipleLines(SettingsValues.Language, 113, 2).slice(0, -1) + " " + Math.floor(650 * SettingsValues.MoneyCostIncrease) + " " + TranslatedText[SettingsValues.Language][90]);
+	dialogue.makeBubble(1, TranslationGetMultipleLines(SettingsValues.Language, 115, 2));
+	dialogue.makeBubble(2, TranslatedText[SettingsValues.Language][117]);
 	dialogue.makeChoice(3);
 	
 	let dWaitInterval = window.setInterval((dialogue) => {
@@ -344,22 +344,22 @@ function HraniceNaMoraveNastupisteJob(canvas) {
 			if(dialogue.choice_result === 1) {
 				if(MoneyAmount >= Math.floor(650 * SettingsValues.MoneyCostIncrease)) {
 					if(doesHaveTicket) {
-						dialogue.makeBubble(4, TranslatedText[SettingsValues.Language][117]);
+						dialogue.makeBubble(4, TranslatedText[SettingsValues.Language][123]);
 						return;
 					}
 					removeMoney(Math.floor(650 * SettingsValues.MoneyCostIncrease));
 					doesHaveTicket = true;
-					dialogue.makeBubble(4, TranslatedText[SettingsValues.Language][112]);
+					dialogue.makeBubble(4, TranslatedText[SettingsValues.Language][118]);
 					return;
 				}
 				else {
-					dialogue.makeBubble(4, TranslationGetMultipleLines(SettingsValues.Language, 113, 2));
+					dialogue.makeBubble(4, TranslationGetMultipleLines(SettingsValues.Language, 119, 2));
 					return;
 				}
 				return;
 			}
 			else {
-				dialogue.makeBubble(4, TranslatedText[SettingsValues.Language][115]);
+				dialogue.makeBubble(4, TranslatedText[SettingsValues.Language][121]);
 				return;
 			}
 		}

@@ -128,6 +128,5 @@ class Dialogue {
 		this.canvas_info;
 		this.counter = 0;
 		this.can_proceed = false;
-		AllowedToPause = true;
 	}
 };

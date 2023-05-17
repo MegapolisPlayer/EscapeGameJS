@@ -23,11 +23,11 @@ function InstantLossScreen(eventNo, canvasobj) {
 	canvasobj.context.textAlign = "center"; 
 	canvasobj.setnewfont("Arial, FreeSans", "48", "bold");
 	canvasobj.setnewcolor("#ff0000");
-	canvasobj.text(TranslatedText[SettingsValues.Language][54], 500, 100);
+	canvasobj.text(TranslatedText[SettingsValues.Language][60], 500, 100);
 	canvasobj.resetfontweight();
 	canvasobj.setnewcolor("#ffffff");
 	canvasobj.textml(TranslationGetMultipleLines(SettingsValues.Language, 55+(eventNo*2), 2), 500, 200);
-	InstantLossScreen.Quit = new Button(700, 400, 300, 100, 25, TranslatedText[SettingsValues.Language][11], "canvas_container");
+	InstantLossScreen.Quit = new Button(700, 400, 300, 100, 25, TranslatedText[SettingsValues.Language][17], "canvas_container");
 	InstantLossScreen.Quit.button.addEventListener("click", (event) => {
 		location.reload();
 	});
@@ -131,7 +131,7 @@ function SettingsRenderLanguageRelatedText(canvasobj) {
 function Settings(canvasobj) {	
 	Settings.arrowPrev = new Arrow(50, 110, 50, 50, ArrowDirections.Left, null);
 	Settings.arrowNext = new Arrow(300, 110, 50, 50, ArrowDirections.Right, null);
-	Settings.buttonBack = new Button(50, 400, 300, 100, 25, TranslatedText[SettingsValues.Language][31], "canvas_container");
+	Settings.buttonBack = new Button(50, 400, 300, 100, 25, TranslatedText[SettingsValues.Language][36], "canvas_container");
 	//language
 	Settings.arrowPrevL = new Arrow(600, 110, 50, 50, ArrowDirections.Left, null);
 	Settings.arrowNextL = new Arrow(850, 110, 50, 50, ArrowDirections.Right, null);
@@ -193,7 +193,7 @@ function Settings(canvasobj) {
 	SettingsRenderDifficultyRelatedText(canvasobj);		
 	SettingsRenderLanguageRelatedText(canvasobj);
 	
-	canvasobj.textml(TranslationGetMultipleLines(SettingsValues.Language, 21, 3), 50, 300);	
+	canvasobj.textml(TranslationGetMultipleLines(SettingsValues.Language, 26, 3), 50, 300);	
 }
 
 function SettingsButtonRegister(canvasobj) {

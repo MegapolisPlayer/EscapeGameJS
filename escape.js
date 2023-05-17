@@ -18,6 +18,7 @@ console.log("Escape from Olomouc\n%cPlease do not enter anything here.\nThis is 
 
 const cvs = new Canvas("EscapeCanvas", "Arial, FreeSans", "48", "#333399", 1000, 500);
 cvs.clear("purple");
+cvs.text("Setting up main menu...", 50, 50);
 
 const MainMenuImage = new Image();
 MainMenuImage.src = "res/prerov/nastupiste.jpg";
@@ -44,6 +45,7 @@ function MainMenuSetup() {
 	});	
 	
 	let thisInterval = window.setInterval(() => {
+		console.log(AmountTranslations + " " + TicketImagesLoaded + " " + AchievementImagesLoaded);
 		if(AmountTranslations === 4 && TicketImagesLoaded === 2 && AchievementImagesLoaded === 5) {
 			clearInterval(thisInterval);
 			MainMenu();
@@ -83,7 +85,7 @@ function MainMenu() {
 	cvs.setnewfont("Arial, FreeSans", "16");
 	
 	cvs.text("(c) Martin/MegapolisPlayer, Jiri/KohoutGD 2023", 650, 472);
-	cvs.text("build date 16/05/2023, prerelease test version", 650, 492);
+	cvs.text("build date 18/05/2023, prerelease test version", 650, 492);
 	
 	cvs.setnewcolor("#333399");
 	cvs.setnewfont("Arial, FreeSans", "48");
@@ -103,7 +105,7 @@ function PlayMenu() {
 	cvs.setnewfont("Arial, FreeSans", "32");
 	let buttonNew = new Button(50, 130, 300, 100, 25, TranslatedText[SettingsValues.Language][1], "canvas_container");
 	let buttonLoad = new Button(350, 130, 300, 100, 25, TranslatedText[SettingsValues.Language][10], "canvas_container");
-	let buttonBack = new Button(650, 130, 300, 100, 25, TranslatedText[SettingsValues.Language][31], "canvas_container");
+	let buttonBack = new Button(650, 130, 300, 100, 25, TranslatedText[SettingsValues.Language][36], "canvas_container");
 	
 	let thisInterval = window.setInterval(() => {
 		if(Load.FileLoaded === true) {
@@ -137,14 +139,32 @@ function PlayMenu() {
 //game stuff
 
 function Intro() {
-    console.log("Registered PLAY Button press!");
+	console.log("Registered PLAY Button press!");
 	ap.playTrack(1);
+	
+	cvs.clear("black");
+    cvs.setnewcolor("#cc0000");
+	cvs.setnewfont("Arial, FreeSans", "48", "bold");
+	cvs.text(TranslatedText[SettingsValues.Language][19], 50, 50);
+	cvs.setnewcolor("white");
+    cvs.setnewfont("Arial, FreeSans", "32");
+    cvs.textml(TranslationGetMultipleLines(SettingsValues.Language, 20, 4), 100, 100);
+	
+	introarrow = new Arrow(700, 400, 100, 100, ArrowDirections.Right, cvs);
+	introarrow.button.addEventListener("click", (event) => {
+		introarrow.deleteButton();
+   	 	Backstory(cvs);
+	});
+    introarrow.draw(cvs);
+}
+
+function Backstory() {
 	cvs.clear("black");
     cvs.setnewcolor("white");
 	cvs.setnewfont("Arial, FreeSans", "48", "bold");
-	cvs.text(TranslatedText[SettingsValues.Language][19], 50, 50);
+	cvs.text(TranslatedText[SettingsValues.Language][24], 50, 50);
     cvs.setnewfont("Arial, FreeSans", "32");
-    cvs.textml(TranslationGetMultipleLines(SettingsValues.Language, 24, 7), 100, 100);
+    cvs.textml(TranslationGetMultipleLines(SettingsValues.Language, 29, 7), 100, 100);
 	
 	introarrow = new Arrow(700, 400, 100, 100, ArrowDirections.Right, cvs);
 	introarrow.button.addEventListener("click", (event) => {

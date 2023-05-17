@@ -24,3 +24,40 @@ function timerEnd() {
 function timerToString() {
 	return String(Math.floor(TimerValues.OverallTime / 60) + ":" + String("00" + Number(TimerValues.OverallTime % 60) ).slice(-2) + " ([M]M:SS)");
 }
+
+let TimerlimitValues = {
+	TimeLimit: 0,
+	StartTime: 0,
+	CurrentTime: 0,
+	OverallTime: 0
+}
+
+function timelimitStart(minutes, seconds) {
+	TimerlimitValues.StartTime = Date.now();
+	TimerlimitValues.TimeLimit = (minutes * 60) + seconds;
+}
+function timelimitStart(seconds) {
+	TimerlimitValues.StartTime = Date.now();
+	TimerlimitValues.TimeLimit = seconds;
+}
+function timelimitUpdate() {
+	TimerlimitValues.CurrentTime = Date.now();
+	TimerlimitValues.OverallTime = Math.floor(Math.abs(Number(TimerlimitValues.CurrentTime) - Number(TimerlimitValues.StartTime)) / 1000);
+}
+function timelimitToString() {
+	return String(
+		Number(Math.floor((TimerlimitValues.TimeLimit - TimerlimitValues.OverallTime) / 60))
+		+ ":" + String("00" + 
+		Number((TimerlimitValues.TimeLimit - TimerlimitValues.OverallTime) % 60)
+		).slice(-2));
+}
+function timelimitRender(canvasobj) {
+	timelimitUpdate();
+	canvasobj.setnewfont("Arial, FreeSans", "32");
+	canvasobj.setnewcolor("#ffffff");
+	let text = TranslatedText[SettingsValues.Language][93]+": "+timelimitToString()+" ";
+	let metrics = canvasobj.context.measureText(text);
+	canvasobj.box(1000 - metrics.width - 20, 0, metrics.width + 20, 50);
+	canvasobj.setnewcolor("#333399");
+	canvasobj.text(text, 1000 - metrics.width - 10, 40);
+}

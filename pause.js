@@ -96,7 +96,7 @@ function Pause(canvasobj) {
 	
 	Pause.buttonAudio = new Button(320, 130, 100, 100, 25, "", "canvas_container");
 	Pause.buttonRestart = new Button(420, 130, 100, 100, 25, TranslatedText[SettingsValues.Language][6], "canvas_container");
-	Pause.buttonCode = new Button(520, 130, 100, 100, 25, TranslatedText[SettingsValues.Language][45], "canvas_container");
+	Pause.buttonCode = new Button(520, 130, 100, 100, 25, TranslatedText[SettingsValues.Language][50], "canvas_container");
 	Pause.buttonSave = new Button(320, 230, 100, 100, 25, TranslatedText[SettingsValues.Language][9], "canvas_container");
 	Pause.buttonLoad = new Button(420, 230, 100, 100, 25, TranslatedText[SettingsValues.Language][10], "canvas_container");
 	Pause.buttonQuit = new Button(520, 230, 100, 100, 25, TranslatedText[SettingsValues.Language][11], "canvas_container");
@@ -125,7 +125,7 @@ function Pause(canvasobj) {
 		location.reload();
 	});
 	
-	canvasobj.textml(TranslationGetMultipleLines(SettingsValues.Language, 43, 2), 320, 380);
+	canvasobj.textml(TranslationGetMultipleLines(SettingsValues.Language, 48, 2), 320, 380);
 	canvasobj.setnewfont("Arial, FreeSans", "48");
 }
 
