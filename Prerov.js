@@ -35,7 +35,7 @@ function PrerovMap(canvas) {
 	canvas.setnewcolor("#333399");
 	canvas.setnewfont("Arial, FreeSans", "32", "bold");
 	canvas.image(pre_Locations[5], 0, 0, canvas.canvas.width, canvas.canvas.height);
-	canvas.textml(TranslatedText[SettingsValues.Language][20]+" 2\nPřerov", 50, 50);
+	canvas.textml(TranslatedText[SettingsValues.Language][25]+" 2\nPřerov", 50, 50);
 	canvas.resetfontweight();
 	maparrow = new Arrow(700, 400, 100, 100, ArrowDirections.Right, canvas);
 	maparrow.button.addEventListener("click", (event) => {
@@ -55,11 +55,11 @@ function Prerov(canvas) {
 	
 	let FirstDialogue = new Dialogue();
 	FirstDialogue.begin(canvas);
-	FirstDialogue.makeBubble(0, TranslationGetMultipleLines(SettingsValues.Language, 119, 2));
-	FirstDialogue.makeBubble(1, TranslationGetMultipleLines(SettingsValues.Language, 121, 2));
-	FirstDialogue.makeBubble(2, TranslationGetMultipleLines(SettingsValues.Language, 123, 2).slice(0, -1) + " " + Math.floor(1080 * SettingsValues.MoneyCostIncrease) + " " + TranslatedText[SettingsValues.Language][85]);
-	FirstDialogue.makeBubble(3, TranslationGetMultipleLines(SettingsValues.Language, 125, 2));
-	FirstDialogue.makeBubble(4, TranslatedText[SettingsValues.Language][127]);	
+	FirstDialogue.makeBubble(0, TranslationGetMultipleLines(SettingsValues.Language, 143, 2));
+	FirstDialogue.makeBubble(1, TranslationGetMultipleLines(SettingsValues.Language, 145, 2));
+	FirstDialogue.makeBubble(2, TranslationGetMultipleLines(SettingsValues.Language, 147, 2).slice(0, -1) + " " + Math.floor(1080 * SettingsValues.MoneyCostIncrease) + " " + TranslatedText[SettingsValues.Language][90]);
+	FirstDialogue.makeBubble(3, TranslationGetMultipleLines(SettingsValues.Language, 149, 2));
+	FirstDialogue.makeBubble(4, TranslatedText[SettingsValues.Language][151]);	
 	
 	let thisInterval = window.setInterval((dialogue, canvas) => {
 		if(dialogue.counter === 5) {

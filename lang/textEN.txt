@@ -114,27 +114,45 @@ Earned
 
 Waiter minigame
 Click on the correct orders as fast as possible.
-For every order you will get 30CZK.
+For every order you will get 15 CZK.
+For every undelivered or incorrectly delivered
+order you will lose 15 CZK. All orders must be
+delivered in 10 seconds after they are finished.
 
 Fisher minigame
 Catch as much fish as possible.
 For every fish you catch you will get 50CZK.
+-
+-
+-
 
 Toilets cleaning minigame
 Just clean the toilets by swiping.
 You will get 250CZK.
+-
+-
+-
 
 Translation minigame
 Translate as many words from a dialect.
 For every word you will get 5CZK.
+-
+-
+-
 
 Cashier minigame
 Process as many products as possible.
 For every product you will get 5CZK.
+-
+-
+-
 
 Defense minigame
 Defend Studénka!
 You will get a ticket to Ostrava.
+-
+-
+-
 
 So you want to buy a ticket, right?
 To go to Přerov it would cost
@@ -158,3 +176,9 @@ The tickets to Němcice cost
 Also the city has quite a criminal history,
 so good luck and leave as soon as possible.
 Good luck!
+
+Welcome to Němčice nad Hanou. This is a small town but
+todo: add nnh dialogue
+-
+-
+-

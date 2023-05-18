@@ -187,7 +187,7 @@ ArrowImages[1].src = "res/arrow_up.png";
 ArrowImages[2].src = "res/arrow_right.png";
 ArrowImages[3].src = "res/arrow_down.png";
 ArrowImages[4].src = "res/arrow_left.png";
-ArrowImages[5].src = "res/pause.png";
+ArrowImages[5].src = "res/pause.png";	
 ArrowImages[6].src = "res/yes.png";
 ArrowImages[7].src = "res/no.png";
 ArrowImages[8].src = "res/arrow_here.png";
@@ -282,20 +282,20 @@ class Arrow {
 class AudioPlayer {
 	constructor() {
 		this.audioTracks = [];
-		this.audioTracks.push(new Audio("res/music/Stormfront.mp3"));        //main menu
-		this.audioTracks.push(new Audio("res/music/Faceoff.mp3"));           //intro
-		this.audioTracks.push(new Audio("res/music/ImpendingBoom.mp3"));     //hranice
-		this.audioTracks.push(new Audio("res/music/Nerves.mp3"));            //prerov
-		this.audioTracks.push(new Audio("res/music/LateNightRadio.mp3"));    //nemcice nad hanou
-		this.audioTracks.push(new Audio("res/music/BlueFeather.mp3"));       //prostejov
-		this.audioTracks.push(new Audio("res/music/FailingDefense.mp3"));    //olomouc
-		this.audioTracks.push(new Audio("res/music/RoyalCoupling.mp3"));     //studenka
-		this.audioTracks.push(new Audio("res/music/TheParting.mp3"));        //ostrava
+		this.audioTrackCounter = 0;
+		this.audioTracks.push(new Audio("res/music/Stormfront.mp3"));             //main menu
+		this.audioTracks.push(new Audio("res/music/Faceoff.mp3"));                //intro
+		this.audioTracks.push(new Audio("res/music/ImpendingBoom.mp3"));          //hranice
+		this.audioTracks.push(new Audio("res/music/Nerves.mp3"));                 //prerov
+		this.audioTracks.push(new Audio("res/music/LateNightRadio.mp3"));         //nemcice nad hanou
+		this.audioTracks.push(new Audio("res/music/BlueFeather.mp3"));            //prostejov
+		this.audioTracks.push(new Audio("res/music/FailingDefense.mp3"));         //olomouc
+		this.audioTracks.push(new Audio("res/music/RoyalCoupling.mp3"));          //studenka
+		this.audioTracks.push(new Audio("res/music/TheParting.mp3"));             //ostrava
 		this.audioTracks.push(new Audio("res/music/StartingOutWaltzVivace.mp3")); //credits, ending
 		for(let Id = 0; Id < 10; Id++) {
 			this.audioTracks[Id].loop = true;
 		}
-		this.audioTrackCounter = 0;
 		this.allowed = false;
 	}
 	playNextTrack() {
@@ -589,13 +589,25 @@ function timelimitToString() {
 }
 function timelimitRender(canvasobj) {
 	timelimitUpdate();
-	canvasobj.setnewfont("Arial, FreeSans", "32");
 	canvasobj.setnewcolor("#ffffff");
-	let text = TranslatedText[SettingsValues.Language][93]+": "+timelimitToString()+" ";
+	canvasobj.setnewfont("Arial, FreeSans", "32");
+	let text = TranslatedText[SettingsValues.Language][94]+": "+timelimitToString()+" ";
 	let metrics = canvasobj.context.measureText(text);
 	canvasobj.box(1000 - metrics.width - 20, 0, metrics.width + 20, 50);
-	canvasobj.setnewcolor("#333399");
+	if(TimerlimitValues.TimeLimit - TimerlimitValues.OverallTime <= 10) { canvasobj.setnewcolor("#800000"); }
+	else { canvasobj.setnewcolor("#333399"); }
 	canvasobj.text(text, 1000 - metrics.width - 10, 40);
+}
+function timelimitInfo() {
+	TranslatedText[SettingsValues.Language][93] + String(
+		Number(Math.floor((TimerlimitValues.TimeLimit) / 60))
+		+ ":" + String("00" + 
+		Number((TimerlimitValues.TimeLimit) % 60)
+		).slice(-2));
+}
+
+function timelimitIsDone() {
+	return (TimerlimitValues.OverallTime >= TimerlimitValues.TimeLimit);
 }
 let SettingsValues = {
 	Difficulty: 2, //1 - easy, 2 - medium, 3 - hard
@@ -981,8 +993,16 @@ function debug_Credits(iscalledfrommm, canvasobj) {
 
 let WaiterGameValues = {
 	IsIntroEnd: false,
-	IsOver: -1
+	IsOver: -1,
+	HowMuchCooking: 0,
+	AmountEarned: 0,
 }
+
+class TableManager {
+	constructor() {
+
+	}
+};
 
 function WaiterGame(canvas) {
 	WaiterGameValues.IsOver = -1;
@@ -1007,7 +1027,7 @@ function WaiterGameComponentIntro(canvas) {
 	canvas.setfontweight("bold");
 	canvas.text(TranslatedText[SettingsValues.Language][91] + " - " + TranslatedText[SettingsValues.Language][96], 50, 50);
 	canvas.resetfontweight();
-	canvas.textml(TranslationGetMultipleLines(SettingsValues.Language, 97, 2), 50, 100);
+	canvas.textml(TranslationGetMultipleLines(SettingsValues.Language, 97, 5), 50, 100);
 	canvas.setnewcolor("#333399");
 	canvas.context.textAlign = "right";
 	canvas.text(TranslatedText[SettingsValues.Language][92], 930, 490);
@@ -1016,31 +1036,39 @@ function WaiterGameComponentIntro(canvas) {
 	canvas.setnewcolor("#000000");
 }
 
-//table count: easy - 12, medium - 18, hard - 24
+//table count: easy - 16, medium - 24, hard - 32
 
 function WaiterGameComponentMain(canvas) {
 	canvas.clear("#bd9d80");
-	timelimitStart(180);
+	let amountToRender = ((SettingsValues.Difficulty === 3) ? 32 : (SettingsValues.Difficulty === 1) ? 16 : 24);
+	let tableButtons = [];
+	for(let Id = 0; Id < amountToRender; Id++) {
+		tableButtons.push(new TableManager()); //todo: make TableManager in minigame.js
+	}
+	timelimitStart(150); //2:30
 	let timerInterval = window.setInterval((canvas) => {
 		canvas.clear("#bd9d80");
-		canvas.setnewcolor("#5c2f06"); //table colour			
-		for(let Id = 0; Id < 16; Id++) {
-			canvas.box(50 + (250 * Math.floor(Id / 4)), 50 + ((Id % 4) * 80), 60, 60);	
+		canvas.setnewcolor("#5c2f06"); //table colour
+		for(let Id = 0; Id < amountToRender; Id++) {
+			canvas.box(50 + ((250/SettingsValues.Difficulty) * Math.floor(Id / 4)), 50 + ((Id % 4) * 80), 60, 60);
 		}
 		canvas.setnewcolor("#555555");
 		canvas.box(0, canvas.canvas.height * 0.8, canvas.canvas.width, canvas.canvas.height * 0.2);
 		canvas.setnewcolor("#dddddd");
 		canvas.box(0, canvas.canvas.height * 0.8, canvas.canvas.height * 0.2, canvas.canvas.height * 0.2);
-		canvas.text("N", 0, canvas.canvas.height * 0.8);
+		canvas.setnewcolor("#800000");
+		canvas.context.textAlign = "center";
+		canvas.text(WaiterGameValues.HowMuchCooking, canvas.canvas.height * 0.1, canvas.canvas.height * 0.9);
+		canvas.context.textAlign = "left";
 		canvas.setnewcolor("#000000");
 		timelimitRender(canvas);
-		if(TimerlimitValues.OverallTime  >= 180) {
+		if(timelimitIsDone()) {
 			clearInterval(timerInterval);
 			WaiterGameValues.IsOver = 1;
 			return;
 		}
 	}, 100, canvas);
-	addMoney(30);
+	addMoney(WaiterGameValues.AmountEarned); //15Kc per order!
 }
 function WaiterGameComponentSummary(canvas) {
 
@@ -1459,7 +1487,7 @@ function HraniceNaMoraveNastupiste(canvas) {
 		else {
 			let dialogue = new Dialogue();
 			dialogue.begin(canvas);
-			dialogue.makeBubble(0, TranslatedText[SettingsValues.Language][122]);
+			dialogue.makeBubble(0, TranslatedText[SettingsValues.Language][141]);
 			let thisInterval = window.setInterval((dialogue, canvas) => {
 				if(dialogue.counter === 1) {
 					clearInterval(thisInterval);
@@ -1562,9 +1590,9 @@ function HraniceNaMoraveNastupisteJob(canvas) {
 	AllowedToPause = false;
 	let dialogue = new Dialogue();
 	dialogue.begin(canvas);
-	dialogue.makeBubble(0, TranslationGetMultipleLines(SettingsValues.Language, 113, 2).slice(0, -1) + " " + Math.floor(650 * SettingsValues.MoneyCostIncrease) + " " + TranslatedText[SettingsValues.Language][90]);
-	dialogue.makeBubble(1, TranslationGetMultipleLines(SettingsValues.Language, 115, 2));
-	dialogue.makeBubble(2, TranslatedText[SettingsValues.Language][117]);
+	dialogue.makeBubble(0, TranslationGetMultipleLines(SettingsValues.Language, 132, 2).slice(0, -1) + " " + Math.floor(650 * SettingsValues.MoneyCostIncrease) + " " + TranslatedText[SettingsValues.Language][90]);
+	dialogue.makeBubble(1, TranslationGetMultipleLines(SettingsValues.Language, 134, 2));
+	dialogue.makeBubble(2, TranslatedText[SettingsValues.Language][136]);
 	dialogue.makeChoice(3);
 	
 	let dWaitInterval = window.setInterval((dialogue) => {
@@ -1573,22 +1601,22 @@ function HraniceNaMoraveNastupisteJob(canvas) {
 			if(dialogue.choice_result === 1) {
 				if(MoneyAmount >= Math.floor(650 * SettingsValues.MoneyCostIncrease)) {
 					if(doesHaveTicket) {
-						dialogue.makeBubble(4, TranslatedText[SettingsValues.Language][123]);
+						dialogue.makeBubble(4, TranslatedText[SettingsValues.Language][142]);
 						return;
 					}
 					removeMoney(Math.floor(650 * SettingsValues.MoneyCostIncrease));
 					doesHaveTicket = true;
-					dialogue.makeBubble(4, TranslatedText[SettingsValues.Language][118]);
+					dialogue.makeBubble(4, TranslatedText[SettingsValues.Language][137]);
 					return;
 				}
 				else {
-					dialogue.makeBubble(4, TranslationGetMultipleLines(SettingsValues.Language, 119, 2));
+					dialogue.makeBubble(4, TranslationGetMultipleLines(SettingsValues.Language, 138, 2));
 					return;
 				}
 				return;
 			}
 			else {
-				dialogue.makeBubble(4, TranslatedText[SettingsValues.Language][121]);
+				dialogue.makeBubble(4, TranslatedText[SettingsValues.Language][140]);
 				return;
 			}
 		}
@@ -1640,7 +1668,7 @@ function PrerovMap(canvas) {
 	canvas.setnewcolor("#333399");
 	canvas.setnewfont("Arial, FreeSans", "32", "bold");
 	canvas.image(pre_Locations[5], 0, 0, canvas.canvas.width, canvas.canvas.height);
-	canvas.textml(TranslatedText[SettingsValues.Language][20]+" 2\nPřerov", 50, 50);
+	canvas.textml(TranslatedText[SettingsValues.Language][25]+" 2\nPřerov", 50, 50);
 	canvas.resetfontweight();
 	maparrow = new Arrow(700, 400, 100, 100, ArrowDirections.Right, canvas);
 	maparrow.button.addEventListener("click", (event) => {
@@ -1660,11 +1688,11 @@ function Prerov(canvas) {
 	
 	let FirstDialogue = new Dialogue();
 	FirstDialogue.begin(canvas);
-	FirstDialogue.makeBubble(0, TranslationGetMultipleLines(SettingsValues.Language, 119, 2));
-	FirstDialogue.makeBubble(1, TranslationGetMultipleLines(SettingsValues.Language, 121, 2));
-	FirstDialogue.makeBubble(2, TranslationGetMultipleLines(SettingsValues.Language, 123, 2).slice(0, -1) + " " + Math.floor(1080 * SettingsValues.MoneyCostIncrease) + " " + TranslatedText[SettingsValues.Language][85]);
-	FirstDialogue.makeBubble(3, TranslationGetMultipleLines(SettingsValues.Language, 125, 2));
-	FirstDialogue.makeBubble(4, TranslatedText[SettingsValues.Language][127]);	
+	FirstDialogue.makeBubble(0, TranslationGetMultipleLines(SettingsValues.Language, 143, 2));
+	FirstDialogue.makeBubble(1, TranslationGetMultipleLines(SettingsValues.Language, 145, 2));
+	FirstDialogue.makeBubble(2, TranslationGetMultipleLines(SettingsValues.Language, 147, 2).slice(0, -1) + " " + Math.floor(1080 * SettingsValues.MoneyCostIncrease) + " " + TranslatedText[SettingsValues.Language][90]);
+	FirstDialogue.makeBubble(3, TranslationGetMultipleLines(SettingsValues.Language, 149, 2));
+	FirstDialogue.makeBubble(4, TranslatedText[SettingsValues.Language][151]);	
 	
 	let thisInterval = window.setInterval((dialogue, canvas) => {
 		if(dialogue.counter === 5) {
@@ -2122,9 +2150,11 @@ if (window.document.documentMode) {
 
 console.log("Escape from Olomouc\n%cPlease do not enter anything here.\nThis is strictly for debugging or error logging.\nIf you see an error (large red box) please report it to the author.", "color: red; font-weight: bold;");
 
+AllowedToPause = false;
+
 const cvs = new Canvas("EscapeCanvas", "Arial, FreeSans", "48", "#333399", 1000, 500);
 cvs.clear("purple");
-cvs.text("Setting up main menu...", 50, 50);
+cvs.loadingMsg();
 
 const MainMenuImage = new Image();
 MainMenuImage.src = "res/prerov/nastupiste.jpg";
@@ -2134,9 +2164,8 @@ let mainMenuButtons = [];
 
 function MainMenuSetup() {
 	cvs.loadingMsg();
-	AllowedToPause = false;
-	//translations
 	
+	//translations
 	TranslationLoad("EN", 0);
 	TranslationLoad("CZ", 1);
 	TranslationLoad("DE", 2);
@@ -2191,7 +2220,7 @@ function MainMenu() {
 	cvs.setnewfont("Arial, FreeSans", "16");
 	
 	cvs.text("(c) Martin/MegapolisPlayer, Jiri/KohoutGD 2023", 650, 472);
-	cvs.text("build date 18/05/2023, prerelease test version", 650, 492);
+	cvs.text("build date 19/05/2023, prerelease test version", 650, 492);
 	
 	cvs.setnewcolor("#333399");
 	cvs.setnewfont("Arial, FreeSans", "48");
@@ -2249,7 +2278,7 @@ function Intro() {
 	ap.playTrack(1);
 	
 	cvs.clear("black");
-    cvs.setnewcolor("#cc0000");
+    cvs.setnewcolor("#800000");
 	cvs.setnewfont("Arial, FreeSans", "48", "bold");
 	cvs.text(TranslatedText[SettingsValues.Language][19], 50, 50);
 	cvs.setnewcolor("white");

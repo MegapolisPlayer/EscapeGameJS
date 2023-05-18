@@ -53,11 +53,23 @@ function timelimitToString() {
 }
 function timelimitRender(canvasobj) {
 	timelimitUpdate();
-	canvasobj.setnewfont("Arial, FreeSans", "32");
 	canvasobj.setnewcolor("#ffffff");
-	let text = TranslatedText[SettingsValues.Language][93]+": "+timelimitToString()+" ";
+	canvasobj.setnewfont("Arial, FreeSans", "32");
+	let text = TranslatedText[SettingsValues.Language][94]+": "+timelimitToString()+" ";
 	let metrics = canvasobj.context.measureText(text);
 	canvasobj.box(1000 - metrics.width - 20, 0, metrics.width + 20, 50);
-	canvasobj.setnewcolor("#333399");
+	if(TimerlimitValues.TimeLimit - TimerlimitValues.OverallTime <= 10) { canvasobj.setnewcolor("#800000"); }
+	else { canvasobj.setnewcolor("#333399"); }
 	canvasobj.text(text, 1000 - metrics.width - 10, 40);
+}
+function timelimitInfo() {
+	TranslatedText[SettingsValues.Language][93] + String(
+		Number(Math.floor((TimerlimitValues.TimeLimit) / 60))
+		+ ":" + String("00" + 
+		Number((TimerlimitValues.TimeLimit) % 60)
+		).slice(-2));
+}
+
+function timelimitIsDone() {
+	return (TimerlimitValues.OverallTime >= TimerlimitValues.TimeLimit);
 }

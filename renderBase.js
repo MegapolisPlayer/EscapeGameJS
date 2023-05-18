@@ -187,7 +187,7 @@ ArrowImages[1].src = "res/arrow_up.png";
 ArrowImages[2].src = "res/arrow_right.png";
 ArrowImages[3].src = "res/arrow_down.png";
 ArrowImages[4].src = "res/arrow_left.png";
-ArrowImages[5].src = "res/pause.png";
+ArrowImages[5].src = "res/pause.png";	
 ArrowImages[6].src = "res/yes.png";
 ArrowImages[7].src = "res/no.png";
 ArrowImages[8].src = "res/arrow_here.png";
@@ -282,20 +282,20 @@ class Arrow {
 class AudioPlayer {
 	constructor() {
 		this.audioTracks = [];
-		this.audioTracks.push(new Audio("res/music/Stormfront.mp3"));        //main menu
-		this.audioTracks.push(new Audio("res/music/Faceoff.mp3"));           //intro
-		this.audioTracks.push(new Audio("res/music/ImpendingBoom.mp3"));     //hranice
-		this.audioTracks.push(new Audio("res/music/Nerves.mp3"));            //prerov
-		this.audioTracks.push(new Audio("res/music/LateNightRadio.mp3"));    //nemcice nad hanou
-		this.audioTracks.push(new Audio("res/music/BlueFeather.mp3"));       //prostejov
-		this.audioTracks.push(new Audio("res/music/FailingDefense.mp3"));    //olomouc
-		this.audioTracks.push(new Audio("res/music/RoyalCoupling.mp3"));     //studenka
-		this.audioTracks.push(new Audio("res/music/TheParting.mp3"));        //ostrava
+		this.audioTrackCounter = 0;
+		this.audioTracks.push(new Audio("res/music/Stormfront.mp3"));             //main menu
+		this.audioTracks.push(new Audio("res/music/Faceoff.mp3"));                //intro
+		this.audioTracks.push(new Audio("res/music/ImpendingBoom.mp3"));          //hranice
+		this.audioTracks.push(new Audio("res/music/Nerves.mp3"));                 //prerov
+		this.audioTracks.push(new Audio("res/music/LateNightRadio.mp3"));         //nemcice nad hanou
+		this.audioTracks.push(new Audio("res/music/BlueFeather.mp3"));            //prostejov
+		this.audioTracks.push(new Audio("res/music/FailingDefense.mp3"));         //olomouc
+		this.audioTracks.push(new Audio("res/music/RoyalCoupling.mp3"));          //studenka
+		this.audioTracks.push(new Audio("res/music/TheParting.mp3"));             //ostrava
 		this.audioTracks.push(new Audio("res/music/StartingOutWaltzVivace.mp3")); //credits, ending
 		for(let Id = 0; Id < 10; Id++) {
 			this.audioTracks[Id].loop = true;
 		}
-		this.audioTrackCounter = 0;
 		this.allowed = false;
 	}
 	playNextTrack() {

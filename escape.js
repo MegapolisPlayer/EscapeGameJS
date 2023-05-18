@@ -16,9 +16,11 @@ if (window.document.documentMode) {
 
 console.log("Escape from Olomouc\n%cPlease do not enter anything here.\nThis is strictly for debugging or error logging.\nIf you see an error (large red box) please report it to the author.", "color: red; font-weight: bold;");
 
+AllowedToPause = false;
+
 const cvs = new Canvas("EscapeCanvas", "Arial, FreeSans", "48", "#333399", 1000, 500);
 cvs.clear("purple");
-cvs.text("Setting up main menu...", 50, 50);
+cvs.loadingMsg();
 
 const MainMenuImage = new Image();
 MainMenuImage.src = "res/prerov/nastupiste.jpg";
@@ -28,9 +30,8 @@ let mainMenuButtons = [];
 
 function MainMenuSetup() {
 	cvs.loadingMsg();
-	AllowedToPause = false;
-	//translations
 	
+	//translations
 	TranslationLoad("EN", 0);
 	TranslationLoad("CZ", 1);
 	TranslationLoad("DE", 2);
@@ -85,7 +86,7 @@ function MainMenu() {
 	cvs.setnewfont("Arial, FreeSans", "16");
 	
 	cvs.text("(c) Martin/MegapolisPlayer, Jiri/KohoutGD 2023", 650, 472);
-	cvs.text("build date 18/05/2023, prerelease test version", 650, 492);
+	cvs.text("build date 19/05/2023, prerelease test version", 650, 492);
 	
 	cvs.setnewcolor("#333399");
 	cvs.setnewfont("Arial, FreeSans", "48");
@@ -143,7 +144,7 @@ function Intro() {
 	ap.playTrack(1);
 	
 	cvs.clear("black");
-    cvs.setnewcolor("#cc0000");
+    cvs.setnewcolor("#800000");
 	cvs.setnewfont("Arial, FreeSans", "48", "bold");
 	cvs.text(TranslatedText[SettingsValues.Language][19], 50, 50);
 	cvs.setnewcolor("white");

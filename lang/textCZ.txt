@@ -109,32 +109,50 @@ Kč
 Úkoly
 Začít
 Časový limit
-Čas:
+Čas
 Získáno
 
 Čišníkova minihra
 Klikej co nejrychleji na správné objednávky.
 Za každou objednávku dostaneš 30Kč.
+Za každou nedoručenou či špatně doručenou
+objednávku ztratíš 30Kč. Každou objednávku
+je potřeba doručit během 10 sekund po dokončení.
 
 Rybářská minihra
 Vylov co nejvíc ryb za minutu.
 Za každou rybu dostaneš 50Kč.
+Za boty dostaneš 5Kč, za pneumatiky 10Kč.
+Krabice mají vždy neznámý počet peněz nebo
+nejakýobjekt. 
 
 Minihra o čistění záchodů
 Vyčisti záchod.
 Dostaneš 250Kč.
+-
+-
+-
 
 Minihra - Překlad
 Převeď co nejvíce slov.
 Za každé slovo dostaneš 5Kč.
+-
+-
+-
 
 Minihra - Pokladník
-Zprocesuj co nejvíce produktov.
+Zprocesuj co nejvíce produktů.
 Za každý produkt dostaneš 5Kč.
+-
+-
+-
 
 Minihra - Obranná
 Obraň Studenku!
 Dostaneš jízdenku do Ostravy.
+-
+-
+-
 
 ...potřebuješ jízdenku, tak?
 Do Přerova to stojí 
@@ -158,4 +176,11 @@ stojí až
 Taky tohle město má taky dost kriminální historii,
 tak hodně štestí a odjeď so nejrychleji můžeš.
 Hodně štestí!
+
+Vítej v Němčicích nad Hanou. Tohle je dost malé město
+todo: add nnh dialogue
+-
+-
+-
+
 

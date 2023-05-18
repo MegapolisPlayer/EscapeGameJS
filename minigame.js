@@ -2,8 +2,16 @@
 
 let WaiterGameValues = {
 	IsIntroEnd: false,
-	IsOver: -1
+	IsOver: -1,
+	HowMuchCooking: 0,
+	AmountEarned: 0,
 }
+
+class TableManager {
+	constructor() {
+
+	}
+};
 
 function WaiterGame(canvas) {
 	WaiterGameValues.IsOver = -1;
@@ -28,7 +36,7 @@ function WaiterGameComponentIntro(canvas) {
 	canvas.setfontweight("bold");
 	canvas.text(TranslatedText[SettingsValues.Language][91] + " - " + TranslatedText[SettingsValues.Language][96], 50, 50);
 	canvas.resetfontweight();
-	canvas.textml(TranslationGetMultipleLines(SettingsValues.Language, 97, 2), 50, 100);
+	canvas.textml(TranslationGetMultipleLines(SettingsValues.Language, 97, 5), 50, 100);
 	canvas.setnewcolor("#333399");
 	canvas.context.textAlign = "right";
 	canvas.text(TranslatedText[SettingsValues.Language][92], 930, 490);
@@ -37,31 +45,39 @@ function WaiterGameComponentIntro(canvas) {
 	canvas.setnewcolor("#000000");
 }
 
-//table count: easy - 12, medium - 18, hard - 24
+//table count: easy - 16, medium - 24, hard - 32
 
 function WaiterGameComponentMain(canvas) {
 	canvas.clear("#bd9d80");
-	timelimitStart(180);
+	let amountToRender = ((SettingsValues.Difficulty === 3) ? 32 : (SettingsValues.Difficulty === 1) ? 16 : 24);
+	let tableButtons = [];
+	for(let Id = 0; Id < amountToRender; Id++) {
+		tableButtons.push(new TableManager()); //todo: make TableManager in minigame.js
+	}
+	timelimitStart(150); //2:30
 	let timerInterval = window.setInterval((canvas) => {
 		canvas.clear("#bd9d80");
-		canvas.setnewcolor("#5c2f06"); //table colour			
-		for(let Id = 0; Id < 16; Id++) {
-			canvas.box(50 + (250 * Math.floor(Id / 4)), 50 + ((Id % 4) * 80), 60, 60);	
+		canvas.setnewcolor("#5c2f06"); //table colour
+		for(let Id = 0; Id < amountToRender; Id++) {
+			canvas.box(50 + ((250/SettingsValues.Difficulty) * Math.floor(Id / 4)), 50 + ((Id % 4) * 80), 60, 60);
 		}
 		canvas.setnewcolor("#555555");
 		canvas.box(0, canvas.canvas.height * 0.8, canvas.canvas.width, canvas.canvas.height * 0.2);
 		canvas.setnewcolor("#dddddd");
 		canvas.box(0, canvas.canvas.height * 0.8, canvas.canvas.height * 0.2, canvas.canvas.height * 0.2);
-		canvas.text("N", 0, canvas.canvas.height * 0.8);
+		canvas.setnewcolor("#800000");
+		canvas.context.textAlign = "center";
+		canvas.text(WaiterGameValues.HowMuchCooking, canvas.canvas.height * 0.1, canvas.canvas.height * 0.9);
+		canvas.context.textAlign = "left";
 		canvas.setnewcolor("#000000");
 		timelimitRender(canvas);
-		if(TimerlimitValues.OverallTime  >= 180) {
+		if(timelimitIsDone()) {
 			clearInterval(timerInterval);
 			WaiterGameValues.IsOver = 1;
 			return;
 		}
 	}, 100, canvas);
-	addMoney(30);
+	addMoney(WaiterGameValues.AmountEarned); //15Kc per order!
 }
 function WaiterGameComponentSummary(canvas) {
 
