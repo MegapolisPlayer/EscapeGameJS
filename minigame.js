@@ -7,9 +7,52 @@ let WaiterGameValues = {
 	AmountEarned: 0,
 }
 
-class TableManager {
-	constructor() {
+let TableImages = [];
+for(let Id = 0; Id < 3; Id++) {
+	TableImages.push(new Image());
+}
 
+TableImages[0].src = "res/table_empty.png";
+TableImages[1].src = "res/table_order.png";
+TableImages[2].src = "res/table_waiting.png";
+TableImages[3].src = "res/table_warning.png";
+
+//orders, etc
+class TableManager {
+	constructor(xoffset, yoffset, width, height, canvasobj) {
+		this.button = document.createElement("button"); //new button, no need to del event listeners
+	    
+		this.width = width;
+		this.height = height;
+		this.xoffset = xoffset;
+		this.yoffset = yoffset;
+		this.status = 0; //0 - std, 1 - to order, 2 - warning
+		
+		this.button.setAttribute("class", "CanvasInputElement MinigameElement TableButton Invisible");
+		this.button.style.setProperty("width", this.width+"px");
+		this.button.style.setProperty("height", this.height+"px");
+		this.button.style.setProperty("left", this.xoffset+"px");
+		this.button.style.setProperty("top", this.yoffset+"px");
+	}
+	draw(id, canvas) {	
+		canvas.image(TableImages[id], this.xoffset, this.yoffset);
+	}
+	append(canvas) {
+		
+	}
+	remove() {
+			
+	}
+	setstatus(status) {
+		this.status = status;
+	}
+	update() {
+		if(randomNumber(100) === 50) {
+			//if normal - order food
+			//if ordered - wait
+			//if waiting - warning
+			//if warning time passed - remove money
+		}
 	}
 };
 

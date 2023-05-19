@@ -46,6 +46,12 @@ a {
     z-index: -1;
 }
 
+.CanvasInputElement {
+	font-family: Arial, FreeSans;
+    position: absolute;
+	text-align: center;
+}
+
 .CanvasButton {
 	font-family: Arial, FreeSans;
 	
@@ -54,7 +60,6 @@ a {
     background-color: white;
     color: #333399;
     
-    text-align: center;
     padding: 10px;
     
     border-style: solid;
@@ -67,15 +72,13 @@ a {
 	color: black;
 }
 
-.CanvasArrow {
-	font-family: Arial, FreeSans;
-	
-    background: transparent;
+.CanvasArrow {}
+
+.Invisible {
+	background: transparent;
     position: absolute;
-    text-align: center;
     padding: 10px;
     border-width: 0px;
-    border-color: #000000;
 }
 
 

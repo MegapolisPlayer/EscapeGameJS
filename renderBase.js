@@ -203,7 +203,7 @@ class Arrow {
 			return;
 		}
 		
-		this.button.setAttribute("class", "CanvasArrow CanvasInputElement");
+		this.button.setAttribute("class", "CanvasArrow CanvasInputElement Invisible");
 		this.button.style.setProperty("width", this.width+"px");
 		this.button.style.setProperty("height", this.height+"px");
 		this.button.style.setProperty("left", this.xoffset+"px");
@@ -293,7 +293,9 @@ class AudioPlayer {
 		this.audioTracks.push(new Audio("res/music/RoyalCoupling.mp3"));          //studenka
 		this.audioTracks.push(new Audio("res/music/TheParting.mp3"));             //ostrava
 		this.audioTracks.push(new Audio("res/music/StartingOutWaltzVivace.mp3")); //credits, ending
-		for(let Id = 0; Id < 10; Id++) {
+		this.audioTracks.push(new Audio("res/music/AlmostBliss.mp3"));            //waiter minigame
+		this.audioTracks.push(new Audio("res/music/PorchSwingDays.mp3"));         //fishing
+		for(let Id = 0; Id < 12; Id++) {
 			this.audioTracks[Id].loop = true;
 		}
 		this.allowed = false;
