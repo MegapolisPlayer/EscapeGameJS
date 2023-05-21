@@ -9,7 +9,7 @@ class Character {
 	}
 	draw(xoffset, yoffset, scale, canvasobj) {
 		canvasobj.image(this.image, xoffset, yoffset, this.image.width * scale, this.image.height * scale);
-		this.button.setAttribute("class", "CanvasArrow CanvasInputElement");  //canvas arrow -> transparency
+		this.button.setAttribute("class", "CanvasArrow CanvasInputElement Invisible");
 		this.button.style.setProperty("width", (this.image.width * scale)+"px");
 		this.button.style.setProperty("height", (this.image.height * scale)+"px");
 		this.button.style.setProperty("left", xoffset+"px");

@@ -45,11 +45,19 @@ function timelimitUpdate() {
 	TimerlimitValues.OverallTime = Math.floor(Math.abs(Number(TimerlimitValues.CurrentTime) - Number(TimerlimitValues.StartTime)) / 1000);
 }
 function timelimitToString() {
+	timelimitUpdate();
 	return String(
 		Number(Math.floor((TimerlimitValues.TimeLimit - TimerlimitValues.OverallTime) / 60))
 		+ ":" + String("00" + 
 		Number((TimerlimitValues.TimeLimit - TimerlimitValues.OverallTime) % 60)
 		).slice(-2));
+}
+function timelimitToNumber() {
+	timelimitUpdate();
+	return Number(
+			Math.floor((TimerlimitValues.TimeLimit - TimerlimitValues.OverallTime) / 60)
+			+ ":" + String("00" + Number((TimerlimitValues.TimeLimit - TimerlimitValues.OverallTime) % 60)).slice(-2)
+		);
 }
 function timelimitRender(canvasobj) {
 	timelimitUpdate();

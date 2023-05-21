@@ -141,7 +141,7 @@ function SetStateFile(filecontent, canvas) {
 	if(Data[0] !== "eors1") {
 		console.error("SetStateFile: Incompatible save loaded! (Version 1 required)");
 	}	
-	if(Data.length != 11) {
+	if(Data.length != 13) {
 		console.error("SetStateFile: Invalid save loaded!");
 	}
 	
@@ -158,6 +158,8 @@ function SetStateFile(filecontent, canvas) {
 	CreditsValues.gotAchievementWaiter = Number(Data[8]);
 	CreditsValues.gotAchievementHelp =   Number(Data[9]);
 	CreditsValues.gotAchievementSus =    Number(Data[10]);
+	TimerValues.StartTime =              Number(Data[11]);
+	TimerValues.OverallPauseTime =       Number(Data[12]);
 	UpdateSettingsValues();
 
 	console.log("Data split!");
@@ -198,6 +200,8 @@ function SetStateFile(filecontent, canvas) {
 }
 
 function Save() {
+	timerEnd(); //finishes counting time
+	
 	let finalizedSave = "eors1 ";
 	finalizedSave+=Number(SettingsValues.Language);
 	finalizedSave+=" ";
@@ -218,6 +222,10 @@ function Save() {
 	finalizedSave+=Number(CreditsValues.gotAchievementHelp);
 	finalizedSave+=" ";
 	finalizedSave+=Number(CreditsValues.gotAchievementSus);
+	finalizedSave+=" ";
+	finalizedSave+=Number(TimerValues.StartTime);
+	finalizedSave+=" ";
+	finalizedSave+=Number(TimerValues.OverallPauseTime);
 	
 	let hiddenAddrElem = document.createElement('a');
     hiddenAddrElem.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(finalizedSave));

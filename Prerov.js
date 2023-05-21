@@ -57,7 +57,7 @@ function Prerov(canvas) {
 	FirstDialogue.begin(canvas);
 	FirstDialogue.makeBubble(0, TranslationGetMultipleLines(SettingsValues.Language, 143, 2));
 	FirstDialogue.makeBubble(1, TranslationGetMultipleLines(SettingsValues.Language, 145, 2));
-	FirstDialogue.makeBubble(2, TranslationGetMultipleLines(SettingsValues.Language, 147, 2).slice(0, -1) + " " + Math.floor(1080 * SettingsValues.MoneyCostIncrease) + " " + TranslatedText[SettingsValues.Language][90]);
+	FirstDialogue.makeBubble(2, TranslationGetMultipleLines(SettingsValues.Language, 147, 2).slice(0, -1) + " " + Math.floor(1220 * SettingsValues.MoneyCostIncrease) + " " + TranslatedText[SettingsValues.Language][90]);
 	FirstDialogue.makeBubble(3, TranslationGetMultipleLines(SettingsValues.Language, 149, 2));
 	FirstDialogue.makeBubble(4, TranslatedText[SettingsValues.Language][151]);	
 	

@@ -114,20 +114,20 @@ Earned
 
 Waiter minigame
 Click on the correct orders as fast as possible.
-For every order you will get 15 CZK.
-For every undelivered or incorrectly delivered
-order you will lose 15 CZK. All orders must be
-delivered in 10 seconds after they are finished.
+For every correct order you will get 15 CZK,
+otherwise you will get -15 CZK. Click on the
+tables when they show an order and click on the
+order and then the table to deliver it.
 
 Fisher minigame
-Catch as much fish as possible.
-For every fish you catch you will get 50CZK.
--
--
--
+Catch as much fish as possible. For every fish 
+you catch you will get 50CZK. For every shoe you
+will get 5CZK, for a tire 10CZK. Boxes always
+have an unspecified amount of money or any
+of the aforementioned objects (excl. fish).
 
-Toilets cleaning minigame
-Just clean the toilets by swiping.
+Cleaning minigame
+Just clean objects by swiping.
 You will get 250CZK.
 -
 -
@@ -177,8 +177,8 @@ Also the city has quite a criminal history,
 so good luck and leave as soon as possible.
 Good luck!
 
-Welcome to Němčice nad Hanou. This is a small town but
-todo: add nnh dialogue
+Welcome to Nezamyslice. This is a small town but
+todo: add nzm dialogue
 -
 -
 -

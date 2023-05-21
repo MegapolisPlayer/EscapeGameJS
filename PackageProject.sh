@@ -21,7 +21,7 @@ cat "minigame.js" >> "package.js"
 #location files
 cat "HraniceNaMorave.js" >> "package.js"
 cat "Prerov.js" >> "package.js"
-cat "NemciceNadHanou.js" >> "package.js"
+cat "Nezamyslice.js" >> "package.js"
 cat "Prostejov.js" >> "package.js"
 cat "Olomouc.js" >> "package.js"
 cat "Studenka.js" >> "package.js"

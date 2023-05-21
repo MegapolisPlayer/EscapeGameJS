@@ -2,7 +2,7 @@
 //three-letter city codes:
 //HNM - Hranice Na Morave, ID 1
 //PRE - Prerov, ID 2
-//NEM - Nemcice nad Hanou, ID 3
+//NZM - Nezamyslice, ID 3
 //PRO - Prostejov, ID 4
 //OLO - Olomouc, ID 5
 //STU - Studenka, ID 6
@@ -45,9 +45,16 @@ function MainMenuSetup() {
 		}
 	});	
 	
+	//checks if all images loaded
 	let thisInterval = window.setInterval(() => {
-		console.log(AmountTranslations + " " + TicketImagesLoaded + " " + AchievementImagesLoaded);
-		if(AmountTranslations === 4 && TicketImagesLoaded === 2 && AchievementImagesLoaded === 5) {
+		if(
+			AmountTranslations === 4 && 
+			TicketImagesLoaded === 2 &&
+			AchievementImagesLoaded === 5 &&
+			ArrowImagesLoaded === 9 &&
+			TableImagesLoaded === 5 &&
+			OrderImagesLoaded === 2
+		) {
 			clearInterval(thisInterval);
 			MainMenu();
 		}
@@ -86,7 +93,7 @@ function MainMenu() {
 	cvs.setnewfont("Arial, FreeSans", "16");
 	
 	cvs.text("(c) Martin/MegapolisPlayer, Jiri/KohoutGD 2023", 650, 472);
-	cvs.text("build date 19/05/2023, prerelease test version", 650, 492);
+	cvs.text("build date 21/05/2023, prerelease test version", 650, 492);
 	
 	cvs.setnewcolor("#333399");
 	cvs.setnewfont("Arial, FreeSans", "48");

@@ -113,21 +113,21 @@ Začít
 Získáno
 
 Čišníkova minihra
-Klikej co nejrychleji na správné objednávky.
-Za každou objednávku dostaneš 30Kč.
-Za každou nedoručenou či špatně doručenou
-objednávku ztratíš 30Kč. Každou objednávku
-je potřeba doručit během 10 sekund po dokončení.
+Dostav co nejrychleji na správné objednávky. Za
+každou správnou objednávku dostaneš 15Kč,
+jinak dostaneš -15Kč. Kilkni na stůl aby jsi
+přijal objednávku a klikní na objednávku a
+potom na stůl aby si ji dostavil.
 
 Rybářská minihra
 Vylov co nejvíc ryb za minutu.
 Za každou rybu dostaneš 50Kč.
 Za boty dostaneš 5Kč, za pneumatiky 10Kč.
 Krabice mají vždy neznámý počet peněz nebo
-nejakýobjekt. 
+nejaký objekt (kromě ryb).
 
-Minihra o čistění záchodů
-Vyčisti záchod.
+Minihra o čistění
+Prostě čisti.
 Dostaneš 250Kč.
 -
 -
@@ -177,10 +177,8 @@ Taky tohle město má taky dost kriminální historii,
 tak hodně štestí a odjeď so nejrychleji můžeš.
 Hodně štestí!
 
-Vítej v Němčicích nad Hanou. Tohle je dost malé město
-todo: add nnh dialogue
+Vítej v Nezamyslicích. Tohle je dost malé město
+todo: add nzm dialogue
 -
 -
 -
-
-

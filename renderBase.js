@@ -33,6 +33,14 @@ class Canvas {
 	resetfontweight() {
 		this.context.font = this.context.font.substring(this.context.font.indexOf(" ") + 1);
 	}
+	//sets the text alignment
+	setalign(align) {
+		this.context.textAlign = align;
+	}
+	//resets the text alignment
+	resetalign(align) {
+		this.context.textAlign = "left";
+	}
 	//sets new border (color only is enough)
     setnewborder(newborder) {
 		this.border = newborder;
@@ -177,8 +185,10 @@ const ArrowDirections = {
 }
 
 const ArrowImages = [];
-for(let ArrowImagesId = 0; ArrowImagesId < 9; ArrowImagesId++) {
+let ArrowImagesLoaded = 0;
+for(let Id = 0; Id < 9; Id++) {
 	ArrowImages.push(new Image());
+	ArrowImages[Id].onload = () => { ArrowImagesLoaded++; };
 }
 
 //arrow images
