@@ -89,6 +89,20 @@ class Canvas {
     image(image, xoffset, yoffset, dwidth, dheight) {
         this.context.drawImage(image, xoffset, yoffset, dwidth, dheight);
     }
+	//draws a line
+	line(fromx, fromy, tox, toy, linewidth, color = "null") {
+		canvas.context.beginPath();
+		canvas.context.moveTo(fromx, fromy);
+		canvas.context.lineTo(tox, toy);
+		if(color !== "null") {
+			canvas.context.strokeStyle = color;
+		}
+		else {
+			canvas.context.strokeStyle = this.color;
+		}
+		canvas.context.lineWidth = linewidth;
+		canvas.context.stroke();
+	}
     //clears the canvas
     clear(newcolor = "empty") {
 		if(newcolor === "empty") {

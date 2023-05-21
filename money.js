@@ -1,9 +1,7 @@
 let MoneyAmount = 0;
 
-//todo: red if in debt, if more than certain amount of debt - lose the game instantly
-
 function drawMoneyCount(canvasobj) {
-	if(MoneyAmount < -100) {
+	if(MoneyAmount < -250) {
 		//lose instantly
 		
 	}

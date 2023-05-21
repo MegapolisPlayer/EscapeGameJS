@@ -5,7 +5,8 @@ let WaiterGameValues = {
 	IsOver: -1,
 	HowMuchCooking: 0,
 	AmountEarned: 0,
-	OrdersList: []
+	OrdersList: [],
+	IsOrderSelected: -1,
 }
 
 let TableImages = [];
@@ -62,16 +63,35 @@ class TableManager {
 						orderFrom: this.tableno,
 						timeAt: (timelimitToNumber() * 10),             //seconds left converted to ticks (=ticks left) at time of starting
 						forHowLongCooking: 0,                           //ticks cooking, when reaches
-						forHowLongShouldCook: (80 + randomNumber(20)),  //ticks for how long to cook between 8-10s (max waiting time 13s)
+						forHowLongShouldCook: (70 + randomNumber(20)),  //ticks for how long to cook between 7-9s (max waiting time 13s)
 						isCooked: false,                                //if has finished cooking
+						buttonObject: document.createElement("button"), //button element
+						doesHaveButton: false,                          //if has button in DOM
 					});
+					let tempId = WaiterGameValues.OrdersList.length - 1;
+					WaiterGameValues.OrdersList[tempId].buttonObject.setAttribute("class", "CanvasInputElement MinigameElement TableButton Invisible");
+					WaiterGameValues.OrdersList[tempId].buttonObject.style.setProperty("width", this.canvas_info.canvas.height*0.2+"px");
+					WaiterGameValues.OrdersList[tempId].buttonObject.style.setProperty("height", this.canvas_info.canvas.height*0.2+"px");
+					WaiterGameValues.OrdersList[tempId].buttonObject.style.setProperty("top", canvas.canvas.height * 0.8+"px");
 					break;
 				case 2:
 				case 3:
 					//waiting - recieved
-					this.reset();
-					WaiterGameValues.AmountEarned += 15;
-					this.counter = 0;
+					if(WaiterGameValues.IsOrderSelected === this.tableno) {
+						this.reset();
+						WaiterGameValues.AmountEarned += 15;
+						this.remove();
+						this.counter = 0;
+						//remove from array
+						WaiterGameValues.OrdersList = WaiterGameValues.OrdersList.filter((order) => {
+							if(order.orderFrom === this.tableno) {
+								WaiterGameValues.IsOrderSelected = -1;
+								order.buttonObject.remove();
+								return false;
+							}
+							return true;
+						});
+					}
 					break;
 			}
 		});		
@@ -99,8 +119,8 @@ class TableManager {
 		}
 		switch(this.status) {
 			case 0:
-				//not ordered anything, order in 25s max
-				if(randomNumber(250) === 100) {
+				//not ordered anything, order in 30s max
+				if(randomNumber(300) === 100) {
 					this.status = 1;
 					this.append();
 				}
@@ -109,6 +129,7 @@ class TableManager {
 				if(this.counter >= 75) { //7.5s
 					//didnt click on order fast enough
 					WaiterGameValues.AmountEarned -= 15;
+					this.remove();
 					this.status = 4;
 					this.counter = 0;
 				}
@@ -120,12 +141,21 @@ class TableManager {
 				}
 				break;
 			case 3:
-				if(this.counter >= 30) { //3s
+				if(this.counter >= 50) { //5s
 					//fail
 					WaiterGameValues.AmountEarned -= 15;
 					this.remove();
 					this.status = 4;
 					this.counter = 0;
+					//remove from array
+					WaiterGameValues.OrdersList = WaiterGameValues.OrdersList.filter((order) => {
+						if(order.orderFrom === this.tableno) {
+							WaiterGameValues.IsOrderSelected = -1;
+							order.buttonObject.remove();
+							return false;
+						}
+						return true;
+					});
 				}
 				break;
 			case 4:
@@ -141,6 +171,8 @@ class TableManager {
 	}
 };
 
+//waiter game - hranice, prostejov
+
 function WaiterGame(canvas) {
 	WaiterGameValues.IsOver = -1;
 	console.log("waiter game");
@@ -154,6 +186,7 @@ function WaiterGame(canvas) {
 }
 
 function WaiterGameComponentIntro(canvas) {
+	ap.playTrack(10);
 	canvas.clear("#dddddd");
 	let ArrowEnd = new Arrow(950, 450, 50, 50, ArrowDirections.Right, canvas);
 	ArrowEnd.button.addEventListener("click", (event) => {
@@ -177,6 +210,8 @@ function WaiterGameComponentIntro(canvas) {
 
 function WaiterGameComponentMain(canvas) {
 	canvas.clear("#bd9d80");
+
+	//variables and setup
 	let amountToRender = ((SettingsValues.Difficulty === 3) ? 32 : (SettingsValues.Difficulty === 1) ? 16 : 24);
 	let tables = [];
 	for(let Id = 0; Id < amountToRender; Id++) {
@@ -185,46 +220,79 @@ function WaiterGameComponentMain(canvas) {
 			50 + ((Id % 4) * 80), 
 			60, 60, canvas, Id));
 	}
-	console.log(tables);
-	timelimitStart(80); //1:20 min, you should get around 900-1000 depending on luck, kinda difficult but ok
+	let orderFLCounter = 0;
+
+	//main game
+	timelimitStart(180); //3:00 min, you should get around 900-1000 depending on luck, kinda difficult but ok
 	let timerInterval = window.setInterval((canvas) => {
+		console.log(WaiterGameValues.IsOrderSelected);
 		canvas.clear("#bd9d80");
+		//render tables
 		for(let Id = 0; Id < amountToRender; Id++) {
 			tables[Id].update();
 			tables[Id].draw();
 		}
+		//background
 		canvas.setnewcolor("#555555");
 		canvas.box(0, canvas.canvas.height * 0.8, canvas.canvas.width, canvas.canvas.height * 0.2);
 		canvas.setnewcolor("#dddddd");
 		canvas.box(0, canvas.canvas.height * 0.8, canvas.canvas.height * 0.2, canvas.canvas.height * 0.2);
 		canvas.setnewcolor("#800000");
-		canvas.setalign("center");
+		canvas.resetalign();
 		canvas.text(WaiterGameValues.HowMuchCooking, canvas.canvas.height * 0.1, canvas.canvas.height * 0.9);
 		canvas.setalign("left");
+		canvas.setnewcolor("#000000");
+
+		let lastOrderListSize = 0;
+		//process and render 
 		for(let Id = 0; Id < WaiterGameValues.OrdersList.length; Id++) {
-			if(!isCooked) {
+			if(!WaiterGameValues.OrdersList[Id].isCooked) {
 				WaiterGameValues.OrdersList[Id].forHowLongCooking++;
 				if(WaiterGameValues.OrdersList[Id].forHowLongCooking === WaiterGameValues.OrdersList[Id].forHowLongShouldCook) {
+					WaiterGameValues.HowMuchCooking--;
 					WaiterGameValues.OrdersList[Id].isCooked = true;
-					//add button object, selection and click on table
 				}
 			}
 			else {
-				canvas.image(OrderImages[0], canvas.canvas.width * 0.25 + (Id * canvas.canvas.width * 0.2), canvas.canvas.height * 0.2, canvas.canvas.width * 0.2, canvas.canvas.height * 0.2);
+				WaiterGameValues.OrdersList[Id].buttonObject.style.setProperty("left", String(Number(canvas.canvas.height * 0.2 + 25 + (orderFLCounter * canvas.canvas.height * 0.2)))+"px");
+				
+				//throws non-fatal error "WaiterGameValues.OrdersList[Id] is undefined" and does nothing, this is ok since the game works!
+				try {
+					WaiterGameValues.OrdersList[Id].buttonObject.removeEventListener("click", (event) => {
+						try {
+							WaiterGameValues.IsOrderSelected = WaiterGameValues.OrdersList[Id].orderFrom;
+						} catch(error) {}
+					});
+					WaiterGameValues.OrdersList[Id].buttonObject.addEventListener("click", (event) => {
+						try {
+							WaiterGameValues.IsOrderSelected = WaiterGameValues.OrdersList[Id].orderFrom; //set to which table's order (if -1 none)
+						} catch(error) { WaiterGameValues.IsOrderSelected = -1; }
+					});
+				}
+				catch(error) {}
+
+				if(WaiterGameValues.OrdersList[Id].doesHaveButton === false) {
+					canvas.canvas.parentElement.appendChild(WaiterGameValues.OrdersList[Id].buttonObject);
+					WaiterGameValues.OrdersList[Id].doesHaveButton = true;
+				}
+				canvas.image(OrderImages[(WaiterGameValues.IsOrderSelected === WaiterGameValues.OrdersList[Id].orderFrom) ? 1 : 0], canvas.canvas.height * 0.2 + 25 + (orderFLCounter * canvas.canvas.height * 0.2), canvas.canvas.height * 0.8, canvas.canvas.height * 0.2, canvas.canvas.height * 0.2);
+				canvas.resetalign();
+				canvas.text(WaiterGameValues.OrdersList[Id].orderFrom, canvas.canvas.height * 0.3 + 25 + (orderFLCounter * canvas.canvas.height * 0.2), canvas.canvas.height * 0.9 + 16);
+				canvas.setalign("left");
+				orderFLCounter++;
 			}
 		}
-		canvas.setnewcolor("#000000");
+		orderFLCounter = 0;
+		//time stuff
 		timelimitRender(canvas);
 		if(timelimitIsDone()) {
 			clearInterval(timerInterval);
 			addMoney(WaiterGameValues.AmountEarned); //15Kc per order!
+			deleteCanvasInputElems(canvas);
 			WaiterGameValues.IsOver = 1;
 			return;
 		}
 	}, 100, canvas);
-}
-function WaiterGameComponentSummary(canvas) {
-
 }
 
 function WaiterGameReset() {
@@ -233,6 +301,7 @@ function WaiterGameReset() {
 	WaiterGameValues.HowMuchCooking = 0;
 	WaiterGameValues.AmountEarned = 0;
 	WaiterGameValues.OrdersList = [];
+	WaiterGameValues.IsOrderSelected = -1;
 }
 
 //le fish game - becva in prerov
@@ -240,7 +309,8 @@ function WaiterGameReset() {
 let FishGameValues = {
 	IsIntroEnd: false,
 	IsOver: -1,
-	LeFishCaught: 0
+	AmountEarned: 0,
+	//add more stuff, e.g. angle
 }
 
 function FishGame(canvas) {
@@ -258,6 +328,7 @@ function FishGame(canvas) {
 }
 
 function FishGameComponentIntro(canvas) {
+	ap.playTrack(11);
 	canvas.clear("#03ddff");
 	canvas.setnewcolor("#000000");
 	canvas.setfontweight("bold");
@@ -270,7 +341,7 @@ function FishGameComponentIntro(canvas) {
 		FishGameValues.IsIntroEnd = true;
 	}, { once: true });
 	canvas.setnewcolor("#333399");
-	canvas.setalign = "right";
+	canvas.setalign("right");
 	canvas.text(TranslatedText[SettingsValues.Language][92], 930, 490);
 	canvas.setalign("left");
 	ArrowEnd.draw(canvas);
@@ -278,17 +349,28 @@ function FishGameComponentIntro(canvas) {
 }
 function FishGameComponentMain(canvas) {
 	canvas.clear("#03ddff");
-	addMoney(50);
-	FishGameValues.IsOver = 1;
-}
-function FishGameComponentSummary(canvas) {
-
+	//main game
+	timelimitStart(60); //1:00 min
+	let timerInterval = window.setInterval((canvas) => {
+		canvas.clear("#03ddff");
+		//use trigoniometry to calculate tox, toy - todo: ideas in school
+		canvas.line(500, 0, 100, 100, 15, "#dddddd") 
+		//time stuff
+		timelimitRender(canvas);
+		if(timelimitIsDone()) {
+			clearInterval(timerInterval);
+			addMoney(FishGameValues.AmountEarned); //50Kc fish, 10Kc pneu, 5Kc boots
+			deleteCanvasInputElems(canvas);
+			FishGameValues.IsOver = 1;
+			return;
+		}
+	}, 100, canvas);
 }
 
 function FishGameReset() {
 	FishGameValues.IsIntroEnd = false;
 	FishGameValues.IsOver = -1;
-	FishGameValues.LeFishCaught = 0;
+	FishGameValues.AmountEarned = 0;
 }
 
 //ticket sale minigame - nezamyslice
@@ -310,9 +392,6 @@ function TicketSaleGameComponentIntro(canvas) {
 } 
 function TicketSaleGameComponentMain(canvas) {
 	canvas.clear("#03ddff");
-}
-function TicketSaleGameComponentSummary(canvas) {
-
 }
 
 function TicketSaleGameReset() {
@@ -337,15 +416,12 @@ function DialectTranslationGameComponentIntro(canvas) {
 function DialectTranslationGameComponentMain(canvas) {
 	canvas.clear("#03ddff");
 }
-function DialectTranslationGameComponentSummary(canvas) {
-
-}
 
 function DialectTranslationGameReset() {
 	WaiterGameValues.IsOver = -1;
 }
 
-//cleaning
+//cleaning the beches on the square - prostejov
 
 let CleaningGameValues = {
 	IsOver: -1
@@ -362,15 +438,12 @@ function CleaningGameComponentIntro(canvas) {
 function CleaningGameComponentMain(canvas) {
 
 }
-function CleaningGameComponentSummary(canvas) {
-
-}
 
 function CleaningGameReset(canvas) {
 	CleaningGameValues.IsOver = -1;
 }
 
-//cashier
+//cashier - prostejov, olomouc
 
 let CashierGameValues = {
 	IsIntroEnd: false,
@@ -388,15 +461,12 @@ function CashierGameComponentIntro(canvas) {
 function CashierGameComponentMain(canvas) {
 	
 }
-function CashierGameComponentSummary(canvas) {
-	
-}
 
 function CashierGameReset() {
 	CashierGameValues.IsOver = -1;
 }
 
-//cheese making
+//cheese making - olomouc
 
 let CheeseGameValues = {
 	IsIntroEnd: false,
@@ -419,7 +489,7 @@ function CheeseGameReset() {
 	CheeseGameValues.IsOver = -1;
 }
 
-//defense
+//defense - studenka
 
 let DefenseGameValues = {
 	IsIntroEnd: false,
@@ -441,3 +511,5 @@ function DefenseGameComponentMain(canvas) {
 function DefenseGameReset() {
 	DefenseGameValues.IsOver = -1;
 }
+
+//maze game in ostrava integrated into Ostrava.js

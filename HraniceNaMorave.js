@@ -230,7 +230,7 @@ function HraniceNaMoraveNastupiste(canvas) {
 		else {
 			let dialogue = new Dialogue();
 			dialogue.begin(canvas);
-			dialogue.makeBubble(0, TranslatedText[SettingsValues.Language][141]);
+			dialogue.makeBubble(0, TranslatedText[SettingsValues.Language][147]);
 			let thisInterval = window.setInterval((dialogue, canvas) => {
 				if(dialogue.counter === 1) {
 					clearInterval(thisInterval);
@@ -323,6 +323,7 @@ function HraniceNaMoraveRestauraceJob(canvas) {
 			WaiterGameReset();
 			PauseButton.append(canvas);
 			AllowedToPause = true;
+			ap.playTrack(2);
 			HraniceNaMoraveRestaurace(canvas);
 		}
 	}, 100, dialogue, canvas);
@@ -333,9 +334,9 @@ function HraniceNaMoraveNastupisteJob(canvas) {
 	AllowedToPause = false;
 	let dialogue = new Dialogue();
 	dialogue.begin(canvas);
-	dialogue.makeBubble(0, TranslationGetMultipleLines(SettingsValues.Language, 132, 2).slice(0, -1) + " " + Math.floor(650 * SettingsValues.MoneyCostIncrease) + " " + TranslatedText[SettingsValues.Language][90]);
-	dialogue.makeBubble(1, TranslationGetMultipleLines(SettingsValues.Language, 134, 2));
-	dialogue.makeBubble(2, TranslatedText[SettingsValues.Language][136]);
+	dialogue.makeBubble(0, TranslationGetMultipleLines(SettingsValues.Language, 138, 2).slice(0, -1) + " " + Math.floor(650 * SettingsValues.MoneyCostIncrease) + " " + TranslatedText[SettingsValues.Language][90]);
+	dialogue.makeBubble(1, TranslationGetMultipleLines(SettingsValues.Language, 140, 2));
+	dialogue.makeBubble(2, TranslatedText[SettingsValues.Language][142]);
 	dialogue.makeChoice(3);
 	
 	let dWaitInterval = window.setInterval((dialogue) => {
@@ -344,22 +345,22 @@ function HraniceNaMoraveNastupisteJob(canvas) {
 			if(dialogue.choice_result === 1) {
 				if(MoneyAmount >= Math.floor(650 * SettingsValues.MoneyCostIncrease)) {
 					if(doesHaveTicket) {
-						dialogue.makeBubble(4, TranslatedText[SettingsValues.Language][142]);
+						dialogue.makeBubble(4, TranslatedText[SettingsValues.Language][148]);
 						return;
 					}
 					removeMoney(Math.floor(650 * SettingsValues.MoneyCostIncrease));
 					doesHaveTicket = true;
-					dialogue.makeBubble(4, TranslatedText[SettingsValues.Language][137]);
+					dialogue.makeBubble(4, TranslatedText[SettingsValues.Language][143]);
 					return;
 				}
 				else {
-					dialogue.makeBubble(4, TranslationGetMultipleLines(SettingsValues.Language, 138, 2));
+					dialogue.makeBubble(4, TranslationGetMultipleLines(SettingsValues.Language, 144, 2));
 					return;
 				}
 				return;
 			}
 			else {
-				dialogue.makeBubble(4, TranslatedText[SettingsValues.Language][140]);
+				dialogue.makeBubble(4, TranslatedText[SettingsValues.Language][146]);
 				return;
 			}
 		}
@@ -373,4 +374,8 @@ function HraniceNaMoraveNastupisteJob(canvas) {
 			HraniceNaMoraveNastupiste(canvas);
 		}
 	}, 100, dialogue, canvas);
+}
+
+function HraniceNaMoraveBoard(canvas) {
+	console.log("hnm board");
 }

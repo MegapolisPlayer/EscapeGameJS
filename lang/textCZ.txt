@@ -119,12 +119,16 @@ jinak dostaneš -15Kč. Kilkni na stůl aby jsi
 přijal objednávku a klikní na objednávku a
 potom na stůl aby si ji dostavil.
 
+Objednávka vybrána
+
 Rybářská minihra
 Vylov co nejvíc ryb za minutu.
 Za každou rybu dostaneš 50Kč.
 Za boty dostaneš 5Kč, za pneumatiky 10Kč.
 Krabice mají vždy neznámý počet peněz nebo
 nejaký objekt (kromě ryb).
+
+Současně
 
 Minihra o čistění
 Prostě čisti.
@@ -133,12 +137,16 @@ Dostaneš 250Kč.
 -
 -
 
+Vyčistěno
+
 Minihra - Překlad
 Převeď co nejvíce slov.
 Za každé slovo dostaneš 5Kč.
 -
 -
 -
+
+Přeloženo
 
 Minihra - Pokladník
 Zprocesuj co nejvíce produktů.
@@ -147,12 +155,16 @@ Za každý produkt dostaneš 5Kč.
 -
 -
 
+Naskenováno
+
 Minihra - Obranná
 Obraň Studenku!
 Dostaneš jízdenku do Ostravy.
 -
 -
 -
+
+Zbývajicích vln
 
 ...potřebuješ jízdenku, tak?
 Do Přerova to stojí 
@@ -171,14 +183,22 @@ Vítej ve Přerově. Bohužel je trať do Olomouce
 uzavřena. Snad to SŽDC fakt dají dohromady.
 Budeš muset jet přes hodně měst aby jsi
 ses do Olomouce dostal/a...
-Kvůli inflaci jízdenky do Němčic nad Hanou
+Kvůli inflaci jízdenky do Nezamyslic
 stojí až 
 Taky tohle město má taky dost kriminální historii,
 tak hodně štestí a odjeď so nejrychleji můžeš.
 Hodně štestí!
 
 Vítej v Nezamyslicích. Tohle je dost malé město
-todo: add nzm dialogue
+todo: add nzm dialogue - textEN
 -
 -
 -
+
+Vítej v Proštejově. Tohle je už opravdové město a
+ne nějaká náhodná vesnička. A ještě dost hezké k tomu.
+Je taky dost daleko od fronty takže si můžeš trošku
+odpočinout a zas tak kriminální jako Přerov to není.
+Jízdenky do Olomouce stojí plus mínus
+Hodně štestí!
+

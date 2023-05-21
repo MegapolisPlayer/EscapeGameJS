@@ -119,12 +119,16 @@ otherwise you will get -15 CZK. Click on the
 tables when they show an order and click on the
 order and then the table to deliver it.
 
+Order selected
+
 Fisher minigame
 Catch as much fish as possible. For every fish 
 you catch you will get 50CZK. For every shoe you
 will get 5CZK, for a tire 10CZK. Boxes always
 have an unspecified amount of money or any
 of the aforementioned objects (excl. fish).
+
+Current
 
 Cleaning minigame
 Just clean objects by swiping.
@@ -133,12 +137,16 @@ You will get 250CZK.
 -
 -
 
+Percent
+
 Translation minigame
 Translate as many words from a dialect.
 For every word you will get 5CZK.
 -
 -
 -
+
+Translated
 
 Cashier minigame
 Process as many products as possible.
@@ -147,12 +155,16 @@ For every product you will get 5CZK.
 -
 -
 
+Scanned
+
 Defense minigame
 Defend Studénka!
 You will get a ticket to Ostrava.
 -
 -
 -
+
+Waves remaining
 
 So you want to buy a ticket, right?
 To go to Přerov it would cost
@@ -172,13 +184,20 @@ closed. Let's hope that the SŽDC will get it together
 You will have to go through a few cities
 to get to Olomouc.
 Due to inflation the tickets rose in price significantly.
-The tickets to Němcice cost 
+The tickets to Nezamyslice cost 
 Also the city has quite a criminal history,
 so good luck and leave as soon as possible.
 Good luck!
 
 Welcome to Nezamyslice. This is a small town but
-todo: add nzm dialogue
+todo: add nzm dialogue, no direct connection as reason
 -
 -
 -
+
+Welcome to Proštejov. This is an actual city and not some
+random village in the countryside. It's also quite nice.
+It's also quite far away from the front lines, so you can
+relax a bit and it is not as criminal as Přerov.
+Tickets to Olomouc cost approximately
+Good luck!
