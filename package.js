@@ -91,17 +91,17 @@ class Canvas {
     }
 	//draws a line
 	line(fromx, fromy, tox, toy, linewidth, color = "null") {
-		canvas.context.beginPath();
-		canvas.context.moveTo(fromx, fromy);
-		canvas.context.lineTo(tox, toy);
+		this.context.beginPath();
+		this.context.moveTo(fromx, fromy);
+		this.context.lineTo(tox, toy);
 		if(color !== "null") {
-			canvas.context.strokeStyle = color;
+			this.context.strokeStyle = color;
 		}
 		else {
-			canvas.context.strokeStyle = this.color;
+			this.context.strokeStyle = this.color;
 		}
-		canvas.context.lineWidth = linewidth;
-		canvas.context.stroke();
+		this.context.lineWidth = linewidth;
+		this.context.stroke();
 	}
     //clears the canvas
     clear(newcolor = "empty") {
@@ -368,6 +368,16 @@ class AudioPlayer {
 };
 const ap = new AudioPlayer();
 
+//math conversion stuff
+
+function toDegrees(angle) {
+	return angle * (180 / Math.PI);
+}
+function toRadians(angle) {
+	return angle * (Math.PI / 180);
+}
+
+
 let MoneyAmount = 0;
 
 function drawMoneyCount(canvasobj) {
@@ -577,7 +587,8 @@ let TimerValues = {
 	CurrentTime: 0,
 	PauseStartTime: 0,
 	OverallPauseTime: 0,
-	OverallTime: 0
+	OverallTime: 0,
+	InheritedSaveTime: 0
 }
 
 function timerStart() {
@@ -593,10 +604,18 @@ function timerUnpause() {
 }
 function timerEnd() {
 	TimerValues.CurrentTime = Date.now();
-	TimerValues.OverallTime = Math.floor((Math.abs(Number(TimerValues.CurrentTime) - Number(TimerValues.StartTime)) - Number(TimerValues.OverallPauseTime)) / 1000);
+	TimerValues.OverallTime = Math.floor((Math.abs(Number(TimerValues.CurrentTime) - Number(TimerValues.StartTime)) - Number(TimerValues.OverallPauseTime)) / 1000) + TimerValues.InheritedSaveTime;
 }
 function timerToString() {
 	return String(Math.floor(TimerValues.OverallTime / 60) + ":" + String("00" + Number(TimerValues.OverallTime % 60) ).slice(-2) + " ([M]M:SS)");
+}
+function timerReset() {
+	TimerValues.StartTime = 0;
+	TimerValues.CurrentTime = 0;
+	TimerValues.PauseStartTime = 0;
+	TimerValues.OverallPauseTime = 0;
+	TimerValues.OverallTime = 0;
+	TimerValues.InheritedSaveTime = 0;
 }
 
 let TimerlimitValues = {
@@ -887,15 +906,15 @@ const finalCreditsImage = new Image();
 function CreditsRenderAchievement(isdone, imageyes, imageno, canvasobj) {
 	canvasobj.setfontweight("bold");
 	if(isdone) {
-		canvasobj.resetalign(); 
+		canvasobj.setalign("center");; 
 		canvasobj.image(imageyes, 350, 100, 300, 300);
-		canvasobj.setalign("left"); 
+		canvasobj.resetalign() 
 		canvasobj.text(TranslatedText[SettingsValues.Language][87], 100, 300);
 	}
 	else {
-		canvasobj.resetalign(); 
+		canvasobj.setalign("center");; 
 		canvasobj.image(imageno, 350, 100, 300, 300);
-		canvasobj.setalign("left"); 
+		canvasobj.resetalign() 
 		canvasobj.text(TranslatedText[SettingsValues.Language][88], 100, 300);
 	}
 	canvasobj.resetfontweight();
@@ -937,7 +956,7 @@ function Credits(iscalledfrommm, canvasobj) {
 		canvasobj.image(finalCreditsImage, 0, 0, canvasobj.canvas.width, canvasobj.canvas.height);
 		canvasobj.text(TranslatedText[SettingsValues.Language][72], 50, 190);
 		canvasobj.setfontweight("bold");
-		canvasobj.textml("SReality, Pixabay, VlakemJednoduse.cz, Freepik: jcomp\nWikipedia Commons: Palickap, Marie Čchiedzeová,\nVojtěch Dočkal, Jiří Komárek, Vitezslava\nEverything else is custom-made.", 100, 230);
+		canvasobj.textml("SReality, Pixabay, VlakemJednoduse.cz, Freepik: jcomp\nWikipedia Commons: Palickap, Marie Čchiedzeová,\nVojtěch Dočkal, Jiří Komárek, Vitezslava, RPekar,\nKamil Czianskim, Michal Klajban, Draceane\nEverything else is custom-made.", 100, 230);
 		canvasobj.resetfontweight();
 	}, 2 * delay);	
 
@@ -972,21 +991,21 @@ function Credits(iscalledfrommm, canvasobj) {
 	if(!iscalledfrommm) {
 		setTimeout(() => {
 			//achievements
-			canvasobj.resetalign(); 
+			canvasobj.setalign("center"); 
 			canvasobj.setnewfont("Arial, FreeSans", "48", "bold");
 			canvasobj.image(finalCreditsImage, 0, 0, canvasobj.canvas.width, canvasobj.canvas.height);
 			canvasobj.text(TranslatedText[SettingsValues.Language][76], 500, 250); 
 			canvasobj.setnewfont("Arial, FreeSans", "32", "normal");
-			canvasobj.setalign("left"); 
+			canvasobj.resetalign();
 		}, 6 * delay);
 		
 		setTimeout(() => {
 			//achievements - medal for speed
 			canvasobj.image(finalCreditsImage, 0, 0, canvasobj.canvas.width, canvasobj.canvas.height);
 			canvasobj.text(TranslatedText[SettingsValues.Language][77], 100, 250); 
-			canvasobj.resetalign();
+			canvasobj.setalign("center");;
 			canvasobj.text(TranslatedText[SettingsValues.Language][78], 500, 450); 
-			canvasobj.setalign("left");
+			canvasobj.resetalign()
 			CreditsRenderAchievement(CreditsValues.gotAchievementSpeed, AchievementImages[1], AchievementImages[0], canvasobj);
 		}, 7 * delay);
 
@@ -994,9 +1013,9 @@ function Credits(iscalledfrommm, canvasobj) {
 			//achievements - waiters medal
 			canvasobj.image(finalCreditsImage, 0, 0, canvasobj.canvas.width, canvasobj.canvas.height);
 			canvasobj.text(TranslatedText[SettingsValues.Language][79], 100, 250); 
-			canvasobj.resetalign();
+			canvasobj.setalign("center");;
 			canvasobj.text(TranslatedText[SettingsValues.Language][80], 500, 450); 
-			canvasobj.setalign("left");
+			canvasobj.resetalign()
 			CreditsRenderAchievement(CreditsValues.gotAchievementWaiter, AchievementImages[2], AchievementImages[0], canvasobj);
 		}, 8 * delay);
 
@@ -1004,9 +1023,9 @@ function Credits(iscalledfrommm, canvasobj) {
 			//achievements - help medal
 			canvasobj.image(finalCreditsImage, 0, 0, canvasobj.canvas.width, canvasobj.canvas.height);
 			canvasobj.text(TranslatedText[SettingsValues.Language][81], 100, 250);
-			canvasobj.resetalign();
+			canvasobj.setalign("center");;
 			canvasobj.text(TranslatedText[SettingsValues.Language][82], 500, 450); 
-			canvasobj.setalign("left");
+			canvasobj.resetalign()
 			CreditsRenderAchievement(CreditsValues.gotAchievementHelp, AchievementImages[3], AchievementImages[0], canvasobj);
 		}, 9 * delay);
 		
@@ -1014,9 +1033,9 @@ function Credits(iscalledfrommm, canvasobj) {
 			//achievements - sus medal
 			canvasobj.image(finalCreditsImage, 0, 0, canvasobj.canvas.width, canvasobj.canvas.height);
 			canvasobj.text(TranslatedText[SettingsValues.Language][83], 100, 250);
-			canvasobj.resetalign();
+			canvasobj.setalign("center");;
 			canvasobj.text(TranslatedText[SettingsValues.Language][84], 500, 450); 
-			canvasobj.setalign("left");
+			canvasobj.resetalign()
 			CreditsRenderAchievement(CreditsValues.gotAchievementSus, AchievementImages[4], AchievementImages[0], canvasobj);
 		}, 10 * delay);
 		setTimeout(() => {
@@ -1052,6 +1071,16 @@ function debug_Credits(iscalledfrommm, canvasobj) {
 	finalCreditsImage.src = "res/Credits.jpg";
 	finalCreditsImage.onload = () => { Credits(iscalledfrommm, canvasobj); };
 }
+function renderTextAsMinigameStatus(text, number, canvas) {
+	canvas.setnewfont("Arial, FreeSans", "32");
+	canvas.setnewcolor("#ffffff");
+	let textf = text+": "+number+" ";
+	let metrics = canvas.context.measureText(textf);
+	canvas.box(1000 - metrics.width - 20, 60, metrics.width + 20, 50);
+	canvas.setnewcolor("#333399");
+	canvas.text(textf, 1000 - metrics.width - 10, 80);
+}
+
 //waiter game
 
 let WaiterGameValues = {
@@ -1084,7 +1113,7 @@ for(let Id = 0; Id < 2; Id++) {
 }
 
 OrderImages[0].src = "res/order.png";
-OrderImages[1].src = "res/order_selected.png"; 
+OrderImages[1].src = "res/order_selected.png";
 
 //orders, etc
 class TableManager {
@@ -1117,7 +1146,7 @@ class TableManager {
 						orderFrom: this.tableno,
 						timeAt: (timelimitToNumber() * 10),             //seconds left converted to ticks (=ticks left) at time of starting
 						forHowLongCooking: 0,                           //ticks cooking, when reaches
-						forHowLongShouldCook: (70 + randomNumber(20)),  //ticks for how long to cook between 7-9s (max waiting time 13s)
+						forHowLongShouldCook: (60 + randomNumber(20)),  //ticks for how long to cook between 6-8s (max waiting time 15s)
 						isCooked: false,                                //if has finished cooking
 						buttonObject: document.createElement("button"), //button element
 						doesHaveButton: false,                          //if has button in DOM
@@ -1180,7 +1209,7 @@ class TableManager {
 				}
 				break;
 			case 1:
-				if(this.counter >= 75) { //7.5s
+				if(this.counter >= 100) { //10s
 					//didnt click on order fast enough
 					WaiterGameValues.AmountEarned -= 15;
 					this.remove();
@@ -1277,7 +1306,7 @@ function WaiterGameComponentMain(canvas) {
 	let orderFLCounter = 0;
 
 	//main game
-	timelimitStart(180); //3:00 min, you should get around 900-1000 depending on luck, kinda difficult but ok
+	timelimitStart(150); //2:30 min, you should get around 900-1000 with 3mins depending on luck 2:30 is ok
 	let timerInterval = window.setInterval((canvas) => {
 		console.log(WaiterGameValues.IsOrderSelected);
 		canvas.clear("#bd9d80");
@@ -1310,7 +1339,7 @@ function WaiterGameComponentMain(canvas) {
 			else {
 				WaiterGameValues.OrdersList[Id].buttonObject.style.setProperty("left", String(Number(canvas.canvas.height * 0.2 + 25 + (orderFLCounter * canvas.canvas.height * 0.2)))+"px");
 				
-				//throws non-fatal error "WaiterGameValues.OrdersList[Id] is undefined" and does nothing, this is ok!
+				//throws non-fatal error "WaiterGameValues.OrdersList[Id] is undefined" and does nothing, this is ok since the game works!
 				try {
 					WaiterGameValues.OrdersList[Id].buttonObject.removeEventListener("click", (event) => {
 						try {
@@ -1337,6 +1366,10 @@ function WaiterGameComponentMain(canvas) {
 			}
 		}
 		orderFLCounter = 0;
+		//is selected
+		if(WaiterGameValues.IsOrderSelected !== -1) {
+			renderTextAsMinigameStatus(TranslatedText[SettingsValues.Language][102], WaiterGameValues.IsOrderSelected, canvas);
+		}
 		//time stuff
 		timelimitRender(canvas);
 		if(timelimitIsDone()) {
@@ -1364,8 +1397,20 @@ let FishGameValues = {
 	IsIntroEnd: false,
 	IsOver: -1,
 	AmountEarned: 0,
-	//add more stuff, e.g. angle
+	Angle: 0, //range 60 to -60
+	AngleReverseDirection: false,
 }
+
+let FishingImages = [];
+let FishingImagesLoaded = 0;
+for(let Id = 0; Id < 3; Id++) {
+	FishingImages.push(new Image());
+	FishingImages[Id].onload = () => { FishingImagesLoaded++ };
+}
+
+FishingImages[0].src = "res/fish.png";
+FishingImages[1].src = "res/tire.png";
+FishingImages[2].src = "res/boot.png";
 
 function FishGame(canvas) {
 	FishGameValues.LeFishCaught = 0;
@@ -1386,9 +1431,9 @@ function FishGameComponentIntro(canvas) {
 	canvas.clear("#03ddff");
 	canvas.setnewcolor("#000000");
 	canvas.setfontweight("bold");
-	canvas.text(TranslatedText[SettingsValues.Language][91] + " - " + TranslatedText[SettingsValues.Language][99], 50, 50);
+	canvas.text(TranslatedText[SettingsValues.Language][103] + " - " + TranslatedText[SettingsValues.Language][96], 50, 50);
 	canvas.resetfontweight();
-	canvas.textml(TranslationGetMultipleLines(SettingsValues.Language, 100, 2), 50, 100);
+	canvas.textml(TranslationGetMultipleLines(SettingsValues.Language, 104, 5), 50, 100);
 	let ArrowEnd = new Arrow(950, 450, 50, 50, ArrowDirections.Right, canvas);
 	ArrowEnd.button.addEventListener("click", (event) => {
 		ArrowEnd.deleteButton();
@@ -1403,12 +1448,35 @@ function FishGameComponentIntro(canvas) {
 }
 function FishGameComponentMain(canvas) {
 	canvas.clear("#03ddff");
+	//variables and setup
+	
 	//main game
 	timelimitStart(60); //1:00 min
 	let timerInterval = window.setInterval((canvas) => {
 		canvas.clear("#03ddff");
-		//use trigoniometry to calculate tox, toy - todo: ideas in school
-		canvas.line(500, 0, 100, 100, 15, "#dddddd") 
+		//render objects - abstract into classes
+		for(let Id = 0; Id < 10; Id++) {
+			canvas.image(FishingImages[randomNumber(3)], randomNumber(1000), randomNumber(500), 60, 60);
+		}
+		//render line - length of line 400
+		let finalx = Math.sin(toRadians(FishGameValues.Angle)) * 400;
+		let finaly = Math.cos(toRadians(FishGameValues.Angle)) * 400;
+		canvas.line(500, 50, 500 + finalx, 50 + finaly, 15, "#dddddd");
+		canvas.line(500, 50, 500 + finalx, 50, 5, "#800000"); //debug
+		canvas.line(500, 50, 500, 50 + finaly, 5, "#000080"); //debug
+		//angle calc
+		if(FishGameValues.AngleReverseDirection) {
+			FishGameValues.Angle -= 1;
+			if(FishGameValues.Angle <= -60) {
+				FishGameValues.AngleReverseDirection = false;
+			}
+		}
+		else {
+			FishGameValues.Angle += 1;
+			if(FishGameValues.Angle >= 60) {
+				FishGameValues.AngleReverseDirection = true;
+			}
+		}
 		//time stuff
 		timelimitRender(canvas);
 		if(timelimitIsDone()) {
@@ -2347,11 +2415,13 @@ function SetStateFile(filecontent, canvas) {
 	if(Data[0] !== "eors1") {
 		console.error("SetStateFile: Incompatible save loaded! (Version 1 required)");
 	}	
-	if(Data.length != 13) {
+	if(Data.length != 12) {
 		console.error("SetStateFile: Invalid save loaded!");
 	}
 	
 	console.log("Save loaded: "+filecontent);
+	
+	timerReset();
 	
 	//data splitting
 	SettingsValues.Language =            Number(Data[1]);
@@ -2364,17 +2434,18 @@ function SetStateFile(filecontent, canvas) {
 	CreditsValues.gotAchievementWaiter = Number(Data[8]);
 	CreditsValues.gotAchievementHelp =   Number(Data[9]);
 	CreditsValues.gotAchievementSus =    Number(Data[10]);
-	TimerValues.StartTime =              Number(Data[11]);
-	TimerValues.OverallPauseTime =       Number(Data[12]);
+	TimerValues.InheritedSaveTime =      Number(Data[11]);
 	UpdateSettingsValues();
 
 	console.log("Data split!");
+
+		timerStart();		
 	
 	//pause button
 	PauseButton = new Arrow(10, 10, 50, 50, ArrowDirections.Pause, null);
 	PauseButton.button.addEventListener("click", () => {
 		Pause(canvas);
-	});		
+	});	
 	
 	//image loading - dont forget to add stuff here
 	switch(locationId) {
@@ -2429,9 +2500,7 @@ function Save() {
 	finalizedSave+=" ";
 	finalizedSave+=Number(CreditsValues.gotAchievementSus);
 	finalizedSave+=" ";
-	finalizedSave+=Number(TimerValues.StartTime);
-	finalizedSave+=" ";
-	finalizedSave+=Number(TimerValues.OverallPauseTime);
+	finalizedSave+=Number(TimerValues.OverallTime);
 	
 	let hiddenAddrElem = document.createElement('a');
     hiddenAddrElem.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(finalizedSave));
@@ -2517,7 +2586,8 @@ function MainMenuSetup() {
 			AchievementImagesLoaded === 5 &&
 			ArrowImagesLoaded === 9 &&
 			TableImagesLoaded === 5 &&
-			OrderImagesLoaded === 2
+			OrderImagesLoaded === 2 &&
+			FishingImagesLoaded === 3
 		) {
 			clearInterval(thisInterval);
 			MainMenu();
@@ -2557,7 +2627,7 @@ function MainMenu() {
 	cvs.setnewfont("Arial, FreeSans", "16");
 	
 	cvs.text("(c) Martin/MegapolisPlayer, Jiri/KohoutGD 2023", 650, 472);
-	cvs.text("build date 22/05/2023, prerelease test version", 650, 492);
+	cvs.text("build date 23/05/2023, prerelease test version", 650, 492);
 	
 	cvs.setnewcolor("#333399");
 	cvs.setnewfont("Arial, FreeSans", "48");

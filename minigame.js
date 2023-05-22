@@ -1,3 +1,13 @@
+function renderTextAsMinigameStatus(text, number, canvas) {
+	canvas.setnewfont("Arial, FreeSans", "32");
+	canvas.setnewcolor("#ffffff");
+	let textf = text+": "+number+" ";
+	let metrics = canvas.context.measureText(textf);
+	canvas.box(1000 - metrics.width - 20, 60, metrics.width + 20, 50);
+	canvas.setnewcolor("#333399");
+	canvas.text(textf, 1000 - metrics.width - 10, 80);
+}
+
 //waiter game
 
 let WaiterGameValues = {
@@ -30,7 +40,7 @@ for(let Id = 0; Id < 2; Id++) {
 }
 
 OrderImages[0].src = "res/order.png";
-OrderImages[1].src = "res/order_selected.png"; 
+OrderImages[1].src = "res/order_selected.png";
 
 //orders, etc
 class TableManager {
@@ -63,7 +73,7 @@ class TableManager {
 						orderFrom: this.tableno,
 						timeAt: (timelimitToNumber() * 10),             //seconds left converted to ticks (=ticks left) at time of starting
 						forHowLongCooking: 0,                           //ticks cooking, when reaches
-						forHowLongShouldCook: (70 + randomNumber(20)),  //ticks for how long to cook between 7-9s (max waiting time 13s)
+						forHowLongShouldCook: (60 + randomNumber(20)),  //ticks for how long to cook between 6-8s (max waiting time 15s)
 						isCooked: false,                                //if has finished cooking
 						buttonObject: document.createElement("button"), //button element
 						doesHaveButton: false,                          //if has button in DOM
@@ -126,7 +136,7 @@ class TableManager {
 				}
 				break;
 			case 1:
-				if(this.counter >= 75) { //7.5s
+				if(this.counter >= 100) { //10s
 					//didnt click on order fast enough
 					WaiterGameValues.AmountEarned -= 15;
 					this.remove();
@@ -223,7 +233,7 @@ function WaiterGameComponentMain(canvas) {
 	let orderFLCounter = 0;
 
 	//main game
-	timelimitStart(180); //3:00 min, you should get around 900-1000 depending on luck, kinda difficult but ok
+	timelimitStart(150); //2:30 min, you should get around 900-1000 with 3mins depending on luck 2:30 is ok
 	let timerInterval = window.setInterval((canvas) => {
 		console.log(WaiterGameValues.IsOrderSelected);
 		canvas.clear("#bd9d80");
@@ -283,6 +293,10 @@ function WaiterGameComponentMain(canvas) {
 			}
 		}
 		orderFLCounter = 0;
+		//is selected
+		if(WaiterGameValues.IsOrderSelected !== -1) {
+			renderTextAsMinigameStatus(TranslatedText[SettingsValues.Language][102], WaiterGameValues.IsOrderSelected, canvas);
+		}
 		//time stuff
 		timelimitRender(canvas);
 		if(timelimitIsDone()) {
@@ -310,8 +324,20 @@ let FishGameValues = {
 	IsIntroEnd: false,
 	IsOver: -1,
 	AmountEarned: 0,
-	//add more stuff, e.g. angle
+	Angle: 0, //range 60 to -60
+	AngleReverseDirection: false,
 }
+
+let FishingImages = [];
+let FishingImagesLoaded = 0;
+for(let Id = 0; Id < 3; Id++) {
+	FishingImages.push(new Image());
+	FishingImages[Id].onload = () => { FishingImagesLoaded++ };
+}
+
+FishingImages[0].src = "res/fish.png";
+FishingImages[1].src = "res/tire.png";
+FishingImages[2].src = "res/boot.png";
 
 function FishGame(canvas) {
 	FishGameValues.LeFishCaught = 0;
@@ -332,9 +358,9 @@ function FishGameComponentIntro(canvas) {
 	canvas.clear("#03ddff");
 	canvas.setnewcolor("#000000");
 	canvas.setfontweight("bold");
-	canvas.text(TranslatedText[SettingsValues.Language][91] + " - " + TranslatedText[SettingsValues.Language][99], 50, 50);
+	canvas.text(TranslatedText[SettingsValues.Language][103] + " - " + TranslatedText[SettingsValues.Language][96], 50, 50);
 	canvas.resetfontweight();
-	canvas.textml(TranslationGetMultipleLines(SettingsValues.Language, 100, 2), 50, 100);
+	canvas.textml(TranslationGetMultipleLines(SettingsValues.Language, 104, 5), 50, 100);
 	let ArrowEnd = new Arrow(950, 450, 50, 50, ArrowDirections.Right, canvas);
 	ArrowEnd.button.addEventListener("click", (event) => {
 		ArrowEnd.deleteButton();
@@ -349,12 +375,35 @@ function FishGameComponentIntro(canvas) {
 }
 function FishGameComponentMain(canvas) {
 	canvas.clear("#03ddff");
+	//variables and setup
+	
 	//main game
 	timelimitStart(60); //1:00 min
 	let timerInterval = window.setInterval((canvas) => {
 		canvas.clear("#03ddff");
-		//use trigoniometry to calculate tox, toy - todo: ideas in school
-		canvas.line(500, 0, 100, 100, 15, "#dddddd") 
+		//render objects - abstract into classes
+		for(let Id = 0; Id < 10; Id++) {
+			canvas.image(FishingImages[randomNumber(3)], randomNumber(1000), randomNumber(500), 60, 60);
+		}
+		//render line - length of line 400
+		let finalx = Math.sin(toRadians(FishGameValues.Angle)) * 400;
+		let finaly = Math.cos(toRadians(FishGameValues.Angle)) * 400;
+		canvas.line(500, 50, 500 + finalx, 50 + finaly, 15, "#dddddd");
+		canvas.line(500, 50, 500 + finalx, 50, 5, "#800000"); //debug
+		canvas.line(500, 50, 500, 50 + finaly, 5, "#000080"); //debug
+		//angle calc
+		if(FishGameValues.AngleReverseDirection) {
+			FishGameValues.Angle -= 1;
+			if(FishGameValues.Angle <= -60) {
+				FishGameValues.AngleReverseDirection = false;
+			}
+		}
+		else {
+			FishGameValues.Angle += 1;
+			if(FishGameValues.Angle >= 60) {
+				FishGameValues.AngleReverseDirection = true;
+			}
+		}
 		//time stuff
 		timelimitRender(canvas);
 		if(timelimitIsDone()) {

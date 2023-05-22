@@ -91,17 +91,17 @@ class Canvas {
     }
 	//draws a line
 	line(fromx, fromy, tox, toy, linewidth, color = "null") {
-		canvas.context.beginPath();
-		canvas.context.moveTo(fromx, fromy);
-		canvas.context.lineTo(tox, toy);
+		this.context.beginPath();
+		this.context.moveTo(fromx, fromy);
+		this.context.lineTo(tox, toy);
 		if(color !== "null") {
-			canvas.context.strokeStyle = color;
+			this.context.strokeStyle = color;
 		}
 		else {
-			canvas.context.strokeStyle = this.color;
+			this.context.strokeStyle = this.color;
 		}
-		canvas.context.lineWidth = linewidth;
-		canvas.context.stroke();
+		this.context.lineWidth = linewidth;
+		this.context.stroke();
 	}
     //clears the canvas
     clear(newcolor = "empty") {
@@ -367,4 +367,14 @@ class AudioPlayer {
 	}
 };
 const ap = new AudioPlayer();
+
+//math conversion stuff
+
+function toDegrees(angle) {
+	return angle * (180 / Math.PI);
+}
+function toRadians(angle) {
+	return angle * (Math.PI / 180);
+}
+
 

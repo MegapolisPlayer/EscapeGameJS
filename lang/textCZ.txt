@@ -119,7 +119,7 @@ jinak dostaneš -15Kč. Kilkni na stůl aby jsi
 přijal objednávku a klikní na objednávku a
 potom na stůl aby si ji dostavil.
 
-Objednávka vybrána
+Objednávka
 
 Rybářská minihra
 Vylov co nejvíc ryb za minutu.
@@ -195,7 +195,7 @@ todo: add nzm dialogue - textEN
 -
 -
 
-Vítej v Proštejově. Tohle je už opravdové město a
+Vítej v Prostejově. Tohle je už opravdové město a
 ne nějaká náhodná vesnička. A ještě dost hezké k tomu.
 Je taky dost daleko od fronty takže si můžeš trošku
 odpočinout a zas tak kriminální jako Přerov to není.

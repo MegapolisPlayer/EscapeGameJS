@@ -119,7 +119,7 @@ otherwise you will get -15 CZK. Click on the
 tables when they show an order and click on the
 order and then the table to deliver it.
 
-Order selected
+Order
 
 Fisher minigame
 Catch as much fish as possible. For every fish 
@@ -195,7 +195,7 @@ todo: add nzm dialogue, no direct connection as reason
 -
 -
 
-Welcome to Proštejov. This is an actual city and not some
+Welcome to Prostějov. This is an actual city and not some
 random village in the countryside. It's also quite nice.
 It's also quite far away from the front lines, so you can
 relax a bit and it is not as criminal as Přerov.

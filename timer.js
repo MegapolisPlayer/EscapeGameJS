@@ -3,7 +3,8 @@ let TimerValues = {
 	CurrentTime: 0,
 	PauseStartTime: 0,
 	OverallPauseTime: 0,
-	OverallTime: 0
+	OverallTime: 0,
+	InheritedSaveTime: 0
 }
 
 function timerStart() {
@@ -19,10 +20,18 @@ function timerUnpause() {
 }
 function timerEnd() {
 	TimerValues.CurrentTime = Date.now();
-	TimerValues.OverallTime = Math.floor((Math.abs(Number(TimerValues.CurrentTime) - Number(TimerValues.StartTime)) - Number(TimerValues.OverallPauseTime)) / 1000);
+	TimerValues.OverallTime = Math.floor((Math.abs(Number(TimerValues.CurrentTime) - Number(TimerValues.StartTime)) - Number(TimerValues.OverallPauseTime)) / 1000) + TimerValues.InheritedSaveTime;
 }
 function timerToString() {
 	return String(Math.floor(TimerValues.OverallTime / 60) + ":" + String("00" + Number(TimerValues.OverallTime % 60) ).slice(-2) + " ([M]M:SS)");
+}
+function timerReset() {
+	TimerValues.StartTime = 0;
+	TimerValues.CurrentTime = 0;
+	TimerValues.PauseStartTime = 0;
+	TimerValues.OverallPauseTime = 0;
+	TimerValues.OverallTime = 0;
+	TimerValues.InheritedSaveTime = 0;
 }
 
 let TimerlimitValues = {

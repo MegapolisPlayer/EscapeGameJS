@@ -10,15 +10,15 @@ const finalCreditsImage = new Image();
 function CreditsRenderAchievement(isdone, imageyes, imageno, canvasobj) {
 	canvasobj.setfontweight("bold");
 	if(isdone) {
-		canvasobj.resetalign(); 
+		canvasobj.setalign("center");; 
 		canvasobj.image(imageyes, 350, 100, 300, 300);
-		canvasobj.setalign("left"); 
+		canvasobj.resetalign() 
 		canvasobj.text(TranslatedText[SettingsValues.Language][87], 100, 300);
 	}
 	else {
-		canvasobj.resetalign(); 
+		canvasobj.setalign("center");; 
 		canvasobj.image(imageno, 350, 100, 300, 300);
-		canvasobj.setalign("left"); 
+		canvasobj.resetalign() 
 		canvasobj.text(TranslatedText[SettingsValues.Language][88], 100, 300);
 	}
 	canvasobj.resetfontweight();
@@ -60,7 +60,7 @@ function Credits(iscalledfrommm, canvasobj) {
 		canvasobj.image(finalCreditsImage, 0, 0, canvasobj.canvas.width, canvasobj.canvas.height);
 		canvasobj.text(TranslatedText[SettingsValues.Language][72], 50, 190);
 		canvasobj.setfontweight("bold");
-		canvasobj.textml("SReality, Pixabay, VlakemJednoduse.cz, Freepik: jcomp\nWikipedia Commons: Palickap, Marie Čchiedzeová,\nVojtěch Dočkal, Jiří Komárek, Vitezslava\nEverything else is custom-made.", 100, 230);
+		canvasobj.textml("SReality, Pixabay, VlakemJednoduse.cz, Freepik: jcomp\nWikipedia Commons: Palickap, Marie Čchiedzeová,\nVojtěch Dočkal, Jiří Komárek, Vitezslava, RPekar,\nKamil Czianskim, Michal Klajban, Draceane\nEverything else is custom-made.", 100, 230);
 		canvasobj.resetfontweight();
 	}, 2 * delay);	
 
@@ -95,21 +95,21 @@ function Credits(iscalledfrommm, canvasobj) {
 	if(!iscalledfrommm) {
 		setTimeout(() => {
 			//achievements
-			canvasobj.resetalign(); 
+			canvasobj.setalign("center"); 
 			canvasobj.setnewfont("Arial, FreeSans", "48", "bold");
 			canvasobj.image(finalCreditsImage, 0, 0, canvasobj.canvas.width, canvasobj.canvas.height);
 			canvasobj.text(TranslatedText[SettingsValues.Language][76], 500, 250); 
 			canvasobj.setnewfont("Arial, FreeSans", "32", "normal");
-			canvasobj.setalign("left"); 
+			canvasobj.resetalign();
 		}, 6 * delay);
 		
 		setTimeout(() => {
 			//achievements - medal for speed
 			canvasobj.image(finalCreditsImage, 0, 0, canvasobj.canvas.width, canvasobj.canvas.height);
 			canvasobj.text(TranslatedText[SettingsValues.Language][77], 100, 250); 
-			canvasobj.resetalign();
+			canvasobj.setalign("center");;
 			canvasobj.text(TranslatedText[SettingsValues.Language][78], 500, 450); 
-			canvasobj.setalign("left");
+			canvasobj.resetalign()
 			CreditsRenderAchievement(CreditsValues.gotAchievementSpeed, AchievementImages[1], AchievementImages[0], canvasobj);
 		}, 7 * delay);
 
@@ -117,9 +117,9 @@ function Credits(iscalledfrommm, canvasobj) {
 			//achievements - waiters medal
 			canvasobj.image(finalCreditsImage, 0, 0, canvasobj.canvas.width, canvasobj.canvas.height);
 			canvasobj.text(TranslatedText[SettingsValues.Language][79], 100, 250); 
-			canvasobj.resetalign();
+			canvasobj.setalign("center");;
 			canvasobj.text(TranslatedText[SettingsValues.Language][80], 500, 450); 
-			canvasobj.setalign("left");
+			canvasobj.resetalign()
 			CreditsRenderAchievement(CreditsValues.gotAchievementWaiter, AchievementImages[2], AchievementImages[0], canvasobj);
 		}, 8 * delay);
 
@@ -127,9 +127,9 @@ function Credits(iscalledfrommm, canvasobj) {
 			//achievements - help medal
 			canvasobj.image(finalCreditsImage, 0, 0, canvasobj.canvas.width, canvasobj.canvas.height);
 			canvasobj.text(TranslatedText[SettingsValues.Language][81], 100, 250);
-			canvasobj.resetalign();
+			canvasobj.setalign("center");;
 			canvasobj.text(TranslatedText[SettingsValues.Language][82], 500, 450); 
-			canvasobj.setalign("left");
+			canvasobj.resetalign()
 			CreditsRenderAchievement(CreditsValues.gotAchievementHelp, AchievementImages[3], AchievementImages[0], canvasobj);
 		}, 9 * delay);
 		
@@ -137,9 +137,9 @@ function Credits(iscalledfrommm, canvasobj) {
 			//achievements - sus medal
 			canvasobj.image(finalCreditsImage, 0, 0, canvasobj.canvas.width, canvasobj.canvas.height);
 			canvasobj.text(TranslatedText[SettingsValues.Language][83], 100, 250);
-			canvasobj.resetalign();
+			canvasobj.setalign("center");;
 			canvasobj.text(TranslatedText[SettingsValues.Language][84], 500, 450); 
-			canvasobj.setalign("left");
+			canvasobj.resetalign()
 			CreditsRenderAchievement(CreditsValues.gotAchievementSus, AchievementImages[4], AchievementImages[0], canvasobj);
 		}, 10 * delay);
 		setTimeout(() => {

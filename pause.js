@@ -141,11 +141,13 @@ function SetStateFile(filecontent, canvas) {
 	if(Data[0] !== "eors1") {
 		console.error("SetStateFile: Incompatible save loaded! (Version 1 required)");
 	}	
-	if(Data.length != 13) {
+	if(Data.length != 12) {
 		console.error("SetStateFile: Invalid save loaded!");
 	}
 	
 	console.log("Save loaded: "+filecontent);
+	
+	timerReset();
 	
 	//data splitting
 	SettingsValues.Language =            Number(Data[1]);
@@ -158,17 +160,18 @@ function SetStateFile(filecontent, canvas) {
 	CreditsValues.gotAchievementWaiter = Number(Data[8]);
 	CreditsValues.gotAchievementHelp =   Number(Data[9]);
 	CreditsValues.gotAchievementSus =    Number(Data[10]);
-	TimerValues.StartTime =              Number(Data[11]);
-	TimerValues.OverallPauseTime =       Number(Data[12]);
+	TimerValues.InheritedSaveTime =      Number(Data[11]);
 	UpdateSettingsValues();
 
 	console.log("Data split!");
+
+		timerStart();		
 	
 	//pause button
 	PauseButton = new Arrow(10, 10, 50, 50, ArrowDirections.Pause, null);
 	PauseButton.button.addEventListener("click", () => {
 		Pause(canvas);
-	});		
+	});	
 	
 	//image loading - dont forget to add stuff here
 	switch(locationId) {
@@ -223,9 +226,7 @@ function Save() {
 	finalizedSave+=" ";
 	finalizedSave+=Number(CreditsValues.gotAchievementSus);
 	finalizedSave+=" ";
-	finalizedSave+=Number(TimerValues.StartTime);
-	finalizedSave+=" ";
-	finalizedSave+=Number(TimerValues.OverallPauseTime);
+	finalizedSave+=Number(TimerValues.OverallTime);
 	
 	let hiddenAddrElem = document.createElement('a');
     hiddenAddrElem.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(finalizedSave));
