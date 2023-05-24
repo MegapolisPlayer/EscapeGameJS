@@ -156,7 +156,7 @@ function Credits(iscalledfrommm, canvasobj) {
 		//quit game
 		canvasobj.image(finalCreditsImage, 0, 0, canvasobj.canvas.width, canvasobj.canvas.height);
 		canvasobj.textml(TranslationGetMultipleLines(SettingsValues.Language, 85, 2), 100, 190); 
-		window.addEventListener("click", function(event) {
+		window.addEventListener("click", (event) => {
 			location.reload();		
 		});
 	}, (iscalledfrommm ? 7 : 12) * delay);

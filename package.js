@@ -1052,7 +1052,7 @@ function Credits(iscalledfrommm, canvasobj) {
 		//quit game
 		canvasobj.image(finalCreditsImage, 0, 0, canvasobj.canvas.width, canvasobj.canvas.height);
 		canvasobj.textml(TranslationGetMultipleLines(SettingsValues.Language, 85, 2), 100, 190); 
-		window.addEventListener("click", function(event) {
+		window.addEventListener("click", (event) => {
 			location.reload();		
 		});
 	}, (iscalledfrommm ? 7 : 12) * delay);
@@ -1076,7 +1076,7 @@ function renderTextAsMinigameStatus(text, number, canvas) {
 	canvas.setnewcolor("#ffffff");
 	let textf = text+": "+number+" ";
 	let metrics = canvas.context.measureText(textf);
-	canvas.box(1000 - metrics.width - 20, 60, metrics.width + 20, 50);
+	canvas.box(1000 - metrics.width - 20, 50, metrics.width + 20, 50);
 	canvas.setnewcolor("#333399");
 	canvas.text(textf, 1000 - metrics.width - 10, 80);
 }
@@ -1391,14 +1391,35 @@ function WaiterGameReset() {
 	WaiterGameValues.IsOrderSelected = -1;
 }
 
+//returns if is collision
+function DetectCollisions(xleft1, ytop1, xright1, ybottom1, xleft2, ytop2, xright2, ybottom2) {
+	//if it works dont question it - kinda get that 2 statements are just for not bugging out when behing obj but still
+	if(
+		xleft1 < xright2 &&
+		xright1 > xleft2 &&
+		ytop1 < ybottom2 &&
+		ybottom1 > ytop2
+	) {
+		return true;
+	}
+	else {
+		return false;
+	}
+}
+
 //le fish game - becva in prerov
 
 let FishGameValues = {
 	IsIntroEnd: false,
 	IsOver: -1,
 	AmountEarned: 0,
-	Angle: 0, //range 60 to -60
+	Angle: 0, //range 65 to -65
 	AngleReverseDirection: false,
+	Length: 100,
+	LengthResize: false,
+	LengthReverseResize: false,
+	IsHauling: -1, //id of hauling
+	TypeOfHauledCargo: -1,
 }
 
 let FishingImages = [];
@@ -1411,6 +1432,39 @@ for(let Id = 0; Id < 3; Id++) {
 FishingImages[0].src = "res/fish.png";
 FishingImages[1].src = "res/tire.png";
 FishingImages[2].src = "res/boot.png";
+
+class LeObject {
+	constructor(objtype, doesmovevertically, doesmovehorizontally, canvas) {
+		this.dmv = doesmovevertically;
+		this.dmh = doesmovehorizontally;
+		this.canvas_info = canvas;
+		this.xoffset = 80 + randomNumber(canvas.canvas.width - 160);
+		this.yoffset = 200 + randomNumber(canvas.canvas.height - 250);
+		this.objecttype = objtype;
+	}
+	draw() {
+		this.canvas_info.image(FishingImages[this.objecttype], this.xoffset - 30, this.yoffset - 30, 60, 60);
+	}
+	drawhaul(cx, cy) {
+		moveTo(cx, cy);
+		this.canvas_info.context.save();
+		this.canvas_info.context.translate(this.xoffset, this.yoffset);
+		this.canvas_info.context.rotate(toRadians(90 - FishGameValues.Angle));
+		this.canvas_info.context.translate(-this.xoffset, -this.yoffset);
+		this.canvas_info.image(FishingImages[this.objecttype], this.xoffset - 30, this.yoffset - 30, 60, 60);
+		this.canvas_info.context.restore();
+	}
+	moveTo(x, y) {
+		this.xoffset = x;
+		this.yoffset = y;
+	}
+	moveByX(x) {
+		this.xoffset = x;
+	}
+	moveByY(y) {
+		this.yoffset = y;
+	}
+};
 
 function FishGame(canvas) {
 	FishGameValues.LeFishCaught = 0;
@@ -1431,7 +1485,7 @@ function FishGameComponentIntro(canvas) {
 	canvas.clear("#03ddff");
 	canvas.setnewcolor("#000000");
 	canvas.setfontweight("bold");
-	canvas.text(TranslatedText[SettingsValues.Language][103] + " - " + TranslatedText[SettingsValues.Language][96], 50, 50);
+	canvas.text(TranslatedText[SettingsValues.Language][91] + " - " + TranslatedText[SettingsValues.Language][103], 50, 50);
 	canvas.resetfontweight();
 	canvas.textml(TranslationGetMultipleLines(SettingsValues.Language, 104, 5), 50, 100);
 	let ArrowEnd = new Arrow(950, 450, 50, 50, ArrowDirections.Right, canvas);
@@ -1450,31 +1504,98 @@ function FishGameComponentMain(canvas) {
 	canvas.clear("#03ddff");
 	//variables and setup
 	
+	let FishObjects = [];
+	for(let Id = 0; Id < 10; Id++) {
+		FishObjects.push(new LeObject(0, false, true, canvas));
+	}
+	for(let Id = 0; Id < 5; Id++) {
+		FishObjects.push(new LeObject(1, false, true, canvas));
+	}
+	for(let Id = 0; Id < 5; Id++) {
+		FishObjects.push(new LeObject(2, false, true, canvas));
+	}
+	
+	window.addEventListener("click", (event) => {
+		FishGameValues.LengthResize = true;
+	});	
+	
 	//main game
 	timelimitStart(60); //1:00 min
 	let timerInterval = window.setInterval((canvas) => {
-		canvas.clear("#03ddff");
-		//render objects - abstract into classes
-		for(let Id = 0; Id < 10; Id++) {
-			canvas.image(FishingImages[randomNumber(3)], randomNumber(1000), randomNumber(500), 60, 60);
+		canvas.clear("#2066d6");
+		//render bg
+		canvas.setnewcolor("#03ddff");
+		canvas.box(0, 0, canvas.canvas.width, 100);
+		//render line - length of line
+		let finalx = (Math.sin(toRadians(FishGameValues.Angle)) * FishGameValues.Length) + 500;
+		let finaly = (Math.cos(toRadians(FishGameValues.Angle)) * FishGameValues.Length) + 50;
+		canvas.line(500, 50, finalx, finaly, 15, "#dddddd");
+		//render objects
+		for(let Id = 0; Id < FishObjects.length; Id++) {
+			if(
+				DetectCollisions(finalx - 10, finaly - 10, finalx + 10, finaly + 10, FishObjects[Id].xoffset - 30, FishObjects[Id].yoffset - 30, FishObjects[Id].xoffset + 30, FishObjects[Id].yoffset + 30) && 
+				FishGameValues.IsHauling === -1
+			) {
+				FishGameValues.IsHauling = Id;
+				FishGameValues.TypeOfHauledCargo = FishObjects[Id].objecttype;
+				FishGameValues.LengthReverseResize = true;
+			}
+			if(FishGameValues.IsHauling === Id) {
+				FishObjects[Id].moveTo(finalx, finaly);
+				FishObjects[Id].drawhaul(finalx, finaly);
+			} 
+			else {
+				FishObjects[Id].draw();
+			}
 		}
-		//render line - length of line 400
-		let finalx = Math.sin(toRadians(FishGameValues.Angle)) * 400;
-		let finaly = Math.cos(toRadians(FishGameValues.Angle)) * 400;
-		canvas.line(500, 50, 500 + finalx, 50 + finaly, 15, "#dddddd");
-		canvas.line(500, 50, 500 + finalx, 50, 5, "#800000"); //debug
-		canvas.line(500, 50, 500, 50 + finaly, 5, "#000080"); //debug
-		//angle calc
-		if(FishGameValues.AngleReverseDirection) {
-			FishGameValues.Angle -= 1;
-			if(FishGameValues.Angle <= -60) {
-				FishGameValues.AngleReverseDirection = false;
+		//length calc
+		if(FishGameValues.LengthResize) {
+			if(FishGameValues.LengthReverseResize) {
+				if(FishGameValues.IsHauling !== -1) {
+					FishGameValues.Length -= 0.65;
+				}
+				else {
+					FishGameValues.Length -= 2;
+				}
+				if(FishGameValues.Length <= 100) {
+					FishGameValues.LengthReverseResize = false;
+					FishGameValues.LengthResize = false;
+					FishObjects.splice(FishGameValues.IsHauling, 1);
+					FishGameValues.IsHauling = -1;
+					switch(FishGameValues.TypeOfHauledCargo) {
+						case 0:
+							FishGameValues.AmountEarned += 50;
+							break;
+						case 1:
+							FishGameValues.AmountEarned += 10;
+							break;
+						case 2:
+							FishGameValues.AmountEarned += 5;
+							break;
+					}
+					FishGameValues.TypeOfHauledCargo = -1;
+				}
+			}
+			else {
+				FishGameValues.Length += 2;
+				if(FishGameValues.Length >= 440) {
+					FishGameValues.LengthReverseResize = true;
+				}
 			}
 		}
 		else {
-			FishGameValues.Angle += 1;
-			if(FishGameValues.Angle >= 60) {
-				FishGameValues.AngleReverseDirection = true;
+			//angle calc when no length calc
+			if(FishGameValues.AngleReverseDirection) {
+				FishGameValues.Angle -= 0.4;
+				if(FishGameValues.Angle <= -65) {
+					FishGameValues.AngleReverseDirection = false;
+				}
+			}
+			else {
+				FishGameValues.Angle += 0.4;
+				if(FishGameValues.Angle >= 65) {
+					FishGameValues.AngleReverseDirection = true;
+				}
 			}
 		}
 		//time stuff
@@ -1482,17 +1603,27 @@ function FishGameComponentMain(canvas) {
 		if(timelimitIsDone()) {
 			clearInterval(timerInterval);
 			addMoney(FishGameValues.AmountEarned); //50Kc fish, 10Kc pneu, 5Kc boots
+			window.removeEventListener("click", (event) => {
+				FishGameValues.LengthResize = true;
+			});
 			deleteCanvasInputElems(canvas);
 			FishGameValues.IsOver = 1;
 			return;
 		}
-	}, 100, canvas);
+	}, 20, canvas);
 }
 
 function FishGameReset() {
 	FishGameValues.IsIntroEnd = false;
 	FishGameValues.IsOver = -1;
 	FishGameValues.AmountEarned = 0;
+	FishGameValues.Angle = 0;
+	FishGameValues.AngleReverseDirection = false;
+	FishGameValues.Length = 100;
+	FishGameValues.LengthResize = false;
+	FishGameValues.LengthReverseResize = false;
+	FishGameValues.IsHauling = -1;
+	FishGameValues.TypeOfHauledCargo = -1;
 }
 
 //ticket sale minigame - nezamyslice
