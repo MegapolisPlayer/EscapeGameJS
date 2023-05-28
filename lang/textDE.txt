@@ -20,6 +20,13 @@ Kostenmultiplikator
 Verlustwahrscheinlichkeit pro Tag
 Sprache
 
+ACHTUNG
+
+-
+-
+-
+-
+
 Hintergrundgeschichte
 Tag
 
@@ -36,3 +43,30 @@ liegt jetzt nur wenige Kilometer von Hranice entfernt.
 Es ist fliehen zeit
 
 zurück
+
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+
+Drücken Sie die Escape-Taste oder klicken Sie erneut
+auf die Schaltfläche „Pause“, um die Pause aufzuheben.
+
+Quellcode
+Geld
+
+Unser Kellner hat uns gerade verlassen.
+Hilfst du mir, das Essen an die Tische zu bringen?
+Ich gebe dir ein paar Kronen dafür, aber es hängt davon ab,
+wie erfolgreich du bist. Sind Sie einverstanden?
+Auf geht's!
+Wenn Sie Ihre Meinung ändern, können Sie zurückkommen.
+Ich stehe Ihnen jederzeit zur Verfügung.
+
