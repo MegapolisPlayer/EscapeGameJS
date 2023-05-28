@@ -39,6 +39,7 @@ class Character {
 	}
 };
 let chr = new Character("res/Character.png");
+let chrf = new Character("res/CharacterFisher.png");
 let cook = new Character("res/Cook.png");
 let traindriver = new Character("res/TrainDriver.png");
 

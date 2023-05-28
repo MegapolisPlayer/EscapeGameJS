@@ -60,7 +60,13 @@ function Credits(iscalledfrommm, canvasobj) {
 		canvasobj.image(finalCreditsImage, 0, 0, canvasobj.canvas.width, canvasobj.canvas.height);
 		canvasobj.text(TranslatedText[SettingsValues.Language][72], 50, 190);
 		canvasobj.setfontweight("bold");
-		canvasobj.textml("SReality, Pixabay, VlakemJednoduse.cz, Freepik: jcomp\nWikipedia Commons: Palickap, Marie Čchiedzeová,\nVojtěch Dočkal, Jiří Komárek, Vitezslava, RPekar,\nKamil Czianskim, Michal Klajban, Draceane\nEverything else is custom-made.", 100, 230);
+		canvasobj.textml(
+			"SReality, Pixabay, VlakemJednoduse.cz, Freepik: jcomp\n"+
+			"Fortes Interactive\n"+
+			"Wikipedia Commons: Palickap, Marie Čchiedzeová, JirkaSv\n"+
+			"Vojtěch Dočkal, Jiří Komárek, Vitezslava, RPekar, Dezidor\n"+
+			"Kamil Czianskim, Michal Klajban, Draceane, Herbert Frank\n"
+		, 75, 230);
 		canvasobj.resetfontweight();
 	}, 2 * delay);	
 
@@ -79,7 +85,7 @@ function Credits(iscalledfrommm, canvasobj) {
 		canvasobj.image(finalCreditsImage, 0, 0, canvasobj.canvas.width, canvasobj.canvas.height);
 		canvasobj.text(TranslatedText[SettingsValues.Language][74], 50, 190);
 		canvasobj.setfontweight("bold");
-		canvasobj.textml("Čeština - Martin\nEnglish - Martin\nDeutsch - Jirka\nРусский - Martin\nSus Language - Jirka", 100, 230);
+		canvasobj.textml("Čeština, English, Русский - Martin\nDeutsch, Susština - Jirka\n", 100, 230);
 		canvasobj.resetfontweight();
 	}, 4 * delay);
 

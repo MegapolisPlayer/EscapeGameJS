@@ -54,7 +54,7 @@ function MainMenuSetup() {
 			ArrowImagesLoaded === 9 &&
 			TableImagesLoaded === 5 &&
 			OrderImagesLoaded === 2 &&
-			FishingImagesLoaded === 3
+			FishingImagesLoaded === 4
 		) {
 			clearInterval(thisInterval);
 			MainMenu();
@@ -94,7 +94,7 @@ function MainMenu() {
 	cvs.setnewfont("Arial, FreeSans", "16");
 	
 	cvs.text("(c) Martin/MegapolisPlayer, Jiri/KohoutGD 2023", 650, 472);
-	cvs.text("build date 23/05/2023, prerelease test version", 650, 492);
+	cvs.text("build date 29/05/2023, prerelease test version", 650, 492);
 	
 	cvs.setnewcolor("#333399");
 	cvs.setnewfont("Arial, FreeSans", "48");

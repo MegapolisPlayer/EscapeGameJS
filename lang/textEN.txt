@@ -115,7 +115,7 @@ Earned
 Waiter minigame
 Click on the correct orders as fast as possible.
 For every correct order you will get 15 CZK,
-otherwise you will get -15 CZK. Click on the
+otherwise you will get -5 CZK. Click on the
 tables when they show an order and click on the
 order and then the table to deliver it.
 
@@ -125,8 +125,8 @@ Fisher minigame
 Catch as much fish as possible. For every fish 
 you catch you will get 50CZK. For every shoe you
 will get 5CZK, for a tire 10CZK. Boxes always
-have an unspecified amount of money or any
-of the aforementioned objects (excl. fish).
+have an unspecified amount of money (<150 CZK)
+or any of the aforementioned objects (excl. fish).
 
 Current
 

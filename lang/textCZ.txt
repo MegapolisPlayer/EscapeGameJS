@@ -115,7 +115,7 @@ Získáno
 Čišníkova minihra
 Dostav co nejrychleji na správné objednávky. Za
 každou správnou objednávku dostaneš 15Kč,
-jinak dostaneš -15Kč. Kilkni na stůl aby jsi
+jinak dostaneš -5Kč. Kilkni na stůl aby jsi
 přijal objednávku a klikní na objednávku a
 potom na stůl aby si ji dostavil.
 
@@ -125,8 +125,8 @@ Rybářská minihra
 Vylov co nejvíc ryb za minutu.
 Za každou rybu dostaneš 50Kč.
 Za boty dostaneš 5Kč, za pneumatiky 10Kč.
-Krabice mají vždy neznámý počet peněz nebo
-nejaký objekt (kromě ryb).
+Krabice mají vždy neznámý počet peněz (<150Kč)
+nebo nejaký objekt (kromě ryb).
 
 Současně
 

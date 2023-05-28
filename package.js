@@ -454,6 +454,7 @@ class Character {
 	}
 };
 let chr = new Character("res/Character.png");
+let chrf = new Character("res/CharacterFisher.png");
 let cook = new Character("res/Cook.png");
 let traindriver = new Character("res/TrainDriver.png");
 
@@ -956,7 +957,13 @@ function Credits(iscalledfrommm, canvasobj) {
 		canvasobj.image(finalCreditsImage, 0, 0, canvasobj.canvas.width, canvasobj.canvas.height);
 		canvasobj.text(TranslatedText[SettingsValues.Language][72], 50, 190);
 		canvasobj.setfontweight("bold");
-		canvasobj.textml("SReality, Pixabay, VlakemJednoduse.cz, Freepik: jcomp\nWikipedia Commons: Palickap, Marie Čchiedzeová,\nVojtěch Dočkal, Jiří Komárek, Vitezslava, RPekar,\nKamil Czianskim, Michal Klajban, Draceane\nEverything else is custom-made.", 100, 230);
+		canvasobj.textml(
+			"SReality, Pixabay, VlakemJednoduse.cz, Freepik: jcomp\n"+
+			"Fortes Interactive\n"+
+			"Wikipedia Commons: Palickap, Marie Čchiedzeová, JirkaSv\n"+
+			"Vojtěch Dočkal, Jiří Komárek, Vitezslava, RPekar, Dezidor\n"+
+			"Kamil Czianskim, Michal Klajban, Draceane, Herbert Frank\n"
+		, 75, 230);
 		canvasobj.resetfontweight();
 	}, 2 * delay);	
 
@@ -975,7 +982,7 @@ function Credits(iscalledfrommm, canvasobj) {
 		canvasobj.image(finalCreditsImage, 0, 0, canvasobj.canvas.width, canvasobj.canvas.height);
 		canvasobj.text(TranslatedText[SettingsValues.Language][74], 50, 190);
 		canvasobj.setfontweight("bold");
-		canvasobj.textml("Čeština - Martin\nEnglish - Martin\nDeutsch - Jirka\nРусский - Martin\nSus Language - Jirka", 100, 230);
+		canvasobj.textml("Čeština, English, Русский - Martin\nDeutsch, Susština - Jirka\n", 100, 230);
 		canvasobj.resetfontweight();
 	}, 4 * delay);
 
@@ -1226,7 +1233,7 @@ class TableManager {
 			case 3:
 				if(this.counter >= 50) { //5s
 					//fail
-					WaiterGameValues.AmountEarned -= 15;
+					WaiterGameValues.AmountEarned -= 5;
 					this.remove();
 					this.status = 4;
 					this.counter = 0;
@@ -1422,9 +1429,13 @@ let FishGameValues = {
 	TypeOfHauledCargo: -1,
 }
 
+function SetResizeToTrue() {
+	FishGameValues.LengthResize = true;
+}
+
 let FishingImages = [];
 let FishingImagesLoaded = 0;
-for(let Id = 0; Id < 3; Id++) {
+for(let Id = 0; Id < 4; Id++) {
 	FishingImages.push(new Image());
 	FishingImages[Id].onload = () => { FishingImagesLoaded++ };
 }
@@ -1432,6 +1443,8 @@ for(let Id = 0; Id < 3; Id++) {
 FishingImages[0].src = "res/fish.png";
 FishingImages[1].src = "res/tire.png";
 FishingImages[2].src = "res/boot.png";
+FishingImages[3].src = "res/box.png";
+
 
 class LeObject {
 	constructor(objtype, doesmovevertically, doesmovehorizontally, canvas) {
@@ -1441,6 +1454,10 @@ class LeObject {
 		this.xoffset = 80 + randomNumber(canvas.canvas.width - 160);
 		this.yoffset = 200 + randomNumber(canvas.canvas.height - 250);
 		this.objecttype = objtype;
+	}
+	reroll() {
+		this.xoffset = 80 + randomNumber(canvas.canvas.width - 160);
+		this.yoffset = 200 + randomNumber(canvas.canvas.height - 250);
 	}
 	draw() {
 		this.canvas_info.image(FishingImages[this.objecttype], this.xoffset - 30, this.yoffset - 30, 60, 60);
@@ -1503,21 +1520,38 @@ function FishGameComponentIntro(canvas) {
 function FishGameComponentMain(canvas) {
 	canvas.clear("#03ddff");
 	//variables and setup
-	
 	let FishObjects = [];
-	for(let Id = 0; Id < 10; Id++) {
+	//fish
+	for(let Id = 0; Id < 9; Id++) {
 		FishObjects.push(new LeObject(0, false, true, canvas));
 	}
-	for(let Id = 0; Id < 5; Id++) {
+	//tires
+	for(let Id = 0; Id < 4; Id++) {
 		FishObjects.push(new LeObject(1, false, true, canvas));
 	}
-	for(let Id = 0; Id < 5; Id++) {
+	//boots
+	for(let Id = 0; Id < 4; Id++) {
 		FishObjects.push(new LeObject(2, false, true, canvas));
 	}
+	//boxes
+	for(let Id = 0; Id < 3; Id++) {
+		FishObjects.push(new LeObject(3, false, true, canvas));
+	}
 	
-	window.addEventListener("click", (event) => {
-		FishGameValues.LengthResize = true;
-	});	
+	//check for collisions
+	for(let Id = 0; Id < FishObjects.length; Id++) {
+		for(let Id2 = 0; Id2 < FishObjects.length; Id2++) {
+			if(
+				DetectCollisions(
+					FishObjects[Id].xoffset - 30, FishObjects[Id].yoffset - 30, FishObjects[Id].xoffset + 30, FishObjects[Id].yoffset + 30,
+					FishObjects[Id2].xoffset - 30, FishObjects[Id2].yoffset - 30, FishObjects[Id2].xoffset + 30, FishObjects[Id2].yoffset + 30)
+			) {
+				
+			}
+		}
+	}
+	
+	window.addEventListener("click", SetResizeToTrue);	
 	
 	//main game
 	timelimitStart(60); //1:00 min
@@ -1526,6 +1560,11 @@ function FishGameComponentMain(canvas) {
 		//render bg
 		canvas.setnewcolor("#03ddff");
 		canvas.box(0, 0, canvas.canvas.width, 100);
+		//render assets and stuff
+		chrf.draw(470, 10, 0.2, canvas);
+		canvas.image(FishingImages[3], 100, 30, 75, 75);
+		canvas.image(FishingImages[3], 165, 30, 75, 75);
+		canvas.image(FishingImages[3], 130, 16, 20, 20);
 		//render line - length of line
 		let finalx = (Math.sin(toRadians(FishGameValues.Angle)) * FishGameValues.Length) + 500;
 		let finaly = (Math.cos(toRadians(FishGameValues.Angle)) * FishGameValues.Length) + 50;
@@ -1572,6 +1611,24 @@ function FishGameComponentMain(canvas) {
 						case 2:
 							FishGameValues.AmountEarned += 5;
 							break;
+						case 3:
+							//boxes
+							let what = randomNumber(2);
+							switch(what) {
+								case 0:
+									//got tire
+									FishGameValues.AmountEarned += 10;
+									break;
+								case 1:
+									//got shoe
+									FishGameValues.AmountEarned += 5;
+									break;
+								case 2:
+									//got random amount of money (at least 35CZK, max. 150)
+									FishGameValues.AmountEarned += 35 + randomNumber(150 - 35);
+									break;
+							}
+							break;
 					}
 					FishGameValues.TypeOfHauledCargo = -1;
 				}
@@ -1586,26 +1643,26 @@ function FishGameComponentMain(canvas) {
 		else {
 			//angle calc when no length calc
 			if(FishGameValues.AngleReverseDirection) {
-				FishGameValues.Angle -= 0.4;
+				FishGameValues.Angle -= 0.5;
 				if(FishGameValues.Angle <= -65) {
 					FishGameValues.AngleReverseDirection = false;
 				}
 			}
 			else {
-				FishGameValues.Angle += 0.4;
+				FishGameValues.Angle += 0.5;
 				if(FishGameValues.Angle >= 65) {
 					FishGameValues.AngleReverseDirection = true;
 				}
 			}
 		}
+		//amount earned info
+		renderTextAsMinigameStatus(TranslatedText[SettingsValues.Language][109], FishGameValues.AmountEarned, canvas);
 		//time stuff
 		timelimitRender(canvas);
 		if(timelimitIsDone()) {
 			clearInterval(timerInterval);
 			addMoney(FishGameValues.AmountEarned); //50Kc fish, 10Kc pneu, 5Kc boots
-			window.removeEventListener("click", (event) => {
-				FishGameValues.LengthResize = true;
-			});
+			window.removeEventListener("click", SetResizeToTrue);	
 			deleteCanvasInputElems(canvas);
 			FishGameValues.IsOver = 1;
 			return;
@@ -2718,7 +2775,7 @@ function MainMenuSetup() {
 			ArrowImagesLoaded === 9 &&
 			TableImagesLoaded === 5 &&
 			OrderImagesLoaded === 2 &&
-			FishingImagesLoaded === 3
+			FishingImagesLoaded === 4
 		) {
 			clearInterval(thisInterval);
 			MainMenu();
@@ -2758,7 +2815,7 @@ function MainMenu() {
 	cvs.setnewfont("Arial, FreeSans", "16");
 	
 	cvs.text("(c) Martin/MegapolisPlayer, Jiri/KohoutGD 2023", 650, 472);
-	cvs.text("build date 23/05/2023, prerelease test version", 650, 492);
+	cvs.text("build date 29/05/2023, prerelease test version", 650, 492);
 	
 	cvs.setnewcolor("#333399");
 	cvs.setnewfont("Arial, FreeSans", "48");
