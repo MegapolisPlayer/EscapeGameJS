@@ -168,13 +168,13 @@ Zbývajicích vln
 
 ...potřebuješ jízdenku, tak?
 Do Přerova to stojí 
-Pokud chceš koupit jízdenku
-urychli se, budeme skoro odjiždět.
+Pokud chceš koupit jízdenku tak se urychli,
+je tady hodně lidí kteří chtějí také odjet.
 Takže, chceš koupit jízdenku a odjet?
 Ok, tady to máš.
 Hej, to není dostatek peněz, podvodníku!
 Vypadni!
-Ok, snad se zase uvidíme!
+Ok, snad si to rozmyslíš!
 
 Hej! Kup si nejdřív jízdenku!
 Hej! Vždyť už máš jizdenku, ne?
@@ -189,11 +189,22 @@ Taky tohle město má taky dost kriminální historii,
 tak hodně štestí a odjeď so nejrychleji můžeš.
 Hodně štestí!
 
-Vítej v Nezamyslicích. Tohle je dost malé město
-todo: add nzm dialogue - textEN
--
--
--
+Takže zase kupujeme jízdenku, tak...
+Do Nezamyslic to stojí
+Tak chceš jízdenku nebo ne?
+Ok, tady to je.
+Hele, zě zas nemáš dost peněz...
+Ok, snad si to rozmyslíš.
+
+Vítej v Nezamyslicích. Tohle je sice malá vesnička
+ale přesto je to důležitá železniční výhybka.
+Musíš zde přestoupit na vlak do Olomouce a následně do
+Ostravy a Polska nebo kam to vlastně jedeš.
+Tahle vesnice taky není zas tak kriminální jako Přerov ale
+Slováci se přibližují takže zkus utéct co nejrychleji.
+Jizdenky to Prostějova stojí 
+
+
 
 Vítej v Prostejově. Tohle je už opravdové město a
 ne nějaká náhodná vesnička. A ještě dost hezké k tomu.
@@ -201,4 +212,3 @@ Je taky dost daleko od fronty takže si můžeš trošku
 odpočinout a zas tak kriminální jako Přerov to není.
 Jízdenky do Olomouce stojí plus mínus
 Hodně štestí!
-

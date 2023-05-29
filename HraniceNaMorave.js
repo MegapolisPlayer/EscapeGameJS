@@ -375,7 +375,3 @@ function HraniceNaMoraveNastupisteJob(canvas) {
 		}
 	}, 100, dialogue, canvas);
 }
-
-function HraniceNaMoraveBoard(canvas) {
-	console.log("hnm board");
-}

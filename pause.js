@@ -43,7 +43,18 @@ function SetState(canvasobj) {
 			}
 		case 3:
 			switch(localLocationId) {
-				//nemcice
+				case 0:
+					NezamysliceNastupiste(canvasobj);	
+					return;
+				case 1:
+					NezamysliceNadrazi(canvasobj);	
+					return;
+				case 2:
+					NezamyslicePodnikVenek(canvasobj);
+					return;
+				case 3:
+					NezamyslicePodnikVnitrek(canvasobj);
+					return;
 			}
 			return;
 	}
@@ -165,13 +176,15 @@ function SetStateFile(filecontent, canvas) {
 
 	console.log("Data split!");
 
-		timerStart();		
+	timerStart();		
 	
 	//pause button
 	PauseButton = new Arrow(10, 10, 50, 50, ArrowDirections.Pause, null);
 	PauseButton.button.addEventListener("click", () => {
 		Pause(canvas);
-	});	
+	});
+	
+	SavefileLoaded = true;
 	
 	//image loading - dont forget to add stuff here
 	switch(locationId) {
@@ -195,6 +208,18 @@ function SetStateFile(filecontent, canvas) {
 					clearInterval(thisInterval2);
 					AllowedToPause = true;
 					ap.playTrack(3);
+					SetState(canvas);
+				}
+			}, 100);
+		break;
+		case 3:
+			nzm_AmountLoadedImages = 0;
+			NezamysliceLoad(canvas, true);
+			let thisInterval3 = window.setInterval(() => {
+				if(nzm_AmountLoadedImages === 5) {
+					clearInterval(thisInterval3);
+					AllowedToPause = true;
+					ap.playTrack(4);
 					SetState(canvas);
 				}
 			}, 100);
@@ -238,19 +263,20 @@ function Save() {
     document.body.removeChild(hiddenAddrElem);
 }
 
+let SavefileLoaded = false;
+
 function Load(canvasobj) {
-	Load.FileLoaded = false;
+	SavefileLoaded = false;
 	let hiddenInputElem = document.createElement("input");
 	hiddenInputElem.id="fileuploaded";
 	hiddenInputElem.type = "file";
 	hiddenInputElem.accept = ".eors1";
 	
 	hiddenInputElem.addEventListener("change", (event) => {
-		Load.FileLoaded = true;
 		let reader = new FileReader();
    		reader.readAsText(hiddenInputElem.files[0], "UTF-8");
 		reader.onload = (event) => {
-			Load.FileLoaded = false; //finished load operation
+			SavefileLoaded = true;
 			SetStateFile(event.target.result, canvasobj);
 		}
 	}, false);

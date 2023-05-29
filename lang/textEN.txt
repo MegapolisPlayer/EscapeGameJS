@@ -168,8 +168,8 @@ Waves remaining
 
 So you want to buy a ticket, right?
 To go to Přerov it would cost
-If you want to buy a ticket,
-be quick, we will depart soon.
+If you want to buy a ticket be quick, there are a lot people
+like you who want to escape.
 So do you want to buy the ticket?
 Ok, here you go!
 Wait, that's not enough you thief!
@@ -184,16 +184,27 @@ closed. Let's hope that the SŽDC will get it together
 You will have to go through a few cities
 to get to Olomouc.
 Due to inflation the tickets rose in price significantly.
-The tickets to Nezamyslice cost 
+The tickets to Nezamyslice cost
 Also the city has quite a criminal history,
 so good luck and leave as soon as possible.
 Good luck!
 
-Welcome to Nezamyslice. This is a small town but
-todo: add nzm dialogue, no direct connection as reason
--
--
--
+So you want to buy a ticket again?
+The cost of the ticket to Nezamyslice is
+So do you want to buy the ticket?
+Ok, here you go.
+Hey, stop bothering me if you don't have enough money.
+Ok, hopefully you change you mind.
+
+Welcome to Nezamyslice. This is a small village and
+a very important railway junction. 
+You have to change here onto the train to Prostějov and
+later Olomouc, Ostrava and Poland etc.
+The city is also not as criminal as Přerov
+but the Slovaks are closing in on the city so...
+The tickets to Prostějov cost 
+
+
 
 Welcome to Prostějov. This is an actual city and not some
 random village in the countryside. It's also quite nice.

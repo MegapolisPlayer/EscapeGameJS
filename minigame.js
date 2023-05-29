@@ -371,13 +371,13 @@ class LeObject {
 		this.dmv = doesmovevertically;
 		this.dmh = doesmovehorizontally;
 		this.canvas_info = canvas;
-		this.xoffset = 80 + randomNumber(canvas.canvas.width - 160);
-		this.yoffset = 200 + randomNumber(canvas.canvas.height - 250);
+		this.xoffset = 80 + randomNumber(this.canvas_info.canvas.width - 160);
+		this.yoffset = 200 + randomNumber(this.canvas_info.canvas.height - 250);
 		this.objecttype = objtype;
 	}
 	reroll() {
-		this.xoffset = 80 + randomNumber(canvas.canvas.width - 160);
-		this.yoffset = 200 + randomNumber(canvas.canvas.height - 250);
+		this.xoffset = 80 + randomNumber(this.canvas_info.canvas.width - 160);
+		this.yoffset = 200 + randomNumber(this.canvas_info.canvas.height - 250);
 	}
 	draw() {
 		this.canvas_info.image(FishingImages[this.objecttype], this.xoffset - 30, this.yoffset - 30, 60, 60);
@@ -457,19 +457,31 @@ function FishGameComponentMain(canvas) {
 	for(let Id = 0; Id < 3; Id++) {
 		FishObjects.push(new LeObject(3, false, true, canvas));
 	}
+
+	let collisionCheckPassed = true;
 	
-	//check for collisions
-	for(let Id = 0; Id < FishObjects.length; Id++) {
-		for(let Id2 = 0; Id2 < FishObjects.length; Id2++) {
-			if(
-				DetectCollisions(
-					FishObjects[Id].xoffset - 30, FishObjects[Id].yoffset - 30, FishObjects[Id].xoffset + 30, FishObjects[Id].yoffset + 30,
-					FishObjects[Id2].xoffset - 30, FishObjects[Id2].yoffset - 30, FishObjects[Id2].xoffset + 30, FishObjects[Id2].yoffset + 30)
-			) {
-				
+	do {
+		collisionCheckPassed = true;
+		//check for collisions
+		for(let Id = 0; Id < FishObjects.length; Id++) {
+			for(let Id2 = 0; Id2 < FishObjects.length; Id2++) {
+				if(Id2 !== Id) {
+					if(
+						DetectCollisions(
+							FishObjects[Id].xoffset - 30, FishObjects[Id].yoffset - 30, FishObjects[Id].xoffset + 30, FishObjects[Id].yoffset + 30,
+							FishObjects[Id2].xoffset - 30, FishObjects[Id2].yoffset - 30, FishObjects[Id2].xoffset + 30, FishObjects[Id2].yoffset + 30)
+					) {
+						FishObjects[Id].reroll();
+						collisionCheckPassed = false;
+					}
+				}
 			}
 		}
+		if(collisionCheckPassed) {
+			break;
+		}
 	}
+	while(!collisionCheckPassed);
 	
 	window.addEventListener("click", SetResizeToTrue);	
 	

@@ -50,7 +50,7 @@ function Prerov(canvas) {
 	CheckInstantLoss(canvas);
 	
 	canvas.image(pre_Locations[0], 0, 0, canvas.canvas.width, canvas.canvas.height);
-	chr.draw(830, 150, 0.5, canvas);
+	chr.draw(100, 150, 0.5, canvas);
 	traindriver.draw(550, 150, 0.5, canvas);
 	
 	let FirstDialogue = new Dialogue();
@@ -77,14 +77,50 @@ function PrerovNastupiste(canvas) {
 	console.log("pre nastupiste");
 	localLocationId = 0;
 	canvas.image(pre_Locations[0], 0, 0, canvas.canvas.width, canvas.canvas.height);
-	chr.draw(830, 150, 0.5, canvas);
-	traindriver.draw(550, 150, 0.5, canvas);	
+	
+	traindriver.append(canvas);
+	traindriver.resetEventListeners();
+	traindriver.button.addEventListener("click", () => {
+		if(GamePaused) { return; }
+		traindriver.deleteButton();
+		ArrowToNadrazi.deleteButton();
+		ArrowToTrain.deleteButton();
+		PrerovNastupisteJob(canvas);
+	}, { once: true });
+	
 	let ArrowToNadrazi = new Arrow(700, 400, 100, 100, ArrowDirections.Down, canvas);
 	ArrowToNadrazi.button.addEventListener("click", () => {
 		if(GamePaused) { return; }
+		traindriver.deleteButton();
 		ArrowToNadrazi.deleteButton();
+		ArrowToTrain.deleteButton();
     	PrerovNadrazi(canvas);
 	}, { once: true });
+	let ArrowToTrain = new Arrow(800, 200, 100, 100, ArrowDirections.Right, canvas);
+	ArrowToTrain.button.addEventListener("click", () => {
+	if(GamePaused) { return; }
+		traindriver.deleteButton();
+		ArrowToNadrazi.deleteButton();
+		ArrowToTrain.deleteButton();
+		if(doesHaveTicket) {
+			doesHaveTicket = false;
+    		NezamysliceLoad(canvas);
+		}
+		else {
+			let dialogue = new Dialogue();
+			dialogue.begin(canvas);
+			dialogue.makeBubble(0, TranslatedText[SettingsValues.Language][147]);
+			let thisInterval = window.setInterval((dialogue, canvas) => {
+				if(dialogue.counter === 1) {
+					clearInterval(thisInterval);
+					dialogue.end();
+					PrerovNastupiste(canvas);
+				}
+			}, 100, dialogue, canvas);
+		}
+	}, { once: true });
+	chr.draw(100, 150, 0.5, canvas);
+	traindriver.draw(550, 150, 0.5, canvas);
 	ArrowToNadrazi.draw(canvas);
 	PauseButton.draw(canvas);
 	drawMoneyCount(canvas);
@@ -208,6 +244,48 @@ function PrerovBecvaJob1(canvas) {
 	}, 100, canvas);
 }
 
-function PrerovBoard(canvas) {
-	console.log("pre board");
+function PrerovNastupisteJob(canvas) {
+	console.log("pre nastupiste job");
+	AllowedToPause = false;
+	let dialogue = new Dialogue();
+	dialogue.begin(canvas);
+	dialogue.makeBubble(0, TranslationGetMultipleLines(SettingsValues.Language, 158, 2).slice(0, -1) + " " + Math.floor(1220 * SettingsValues.MoneyCostIncrease) + " " + TranslatedText[SettingsValues.Language][90]);
+	dialogue.makeBubble(1, TranslatedText[SettingsValues.Language][160]);
+	dialogue.makeChoice(2);
+	
+	let dWaitInterval = window.setInterval((dialogue) => {
+		if(dialogue.choice_result !== -1) {
+			clearInterval(dWaitInterval);
+			if(dialogue.choice_result === 1) {
+				if(MoneyAmount >= Math.floor(1220 * SettingsValues.MoneyCostIncrease)) {
+					if(doesHaveTicket) {
+						dialogue.makeBubble(3, TranslatedText[SettingsValues.Language][148]);
+						return;
+					}
+					removeMoney(Math.floor(1220 * SettingsValues.MoneyCostIncrease));
+					doesHaveTicket = true;
+					dialogue.makeBubble(3, TranslatedText[SettingsValues.Language][161]);
+					return;
+				}
+				else {
+					dialogue.makeBubble(3, TranslatedText[SettingsValues.Language][162]);
+					return;
+				}
+				return;
+			}
+			else {
+				dialogue.makeBubble(3, TranslatedText[SettingsValues.Language][163]);
+				return;
+			}
+		}
+	}, 100, dialogue);
+
+	let thisInterval = window.setInterval((dialogue, canvas) => {
+		if(dialogue.counter === 4) {
+			clearInterval(thisInterval);
+			dialogue.end();
+			AllowedToPause = true;	
+			PrerovNastupiste(canvas);
+		}
+	}, 100, dialogue, canvas);
 }

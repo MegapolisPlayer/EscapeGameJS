@@ -307,11 +307,12 @@ class AudioPlayer {
 	constructor() {
 		this.audioTracks = [];
 		this.audioTrackCounter = 0;
+		//music
 		this.audioTracks.push(new Audio("res/music/Stormfront.mp3"));             //main menu
 		this.audioTracks.push(new Audio("res/music/Faceoff.mp3"));                //intro
 		this.audioTracks.push(new Audio("res/music/ImpendingBoom.mp3"));          //hranice
 		this.audioTracks.push(new Audio("res/music/Nerves.mp3"));                 //prerov
-		this.audioTracks.push(new Audio("res/music/LateNightRadio.mp3"));         //nemcice nad hanou
+		this.audioTracks.push(new Audio("res/music/LateNightRadio.mp3"));         //nezamyslice
 		this.audioTracks.push(new Audio("res/music/BlueFeather.mp3"));            //prostejov
 		this.audioTracks.push(new Audio("res/music/FailingDefense.mp3"));         //olomouc
 		this.audioTracks.push(new Audio("res/music/RoyalCoupling.mp3"));          //studenka
@@ -319,9 +320,12 @@ class AudioPlayer {
 		this.audioTracks.push(new Audio("res/music/StartingOutWaltzVivace.mp3")); //credits, ending
 		this.audioTracks.push(new Audio("res/music/AlmostBliss.mp3"));            //waiter minigame
 		this.audioTracks.push(new Audio("res/music/PorchSwingDays.mp3"));         //fishing
-		for(let Id = 0; Id < 12; Id++) {
+		this.audioTracks.push(new Audio("res/music/AVeryBradySpecial.mp3"));      //ticket sale
+		for(let Id = 0; Id < 13; Id++) {
 			this.audioTracks[Id].loop = true;
 		}
+		//sfx
+		
 		this.allowed = false;
 	}
 	playNextTrack() {

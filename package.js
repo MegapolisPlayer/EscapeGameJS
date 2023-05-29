@@ -307,11 +307,12 @@ class AudioPlayer {
 	constructor() {
 		this.audioTracks = [];
 		this.audioTrackCounter = 0;
+		//music
 		this.audioTracks.push(new Audio("res/music/Stormfront.mp3"));             //main menu
 		this.audioTracks.push(new Audio("res/music/Faceoff.mp3"));                //intro
 		this.audioTracks.push(new Audio("res/music/ImpendingBoom.mp3"));          //hranice
 		this.audioTracks.push(new Audio("res/music/Nerves.mp3"));                 //prerov
-		this.audioTracks.push(new Audio("res/music/LateNightRadio.mp3"));         //nemcice nad hanou
+		this.audioTracks.push(new Audio("res/music/LateNightRadio.mp3"));         //nezamyslice
 		this.audioTracks.push(new Audio("res/music/BlueFeather.mp3"));            //prostejov
 		this.audioTracks.push(new Audio("res/music/FailingDefense.mp3"));         //olomouc
 		this.audioTracks.push(new Audio("res/music/RoyalCoupling.mp3"));          //studenka
@@ -319,9 +320,12 @@ class AudioPlayer {
 		this.audioTracks.push(new Audio("res/music/StartingOutWaltzVivace.mp3")); //credits, ending
 		this.audioTracks.push(new Audio("res/music/AlmostBliss.mp3"));            //waiter minigame
 		this.audioTracks.push(new Audio("res/music/PorchSwingDays.mp3"));         //fishing
-		for(let Id = 0; Id < 12; Id++) {
+		this.audioTracks.push(new Audio("res/music/AVeryBradySpecial.mp3"));      //ticket sale
+		for(let Id = 0; Id < 13; Id++) {
 			this.audioTracks[Id].loop = true;
 		}
+		//sfx
+		
 		this.allowed = false;
 	}
 	playNextTrack() {
@@ -1218,7 +1222,7 @@ class TableManager {
 			case 1:
 				if(this.counter >= 100) { //10s
 					//didnt click on order fast enough
-					WaiterGameValues.AmountEarned -= 15;
+					WaiterGameValues.AmountEarned -= 5;
 					this.remove();
 					this.status = 4;
 					this.counter = 0;
@@ -1233,7 +1237,7 @@ class TableManager {
 			case 3:
 				if(this.counter >= 50) { //5s
 					//fail
-					WaiterGameValues.AmountEarned -= 5;
+					WaiterGameValues.AmountEarned -= 15;
 					this.remove();
 					this.status = 4;
 					this.counter = 0;
@@ -1451,13 +1455,13 @@ class LeObject {
 		this.dmv = doesmovevertically;
 		this.dmh = doesmovehorizontally;
 		this.canvas_info = canvas;
-		this.xoffset = 80 + randomNumber(canvas.canvas.width - 160);
-		this.yoffset = 200 + randomNumber(canvas.canvas.height - 250);
+		this.xoffset = 80 + randomNumber(this.canvas_info.canvas.width - 160);
+		this.yoffset = 200 + randomNumber(this.canvas_info.canvas.height - 250);
 		this.objecttype = objtype;
 	}
 	reroll() {
-		this.xoffset = 80 + randomNumber(canvas.canvas.width - 160);
-		this.yoffset = 200 + randomNumber(canvas.canvas.height - 250);
+		this.xoffset = 80 + randomNumber(this.canvas_info.canvas.width - 160);
+		this.yoffset = 200 + randomNumber(this.canvas_info.canvas.height - 250);
 	}
 	draw() {
 		this.canvas_info.image(FishingImages[this.objecttype], this.xoffset - 30, this.yoffset - 30, 60, 60);
@@ -1537,19 +1541,31 @@ function FishGameComponentMain(canvas) {
 	for(let Id = 0; Id < 3; Id++) {
 		FishObjects.push(new LeObject(3, false, true, canvas));
 	}
+
+	let collisionCheckPassed = true;
 	
-	//check for collisions
-	for(let Id = 0; Id < FishObjects.length; Id++) {
-		for(let Id2 = 0; Id2 < FishObjects.length; Id2++) {
-			if(
-				DetectCollisions(
-					FishObjects[Id].xoffset - 30, FishObjects[Id].yoffset - 30, FishObjects[Id].xoffset + 30, FishObjects[Id].yoffset + 30,
-					FishObjects[Id2].xoffset - 30, FishObjects[Id2].yoffset - 30, FishObjects[Id2].xoffset + 30, FishObjects[Id2].yoffset + 30)
-			) {
-				
+	do {
+		collisionCheckPassed = true;
+		//check for collisions
+		for(let Id = 0; Id < FishObjects.length; Id++) {
+			for(let Id2 = 0; Id2 < FishObjects.length; Id2++) {
+				if(Id2 !== Id) {
+					if(
+						DetectCollisions(
+							FishObjects[Id].xoffset - 30, FishObjects[Id].yoffset - 30, FishObjects[Id].xoffset + 30, FishObjects[Id].yoffset + 30,
+							FishObjects[Id2].xoffset - 30, FishObjects[Id2].yoffset - 30, FishObjects[Id2].xoffset + 30, FishObjects[Id2].yoffset + 30)
+					) {
+						FishObjects[Id].reroll();
+						collisionCheckPassed = false;
+					}
+				}
 			}
 		}
+		if(collisionCheckPassed) {
+			break;
+		}
 	}
+	while(!collisionCheckPassed);
 	
 	window.addEventListener("click", SetResizeToTrue);	
 	
@@ -2200,10 +2216,6 @@ function HraniceNaMoraveNastupisteJob(canvas) {
 		}
 	}, 100, dialogue, canvas);
 }
-
-function HraniceNaMoraveBoard(canvas) {
-	console.log("hnm board");
-}
 let pre_Locations = [];
 let pre_AmountLoadedImages = 0;
 
@@ -2256,7 +2268,7 @@ function Prerov(canvas) {
 	CheckInstantLoss(canvas);
 	
 	canvas.image(pre_Locations[0], 0, 0, canvas.canvas.width, canvas.canvas.height);
-	chr.draw(830, 150, 0.5, canvas);
+	chr.draw(100, 150, 0.5, canvas);
 	traindriver.draw(550, 150, 0.5, canvas);
 	
 	let FirstDialogue = new Dialogue();
@@ -2283,14 +2295,50 @@ function PrerovNastupiste(canvas) {
 	console.log("pre nastupiste");
 	localLocationId = 0;
 	canvas.image(pre_Locations[0], 0, 0, canvas.canvas.width, canvas.canvas.height);
-	chr.draw(830, 150, 0.5, canvas);
-	traindriver.draw(550, 150, 0.5, canvas);	
+	
+	traindriver.append(canvas);
+	traindriver.resetEventListeners();
+	traindriver.button.addEventListener("click", () => {
+		if(GamePaused) { return; }
+		traindriver.deleteButton();
+		ArrowToNadrazi.deleteButton();
+		ArrowToTrain.deleteButton();
+		PrerovNastupisteJob(canvas);
+	}, { once: true });
+	
 	let ArrowToNadrazi = new Arrow(700, 400, 100, 100, ArrowDirections.Down, canvas);
 	ArrowToNadrazi.button.addEventListener("click", () => {
 		if(GamePaused) { return; }
+		traindriver.deleteButton();
 		ArrowToNadrazi.deleteButton();
+		ArrowToTrain.deleteButton();
     	PrerovNadrazi(canvas);
 	}, { once: true });
+	let ArrowToTrain = new Arrow(800, 200, 100, 100, ArrowDirections.Right, canvas);
+	ArrowToTrain.button.addEventListener("click", () => {
+	if(GamePaused) { return; }
+		traindriver.deleteButton();
+		ArrowToNadrazi.deleteButton();
+		ArrowToTrain.deleteButton();
+		if(doesHaveTicket) {
+			doesHaveTicket = false;
+    		NezamysliceLoad(canvas);
+		}
+		else {
+			let dialogue = new Dialogue();
+			dialogue.begin(canvas);
+			dialogue.makeBubble(0, TranslatedText[SettingsValues.Language][147]);
+			let thisInterval = window.setInterval((dialogue, canvas) => {
+				if(dialogue.counter === 1) {
+					clearInterval(thisInterval);
+					dialogue.end();
+					PrerovNastupiste(canvas);
+				}
+			}, 100, dialogue, canvas);
+		}
+	}, { once: true });
+	chr.draw(100, 150, 0.5, canvas);
+	traindriver.draw(550, 150, 0.5, canvas);
 	ArrowToNadrazi.draw(canvas);
 	PauseButton.draw(canvas);
 	drawMoneyCount(canvas);
@@ -2414,51 +2462,261 @@ function PrerovBecvaJob1(canvas) {
 	}, 100, canvas);
 }
 
-function PrerovBoard(canvas) {
-	console.log("pre board");
-}
-function NezamysliceImageLoaded() {
+function PrerovNastupisteJob(canvas) {
+	console.log("pre nastupiste job");
+	AllowedToPause = false;
+	let dialogue = new Dialogue();
+	dialogue.begin(canvas);
+	dialogue.makeBubble(0, TranslationGetMultipleLines(SettingsValues.Language, 158, 2).slice(0, -1) + " " + Math.floor(1220 * SettingsValues.MoneyCostIncrease) + " " + TranslatedText[SettingsValues.Language][90]);
+	dialogue.makeBubble(1, TranslatedText[SettingsValues.Language][160]);
+	dialogue.makeChoice(2);
+	
+	let dWaitInterval = window.setInterval((dialogue) => {
+		if(dialogue.choice_result !== -1) {
+			clearInterval(dWaitInterval);
+			if(dialogue.choice_result === 1) {
+				if(MoneyAmount >= Math.floor(1220 * SettingsValues.MoneyCostIncrease)) {
+					if(doesHaveTicket) {
+						dialogue.makeBubble(3, TranslatedText[SettingsValues.Language][148]);
+						return;
+					}
+					removeMoney(Math.floor(1220 * SettingsValues.MoneyCostIncrease));
+					doesHaveTicket = true;
+					dialogue.makeBubble(3, TranslatedText[SettingsValues.Language][161]);
+					return;
+				}
+				else {
+					dialogue.makeBubble(3, TranslatedText[SettingsValues.Language][162]);
+					return;
+				}
+				return;
+			}
+			else {
+				dialogue.makeBubble(3, TranslatedText[SettingsValues.Language][163]);
+				return;
+			}
+		}
+	}, 100, dialogue);
 
+	let thisInterval = window.setInterval((dialogue, canvas) => {
+		if(dialogue.counter === 4) {
+			clearInterval(thisInterval);
+			dialogue.end();
+			AllowedToPause = true;	
+			PrerovNastupiste(canvas);
+		}
+	}, 100, dialogue, canvas);
+}
+let nzm_Locations = [];
+let nzm_AmountLoadedImages = 0;
+
+function NezamysliceImageLoaded() {
+	nzm_AmountLoadedImages += 1;
 }
 
 function NezamysliceLoad(canvas) {
-
+	AllowedToPause = false;	
+	timerPause();
+	canvas.loadingMsg();
+	locationId = 3;
+	for(let Id = 0; Id < 5; Id++) {
+		nzm_Locations.push(new Image());
+		nzm_Locations[Id].onload = NezamysliceImageLoaded;
+	}
+	nzm_Locations[0].src = "res/nezamyslice/nastupiste.jpg";
+	nzm_Locations[1].src = "res/nezamyslice/nadrazi.jpg";
+	nzm_Locations[2].src = "res/nezamyslice/podnik_venek.jpg";
+	nzm_Locations[3].src = "res/nezamyslice/podnik_vnitrek.jpg";
+	nzm_Locations[4].src = "res/map/3.png";
+	
+	NezamysliceMap(canvas);
 }
 
 function NezamysliceMap(canvas) {
-
+	if(nzm_AmountLoadedImages != 5) {
+      	window.setTimeout(NezamysliceMap, 100, canvas); // this checks the flag every 100 milliseconds
+		return;
+    }
+	//map scene
+	ap.playTrack(4);
+	canvas.setnewcolor("#333399");
+	canvas.setnewfont("Arial, FreeSans", "32", "bold");
+	canvas.image(nzm_Locations[4], 0, 0, canvas.canvas.width, canvas.canvas.height);
+	canvas.textml(TranslatedText[SettingsValues.Language][25]+" 3\nNezamyslice", 50, 50);
+	canvas.resetfontweight();
+	maparrow = new Arrow(700, 400, 100, 100, ArrowDirections.Right, canvas);
+	maparrow.button.addEventListener("click", (event) => {
+		maparrow.deleteButton();
+		Nezamyslice(canvas);
+	});
+    maparrow.draw(canvas);
 }
 
 function Nezamyslice(canvas) {
+	console.log("Nezamyslice START "+nzm_AmountLoadedImages);
+	CheckInstantLoss(canvas);
 
+	canvas.image(nzm_Locations[0], 0, 0, canvas.canvas.width, canvas.canvas.height);
+	chr.draw(750, 350, 0.25, canvas);
+	traindriver.draw(250, 300, 0.25, canvas);
+
+	let FirstDialogue = new Dialogue();
+	FirstDialogue.begin(canvas);
+	FirstDialogue.makeBubble(0, TranslationGetMultipleLines(SettingsValues.Language, 164, 2));
+	FirstDialogue.makeBubble(1, TranslationGetMultipleLines(SettingsValues.Language, 166, 2));
+	FirstDialogue.makeBubble(2, TranslationGetMultipleLines(SettingsValues.Language, 168, 2));
+	FirstDialogue.makeBubble(3, TranslatedText[SettingsValues.Language][170].slice(0, -1) + " " + Math.floor(940 * SettingsValues.MoneyCostIncrease) + " " + TranslatedText[SettingsValues.Language][90]);	
+	
+	let thisInterval = window.setInterval((dialogue, canvas) => {
+		if(dialogue.counter === 4) {
+			clearInterval(thisInterval);
+			dialogue.end();		
+			PauseButton.append(canvas);
+			AllowedToPause = true;
+			timerUnpause();	
+			NezamysliceNastupiste(canvas);
+		}
+	}, 100, FirstDialogue, canvas);
 }
 
 function NezamysliceNastupiste(canvas) {
 	console.log("nzm nastupiste");
+	localLocationId = 0;
+	canvas.image(nzm_Locations[0], 0, 0, canvas.canvas.width, canvas.canvas.height);
+	
+	traindriver.append(canvas);
+	traindriver.resetEventListeners();
+	traindriver.button.addEventListener("click", () => {
+		if(GamePaused) { return; }
+		traindriver.deleteButton();
+		ArrowToNadrazi.deleteButton();
+		ArrowToTrain.deleteButton();
+		NezamysliceNastupisteJob(canvas);
+	}, { once: true });
+	
+	let ArrowToNadrazi = new Arrow(850, 400, 100, 100, ArrowDirections.Right, canvas);
+	ArrowToNadrazi.button.addEventListener("click", () => {
+		if(GamePaused) { return; }
+		traindriver.deleteButton();
+		ArrowToNadrazi.deleteButton();
+		ArrowToTrain.deleteButton();
+    	NezamysliceNadrazi(canvas);
+	}, { once: true });
+	let ArrowToTrain = new Arrow(350, 220, 100, 100, ArrowDirections.Left, canvas);
+	ArrowToTrain.button.addEventListener("click", () => {
+	if(GamePaused) { return; }
+		traindriver.deleteButton();
+		ArrowToNadrazi.deleteButton();
+		ArrowToTrain.deleteButton();
+		if(doesHaveTicket) {
+			doesHaveTicket = false;
+    		ProstejovLoad(canvas);
+		}
+		else {
+			let dialogue = new Dialogue();
+			dialogue.begin(canvas);
+			dialogue.makeBubble(0, TranslatedText[SettingsValues.Language][147]);
+			let thisInterval = window.setInterval((dialogue, canvas) => {
+				if(dialogue.counter === 1) {
+					clearInterval(thisInterval);
+					dialogue.end();
+					NezamysliceNastupiste(canvas);
+				}
+			}, 100, dialogue, canvas);
+		}
+	}, { once: true });
+	chr.draw(750, 350, 0.25, canvas);
+	traindriver.draw(250, 300, 0.25, canvas);
+	ArrowToNadrazi.draw(canvas);
+	PauseButton.draw(canvas);
+	drawMoneyCount(canvas);
+	RenderStatus(canvas);
 }
 
 function NezamysliceNadrazi(canvas) {
-	console.log("nzm nastupiste");
+	console.log("nzm nadrazi");
+	localLocationId = 1;
+	canvas.image(nzm_Locations[1], 0, 0, canvas.canvas.width, canvas.canvas.height);
+	
+	let ArrowToNastupiste = new Arrow(700, 350, 100, 100, ArrowDirections.Right, canvas);
+	ArrowToNastupiste.button.addEventListener("click", () => {
+		if(GamePaused) { return; }
+		ArrowToNastupiste.deleteButton();
+		ArrowToPodnikVenek.deleteButton();
+    	NezamysliceNastupiste(canvas);
+	}, { once: true });
+	let ArrowToPodnikVenek = new Arrow(100, 350, 100, 100, ArrowDirections.Left, canvas);
+	ArrowToPodnikVenek.button.addEventListener("click", () => {
+		if(GamePaused) { return; }
+		ArrowToNastupiste.deleteButton();
+		ArrowToPodnikVenek.deleteButton();
+    	NezamyslicePodnikVenek(canvas);
+	}, { once: true });
+	chr.draw(250, 250, 0.5, canvas);
+	PauseButton.draw(canvas);
+	drawMoneyCount(canvas);
+	RenderStatus(canvas);
 }
 
 function NezamyslicePodnikVenek(canvas) {
-	console.log("nzm nastupiste");
+	console.log("nzm podnik venek");
+	localLocationId = 2;
+	canvas.image(nzm_Locations[2], 0, 0, canvas.canvas.width, canvas.canvas.height);
+	let ArrowToNadrazi = new Arrow(900, 400, 100, 100, ArrowDirections.Down, canvas);
+	ArrowToNadrazi.button.addEventListener("click", () => {
+		if(GamePaused) { return; }
+		ArrowToNadrazi.deleteButton();
+		ArrowToPodnikVnitrek.deleteButton();
+    	NezamysliceNadrazi(canvas);
+	}, { once: true });
+	let ArrowToPodnikVnitrek = new Arrow(700, 300, 75, 75, ArrowDirections.Left, canvas);
+	ArrowToPodnikVnitrek.button.addEventListener("click", () => {
+		if(GamePaused) { return; }
+		ArrowToNadrazi.deleteButton();
+		ArrowToPodnikVnitrek.deleteButton();
+    	NezamyslicePodnikVnitrek(canvas);
+	}, { once: true });
+	chr.draw(800, 350, 0.25, canvas);
+	PauseButton.draw(canvas);
+	drawMoneyCount(canvas);
+	RenderStatus(canvas);
 }
 
 function NezamyslicePodnikVnitrek(canvas) {
-	console.log("nzm nastupiste");
-}
-
-function NezamysliceZachody(canvas) {
-	console.log("nzm nastupiste");
+	console.log("nzm podnik vnitrek");
+	localLocationId = 3;
+	canvas.image(nzm_Locations[3], 0, 0, canvas.canvas.width, canvas.canvas.height);
+	let ArrowToPodnikVenek = new Arrow(870, 370, 100, 100, ArrowDirections.Up, canvas);
+	ArrowToPodnikVenek.button.addEventListener("click", () => {
+		if(GamePaused) { return; }
+		ArrowToPodnikVenek.deleteButton();
+    	NezamyslicePodnikVenek(canvas);
+	}, { once: true });
+	chr.draw(700, 250, 0.5, canvas);
+	PauseButton.draw(canvas);
+	drawMoneyCount(canvas);
+	RenderStatus(canvas);
 }
 
 function NezamyslicePodnikVnitrekJob(canvas) {
-	console.log("nzm nastupiste");
+	console.log("nzm podnik vnitrek job");
 }
 
-function NezamysliceZachodyJob(canvas) {
-	console.log("nzm zachody job");
+function NezamysliceNastupisteJob(canvas) {
+	console.log("nzm nastupiste job");
+}
+
+
+function ProstejovImageLoaded() {
+	
+}
+
+function ProstejovLoad(canvas) {
+	AllowedToPause = false;	
+	timerPause();
+	canvas.loadingMsg();
+	locationId = 4;
+	
 }
 let GamePaused = false;
 let AllowedToPause = true;
@@ -2505,7 +2763,18 @@ function SetState(canvasobj) {
 			}
 		case 3:
 			switch(localLocationId) {
-				//nemcice
+				case 0:
+					NezamysliceNastupiste(canvasobj);	
+					return;
+				case 1:
+					NezamysliceNadrazi(canvasobj);	
+					return;
+				case 2:
+					NezamyslicePodnikVenek(canvasobj);
+					return;
+				case 3:
+					NezamyslicePodnikVnitrek(canvasobj);
+					return;
 			}
 			return;
 	}
@@ -2627,13 +2896,15 @@ function SetStateFile(filecontent, canvas) {
 
 	console.log("Data split!");
 
-		timerStart();		
+	timerStart();		
 	
 	//pause button
 	PauseButton = new Arrow(10, 10, 50, 50, ArrowDirections.Pause, null);
 	PauseButton.button.addEventListener("click", () => {
 		Pause(canvas);
-	});	
+	});
+	
+	SavefileLoaded = true;
 	
 	//image loading - dont forget to add stuff here
 	switch(locationId) {
@@ -2657,6 +2928,18 @@ function SetStateFile(filecontent, canvas) {
 					clearInterval(thisInterval2);
 					AllowedToPause = true;
 					ap.playTrack(3);
+					SetState(canvas);
+				}
+			}, 100);
+		break;
+		case 3:
+			nzm_AmountLoadedImages = 0;
+			NezamysliceLoad(canvas, true);
+			let thisInterval3 = window.setInterval(() => {
+				if(nzm_AmountLoadedImages === 5) {
+					clearInterval(thisInterval3);
+					AllowedToPause = true;
+					ap.playTrack(4);
 					SetState(canvas);
 				}
 			}, 100);
@@ -2700,19 +2983,20 @@ function Save() {
     document.body.removeChild(hiddenAddrElem);
 }
 
+let SavefileLoaded = false;
+
 function Load(canvasobj) {
-	Load.FileLoaded = false;
+	SavefileLoaded = false;
 	let hiddenInputElem = document.createElement("input");
 	hiddenInputElem.id="fileuploaded";
 	hiddenInputElem.type = "file";
 	hiddenInputElem.accept = ".eors1";
 	
 	hiddenInputElem.addEventListener("change", (event) => {
-		Load.FileLoaded = true;
 		let reader = new FileReader();
    		reader.readAsText(hiddenInputElem.files[0], "UTF-8");
 		reader.onload = (event) => {
-			Load.FileLoaded = false; //finished load operation
+			SavefileLoaded = true;
 			SetStateFile(event.target.result, canvasobj);
 		}
 	}, false);
@@ -2815,7 +3099,7 @@ function MainMenu() {
 	cvs.setnewfont("Arial, FreeSans", "16");
 	
 	cvs.text("(c) Martin/MegapolisPlayer, Jiri/KohoutGD 2023", 650, 472);
-	cvs.text("build date 29/05/2023, prerelease test version", 650, 492);
+	cvs.text("build date 30/05/2023, prerelease test version", 650, 492);
 	
 	cvs.setnewcolor("#333399");
 	cvs.setnewfont("Arial, FreeSans", "48");
@@ -2838,7 +3122,7 @@ function PlayMenu() {
 	let buttonBack = new Button(650, 130, 300, 100, 25, TranslatedText[SettingsValues.Language][36], "canvas_container");
 	
 	let thisInterval = window.setInterval(() => {
-		if(Load.FileLoaded === true) {
+		if(SavefileLoaded === true) {
 			clearInterval(thisInterval);
 			buttonNew.deleteButton();
 			buttonLoad.deleteButton();

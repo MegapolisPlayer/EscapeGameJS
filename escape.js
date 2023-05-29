@@ -94,7 +94,7 @@ function MainMenu() {
 	cvs.setnewfont("Arial, FreeSans", "16");
 	
 	cvs.text("(c) Martin/MegapolisPlayer, Jiri/KohoutGD 2023", 650, 472);
-	cvs.text("build date 29/05/2023, prerelease test version", 650, 492);
+	cvs.text("build date 30/05/2023, prerelease test version", 650, 492);
 	
 	cvs.setnewcolor("#333399");
 	cvs.setnewfont("Arial, FreeSans", "48");
@@ -117,7 +117,7 @@ function PlayMenu() {
 	let buttonBack = new Button(650, 130, 300, 100, 25, TranslatedText[SettingsValues.Language][36], "canvas_container");
 	
 	let thisInterval = window.setInterval(() => {
-		if(Load.FileLoaded === true) {
+		if(SavefileLoaded === true) {
 			clearInterval(thisInterval);
 			buttonNew.deleteButton();
 			buttonLoad.deleteButton();
