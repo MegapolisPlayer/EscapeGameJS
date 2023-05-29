@@ -138,7 +138,7 @@ class TableManager {
 			case 1:
 				if(this.counter >= 100) { //10s
 					//didnt click on order fast enough
-					WaiterGameValues.AmountEarned -= 15;
+					WaiterGameValues.AmountEarned -= 5;
 					this.remove();
 					this.status = 4;
 					this.counter = 0;
@@ -153,7 +153,7 @@ class TableManager {
 			case 3:
 				if(this.counter >= 50) { //5s
 					//fail
-					WaiterGameValues.AmountEarned -= 5;
+					WaiterGameValues.AmountEarned -= 15;
 					this.remove();
 					this.status = 4;
 					this.counter = 0;
