@@ -70,3 +70,14 @@ Auf geht's!
 Wenn Sie Ihre Meinung ändern, können Sie zurückkommen.
 Ich stehe Ihnen jederzeit zur Verfügung.
 
+DU HAST VERLOREN
+Ein Artillerieangriff zerstörte einen Zug.
+Du warst in diesem Zug.
+Die Slowaken haben die Stadt, in der Sie sich befanden, erobert.
+Jede Fluchtmöglichkeit ist dahin.
+Beim Aussteigen kam es zu einem Ansturm.
+Sie waren einer der Opfer.
+Die tschechische Armee hat Sie an die Front geschickt.
+Da kann man sich wirklich nicht entziehen.
+Sie wurden wegen Kollaboration verhaftet.
+Ihre Ausführung soll in 1h erfolgen.
