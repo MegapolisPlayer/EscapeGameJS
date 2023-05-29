@@ -103,3 +103,11 @@ Klicken Sie irgendwo, um das Spiel zu beenden.
 ENTSPERRT
 GESPERRT
 Spielzeit:
+
+CZK
+
+Aufgaben
+Start
+Zeitlimit
+Zeit
+Verdient
