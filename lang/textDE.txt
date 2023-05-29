@@ -22,10 +22,10 @@ Sprache
 
 ACHTUNG
 
--
--
--
--
+Die Autoren dieses Spiels beabsichtigen nicht, irgendeine Rasse oder
+Nationalität zu beleidigen. Dieses Spiel soll ausschließlich den
+Unterhaltungszwecken dienen und spiegelt nicht die politischen
+Ansichten des Autors wider. Wir hoffen, dass Ihnen dieses Spiel gefallen wird.
 
 Hintergrundgeschichte
 Tag
@@ -44,17 +44,17 @@ Es ist fliehen zeit
 
 zurück
 
--
--
--
--
--
--
--
--
--
--
--
+Heute ist ein schöner Tag
+Lasst uns die Nachrichten lesen!
+Hölle! Die Slowaken haben rebelliert und die sind nur
+einige wenige Kilometer von dem Dorf Hranice entfernt!
+Wie ist das möglich? Die Tschechen werden
+mit der Wehrpflicht bald beginnen.
+Ich muss fliehen! Aber wohin soll ich fliehen? Ich denke, Polen
+ist die sicherste Wette und auch die einfachste Wahl, die es gibt.
+Es ist sowieso nicht so, dass ich eine Wahl hätte – Deutschland
+ist zu weit weg und zu teuer und Österreich ist nicht viel besser.
+Dann ist es Polen!
 
 Drücken Sie die Escape-Taste oder klicken Sie erneut
 auf die Schaltfläche „Pause“, um die Pause aufzuheben.
