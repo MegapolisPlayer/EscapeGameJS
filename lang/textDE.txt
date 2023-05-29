@@ -81,3 +81,25 @@ Die tschechische Armee hat Sie an die Front geschickt.
 Da kann man sich wirklich nicht entziehen.
 Sie wurden wegen Kollaboration verhaftet.
 Ihre Ausführung soll in 1h erfolgen.
+
+Du bist aus der Region Olomouc geflohen!
+
+Spiel gemacht von:
+Bilder von:
+Musik und Audioeffekte von:
+Übersetzungen von:
+Lizenz 
+Deine Erfolge:
+Medaille der Geschwindigkeit
+Du hast das Spiel in weniger als 10 Minuten beendet!
+Kellnermedaille
+Du hast alle Kellner-Minispiele gewonnen!
+Helfermedaille
+Du hast den Menschen geholfen, den Weg nach Hause zu finden!
+SUS-Medaille
+Du hast das Spiel in SUS gewonnen!
+Danke fürs Spielen!
+Klicken Sie irgendwo, um das Spiel zu beenden.
+ENTSPERRT
+GESPERRT
+Spielzeit:
