@@ -113,10 +113,10 @@ Time
 Earned
 
 Waiter minigame
-Click on the correct orders as fast as possible.
-For every correct order you will get 15 CZK,
-otherwise you will get -5 CZK. Click on the
-tables when they show an order and click on the
+Click on the correct orders as fast as possible. For every
+correct order you will get 15 CZK, otherwise you lose 15 CZK.
+If you don`t accept the order you will lose 5 CZK.
+Click on the tables when they show an order and click on the
 order and then the table to deliver it.
 
 Order
@@ -204,11 +204,26 @@ The city is also not as criminal as Přerov
 but the Slovaks are closing in on the city so...
 The tickets to Prostějov cost 
 
-
+Are you going to Prostějov now?
+If the answer and yes than you will have to pay 
+So do you want to buy the tickets?
+(I expect a yes since you seem to be travelling a lot...)
+Ok, here it is.
+If you want to buy a ticket bring enough money next time.
+Ok, hopefully you will rethink this.
 
 Welcome to Prostějov. This is an actual city and not some
 random village in the countryside. It's also quite nice.
 It's also quite far away from the front lines, so you can
-relax a bit and it is not as criminal as Přerov.
+relax a bit and it is probably the safest place so far.
 Tickets to Olomouc cost approximately
+if you are going to need to buy them.
 Good luck!
+
+Oh time for Olomouc I see... The cost is 
+Okay do you have enough money and, more importantly,
+do you want to buy the ticket?
+Okay, hop on!
+Hey, you promised me something!
+Okay, as nice as Prostějov is it is not the best place
+to be at this point in time.

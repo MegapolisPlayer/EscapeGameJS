@@ -642,6 +642,8 @@ function TicketSaleGameReset() {
 
 //dialect translation - nezamyslice
 
+//word in dialect: selection of three (depending on difficulty) where one correct spelling in official dialect
+
 let DialectTranslationGameValues = {
 	IsIntroEnd: false,
 	IsOver: -1
@@ -663,29 +665,10 @@ function DialectTranslationGameReset() {
 	WaiterGameValues.IsOver = -1;
 }
 
-//cleaning the beches on the square - prostejov
-
-let CleaningGameValues = {
-	IsOver: -1
-}
-
-function CleaningGame(canvas) {
-	CleaningGameValues.IsOver = -1;
-	console.log("cleaning game");
-}
-
-function CleaningGameComponentIntro(canvas) {
-
-}
-function CleaningGameComponentMain(canvas) {
-
-}
-
-function CleaningGameReset(canvas) {
-	CleaningGameValues.IsOver = -1;
-}
-
 //cashier - prostejov, olomouc
+
+//rotate object, scan at correct time as fast as possible?
+//3 buttons, stop rotation, rotation incr. speed for both directions
 
 let CashierGameValues = {
 	IsIntroEnd: false,
@@ -706,6 +689,28 @@ function CashierGameComponentMain(canvas) {
 
 function CashierGameReset() {
 	CashierGameValues.IsOver = -1;
+}
+
+//cleaning the benches on the square - olomouc
+
+let CleaningGameValues = {
+	IsOver: -1
+}
+
+function CleaningGame(canvas) {
+	CleaningGameValues.IsOver = -1;
+	console.log("cleaning game");
+}
+
+function CleaningGameComponentIntro(canvas) {
+
+}
+function CleaningGameComponentMain(canvas) {
+
+}
+
+function CleaningGameReset(canvas) {
+	CleaningGameValues.IsOver = -1;
 }
 
 //cheese making - olomouc
@@ -754,4 +759,4 @@ function DefenseGameReset() {
 	DefenseGameValues.IsOver = -1;
 }
 
-//maze game in ostrava integrated into Ostrava.js
+//ostrava not really a big location

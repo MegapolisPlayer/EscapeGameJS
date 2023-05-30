@@ -62,10 +62,10 @@ function Credits(iscalledfrommm, canvasobj) {
 		canvasobj.setfontweight("bold");
 		canvasobj.textml(
 			"SReality, Pixabay, VlakemJednoduse.cz, Freepik: jcomp\n"+
-			"Fortes Interactive\n"+
-			"Wikipedia Commons: Palickap, Marie Čchiedzeová, JirkaSv\n"+
-			"Vojtěch Dočkal, Jiří Komárek, Vitezslava, RPekar, Dezidor\n"+
-			"Kamil Czianskim, Michal Klajban, Draceane, Herbert Frank\n"
+			"Fortes Interactive, Wikipedia Commons: Palickap, JirkaSv\n"+
+			"Marie Čchiedzeová, Vojtěch Dočkal, Jiří Komárek, RPekar\n"+
+			"Dezidor, Vitezslava, Kamil Czianskim, Michal Klajban, \n"+
+			"STERUSSTUDENKA, Draceane, Herbert Frank\n"
 		, 75, 230);
 		canvasobj.resetfontweight();
 	}, 2 * delay);	
@@ -76,7 +76,7 @@ function Credits(iscalledfrommm, canvasobj) {
 		canvasobj.image(finalCreditsImage, 0, 0, canvasobj.canvas.width, canvasobj.canvas.height);
 		canvasobj.text(TranslatedText[SettingsValues.Language][73], 50, 190);
 		canvasobj.setfontweight("bold");
-		canvasobj.textml("All music by Kevin Macleod (incompetech.com)\nLicensed under CC-BY 3.0", 100, 230);
+		canvasobj.textml("All music by Kevin Macleod (incompetech.com)\nLicensed under CC-BY 3.0\n", 100, 230);
 		canvasobj.resetfontweight();
 	}, 3 * delay);
 

@@ -113,11 +113,11 @@ Začít
 Získáno
 
 Čišníkova minihra
-Dostav co nejrychleji na správné objednávky. Za
-každou správnou objednávku dostaneš 15Kč,
-jinak dostaneš -5Kč. Kilkni na stůl aby jsi
-přijal objednávku a klikní na objednávku a
-potom na stůl aby si ji dostavil.
+Dostav správné objednávky co nejrychleji. Za každou
+správnou objednávku dostaneš 15Kč, jinak dostaneš -15Kč.
+Pokud nevyzvedneš objednávku tak ztratíš 5Kč. 
+Kilkni na stůl aby jsi přijal objednávku a klikní na
+objednávku a potom na stůl aby si ji dostavil.
 
 Objednávka
 
@@ -204,11 +204,26 @@ Tahle vesnice taky není zas tak kriminální jako Přerov ale
 Slováci se přibližují takže zkus utéct co nejrychleji.
 Jizdenky to Prostějova stojí 
 
-
+Jedeš už do Prostějova?
+Pokud je odpověď ano tak si musíš připlatit 
+Takže chceš si zakoupit jízdenky?
+(Očekávam odpověď ano protože cestuješ nějak hodně...)
+Okej, zde to je!
+Pokud si chceš koupit jízdenku vezmi si dostatek peněz!
+Ok, snad si to fakt rozmyslíš.
 
 Vítej v Prostejově. Tohle je už opravdové město a
 ne nějaká náhodná vesnička. A ještě dost hezké k tomu.
 Je taky dost daleko od fronty takže si můžeš trošku
-odpočinout a zas tak kriminální jako Přerov to není.
+odpočinout a zas je to asi jedno z nejbezpečnějších míst.
 Jízdenky do Olomouce stojí plus mínus
+pokud si je budeš muset koupit
 Hodně štestí!
+
+Vypadá že je čas na Olomouc... Cena je 
+Máš-li dostatek peněz a také - více duležitá otázka - 
+chceš si koupit jízdenku?
+Oukej, tak naskoč!
+Hej, něco si mi sliboval!
+Já vím že Prostějov je hezké město ale opravdu není
+dobrý nápad zde zůstat během současné situace.

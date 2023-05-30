@@ -2,7 +2,7 @@ let nzm_Locations = [];
 let nzm_AmountLoadedImages = 0;
 
 function NezamysliceImageLoaded() {
-	nzm_AmountLoadedImages += 1;
+	nzm_AmountLoadedImages++;
 }
 
 function NezamysliceLoad(canvas) {
