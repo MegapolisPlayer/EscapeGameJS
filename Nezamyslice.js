@@ -129,7 +129,7 @@ function NezamysliceNadrazi(canvas) {
 	localLocationId = 1;
 	canvas.image(nzm_Locations[1], 0, 0, canvas.canvas.width, canvas.canvas.height);
 	
-	let ArrowToNastupiste = new Arrow(700, 350, 100, 100, ArrowDirections.Right, canvas);
+	let ArrowToNastupiste = new Arrow(500, 370, 100, 100, ArrowDirections.Down, canvas);
 	ArrowToNastupiste.button.addEventListener("click", () => {
 		if(GamePaused) { return; }
 		ArrowToNastupiste.deleteButton();
@@ -195,4 +195,46 @@ function NezamyslicePodnikVnitrekJob(canvas) {
 
 function NezamysliceNastupisteJob(canvas) {
 	console.log("nzm nastupiste job");
+	AllowedToPause = false;
+	let dialogue = new Dialogue();
+	dialogue.begin(canvas);
+	dialogue.makeBubble(0, TranslationGetMultipleLines(SettingsValues.Language, 171, 2).slice(0, -1) + " " + Math.floor(940 * SettingsValues.MoneyCostIncrease) + " " + TranslatedText[SettingsValues.Language][90]);
+	dialogue.makeBubble(1, TranslationGetMultipleLines(SettingsValues.Language, 173, 2));
+	dialogue.makeChoice(2);
+	
+	let dWaitInterval = window.setInterval((dialogue) => {
+		if(dialogue.choice_result !== -1) {
+			clearInterval(dWaitInterval);
+			if(dialogue.choice_result === 1) {
+				if(MoneyAmount >= Math.floor(940 * SettingsValues.MoneyCostIncrease)) {
+					if(doesHaveTicket) {
+						dialogue.makeBubble(3, TranslatedText[SettingsValues.Language][148]);
+						return;
+					}
+					removeMoney(Math.floor(940 * SettingsValues.MoneyCostIncrease));
+					doesHaveTicket = true;
+					dialogue.makeBubble(3, TranslatedText[SettingsValues.Language][175]);
+					return;
+				}
+				else {
+					dialogue.makeBubble(3, TranslatedText[SettingsValues.Language][176]);
+					return;
+				}
+				return;
+			}
+			else {
+				dialogue.makeBubble(3, TranslatedText[SettingsValues.Language][177]);
+				return;
+			}
+		}
+	}, 100, dialogue);
+
+	let thisInterval = window.setInterval((dialogue, canvas) => {
+		if(dialogue.counter === 4) {
+			clearInterval(thisInterval);
+			dialogue.end();
+			AllowedToPause = true;	
+			NezamysliceNastupiste(canvas);
+		}
+	}, 100, dialogue, canvas);
 }

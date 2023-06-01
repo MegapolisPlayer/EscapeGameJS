@@ -119,7 +119,7 @@ If you don`t accept the order you will lose 5 CZK.
 Click on the tables when they show an order and click on the
 order and then the table to deliver it.
 
-Order
+Done
 
 Fisher minigame
 Catch as much fish as possible. For every fish 
@@ -128,7 +128,7 @@ will get 5CZK, for a tire 10CZK. Boxes always
 have an unspecified amount of money (<150 CZK)
 or any of the aforementioned objects (excl. fish).
 
-Current
+Earned
 
 Cleaning minigame
 Just clean objects by swiping.
@@ -167,7 +167,7 @@ You will get a ticket to Ostrava.
 Waves remaining
 
 So you want to buy a ticket, right?
-To go to Přerov it would cost
+To go to Přerov it would cost 
 If you want to buy a ticket be quick, there are a lot people
 like you who want to escape.
 So do you want to buy the ticket?
@@ -184,13 +184,13 @@ closed. Let's hope that the SŽDC will get it together
 You will have to go through a few cities
 to get to Olomouc.
 Due to inflation the tickets rose in price significantly.
-The tickets to Nezamyslice cost
+The tickets to Nezamyslice cost 
 Also the city has quite a criminal history,
 so good luck and leave as soon as possible.
 Good luck!
 
 So you want to buy a ticket again?
-The cost of the ticket to Nezamyslice is
+The cost of the ticket to Nezamyslice is 
 So do you want to buy the ticket?
 Ok, here you go.
 Hey, stop bothering me if you don't have enough money.
@@ -208,7 +208,7 @@ Are you going to Prostějov now?
 If the answer and yes than you will have to pay 
 So do you want to buy the tickets?
 (I expect a yes since you seem to be travelling a lot...)
-Ok, here it is.
+Ok, here is the ticket.
 If you want to buy a ticket bring enough money next time.
 Ok, hopefully you will rethink this.
 
@@ -216,8 +216,8 @@ Welcome to Prostějov. This is an actual city and not some
 random village in the countryside. It's also quite nice.
 It's also quite far away from the front lines, so you can
 relax a bit and it is probably the safest place so far.
-Tickets to Olomouc cost approximately
-if you are going to need to buy them.
+Tickets to Olomouc cost approximately 
+if you are going to need them.
 Good luck!
 
 Oh time for Olomouc I see... The cost is 
@@ -227,3 +227,29 @@ Okay, hop on!
 Hey, you promised me something!
 Okay, as nice as Prostějov is it is not the best place
 to be at this point in time.
+
+Welcome to Olomouc, the home of cheesemaking and also the
+first city on our trip with a functioning tram system!
+There is quite a lot of stuff to do but still, I wouldn`t
+stay here I were you.
+
+Okay so are we going to Poland?
+The ticket to Katowice costs 
+I'm sure nothing will ever happen along the way - I mean we
+aren`t going through any 
+Okay so are we going to Poland?
+It seems that the answer is indeed yes!
+You don`t have money again???
+Okay, try some cheeses and return!
+
+Why are we braking and honking?
+Oh crap!
+We hit a steamroller on a crossing. It seems it had a Polish
+driver. Also why do I hear artillery and the Slovak anthem?
+
+Hopefully nothing happens this time!
+
+And now to transfer to the right train!
+
+Finally in Poland!
+Yay!

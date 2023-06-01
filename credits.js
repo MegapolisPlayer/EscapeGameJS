@@ -56,17 +56,18 @@ function Credits(iscalledfrommm, canvasobj) {
 	}, 1 * delay);
 	
 	setTimeout(() => {
-		//images - main, hranice na morave, prerov
+		//images - all of them
 		canvasobj.image(finalCreditsImage, 0, 0, canvasobj.canvas.width, canvasobj.canvas.height);
-		canvasobj.text(TranslatedText[SettingsValues.Language][72], 50, 190);
+		canvasobj.text(TranslatedText[SettingsValues.Language][72], 50, 160);
 		canvasobj.setfontweight("bold");
 		canvasobj.textml(
 			"SReality, Pixabay, VlakemJednoduse.cz, Freepik: jcomp\n"+
-			"Fortes Interactive, Wikipedia Commons: Palickap, JirkaSv\n"+
-			"Marie Čchiedzeová, Vojtěch Dočkal, Jiří Komárek, RPekar\n"+
-			"Dezidor, Vitezslava, Kamil Czianskim, Michal Klajban, \n"+
-			"STERUSSTUDENKA, Draceane, Herbert Frank\n"
-		, 75, 230);
+			"Fortes Interactive, VagonWeb.cz, Wikipedia Commons:\n"+
+			"Marie Čchiedzeová, Vojtěch Dočkal, Jiří Komárek, JirkaSv\n"+
+			"Dezidor, Vitezslava, Kamil Czianskim, Michal Klajban\n"+
+			"STERUSSTUDENKA, Draceane, Herbert Frank, Palickap\n"+
+			"RPekar\n"
+		, 75, 200);
 		canvasobj.resetfontweight();
 	}, 2 * delay);	
 

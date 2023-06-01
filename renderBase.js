@@ -94,6 +94,7 @@ class Canvas {
 		this.context.beginPath();
 		this.context.moveTo(fromx, fromy);
 		this.context.lineTo(tox, toy);
+		let colorsave = this.context.strokeStyle;
 		if(color !== "null") {
 			this.context.strokeStyle = color;
 		}
@@ -102,6 +103,7 @@ class Canvas {
 		}
 		this.context.lineWidth = linewidth;
 		this.context.stroke();
+		this.context.strokeStyle = colorsave;
 	}
     //clears the canvas
     clear(newcolor = "empty") {
@@ -313,7 +315,7 @@ class AudioPlayer {
 		this.audioTracks.push(new Audio("res/music/ImpendingBoom.mp3"));          //hranice
 		this.audioTracks.push(new Audio("res/music/Nerves.mp3"));                 //prerov
 		this.audioTracks.push(new Audio("res/music/LateNightRadio.mp3"));         //nezamyslice
-		this.audioTracks.push(new Audio("res/music/BlueFeather.mp3"));            //prostejov
+		this.audioTracks.push(new Audio("res/music/StringImpromptu1.mp3"));       //prostejov
 		this.audioTracks.push(new Audio("res/music/FailingDefense.mp3"));         //olomouc
 		this.audioTracks.push(new Audio("res/music/RoyalCoupling.mp3"));          //studenka
 		this.audioTracks.push(new Audio("res/music/TheParting.mp3"));             //ostrava
@@ -321,7 +323,8 @@ class AudioPlayer {
 		this.audioTracks.push(new Audio("res/music/AlmostBliss.mp3"));            //waiter minigame
 		this.audioTracks.push(new Audio("res/music/PorchSwingDays.mp3"));         //fishing
 		this.audioTracks.push(new Audio("res/music/AVeryBradySpecial.mp3"));      //ticket sale
-		for(let Id = 0; Id < 13; Id++) {
+		this.audioTracks.push(new Audio("res/music/Pride.mp3"));                  //wagon cutscenes
+		for(let Id = 0; Id < 14; Id++) {
 			this.audioTracks[Id].loop = true;
 		}
 		//sfx

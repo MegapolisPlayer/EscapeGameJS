@@ -94,6 +94,7 @@ class Canvas {
 		this.context.beginPath();
 		this.context.moveTo(fromx, fromy);
 		this.context.lineTo(tox, toy);
+		let colorsave = this.context.strokeStyle;
 		if(color !== "null") {
 			this.context.strokeStyle = color;
 		}
@@ -102,6 +103,7 @@ class Canvas {
 		}
 		this.context.lineWidth = linewidth;
 		this.context.stroke();
+		this.context.strokeStyle = colorsave;
 	}
     //clears the canvas
     clear(newcolor = "empty") {
@@ -313,7 +315,7 @@ class AudioPlayer {
 		this.audioTracks.push(new Audio("res/music/ImpendingBoom.mp3"));          //hranice
 		this.audioTracks.push(new Audio("res/music/Nerves.mp3"));                 //prerov
 		this.audioTracks.push(new Audio("res/music/LateNightRadio.mp3"));         //nezamyslice
-		this.audioTracks.push(new Audio("res/music/BlueFeather.mp3"));            //prostejov
+		this.audioTracks.push(new Audio("res/music/StringImpromptu1.mp3"));       //prostejov
 		this.audioTracks.push(new Audio("res/music/FailingDefense.mp3"));         //olomouc
 		this.audioTracks.push(new Audio("res/music/RoyalCoupling.mp3"));          //studenka
 		this.audioTracks.push(new Audio("res/music/TheParting.mp3"));             //ostrava
@@ -321,7 +323,8 @@ class AudioPlayer {
 		this.audioTracks.push(new Audio("res/music/AlmostBliss.mp3"));            //waiter minigame
 		this.audioTracks.push(new Audio("res/music/PorchSwingDays.mp3"));         //fishing
 		this.audioTracks.push(new Audio("res/music/AVeryBradySpecial.mp3"));      //ticket sale
-		for(let Id = 0; Id < 13; Id++) {
+		this.audioTracks.push(new Audio("res/music/Pride.mp3"));                  //wagon cutscenes
+		for(let Id = 0; Id < 14; Id++) {
 			this.audioTracks[Id].loop = true;
 		}
 		//sfx
@@ -583,7 +586,9 @@ function TranslationGetMultipleLines(lid, idf, amount) {
 	let tempResult = "";
 	for(let Id = 0; Id < amount; Id++) {
 		tempResult += TranslatedText[lid][idf + Id];
-		tempResult += '\n';
+		if(Id !== amount - 1) {
+			tempResult += '\n';
+		}
 	}
 	return tempResult;
 }
@@ -957,17 +962,18 @@ function Credits(iscalledfrommm, canvasobj) {
 	}, 1 * delay);
 	
 	setTimeout(() => {
-		//images - main, hranice na morave, prerov
+		//images - all of them
 		canvasobj.image(finalCreditsImage, 0, 0, canvasobj.canvas.width, canvasobj.canvas.height);
-		canvasobj.text(TranslatedText[SettingsValues.Language][72], 50, 190);
+		canvasobj.text(TranslatedText[SettingsValues.Language][72], 50, 160);
 		canvasobj.setfontweight("bold");
 		canvasobj.textml(
 			"SReality, Pixabay, VlakemJednoduse.cz, Freepik: jcomp\n"+
-			"Fortes Interactive\n"+
-			"Wikipedia Commons: Palickap, Marie Čchiedzeová, JirkaSv\n"+
-			"Vojtěch Dočkal, Jiří Komárek, Vitezslava, RPekar, Dezidor\n"+
-			"Kamil Czianskim, Michal Klajban, Draceane, Herbert Frank\n"
-		, 75, 230);
+			"Fortes Interactive, VagonWeb.cz, Wikipedia Commons:\n"+
+			"Marie Čchiedzeová, Vojtěch Dočkal, Jiří Komárek, JirkaSv\n"+
+			"Dezidor, Vitezslava, Kamil Czianskim, Michal Klajban\n"+
+			"STERUSSTUDENKA, Draceane, Herbert Frank, Palickap\n"+
+			"RPekar\n"
+		, 75, 200);
 		canvasobj.resetfontweight();
 	}, 2 * delay);	
 
@@ -977,7 +983,7 @@ function Credits(iscalledfrommm, canvasobj) {
 		canvasobj.image(finalCreditsImage, 0, 0, canvasobj.canvas.width, canvasobj.canvas.height);
 		canvasobj.text(TranslatedText[SettingsValues.Language][73], 50, 190);
 		canvasobj.setfontweight("bold");
-		canvasobj.textml("All music by Kevin Macleod (incompetech.com)\nLicensed under CC-BY 3.0", 100, 230);
+		canvasobj.textml("All music by Kevin Macleod (incompetech.com)\nLicensed under CC-BY 3.0\n", 100, 230);
 		canvasobj.resetfontweight();
 	}, 3 * delay);
 
@@ -1101,6 +1107,7 @@ let WaiterGameValues = {
 	AmountEarned: 0,
 	OrdersList: [],
 	IsOrderSelected: -1,
+	AmountOrders: 0,
 }
 
 let TableImages = [];
@@ -1185,6 +1192,7 @@ class TableManager {
 							}
 							return true;
 						});
+						WaiterGameValues.AmountOrders++;
 					}
 					break;
 			}
@@ -1379,7 +1387,7 @@ function WaiterGameComponentMain(canvas) {
 		orderFLCounter = 0;
 		//is selected
 		if(WaiterGameValues.IsOrderSelected !== -1) {
-			renderTextAsMinigameStatus(TranslatedText[SettingsValues.Language][102], WaiterGameValues.IsOrderSelected, canvas);
+			renderTextAsMinigameStatus(TranslatedText[SettingsValues.Language][102], WaiterGameValues.AmountOrders, canvas);
 		}
 		//time stuff
 		timelimitRender(canvas);
@@ -1400,6 +1408,7 @@ function WaiterGameReset() {
 	WaiterGameValues.AmountEarned = 0;
 	WaiterGameValues.OrdersList = [];
 	WaiterGameValues.IsOrderSelected = -1;
+	WaiterGameValues.AmountOrders = 0;
 }
 
 //returns if is collision
@@ -1455,12 +1464,12 @@ class LeObject {
 		this.dmv = doesmovevertically;
 		this.dmh = doesmovehorizontally;
 		this.canvas_info = canvas;
-		this.xoffset = 80 + randomNumber(this.canvas_info.canvas.width - 160);
+		this.xoffset = 100 + randomNumber(this.canvas_info.canvas.width - 200);
 		this.yoffset = 200 + randomNumber(this.canvas_info.canvas.height - 250);
 		this.objecttype = objtype;
 	}
 	reroll() {
-		this.xoffset = 80 + randomNumber(this.canvas_info.canvas.width - 160);
+		this.xoffset = 100 + randomNumber(this.canvas_info.canvas.width - 200);
 		this.yoffset = 200 + randomNumber(this.canvas_info.canvas.height - 250);
 	}
 	draw() {
@@ -1570,7 +1579,7 @@ function FishGameComponentMain(canvas) {
 	window.addEventListener("click", SetResizeToTrue);	
 	
 	//main game
-	timelimitStart(60); //1:00 min
+	timelimitStart(120); //2:00 min
 	let timerInterval = window.setInterval((canvas) => {
 		canvas.clear("#2066d6");
 		//render bg
@@ -1607,7 +1616,7 @@ function FishGameComponentMain(canvas) {
 		if(FishGameValues.LengthResize) {
 			if(FishGameValues.LengthReverseResize) {
 				if(FishGameValues.IsHauling !== -1) {
-					FishGameValues.Length -= 0.65;
+					FishGameValues.Length -= 0.8;
 				}
 				else {
 					FishGameValues.Length -= 2;
@@ -1677,7 +1686,7 @@ function FishGameComponentMain(canvas) {
 		timelimitRender(canvas);
 		if(timelimitIsDone()) {
 			clearInterval(timerInterval);
-			addMoney(FishGameValues.AmountEarned); //50Kc fish, 10Kc pneu, 5Kc boots
+			addMoney(FishGameValues.AmountEarned); //50Kc fish, 10Kc pneu, 5Kc boots, boxes random
 			window.removeEventListener("click", SetResizeToTrue);	
 			deleteCanvasInputElems(canvas);
 			FishGameValues.IsOver = 1;
@@ -1726,6 +1735,8 @@ function TicketSaleGameReset() {
 
 //dialect translation - nezamyslice
 
+//word in dialect: selection of three (depending on difficulty) where one correct spelling in official dialect
+
 let DialectTranslationGameValues = {
 	IsIntroEnd: false,
 	IsOver: -1
@@ -1747,29 +1758,10 @@ function DialectTranslationGameReset() {
 	WaiterGameValues.IsOver = -1;
 }
 
-//cleaning the beches on the square - prostejov
-
-let CleaningGameValues = {
-	IsOver: -1
-}
-
-function CleaningGame(canvas) {
-	CleaningGameValues.IsOver = -1;
-	console.log("cleaning game");
-}
-
-function CleaningGameComponentIntro(canvas) {
-
-}
-function CleaningGameComponentMain(canvas) {
-
-}
-
-function CleaningGameReset(canvas) {
-	CleaningGameValues.IsOver = -1;
-}
-
 //cashier - prostejov, olomouc
+
+//rotate object, scan at correct time as fast as possible?
+//3 buttons, stop rotation, rotation incr. speed for both directions
 
 let CashierGameValues = {
 	IsIntroEnd: false,
@@ -1790,6 +1782,28 @@ function CashierGameComponentMain(canvas) {
 
 function CashierGameReset() {
 	CashierGameValues.IsOver = -1;
+}
+
+//cleaning the benches on the square - olomouc
+
+let CleaningGameValues = {
+	IsOver: -1
+}
+
+function CleaningGame(canvas) {
+	CleaningGameValues.IsOver = -1;
+	console.log("cleaning game");
+}
+
+function CleaningGameComponentIntro(canvas) {
+
+}
+function CleaningGameComponentMain(canvas) {
+
+}
+
+function CleaningGameReset(canvas) {
+	CleaningGameValues.IsOver = -1;
 }
 
 //cheese making - olomouc
@@ -1838,7 +1852,7 @@ function DefenseGameReset() {
 	DefenseGameValues.IsOver = -1;
 }
 
-//maze game in ostrava integrated into Ostrava.js
+//ostrava not really a big location
 //global for all locations, HnM is just first
 
 let locationId = 0; //HnM, Prerov, etc... (HnM = 1, 0 is for main menu)
@@ -2511,7 +2525,7 @@ let nzm_Locations = [];
 let nzm_AmountLoadedImages = 0;
 
 function NezamysliceImageLoaded() {
-	nzm_AmountLoadedImages += 1;
+	nzm_AmountLoadedImages++;
 }
 
 function NezamysliceLoad(canvas) {
@@ -2638,7 +2652,7 @@ function NezamysliceNadrazi(canvas) {
 	localLocationId = 1;
 	canvas.image(nzm_Locations[1], 0, 0, canvas.canvas.width, canvas.canvas.height);
 	
-	let ArrowToNastupiste = new Arrow(700, 350, 100, 100, ArrowDirections.Right, canvas);
+	let ArrowToNastupiste = new Arrow(500, 370, 100, 100, ArrowDirections.Down, canvas);
 	ArrowToNastupiste.button.addEventListener("click", () => {
 		if(GamePaused) { return; }
 		ArrowToNastupiste.deleteButton();
@@ -2704,11 +2718,54 @@ function NezamyslicePodnikVnitrekJob(canvas) {
 
 function NezamysliceNastupisteJob(canvas) {
 	console.log("nzm nastupiste job");
-}
+	AllowedToPause = false;
+	let dialogue = new Dialogue();
+	dialogue.begin(canvas);
+	dialogue.makeBubble(0, TranslationGetMultipleLines(SettingsValues.Language, 171, 2).slice(0, -1) + " " + Math.floor(940 * SettingsValues.MoneyCostIncrease) + " " + TranslatedText[SettingsValues.Language][90]);
+	dialogue.makeBubble(1, TranslationGetMultipleLines(SettingsValues.Language, 173, 2));
+	dialogue.makeChoice(2);
+	
+	let dWaitInterval = window.setInterval((dialogue) => {
+		if(dialogue.choice_result !== -1) {
+			clearInterval(dWaitInterval);
+			if(dialogue.choice_result === 1) {
+				if(MoneyAmount >= Math.floor(940 * SettingsValues.MoneyCostIncrease)) {
+					if(doesHaveTicket) {
+						dialogue.makeBubble(3, TranslatedText[SettingsValues.Language][148]);
+						return;
+					}
+					removeMoney(Math.floor(940 * SettingsValues.MoneyCostIncrease));
+					doesHaveTicket = true;
+					dialogue.makeBubble(3, TranslatedText[SettingsValues.Language][175]);
+					return;
+				}
+				else {
+					dialogue.makeBubble(3, TranslatedText[SettingsValues.Language][176]);
+					return;
+				}
+				return;
+			}
+			else {
+				dialogue.makeBubble(3, TranslatedText[SettingsValues.Language][177]);
+				return;
+			}
+		}
+	}, 100, dialogue);
 
+	let thisInterval = window.setInterval((dialogue, canvas) => {
+		if(dialogue.counter === 4) {
+			clearInterval(thisInterval);
+			dialogue.end();
+			AllowedToPause = true;	
+			NezamysliceNastupiste(canvas);
+		}
+	}, 100, dialogue, canvas);
+}
+let pro_Locations = [];
+let pro_AmountLoadedImages = 0;
 
 function ProstejovImageLoaded() {
-	
+	pro_AmountLoadedImages++;
 }
 
 function ProstejovLoad(canvas) {
@@ -2716,7 +2773,383 @@ function ProstejovLoad(canvas) {
 	timerPause();
 	canvas.loadingMsg();
 	locationId = 4;
+	for(let Id = 0; Id < 6; Id++) {
+		pro_Locations.push(new Image());
+		pro_Locations[Id].onload = ProstejovImageLoaded;
+	}
+	pro_Locations[0].src = "res/prostejov/nastupiste.jpg";
+	pro_Locations[1].src = "res/prostejov/nadrazi.jpg";
+	pro_Locations[2].src = "res/prostejov/namesti.jpg";
+	pro_Locations[3].src = "res/prostejov/obchod.jpg";
+	pro_Locations[4].src = "res/prostejov/cafe.jpg";
+	pro_Locations[5].src = "res/map/4.png";
 	
+	ProstejovMap(canvas);
+}
+
+function ProstejovMap(canvas) {
+	if(pro_AmountLoadedImages != 6) {
+      	window.setTimeout(ProstejovMap, 100, canvas); // this checks the flag every 100 milliseconds
+		return;
+    }
+	//map scene
+	ap.playTrack(5);
+	canvas.setnewcolor("#333399");
+	canvas.setnewfont("Arial, FreeSans", "32", "bold");
+	canvas.image(pro_Locations[5], 0, 0, canvas.canvas.width, canvas.canvas.height);
+	canvas.textml(TranslatedText[SettingsValues.Language][25]+" 4\nProstějov", 50, 50);
+	canvas.resetfontweight();
+	maparrow = new Arrow(700, 400, 100, 100, ArrowDirections.Right, canvas);
+	maparrow.button.addEventListener("click", (event) => {
+		maparrow.deleteButton();
+		Prostejov(canvas);
+	});
+    maparrow.draw(canvas);
+}
+
+function Prostejov(canvas) {
+	console.log("Prostejov START "+pro_AmountLoadedImages);
+	CheckInstantLoss(canvas);
+
+	canvas.image(pro_Locations[0], 0, 0, canvas.canvas.width, canvas.canvas.height);
+	chr.draw(150, 190, 0.3, canvas);
+	traindriver.draw(700, 200, 0.5, canvas);
+	
+	let FirstDialogue = new Dialogue();
+	FirstDialogue.begin(canvas);
+	FirstDialogue.makeBubble(0, TranslationGetMultipleLines(SettingsValues.Language, 178, 2));
+	FirstDialogue.makeBubble(1, TranslationGetMultipleLines(SettingsValues.Language, 180, 2));
+	FirstDialogue.makeBubble(2, 
+		(TranslatedText[SettingsValues.Language][182].slice(0, -1) + " " + 
+		Math.floor(1470 * SettingsValues.MoneyCostIncrease) + " "  + TranslatedText[SettingsValues.Language][90])
+		+ "\n" + TranslatedText[SettingsValues.Language][183]);
+	FirstDialogue.makeBubble(3, TranslatedText[SettingsValues.Language][184]);	
+	
+	let thisInterval = window.setInterval((dialogue, canvas) => {
+		if(dialogue.counter === 4) {
+			clearInterval(thisInterval);
+			dialogue.end();		
+			PauseButton.append(canvas);
+			AllowedToPause = true;
+			timerUnpause();	
+			ProstejovNastupiste(canvas);
+		}
+	}, 100, FirstDialogue, canvas);
+}
+
+function ProstejovNastupiste(canvas) {
+	console.log("pro nastupiste");
+	localLocationId = 0;
+	canvas.image(pro_Locations[0], 0, 0, canvas.canvas.width, canvas.canvas.height);
+	
+	traindriver.append(canvas);
+	traindriver.resetEventListeners();
+	traindriver.button.addEventListener("click", () => {
+		if(GamePaused) { return; }
+		traindriver.deleteButton();
+		ArrowToNadrazi.deleteButton();
+		ArrowToTrain.deleteButton();
+		ProstejovNastupisteJob(canvas);
+	}, { once: true });
+	
+	let ArrowToNadrazi = new Arrow(500, 300, 100, 100, ArrowDirections.Up, canvas);
+	ArrowToNadrazi.button.addEventListener("click", () => {
+		if(GamePaused) { return; }
+		traindriver.deleteButton();
+		ArrowToNadrazi.deleteButton();
+		ArrowToTrain.deleteButton();
+    	ProstejovNadrazi(canvas);
+	}, { once: true });
+	let ArrowToTrain = new Arrow(850, 300, 100, 100, ArrowDirections.Right, canvas);
+	ArrowToTrain.button.addEventListener("click", () => {
+	if(GamePaused) { return; }
+		traindriver.deleteButton();
+		ArrowToNadrazi.deleteButton();
+		ArrowToTrain.deleteButton();
+		if(doesHaveTicket) {
+			doesHaveTicket = false;
+    		OlomoucLoad(canvas);
+		}
+		else {
+			let dialogue = new Dialogue();
+			dialogue.begin(canvas);
+			dialogue.makeBubble(0, TranslatedText[SettingsValues.Language][147]);
+			let thisInterval = window.setInterval((dialogue, canvas) => {
+				if(dialogue.counter === 1) {
+					clearInterval(thisInterval);
+					dialogue.end();
+					ProstejovNastupiste(canvas);
+				}
+			}, 100, dialogue, canvas);
+		}
+	}, { once: true });
+	chr.draw(150, 190, 0.3, canvas);
+	traindriver.draw(700, 200, 0.5, canvas);		
+}
+
+function ProstejovNadrazi(canvas) {
+	console.log("pro nadrazi");
+	localLocationId = 1;
+	canvas.image(pro_Locations[1], 0, 0, canvas.canvas.width, canvas.canvas.height);
+	
+	
+	
+}
+
+function ProstejovNamesti(canvas) {
+	console.log("pro namesti");
+	localLocationId = 2;
+	canvas.image(pro_Locations[2], 0, 0, canvas.canvas.width, canvas.canvas.height);
+	
+
+
+
+}
+
+function ProstejovObchod(canvas) {
+	console.log("pro obchod");
+	localLocationId = 3;
+	canvas.image(pro_Locations[3], 0, 0, canvas.canvas.width, canvas.canvas.height);
+
+
+	
+}
+
+function ProstejovCafe(canvas) {
+	console.log("pro cafe");
+	localLocationId = 4;
+	canvas.image(pro_Locations[4], 0, 0, canvas.canvas.width, canvas.canvas.height);
+	
+
+
+}
+
+function ProstejovCafeWaiterJob(canvas) {
+	console.log("pro waiter job");
+}
+
+function ProstejovObchodJob(canvas) {
+	console.log("pro obchod job");
+}
+function ProstejovNastupisteJob(canvas) {
+	console.log("pro nastupiste job");
+}
+
+
+let olo_Locations = [];
+let olo_AmountLoadedImages = 0;
+
+function OlomoucImageLoaded() {
+	olo_AmountLoadedImages++;
+}
+
+function OlomoucLoad(canvas) {
+	AllowedToPause = false;	
+	timerPause();
+	canvas.loadingMsg();
+	locationId = 5;
+	for(let Id = 0; Id < 8; Id++) {
+		olo_Locations.push(new Image());
+		olo_Locations[Id].onload = OlomoucImageLoaded;
+	}
+	olo_Locations[0].src = "res/olomouc/nastupiste.jpg";
+	olo_Locations[1].src = "res/olomouc/nadrazi.jpg";
+	olo_Locations[2].src = "res/olomouc/namesti.jpg";
+	olo_Locations[3].src = "res/olomouc/obchod_venek.jpg";
+	olo_Locations[4].src = "res/olomouc/obchod_vnitrek.jpg";
+	olo_Locations[5].src = "res/olomouc/syrarna.jpg";
+	olo_Locations[6].src = "res/olomouc/restaurant.jpg";
+	olo_Locations[7].src = "res/map/5.png";
+	
+	OlomoucMap(canvas);
+}
+
+function OlomoucMap(canvas) {
+	if(olo_AmountLoadedImages != 8) {
+      	window.setTimeout(OlomoucMap, 100, canvas); // this checks the flag every 100 milliseconds
+		return;
+    }
+	//map scene
+	ap.playTrack(6);
+	canvas.setnewcolor("#333399");
+	canvas.setnewfont("Arial, FreeSans", "32", "bold");
+	canvas.image(olo_Locations[7], 0, 0, canvas.canvas.width, canvas.canvas.height);
+	canvas.textml(TranslatedText[SettingsValues.Language][25]+" 5\nOlomouc", 50, 50);
+	canvas.resetfontweight();
+	maparrow = new Arrow(700, 400, 100, 100, ArrowDirections.Right, canvas);
+	maparrow.button.addEventListener("click", (event) => {
+		maparrow.deleteButton();
+		Olomouc(canvas);
+	});
+    maparrow.draw(canvas);
+}
+
+function Olomouc(canvas) {
+	console.log("Olomouc START"+olo_AmountLoadedImages);
+}
+
+function OlomoucNastupiste(canvas) {
+
+}
+
+function OlomoucNadrazi(canvas) {
+
+}
+
+function OlomoucNamesti(canvas) {
+
+}
+
+function OlomoucSyrarna(canvas) {
+
+}
+
+function OlomoucObchodVenek(canvas) {
+
+}
+
+function OlomoucObchodVnitrek(canvas) {
+
+}
+
+function OlomoucObchodJob(canvas) {
+
+}
+
+function OlomoucSyrarnaJob(canvas) {
+
+}
+let stu_Locations = [];
+let stu_AmountLoadedImages = 0;
+
+function StudenkaImageLoaded() {
+	stu_AmountLoadedImages++;
+}
+
+function StudenkaLoad(canvas) {
+	AllowedToPause = false;	
+	timerPause();
+	canvas.loadingMsg();
+	locationId = 6;
+	for(let Id = 0; Id < 8; Id++) {
+		stu_Locations.push(new Image());
+		stu_Locations[Id].onload = StudenkaImageLoaded;
+	}
+	stu_Locations[0].src = "res/studenka/prejezd.jpg";
+	stu_Locations[1].src = "res/studenka/namesti.jpg";
+	stu_Locations[2].src = "res/studenka/nadrazi.jpg";
+	stu_Locations[3].src = "res/studenka/nastupiste.jpg";
+	stu_Locations[4].src = "res/studenka/pole.jpg";
+	stu_Locations[5].src = "res/studenka/most.jpg";
+	stu_Locations[6].src = "res/map/6.png";
+	
+	StudenkaMap(canvas);
+}
+
+function StudenkaMap(canvas) {
+	if(stu_AmountLoadedImages != 7) {
+      	window.setTimeout(StudenkaMap, 100, canvas); // this checks the flag every 100 milliseconds
+		return;
+    }
+	//map scene
+	ap.playTrack(7);
+	canvas.setnewcolor("#333399");
+	canvas.setnewfont("Arial, FreeSans", "32", "bold");
+	canvas.image(stu_Locations[6], 0, 0, canvas.canvas.width, canvas.canvas.height);
+	canvas.textml(TranslatedText[SettingsValues.Language][25]+"6\nStudénka", 50, 50);
+	canvas.resetfontweight();
+	maparrow = new Arrow(700, 400, 100, 100, ArrowDirections.Right, canvas);
+	maparrow.button.addEventListener("click", (event) => {
+		maparrow.deleteButton();
+		Studenka(canvas);
+	});
+    maparrow.draw(canvas);
+}
+
+function Studenka(canvas) {
+	console.log("Studenka START"+stu_AmountLoadedImages);
+}
+
+function StudenkaPrejezd(canvas) {
+
+}
+
+function StudenkaNamesti(canvas) {
+
+}
+
+function StudenkaMost(canvas) {
+
+}
+
+function StudenkaNadrazi(canvas) {
+
+}
+
+function StudenkaNastupiste(canvas) {
+
+}
+
+function StudenkaPole(canvas) {
+
+}
+
+function StudenkaDefenseJob(canvas) {
+
+}
+let ost_Locations = [];
+let ost_AmountLoadedImages = 0;
+
+function OstravaImageLoaded() {
+	ost_AmountLoadedImages++;
+}
+
+function OstravaLoad(canvas) {
+	AllowedToPause = false;	
+	timerPause();
+	canvas.loadingMsg();
+	locationId = 7;
+	for(let Id = 0; Id < 3; Id++) {
+		ost_Locations.push(new Image());
+		ost_Locations[Id].onload = OstravaImageLoaded;
+	}
+	ost_Locations[0].src = "res/studenka/prejezd.jpg";
+	ost_Locations[1].src = "res/studenka/namesti.jpg";
+	ost_Locations[2].src = "res/map/7.png";
+	
+	OstravaMap(canvas);
+}
+
+function OstravaMap(canvas) {
+	if(ost_AmountLoadedImages != 3) {
+      	window.setTimeout(ProstejovMap, 100, canvas); // this checks the flag every 100 milliseconds
+		return;
+    }
+	//map scene
+	ap.playTrack(8);
+	canvas.setnewcolor("#333399");
+	canvas.setnewfont("Arial, FreeSans", "32", "bold");
+	canvas.image(pro_Locations[5], 0, 0, canvas.canvas.width, canvas.canvas.height);
+	canvas.textml(TranslatedText[SettingsValues.Language][25]+" 7\nOstrava", 50, 50);
+	canvas.resetfontweight();
+	maparrow = new Arrow(700, 400, 100, 100, ArrowDirections.Right, canvas);
+	maparrow.button.addEventListener("click", (event) => {
+		maparrow.deleteButton();
+		Ostrava(canvas);
+	});
+    maparrow.draw(canvas);
+}
+
+function Ostrava(canvas) {
+	console.log("Ostrava START"+ost_AmountLoadedImages);
+}
+
+function OstravaNastupiste(canvas) {
+
+}
+
+function OstravaNadrazi(canvas) {
+
 }
 let GamePaused = false;
 let AllowedToPause = true;
@@ -2776,6 +3209,14 @@ function SetState(canvasobj) {
 					NezamyslicePodnikVnitrek(canvasobj);
 					return;
 			}
+			return;
+		case 4:
+			return;
+		case 5:
+			return;
+		case 6:
+			return;
+		case 7:
 			return;
 	}
 	return;	
@@ -3099,7 +3540,7 @@ function MainMenu() {
 	cvs.setnewfont("Arial, FreeSans", "16");
 	
 	cvs.text("(c) Martin/MegapolisPlayer, Jiri/KohoutGD 2023", 650, 472);
-	cvs.text("build date 30/05/2023, prerelease test version", 650, 492);
+	cvs.text("build date 2/6/2023, prerelease test version", 650, 492);
 	
 	cvs.setnewcolor("#333399");
 	cvs.setnewfont("Arial, FreeSans", "48");

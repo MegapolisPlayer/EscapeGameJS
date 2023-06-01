@@ -31,7 +31,9 @@ function TranslationGetMultipleLines(lid, idf, amount) {
 	let tempResult = "";
 	for(let Id = 0; Id < amount; Id++) {
 		tempResult += TranslatedText[lid][idf + Id];
-		tempResult += '\n';
+		if(Id !== amount - 1) {
+			tempResult += '\n';
+		}
 	}
 	return tempResult;
 }

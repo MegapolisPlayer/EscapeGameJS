@@ -17,6 +17,7 @@ let WaiterGameValues = {
 	AmountEarned: 0,
 	OrdersList: [],
 	IsOrderSelected: -1,
+	AmountOrders: 0,
 }
 
 let TableImages = [];
@@ -101,6 +102,7 @@ class TableManager {
 							}
 							return true;
 						});
+						WaiterGameValues.AmountOrders++;
 					}
 					break;
 			}
@@ -295,7 +297,7 @@ function WaiterGameComponentMain(canvas) {
 		orderFLCounter = 0;
 		//is selected
 		if(WaiterGameValues.IsOrderSelected !== -1) {
-			renderTextAsMinigameStatus(TranslatedText[SettingsValues.Language][102], WaiterGameValues.IsOrderSelected, canvas);
+			renderTextAsMinigameStatus(TranslatedText[SettingsValues.Language][102], WaiterGameValues.AmountOrders, canvas);
 		}
 		//time stuff
 		timelimitRender(canvas);
@@ -316,6 +318,7 @@ function WaiterGameReset() {
 	WaiterGameValues.AmountEarned = 0;
 	WaiterGameValues.OrdersList = [];
 	WaiterGameValues.IsOrderSelected = -1;
+	WaiterGameValues.AmountOrders = 0;
 }
 
 //returns if is collision
@@ -371,12 +374,12 @@ class LeObject {
 		this.dmv = doesmovevertically;
 		this.dmh = doesmovehorizontally;
 		this.canvas_info = canvas;
-		this.xoffset = 80 + randomNumber(this.canvas_info.canvas.width - 160);
+		this.xoffset = 100 + randomNumber(this.canvas_info.canvas.width - 200);
 		this.yoffset = 200 + randomNumber(this.canvas_info.canvas.height - 250);
 		this.objecttype = objtype;
 	}
 	reroll() {
-		this.xoffset = 80 + randomNumber(this.canvas_info.canvas.width - 160);
+		this.xoffset = 100 + randomNumber(this.canvas_info.canvas.width - 200);
 		this.yoffset = 200 + randomNumber(this.canvas_info.canvas.height - 250);
 	}
 	draw() {
@@ -486,7 +489,7 @@ function FishGameComponentMain(canvas) {
 	window.addEventListener("click", SetResizeToTrue);	
 	
 	//main game
-	timelimitStart(60); //1:00 min
+	timelimitStart(120); //2:00 min
 	let timerInterval = window.setInterval((canvas) => {
 		canvas.clear("#2066d6");
 		//render bg
@@ -523,7 +526,7 @@ function FishGameComponentMain(canvas) {
 		if(FishGameValues.LengthResize) {
 			if(FishGameValues.LengthReverseResize) {
 				if(FishGameValues.IsHauling !== -1) {
-					FishGameValues.Length -= 0.65;
+					FishGameValues.Length -= 0.8;
 				}
 				else {
 					FishGameValues.Length -= 2;
@@ -593,7 +596,7 @@ function FishGameComponentMain(canvas) {
 		timelimitRender(canvas);
 		if(timelimitIsDone()) {
 			clearInterval(timerInterval);
-			addMoney(FishGameValues.AmountEarned); //50Kc fish, 10Kc pneu, 5Kc boots
+			addMoney(FishGameValues.AmountEarned); //50Kc fish, 10Kc pneu, 5Kc boots, boxes random
 			window.removeEventListener("click", SetResizeToTrue);	
 			deleteCanvasInputElems(canvas);
 			FishGameValues.IsOver = 1;
