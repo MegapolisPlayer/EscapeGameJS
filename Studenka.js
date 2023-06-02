@@ -16,10 +16,10 @@ function StudenkaLoad(canvas) {
 	}
 	stu_Locations[0].src = "res/studenka/prejezd.jpg";
 	stu_Locations[1].src = "res/studenka/namesti.jpg";
-	stu_Locations[2].src = "res/studenka/nadrazi.jpg";
-	stu_Locations[3].src = "res/studenka/nastupiste.jpg";
-	stu_Locations[4].src = "res/studenka/pole.jpg";
-	stu_Locations[5].src = "res/studenka/most.jpg";
+	stu_Locations[2].src = "res/studenka/most.jpg";
+	stu_Locations[3].src = "res/studenka/nadrazi.jpg";
+	stu_Locations[4].src = "res/studenka/nastupiste.jpg";
+	stu_Locations[5].src = "res/studenka/pole.jpg";
 	stu_Locations[6].src = "res/map/6.png";
 	
 	StudenkaMap(canvas);
@@ -50,29 +50,29 @@ function Studenka(canvas) {
 }
 
 function StudenkaPrejezd(canvas) {
-
+	console.log("stu prejezd");
 }
 
 function StudenkaNamesti(canvas) {
-
+	console.log("stu namesti");
 }
 
 function StudenkaMost(canvas) {
-
+	console.log("stu most");
 }
 
 function StudenkaNadrazi(canvas) {
-
+	console.log("stu nadrazi");
 }
 
 function StudenkaNastupiste(canvas) {
-
+	console.log("stu nastupiste");
 }
 
 function StudenkaPole(canvas) {
-
+	console.log("stu pole");
 }
 
 function StudenkaDefenseJob(canvas) {
-
+	console.log("stu defense job");
 }

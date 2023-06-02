@@ -323,6 +323,11 @@ class AudioPlayer {
 		this.audioTracks.push(new Audio("res/music/AlmostBliss.mp3"));            //waiter minigame
 		this.audioTracks.push(new Audio("res/music/PorchSwingDays.mp3"));         //fishing
 		this.audioTracks.push(new Audio("res/music/AVeryBradySpecial.mp3"));      //ticket sale
+																				  //dialect translation
+																				  //cashier minigame
+																				  //cleaning minigame
+																				  //cheesemaking
+																				  //defense minigame
 		this.audioTracks.push(new Audio("res/music/Pride.mp3"));                  //wagon cutscenes
 		for(let Id = 0; Id < 14; Id++) {
 			this.audioTracks[Id].loop = true;
@@ -464,6 +469,8 @@ let chr = new Character("res/Character.png");
 let chrf = new Character("res/CharacterFisher.png");
 let cook = new Character("res/Cook.png");
 let traindriver = new Character("res/TrainDriver.png");
+let schl = new Character("res/Scholar.png");
+let util = new Character("res/UtilityMan.png");
 
 class Dialogue {
 	constructor() {
@@ -2584,7 +2591,7 @@ function Nezamyslice(canvas) {
 	let thisInterval = window.setInterval((dialogue, canvas) => {
 		if(dialogue.counter === 4) {
 			clearInterval(thisInterval);
-			dialogue.end();		
+			dialogue.end();
 			PauseButton.append(canvas);
 			AllowedToPause = true;
 			timerUnpause();	
@@ -2596,7 +2603,6 @@ function Nezamyslice(canvas) {
 function NezamysliceNastupiste(canvas) {
 	console.log("nzm nastupiste");
 	localLocationId = 0;
-	canvas.image(nzm_Locations[0], 0, 0, canvas.canvas.width, canvas.canvas.height);
 	
 	traindriver.append(canvas);
 	traindriver.resetEventListeners();
@@ -2639,8 +2645,11 @@ function NezamysliceNastupiste(canvas) {
 			}, 100, dialogue, canvas);
 		}
 	}, { once: true });
+
+	canvas.image(nzm_Locations[0], 0, 0, canvas.canvas.width, canvas.canvas.height);
 	chr.draw(750, 350, 0.25, canvas);
 	traindriver.draw(250, 300, 0.25, canvas);
+	ArrowToTrain.draw(canvas);
 	ArrowToNadrazi.draw(canvas);
 	PauseButton.draw(canvas);
 	drawMoneyCount(canvas);
@@ -2650,7 +2659,6 @@ function NezamysliceNastupiste(canvas) {
 function NezamysliceNadrazi(canvas) {
 	console.log("nzm nadrazi");
 	localLocationId = 1;
-	canvas.image(nzm_Locations[1], 0, 0, canvas.canvas.width, canvas.canvas.height);
 	
 	let ArrowToNastupiste = new Arrow(500, 370, 100, 100, ArrowDirections.Down, canvas);
 	ArrowToNastupiste.button.addEventListener("click", () => {
@@ -2666,7 +2674,11 @@ function NezamysliceNadrazi(canvas) {
 		ArrowToPodnikVenek.deleteButton();
     	NezamyslicePodnikVenek(canvas);
 	}, { once: true });
+	
+	canvas.image(nzm_Locations[1], 0, 0, canvas.canvas.width, canvas.canvas.height);
 	chr.draw(250, 250, 0.5, canvas);
+	ArrowToNastupiste.draw(canvas);
+	ArrowToPodnikVenek.draw(canvas);
 	PauseButton.draw(canvas);
 	drawMoneyCount(canvas);
 	RenderStatus(canvas);
@@ -2675,7 +2687,7 @@ function NezamysliceNadrazi(canvas) {
 function NezamyslicePodnikVenek(canvas) {
 	console.log("nzm podnik venek");
 	localLocationId = 2;
-	canvas.image(nzm_Locations[2], 0, 0, canvas.canvas.width, canvas.canvas.height);
+
 	let ArrowToNadrazi = new Arrow(900, 400, 100, 100, ArrowDirections.Down, canvas);
 	ArrowToNadrazi.button.addEventListener("click", () => {
 		if(GamePaused) { return; }
@@ -2690,7 +2702,11 @@ function NezamyslicePodnikVenek(canvas) {
 		ArrowToPodnikVnitrek.deleteButton();
     	NezamyslicePodnikVnitrek(canvas);
 	}, { once: true });
+	
+	canvas.image(nzm_Locations[2], 0, 0, canvas.canvas.width, canvas.canvas.height);
 	chr.draw(800, 350, 0.25, canvas);
+	ArrowToNadrazi.draw(canvas);
+	ArrowToPodnikVnitrek.draw(canvas);
 	PauseButton.draw(canvas);
 	drawMoneyCount(canvas);
 	RenderStatus(canvas);
@@ -2699,14 +2715,17 @@ function NezamyslicePodnikVenek(canvas) {
 function NezamyslicePodnikVnitrek(canvas) {
 	console.log("nzm podnik vnitrek");
 	localLocationId = 3;
-	canvas.image(nzm_Locations[3], 0, 0, canvas.canvas.width, canvas.canvas.height);
+	
 	let ArrowToPodnikVenek = new Arrow(870, 370, 100, 100, ArrowDirections.Up, canvas);
 	ArrowToPodnikVenek.button.addEventListener("click", () => {
 		if(GamePaused) { return; }
 		ArrowToPodnikVenek.deleteButton();
     	NezamyslicePodnikVenek(canvas);
 	}, { once: true });
+
+	canvas.image(nzm_Locations[3], 0, 0, canvas.canvas.width, canvas.canvas.height);
 	chr.draw(700, 250, 0.5, canvas);
+	ArrowToPodnikVenek.draw(canvas);
 	PauseButton.draw(canvas);
 	drawMoneyCount(canvas);
 	RenderStatus(canvas);
@@ -2840,7 +2859,6 @@ function Prostejov(canvas) {
 function ProstejovNastupiste(canvas) {
 	console.log("pro nastupiste");
 	localLocationId = 0;
-	canvas.image(pro_Locations[0], 0, 0, canvas.canvas.width, canvas.canvas.height);
 	
 	traindriver.append(canvas);
 	traindriver.resetEventListeners();
@@ -2883,49 +2901,177 @@ function ProstejovNastupiste(canvas) {
 			}, 100, dialogue, canvas);
 		}
 	}, { once: true });
+	
+	canvas.image(pro_Locations[0], 0, 0, canvas.canvas.width, canvas.canvas.height);
 	chr.draw(150, 190, 0.3, canvas);
-	traindriver.draw(700, 200, 0.5, canvas);		
+	traindriver.draw(700, 200, 0.5, canvas);
+	ArrowToNadrazi.draw(canvas);
+	ArrowToTrain.draw(canvas);
+	PauseButton.draw(canvas);
+	drawMoneyCount(canvas);
+	RenderStatus(canvas);
 }
 
 function ProstejovNadrazi(canvas) {
 	console.log("pro nadrazi");
 	localLocationId = 1;
+	let ArrowToNastupiste = new Arrow(550, 300, 100, 100, ArrowDirections.Up, canvas);
+	ArrowToNastupiste.button.addEventListener("click", () => {
+		if(GamePaused) { return; }
+		ArrowToNastupiste.deleteButton();
+		ArrowToNamesti.deleteButton();
+    	ProstejovNastupiste(canvas);
+	}, { once: true });
+	let ArrowToNamesti = new Arrow(850, 350, 100, 100, ArrowDirections.Right, canvas);
+	ArrowToNamesti.button.addEventListener("click", () => {
+		if(GamePaused) { return; }
+		ArrowToNastupiste.deleteButton();
+		ArrowToNamesti.deleteButton();
+    	ProstejovNamesti(canvas);
+	}, { once: true });
+
 	canvas.image(pro_Locations[1], 0, 0, canvas.canvas.width, canvas.canvas.height);
-	
-	
-	
+	chr.draw(300, 270, 0.15, canvas);
+	ArrowToNastupiste.draw(canvas);
+	ArrowToNamesti.draw(canvas);
+	PauseButton.draw(canvas);
+	drawMoneyCount(canvas);
+	RenderStatus(canvas);
 }
 
 function ProstejovNamesti(canvas) {
 	console.log("pro namesti");
 	localLocationId = 2;
-	canvas.image(pro_Locations[2], 0, 0, canvas.canvas.width, canvas.canvas.height);
 	
-
-
-
+	let ArrowToNadrazi = new Arrow(100, 400, 100, 100, ArrowDirections.Left, canvas);
+	ArrowToNadrazi.button.addEventListener("click", () => {
+		if(GamePaused) { return; }
+		ArrowToNadrazi.deleteButton();
+		ArrowToCafe.deleteButton();
+		ArrowToObchod.deleteButton();
+    	ProstejovNadrazi(canvas);
+	}, { once: true });
+	let ArrowToCafe = new Arrow(100, 250, 100, 100, ArrowDirections.Left, canvas);
+	ArrowToCafe.button.addEventListener("click", () => {
+		if(GamePaused) { return; }
+		ArrowToNadrazi.deleteButton();
+		ArrowToCafe.deleteButton();
+		ArrowToObchod.deleteButton();
+    	ProstejovCafe(canvas);
+	}, { once: true });
+	let ArrowToObchod = new Arrow(640, 250, 100, 100, ArrowDirections.Right, canvas);
+	ArrowToObchod.button.addEventListener("click", () => {
+		if(GamePaused) { return; }
+		ArrowToNadrazi.deleteButton();
+		ArrowToCafe.deleteButton();
+		ArrowToObchod.deleteButton();
+    	ProstejovObchod(canvas);
+	}, { once: true });
+	
+	canvas.image(pro_Locations[2], 0, 0, canvas.canvas.width, canvas.canvas.height);
+	chr.draw(450, 300, 0.3, canvas);
+	ArrowToNadrazi.draw(canvas);
+	ArrowToCafe.draw(canvas);
+	ArrowToObchod.draw(canvas);
+	PauseButton.draw(canvas);
+	drawMoneyCount(canvas);
+	RenderStatus(canvas);
 }
 
 function ProstejovObchod(canvas) {
 	console.log("pro obchod");
 	localLocationId = 3;
-	canvas.image(pro_Locations[3], 0, 0, canvas.canvas.width, canvas.canvas.height);
 
-
+	let ArrowToNamesti = new Arrow(900, 400, 100, 100, ArrowDirections.Down, canvas);
+	ArrowToNamesti.button.addEventListener("click", () => {
+		if(GamePaused) { return; }
+		ArrowToNamesti.deleteButton();
+    	ProstejovNamesti(canvas);
+	}, { once: true });
 	
+	canvas.image(pro_Locations[3], 0, 0, canvas.canvas.width, canvas.canvas.height);
+	chr.draw(800, 150, 0.8, canvas);
+	ArrowToNamesti.draw(canvas);
+	PauseButton.draw(canvas);
+	drawMoneyCount(canvas);
+	RenderStatus(canvas);
 }
 
 function ProstejovCafe(canvas) {
 	console.log("pro cafe");
 	localLocationId = 4;
-	canvas.image(pro_Locations[4], 0, 0, canvas.canvas.width, canvas.canvas.height);
 	
+	let ArrowToNamesti = new Arrow(850, 50, 100, 100, ArrowDirections.Right, canvas);
+	
+	ArrowToNamesti.button.addEventListener("click", () => {
+		if(GamePaused) { return; }
+		ArrowToNamesti.deleteButton();
+    	ProstejovNamesti(canvas);
+	}, { once: true });
 
-
+	cook.append(canvas);
+	cook.resetEventListeners();
+	cook.button.addEventListener("click", (event) => {
+		if(GamePaused) { return; }
+		cook.deleteButton();
+		ArrowToNamesti.deleteButton();
+		ProstejovCafeWaiterJob(canvas);
+	});
+	
+	canvas.image(pro_Locations[4], 0, 0, canvas.canvas.width, canvas.canvas.height);
+	chr.draw(500, 120, 0.8, canvas);
+	cook.draw(200, 180, 0.8, canvas);
+	ArrowToNamesti.draw(canvas);
+	PauseButton.draw(canvas);
+	drawMoneyCount(canvas);
+	RenderStatus(canvas);
 }
 
 function ProstejovCafeWaiterJob(canvas) {
 	console.log("pro waiter job");
+	AllowedToPause = false;
+	PauseButton.deleteButton();
+	let dialogue = new Dialogue();
+	dialogue.begin(canvas);
+	dialogue.makeBubble(0, TranslationGetMultipleLines(SettingsValues.Language, 52, 2));
+	dialogue.makeBubble(1, TranslationGetMultipleLines(SettingsValues.Language, 54, 2));
+	dialogue.makeChoice(2);
+	
+	let dWaitInterval = window.setInterval((dialogue) => {
+		if(dialogue.choice_result !== -1) {
+			clearInterval(dWaitInterval);
+			if(dialogue.choice_result === 1) {
+				dialogue.makeBubble(3, TranslatedText[SettingsValues.Language][56]);
+				return;
+			}
+			else {
+				dialogue.makeBubble(3, TranslationGetMultipleLines(SettingsValues.Language, 57, 2));
+				return;
+			}
+		}
+	}, 100, dialogue);
+	
+	let thisInterval = window.setInterval((dialogue, canvas) => {
+		if(dialogue.counter === 4) {
+			dialogue.end();
+			if(dialogue.choice_result === 1) {
+				WaiterGame(canvas);
+				return;
+			}
+			if(dialogue.choice_result === 0) {
+				WaiterGameValues.IsOver = 0;
+				return;
+			}
+		}
+		if(WaiterGameValues.IsOver !== -1) {
+			clearInterval(thisInterval);
+			WaiterGameReset();
+			PauseButton.append(canvas);
+			AllowedToPause = true;
+			ap.playTrack(2);
+			ProstejovCafe(canvas);
+		}
+	}, 100, dialogue, canvas);
 }
 
 function ProstejovObchodJob(canvas) {
@@ -2933,6 +3079,48 @@ function ProstejovObchodJob(canvas) {
 }
 function ProstejovNastupisteJob(canvas) {
 	console.log("pro nastupiste job");
+	AllowedToPause = false;
+	let dialogue = new Dialogue();
+	dialogue.begin(canvas);
+	dialogue.makeBubble(0, TranslatedText[SettingsValues.Language][185].slice(0, -1) + " " + Math.floor(1470 * SettingsValues.MoneyCostIncrease) + " " + TranslatedText[SettingsValues.Language][90]);
+	dialogue.makeBubble(1, TranslationGetMultipleLines(SettingsValues.Language, 186, 2));
+	dialogue.makeChoice(2);
+	
+	let dWaitInterval = window.setInterval((dialogue) => {
+		if(dialogue.choice_result !== -1) {
+			clearInterval(dWaitInterval);
+			if(dialogue.choice_result === 1) {
+				if(MoneyAmount >= Math.floor(1470 * SettingsValues.MoneyCostIncrease)) {
+					if(doesHaveTicket) {
+						dialogue.makeBubble(3, TranslatedText[SettingsValues.Language][148]);
+						return;
+					}
+					removeMoney(Math.floor(1470 * SettingsValues.MoneyCostIncrease));
+					doesHaveTicket = true;
+					dialogue.makeBubble(3, TranslatedText[SettingsValues.Language][188]);
+					return;
+				}
+				else {
+					dialogue.makeBubble(3, TranslatedText[SettingsValues.Language][189]);
+					return;
+				}
+				return;
+			}
+			else {
+				dialogue.makeBubble(3,TranslationGetMultipleLines(SettingsValues.Language, 190, 2));
+				return;
+			}
+		}
+	}, 100, dialogue);
+
+	let thisInterval = window.setInterval((dialogue, canvas) => {
+		if(dialogue.counter === 4) {
+			clearInterval(thisInterval);
+			dialogue.end();
+			AllowedToPause = true;	
+			ProstejovNastupiste(canvas);
+		}
+	}, 100, dialogue, canvas);
 }
 
 
@@ -2986,38 +3174,100 @@ function OlomoucMap(canvas) {
 
 function Olomouc(canvas) {
 	console.log("Olomouc START"+olo_AmountLoadedImages);
+	CheckInstantLoss(canvas);
+
+	canvas.image(olo_Locations[0], 0, 0, canvas.canvas.width, canvas.canvas.height);
+	chr.draw(750, 170, 0.33, canvas);
+	traindriver.draw(600, 150, 0.33, canvas);
+
+	let FirstDialogue = new Dialogue();
+	FirstDialogue.begin(canvas);
+	FirstDialogue.makeBubble(0, TranslationGetMultipleLines(SettingsValues.Language, 192, 2));
+	FirstDialogue.makeBubble(1, TranslationGetMultipleLines(SettingsValues.Language, 194, 2));
+	FirstDialogue.makeBubble(2, TranslatedText[SettingsValues.Language][196].slice(0, -1) + " " + Math.floor(1840 * SettingsValues.MoneyCostIncrease) + " " + TranslatedText[SettingsValues.Language][90]);	
+	
+	let thisInterval = window.setInterval((dialogue, canvas) => {
+		if(dialogue.counter === 3) {
+			clearInterval(thisInterval);
+			dialogue.end();		
+			PauseButton.append(canvas);
+			AllowedToPause = true;
+			timerUnpause();	
+			OlomoucNastupiste(canvas);
+		}
+	}, 100, FirstDialogue, canvas);
 }
 
 function OlomoucNastupiste(canvas) {
-
+	console.log("olo nastupiste");
+	canvas.image(olo_Locations[0], 0, 0, canvas.canvas.width, canvas.canvas.height);
+	chr.draw(750, 170, 0.33, canvas);
+	traindriver.draw(600, 150, 0.33, canvas);
+	PauseButton.draw(canvas);
+	drawMoneyCount(canvas);
+	RenderStatus(canvas);
 }
 
 function OlomoucNadrazi(canvas) {
-
+	console.log("olo nadrazi");
+	canvas.image(olo_Locations[1], 0, 0, canvas.canvas.width, canvas.canvas.height);
+	PauseButton.draw(canvas);
+	drawMoneyCount(canvas);
+	RenderStatus(canvas);
 }
 
 function OlomoucNamesti(canvas) {
-
-}
-
-function OlomoucSyrarna(canvas) {
-
+	console.log("olo namesti");
+	canvas.image(olo_Locations[2], 0, 0, canvas.canvas.width, canvas.canvas.height);
+	PauseButton.draw(canvas);
+	drawMoneyCount(canvas);
+	RenderStatus(canvas);
 }
 
 function OlomoucObchodVenek(canvas) {
-
+	console.log("olo obchod venek");
+	canvas.image(olo_Locations[3], 0, 0, canvas.canvas.width, canvas.canvas.height);
+	PauseButton.draw(canvas);
+	drawMoneyCount(canvas);
+	RenderStatus(canvas);
 }
 
 function OlomoucObchodVnitrek(canvas) {
+	console.log("olo obchod vnitrek");
+	canvas.image(olo_Locations[4], 0, 0, canvas.canvas.width, canvas.canvas.height);
+	PauseButton.draw(canvas);
+	drawMoneyCount(canvas);
+	RenderStatus(canvas);
+}
 
+function OlomoucSyrarna(canvas) {
+	console.log("olo syrarna");
+	canvas.image(olo_Locations[5], 0, 0, canvas.canvas.width, canvas.canvas.height);
+	PauseButton.draw(canvas);
+	drawMoneyCount(canvas);
+	RenderStatus(canvas);
+}
+
+function OlomoucRestaurace(canvas) {
+	console.log("olo restaurace");
+	canvas.image(olo_Locations[6], 0, 0, canvas.canvas.width, canvas.canvas.height);
+	PauseButton.draw(canvas);
+	drawMoneyCount(canvas);
+	RenderStatus(canvas);
 }
 
 function OlomoucObchodJob(canvas) {
-
+	console.log("olo obchod job");
+	PauseButton.draw(canvas);
+	drawMoneyCount(canvas);
+	RenderStatus(canvas);
 }
 
 function OlomoucSyrarnaJob(canvas) {
-
+	console.log("olo syrarna job");
+	PauseButton.draw(canvas);
+	drawMoneyCount(canvas);
+	RenderStatus(canvas);
 }
 let stu_Locations = [];
 let stu_AmountLoadedImages = 0;
@@ -3037,10 +3287,10 @@ function StudenkaLoad(canvas) {
 	}
 	stu_Locations[0].src = "res/studenka/prejezd.jpg";
 	stu_Locations[1].src = "res/studenka/namesti.jpg";
-	stu_Locations[2].src = "res/studenka/nadrazi.jpg";
-	stu_Locations[3].src = "res/studenka/nastupiste.jpg";
-	stu_Locations[4].src = "res/studenka/pole.jpg";
-	stu_Locations[5].src = "res/studenka/most.jpg";
+	stu_Locations[2].src = "res/studenka/most.jpg";
+	stu_Locations[3].src = "res/studenka/nadrazi.jpg";
+	stu_Locations[4].src = "res/studenka/nastupiste.jpg";
+	stu_Locations[5].src = "res/studenka/pole.jpg";
 	stu_Locations[6].src = "res/map/6.png";
 	
 	StudenkaMap(canvas);
@@ -3071,31 +3321,31 @@ function Studenka(canvas) {
 }
 
 function StudenkaPrejezd(canvas) {
-
+	console.log("stu prejezd");
 }
 
 function StudenkaNamesti(canvas) {
-
+	console.log("stu namesti");
 }
 
 function StudenkaMost(canvas) {
-
+	console.log("stu most");
 }
 
 function StudenkaNadrazi(canvas) {
-
+	console.log("stu nadrazi");
 }
 
 function StudenkaNastupiste(canvas) {
-
+	console.log("stu nastupiste");
 }
 
 function StudenkaPole(canvas) {
-
+	console.log("stu pole");
 }
 
 function StudenkaDefenseJob(canvas) {
-
+	console.log("stu defense job");
 }
 let ost_Locations = [];
 let ost_AmountLoadedImages = 0;

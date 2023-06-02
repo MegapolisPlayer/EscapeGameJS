@@ -323,6 +323,11 @@ class AudioPlayer {
 		this.audioTracks.push(new Audio("res/music/AlmostBliss.mp3"));            //waiter minigame
 		this.audioTracks.push(new Audio("res/music/PorchSwingDays.mp3"));         //fishing
 		this.audioTracks.push(new Audio("res/music/AVeryBradySpecial.mp3"));      //ticket sale
+																				  //dialect translation
+																				  //cashier minigame
+																				  //cleaning minigame
+																				  //cheesemaking
+																				  //defense minigame
 		this.audioTracks.push(new Audio("res/music/Pride.mp3"));                  //wagon cutscenes
 		for(let Id = 0; Id < 14; Id++) {
 			this.audioTracks[Id].loop = true;

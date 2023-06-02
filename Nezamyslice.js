@@ -61,7 +61,7 @@ function Nezamyslice(canvas) {
 	let thisInterval = window.setInterval((dialogue, canvas) => {
 		if(dialogue.counter === 4) {
 			clearInterval(thisInterval);
-			dialogue.end();		
+			dialogue.end();
 			PauseButton.append(canvas);
 			AllowedToPause = true;
 			timerUnpause();	
@@ -73,7 +73,6 @@ function Nezamyslice(canvas) {
 function NezamysliceNastupiste(canvas) {
 	console.log("nzm nastupiste");
 	localLocationId = 0;
-	canvas.image(nzm_Locations[0], 0, 0, canvas.canvas.width, canvas.canvas.height);
 	
 	traindriver.append(canvas);
 	traindriver.resetEventListeners();
@@ -116,8 +115,11 @@ function NezamysliceNastupiste(canvas) {
 			}, 100, dialogue, canvas);
 		}
 	}, { once: true });
+
+	canvas.image(nzm_Locations[0], 0, 0, canvas.canvas.width, canvas.canvas.height);
 	chr.draw(750, 350, 0.25, canvas);
 	traindriver.draw(250, 300, 0.25, canvas);
+	ArrowToTrain.draw(canvas);
 	ArrowToNadrazi.draw(canvas);
 	PauseButton.draw(canvas);
 	drawMoneyCount(canvas);
@@ -127,7 +129,6 @@ function NezamysliceNastupiste(canvas) {
 function NezamysliceNadrazi(canvas) {
 	console.log("nzm nadrazi");
 	localLocationId = 1;
-	canvas.image(nzm_Locations[1], 0, 0, canvas.canvas.width, canvas.canvas.height);
 	
 	let ArrowToNastupiste = new Arrow(500, 370, 100, 100, ArrowDirections.Down, canvas);
 	ArrowToNastupiste.button.addEventListener("click", () => {
@@ -143,7 +144,11 @@ function NezamysliceNadrazi(canvas) {
 		ArrowToPodnikVenek.deleteButton();
     	NezamyslicePodnikVenek(canvas);
 	}, { once: true });
+	
+	canvas.image(nzm_Locations[1], 0, 0, canvas.canvas.width, canvas.canvas.height);
 	chr.draw(250, 250, 0.5, canvas);
+	ArrowToNastupiste.draw(canvas);
+	ArrowToPodnikVenek.draw(canvas);
 	PauseButton.draw(canvas);
 	drawMoneyCount(canvas);
 	RenderStatus(canvas);
@@ -152,7 +157,7 @@ function NezamysliceNadrazi(canvas) {
 function NezamyslicePodnikVenek(canvas) {
 	console.log("nzm podnik venek");
 	localLocationId = 2;
-	canvas.image(nzm_Locations[2], 0, 0, canvas.canvas.width, canvas.canvas.height);
+
 	let ArrowToNadrazi = new Arrow(900, 400, 100, 100, ArrowDirections.Down, canvas);
 	ArrowToNadrazi.button.addEventListener("click", () => {
 		if(GamePaused) { return; }
@@ -167,7 +172,11 @@ function NezamyslicePodnikVenek(canvas) {
 		ArrowToPodnikVnitrek.deleteButton();
     	NezamyslicePodnikVnitrek(canvas);
 	}, { once: true });
+	
+	canvas.image(nzm_Locations[2], 0, 0, canvas.canvas.width, canvas.canvas.height);
 	chr.draw(800, 350, 0.25, canvas);
+	ArrowToNadrazi.draw(canvas);
+	ArrowToPodnikVnitrek.draw(canvas);
 	PauseButton.draw(canvas);
 	drawMoneyCount(canvas);
 	RenderStatus(canvas);
@@ -176,14 +185,17 @@ function NezamyslicePodnikVenek(canvas) {
 function NezamyslicePodnikVnitrek(canvas) {
 	console.log("nzm podnik vnitrek");
 	localLocationId = 3;
-	canvas.image(nzm_Locations[3], 0, 0, canvas.canvas.width, canvas.canvas.height);
+	
 	let ArrowToPodnikVenek = new Arrow(870, 370, 100, 100, ArrowDirections.Up, canvas);
 	ArrowToPodnikVenek.button.addEventListener("click", () => {
 		if(GamePaused) { return; }
 		ArrowToPodnikVenek.deleteButton();
     	NezamyslicePodnikVenek(canvas);
 	}, { once: true });
+
+	canvas.image(nzm_Locations[3], 0, 0, canvas.canvas.width, canvas.canvas.height);
 	chr.draw(700, 250, 0.5, canvas);
+	ArrowToPodnikVenek.draw(canvas);
 	PauseButton.draw(canvas);
 	drawMoneyCount(canvas);
 	RenderStatus(canvas);

@@ -48,36 +48,98 @@ function OlomoucMap(canvas) {
 
 function Olomouc(canvas) {
 	console.log("Olomouc START"+olo_AmountLoadedImages);
+	CheckInstantLoss(canvas);
+
+	canvas.image(olo_Locations[0], 0, 0, canvas.canvas.width, canvas.canvas.height);
+	chr.draw(750, 170, 0.33, canvas);
+	traindriver.draw(600, 150, 0.33, canvas);
+
+	let FirstDialogue = new Dialogue();
+	FirstDialogue.begin(canvas);
+	FirstDialogue.makeBubble(0, TranslationGetMultipleLines(SettingsValues.Language, 192, 2));
+	FirstDialogue.makeBubble(1, TranslationGetMultipleLines(SettingsValues.Language, 194, 2));
+	FirstDialogue.makeBubble(2, TranslatedText[SettingsValues.Language][196].slice(0, -1) + " " + Math.floor(1840 * SettingsValues.MoneyCostIncrease) + " " + TranslatedText[SettingsValues.Language][90]);	
+	
+	let thisInterval = window.setInterval((dialogue, canvas) => {
+		if(dialogue.counter === 3) {
+			clearInterval(thisInterval);
+			dialogue.end();		
+			PauseButton.append(canvas);
+			AllowedToPause = true;
+			timerUnpause();	
+			OlomoucNastupiste(canvas);
+		}
+	}, 100, FirstDialogue, canvas);
 }
 
 function OlomoucNastupiste(canvas) {
-
+	console.log("olo nastupiste");
+	canvas.image(olo_Locations[0], 0, 0, canvas.canvas.width, canvas.canvas.height);
+	chr.draw(750, 170, 0.33, canvas);
+	traindriver.draw(600, 150, 0.33, canvas);
+	PauseButton.draw(canvas);
+	drawMoneyCount(canvas);
+	RenderStatus(canvas);
 }
 
 function OlomoucNadrazi(canvas) {
-
+	console.log("olo nadrazi");
+	canvas.image(olo_Locations[1], 0, 0, canvas.canvas.width, canvas.canvas.height);
+	PauseButton.draw(canvas);
+	drawMoneyCount(canvas);
+	RenderStatus(canvas);
 }
 
 function OlomoucNamesti(canvas) {
-
-}
-
-function OlomoucSyrarna(canvas) {
-
+	console.log("olo namesti");
+	canvas.image(olo_Locations[2], 0, 0, canvas.canvas.width, canvas.canvas.height);
+	PauseButton.draw(canvas);
+	drawMoneyCount(canvas);
+	RenderStatus(canvas);
 }
 
 function OlomoucObchodVenek(canvas) {
-
+	console.log("olo obchod venek");
+	canvas.image(olo_Locations[3], 0, 0, canvas.canvas.width, canvas.canvas.height);
+	PauseButton.draw(canvas);
+	drawMoneyCount(canvas);
+	RenderStatus(canvas);
 }
 
 function OlomoucObchodVnitrek(canvas) {
+	console.log("olo obchod vnitrek");
+	canvas.image(olo_Locations[4], 0, 0, canvas.canvas.width, canvas.canvas.height);
+	PauseButton.draw(canvas);
+	drawMoneyCount(canvas);
+	RenderStatus(canvas);
+}
 
+function OlomoucSyrarna(canvas) {
+	console.log("olo syrarna");
+	canvas.image(olo_Locations[5], 0, 0, canvas.canvas.width, canvas.canvas.height);
+	PauseButton.draw(canvas);
+	drawMoneyCount(canvas);
+	RenderStatus(canvas);
+}
+
+function OlomoucRestaurace(canvas) {
+	console.log("olo restaurace");
+	canvas.image(olo_Locations[6], 0, 0, canvas.canvas.width, canvas.canvas.height);
+	PauseButton.draw(canvas);
+	drawMoneyCount(canvas);
+	RenderStatus(canvas);
 }
 
 function OlomoucObchodJob(canvas) {
-
+	console.log("olo obchod job");
+	PauseButton.draw(canvas);
+	drawMoneyCount(canvas);
+	RenderStatus(canvas);
 }
 
 function OlomoucSyrarnaJob(canvas) {
-
+	console.log("olo syrarna job");
+	PauseButton.draw(canvas);
+	drawMoneyCount(canvas);
+	RenderStatus(canvas);
 }

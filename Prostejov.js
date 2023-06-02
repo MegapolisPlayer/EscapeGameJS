@@ -77,7 +77,6 @@ function Prostejov(canvas) {
 function ProstejovNastupiste(canvas) {
 	console.log("pro nastupiste");
 	localLocationId = 0;
-	canvas.image(pro_Locations[0], 0, 0, canvas.canvas.width, canvas.canvas.height);
 	
 	traindriver.append(canvas);
 	traindriver.resetEventListeners();
@@ -120,49 +119,177 @@ function ProstejovNastupiste(canvas) {
 			}, 100, dialogue, canvas);
 		}
 	}, { once: true });
+	
+	canvas.image(pro_Locations[0], 0, 0, canvas.canvas.width, canvas.canvas.height);
 	chr.draw(150, 190, 0.3, canvas);
-	traindriver.draw(700, 200, 0.5, canvas);		
+	traindriver.draw(700, 200, 0.5, canvas);
+	ArrowToNadrazi.draw(canvas);
+	ArrowToTrain.draw(canvas);
+	PauseButton.draw(canvas);
+	drawMoneyCount(canvas);
+	RenderStatus(canvas);
 }
 
 function ProstejovNadrazi(canvas) {
 	console.log("pro nadrazi");
 	localLocationId = 1;
+	let ArrowToNastupiste = new Arrow(550, 300, 100, 100, ArrowDirections.Up, canvas);
+	ArrowToNastupiste.button.addEventListener("click", () => {
+		if(GamePaused) { return; }
+		ArrowToNastupiste.deleteButton();
+		ArrowToNamesti.deleteButton();
+    	ProstejovNastupiste(canvas);
+	}, { once: true });
+	let ArrowToNamesti = new Arrow(850, 350, 100, 100, ArrowDirections.Right, canvas);
+	ArrowToNamesti.button.addEventListener("click", () => {
+		if(GamePaused) { return; }
+		ArrowToNastupiste.deleteButton();
+		ArrowToNamesti.deleteButton();
+    	ProstejovNamesti(canvas);
+	}, { once: true });
+
 	canvas.image(pro_Locations[1], 0, 0, canvas.canvas.width, canvas.canvas.height);
-	
-	
-	
+	chr.draw(300, 270, 0.15, canvas);
+	ArrowToNastupiste.draw(canvas);
+	ArrowToNamesti.draw(canvas);
+	PauseButton.draw(canvas);
+	drawMoneyCount(canvas);
+	RenderStatus(canvas);
 }
 
 function ProstejovNamesti(canvas) {
 	console.log("pro namesti");
 	localLocationId = 2;
-	canvas.image(pro_Locations[2], 0, 0, canvas.canvas.width, canvas.canvas.height);
 	
-
-
-
+	let ArrowToNadrazi = new Arrow(100, 400, 100, 100, ArrowDirections.Left, canvas);
+	ArrowToNadrazi.button.addEventListener("click", () => {
+		if(GamePaused) { return; }
+		ArrowToNadrazi.deleteButton();
+		ArrowToCafe.deleteButton();
+		ArrowToObchod.deleteButton();
+    	ProstejovNadrazi(canvas);
+	}, { once: true });
+	let ArrowToCafe = new Arrow(100, 250, 100, 100, ArrowDirections.Left, canvas);
+	ArrowToCafe.button.addEventListener("click", () => {
+		if(GamePaused) { return; }
+		ArrowToNadrazi.deleteButton();
+		ArrowToCafe.deleteButton();
+		ArrowToObchod.deleteButton();
+    	ProstejovCafe(canvas);
+	}, { once: true });
+	let ArrowToObchod = new Arrow(640, 250, 100, 100, ArrowDirections.Right, canvas);
+	ArrowToObchod.button.addEventListener("click", () => {
+		if(GamePaused) { return; }
+		ArrowToNadrazi.deleteButton();
+		ArrowToCafe.deleteButton();
+		ArrowToObchod.deleteButton();
+    	ProstejovObchod(canvas);
+	}, { once: true });
+	
+	canvas.image(pro_Locations[2], 0, 0, canvas.canvas.width, canvas.canvas.height);
+	chr.draw(450, 300, 0.3, canvas);
+	ArrowToNadrazi.draw(canvas);
+	ArrowToCafe.draw(canvas);
+	ArrowToObchod.draw(canvas);
+	PauseButton.draw(canvas);
+	drawMoneyCount(canvas);
+	RenderStatus(canvas);
 }
 
 function ProstejovObchod(canvas) {
 	console.log("pro obchod");
 	localLocationId = 3;
-	canvas.image(pro_Locations[3], 0, 0, canvas.canvas.width, canvas.canvas.height);
 
-
+	let ArrowToNamesti = new Arrow(900, 400, 100, 100, ArrowDirections.Down, canvas);
+	ArrowToNamesti.button.addEventListener("click", () => {
+		if(GamePaused) { return; }
+		ArrowToNamesti.deleteButton();
+    	ProstejovNamesti(canvas);
+	}, { once: true });
 	
+	canvas.image(pro_Locations[3], 0, 0, canvas.canvas.width, canvas.canvas.height);
+	chr.draw(800, 150, 0.8, canvas);
+	ArrowToNamesti.draw(canvas);
+	PauseButton.draw(canvas);
+	drawMoneyCount(canvas);
+	RenderStatus(canvas);
 }
 
 function ProstejovCafe(canvas) {
 	console.log("pro cafe");
 	localLocationId = 4;
-	canvas.image(pro_Locations[4], 0, 0, canvas.canvas.width, canvas.canvas.height);
 	
+	let ArrowToNamesti = new Arrow(850, 50, 100, 100, ArrowDirections.Right, canvas);
+	
+	ArrowToNamesti.button.addEventListener("click", () => {
+		if(GamePaused) { return; }
+		ArrowToNamesti.deleteButton();
+    	ProstejovNamesti(canvas);
+	}, { once: true });
 
-
+	cook.append(canvas);
+	cook.resetEventListeners();
+	cook.button.addEventListener("click", (event) => {
+		if(GamePaused) { return; }
+		cook.deleteButton();
+		ArrowToNamesti.deleteButton();
+		ProstejovCafeWaiterJob(canvas);
+	});
+	
+	canvas.image(pro_Locations[4], 0, 0, canvas.canvas.width, canvas.canvas.height);
+	chr.draw(500, 120, 0.8, canvas);
+	cook.draw(200, 180, 0.8, canvas);
+	ArrowToNamesti.draw(canvas);
+	PauseButton.draw(canvas);
+	drawMoneyCount(canvas);
+	RenderStatus(canvas);
 }
 
 function ProstejovCafeWaiterJob(canvas) {
 	console.log("pro waiter job");
+	AllowedToPause = false;
+	PauseButton.deleteButton();
+	let dialogue = new Dialogue();
+	dialogue.begin(canvas);
+	dialogue.makeBubble(0, TranslationGetMultipleLines(SettingsValues.Language, 52, 2));
+	dialogue.makeBubble(1, TranslationGetMultipleLines(SettingsValues.Language, 54, 2));
+	dialogue.makeChoice(2);
+	
+	let dWaitInterval = window.setInterval((dialogue) => {
+		if(dialogue.choice_result !== -1) {
+			clearInterval(dWaitInterval);
+			if(dialogue.choice_result === 1) {
+				dialogue.makeBubble(3, TranslatedText[SettingsValues.Language][56]);
+				return;
+			}
+			else {
+				dialogue.makeBubble(3, TranslationGetMultipleLines(SettingsValues.Language, 57, 2));
+				return;
+			}
+		}
+	}, 100, dialogue);
+	
+	let thisInterval = window.setInterval((dialogue, canvas) => {
+		if(dialogue.counter === 4) {
+			dialogue.end();
+			if(dialogue.choice_result === 1) {
+				WaiterGame(canvas);
+				return;
+			}
+			if(dialogue.choice_result === 0) {
+				WaiterGameValues.IsOver = 0;
+				return;
+			}
+		}
+		if(WaiterGameValues.IsOver !== -1) {
+			clearInterval(thisInterval);
+			WaiterGameReset();
+			PauseButton.append(canvas);
+			AllowedToPause = true;
+			ap.playTrack(2);
+			ProstejovCafe(canvas);
+		}
+	}, 100, dialogue, canvas);
 }
 
 function ProstejovObchodJob(canvas) {
@@ -170,6 +297,48 @@ function ProstejovObchodJob(canvas) {
 }
 function ProstejovNastupisteJob(canvas) {
 	console.log("pro nastupiste job");
+	AllowedToPause = false;
+	let dialogue = new Dialogue();
+	dialogue.begin(canvas);
+	dialogue.makeBubble(0, TranslatedText[SettingsValues.Language][185].slice(0, -1) + " " + Math.floor(1470 * SettingsValues.MoneyCostIncrease) + " " + TranslatedText[SettingsValues.Language][90]);
+	dialogue.makeBubble(1, TranslationGetMultipleLines(SettingsValues.Language, 186, 2));
+	dialogue.makeChoice(2);
+	
+	let dWaitInterval = window.setInterval((dialogue) => {
+		if(dialogue.choice_result !== -1) {
+			clearInterval(dWaitInterval);
+			if(dialogue.choice_result === 1) {
+				if(MoneyAmount >= Math.floor(1470 * SettingsValues.MoneyCostIncrease)) {
+					if(doesHaveTicket) {
+						dialogue.makeBubble(3, TranslatedText[SettingsValues.Language][148]);
+						return;
+					}
+					removeMoney(Math.floor(1470 * SettingsValues.MoneyCostIncrease));
+					doesHaveTicket = true;
+					dialogue.makeBubble(3, TranslatedText[SettingsValues.Language][188]);
+					return;
+				}
+				else {
+					dialogue.makeBubble(3, TranslatedText[SettingsValues.Language][189]);
+					return;
+				}
+				return;
+			}
+			else {
+				dialogue.makeBubble(3,TranslationGetMultipleLines(SettingsValues.Language, 190, 2));
+				return;
+			}
+		}
+	}, 100, dialogue);
+
+	let thisInterval = window.setInterval((dialogue, canvas) => {
+		if(dialogue.counter === 4) {
+			clearInterval(thisInterval);
+			dialogue.end();
+			AllowedToPause = true;	
+			ProstejovNastupiste(canvas);
+		}
+	}, 100, dialogue, canvas);
 }
 
 
