@@ -1,59 +1,113 @@
 Flucht aus der Region Olomouc
 Spielen
 Einstellungen
-NICHTS
-NICHTS
-NICHTS
-NICHTS
-NICHTS
-NICHTS
-NICHTS
-NICHTS
-NICHTS
-NICHTS
-NICHTS
-NICHTS
-NICHTS
-NICHTS
-NICHTS
-NICHTS
-NICHTS
-NICHTS
-NICHTS
-NICHTS
-NICHTS
-NICHTS
-NICHTS
-NICHTS
-NICHTS
-NICHTS
-NICHTS
-NICHTS
-NICHTS
-NICHTS
-NICHTS
-NICHTS
-NICHTS
-NICHTS
-NICHTS
-NICHTS
-NICHTS
-NICHTS
-NICHTS
-NICHTS
-NICHTS
-NICHTS
-NICHTS
-NICHTS
-NICHTS
-NICHTS
-NICHTS
-NICHTS
-NICHTS
-NICHTS
-NICHTS
-NICHTS
-NICHTS
-NICHTS
-NICHTS
-NICHTS
+Kredite
+Spiel Musik
+Stop die Musik
+Wiederherstellen
+
+Pausenmenü
+Spielen
+Spiel speichern
+Spiel laden
+Spiel enden
+
+Schwierigkeit
+Leicht
+Mittelschwer
+Schwer
+Kostenmultiplikator
+Verlustwahrscheinlichkeit pro Tag
+Sprache
+
+ACHTUNG
+
+Die Autoren dieses Spiels beabsichtigen nicht, irgendeine Rasse oder
+Nationalität zu beleidigen. Dieses Spiel soll ausschließlich den
+Unterhaltungszwecken dienen und spiegelt nicht die politischen
+Ansichten des Autors wider. Wir hoffen, dass Ihnen dieses Spiel gefallen wird.
+
+Hintergrundgeschichte
+Tag
+
+Die Schwierigkeit bestimmt nicht nur die oben genannten Werte, sondern auch
+die Schwierigkeit der Minispiele. Die Schwierigkeit oder die Sprache können
+es nicht während des Spiels geändert werden. Alle Werte werden gespeichert.
+
+Es ist der 1. Mai 1997 und die slowakische Minderheit hat gerade erst gefeiert
+erklärte seine Unabhängigkeit von der jungen Republik Tschechien.
+Mit der Unterstützung der Slowakischen Republik sind die Separatisten dabei
+dringen nun tief in das mährische Kernland vor. Sie haben
+haben unterwegs auch den Fluss Bečva verunreinigt und sind es auch
+liegt jetzt nur wenige Kilometer von Hranice entfernt.
+Es ist fliehen zeit
+
+zurück
+
+Heute ist ein schöner Tag
+Lasst uns die Nachrichten lesen!
+Hölle! Die Slowaken haben rebelliert und die sind nur
+einige wenige Kilometer von dem Dorf Hranice entfernt!
+Wie ist das möglich? Die Tschechen werden
+mit der Wehrpflicht bald beginnen.
+Ich muss fliehen! Aber wohin soll ich fliehen? Ich denke, Polen
+ist die sicherste Wette und auch die einfachste Wahl, die es gibt.
+Es ist sowieso nicht so, dass ich eine Wahl hätte – Deutschland
+ist zu weit weg und zu teuer und Österreich ist nicht viel besser.
+Dann ist es Polen!
+
+Drücken Sie die Escape-Taste oder klicken Sie erneut
+auf die Schaltfläche „Pause“, um die Pause aufzuheben.
+
+Quellcode
+Geld
+
+Unser Kellner hat uns gerade verlassen.
+Hilfst du mir, das Essen an die Tische zu bringen?
+Ich gebe dir ein paar Kronen dafür, aber es hängt davon ab,
+wie erfolgreich du bist. Sind Sie einverstanden?
+Auf geht's!
+Wenn Sie Ihre Meinung ändern, können Sie zurückkommen.
+Ich stehe Ihnen jederzeit zur Verfügung.
+
+DU HAST VERLOREN
+Ein Artillerieangriff zerstörte einen Zug.
+Du warst in diesem Zug.
+Die Slowaken haben die Stadt, in der Sie sich befanden, erobert.
+Jede Fluchtmöglichkeit ist dahin.
+Beim Aussteigen kam es zu einem Ansturm.
+Sie waren einer der Opfer.
+Die tschechische Armee hat Sie an die Front geschickt.
+Da kann man sich wirklich nicht entziehen.
+Sie wurden wegen Kollaboration verhaftet.
+Ihre Ausführung soll in 1h erfolgen.
+
+Du bist aus der Region Olomouc geflohen!
+
+Spiel gemacht von:
+Bilder von:
+Musik und Audioeffekte von:
+Übersetzungen von:
+Lizenz 
+Deine Erfolge:
+Medaille der Geschwindigkeit
+Du hast das Spiel in weniger als 10 Minuten beendet!
+Kellnermedaille
+Du hast alle Kellner-Minispiele gewonnen!
+Helfermedaille
+Du hast den Menschen geholfen, den Weg nach Hause zu finden!
+SUS-Medaille
+Du hast das Spiel in SUS gewonnen!
+Danke fürs Spielen!
+Klicken Sie irgendwo, um das Spiel zu beenden.
+ENTSPERRT
+GESPERRT
+Spielzeit:
+
+CZK
+
+Aufgaben
+Start
+Zeitlimit
+Zeit
+Verdient
