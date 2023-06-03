@@ -30,6 +30,7 @@ let mainMenuButtons = [];
 
 function MainMenuSetup() {
 	cvs.loadingMsg();
+	console.log("Entered MainMenuSetup()");
 	
 	//translations
 	TranslationLoad("EN", 0);
@@ -75,12 +76,12 @@ function MainMenu() {
 	mainMenuButtons.push(new Button(600, 200, 300, 100, 50, TranslatedText[SettingsValues.Language][2], "canvas_container"));
 	mainMenuButtons.push(new Button(600, 300, 300, 100, 50, TranslatedText[SettingsValues.Language][3], "canvas_container"));
 
-	mainMenuButtons[0].setCallback("AudioEnabler()");
-	mainMenuButtons[1].setCallback("ap.resetTrack()");
+	mainMenuButtons[0].button.addEventListener("click", AudioEnabler);
+	mainMenuButtons[1].button.addEventListener("click", ap.resetTrack);
 	
-	mainMenuButtons[2].setCallback("ButtonsRouter(0)");
-	mainMenuButtons[3].setCallback("ButtonsRouter(1)");
-	mainMenuButtons[4].setCallback("ButtonsRouter(2)");
+	mainMenuButtons[2].button.addEventListener("click", (event) => { ButtonsRouter(0) });
+	mainMenuButtons[3].button.addEventListener("click", (event) => { ButtonsRouter(1) });
+	mainMenuButtons[4].button.addEventListener("click", (event) => { ButtonsRouter(2) });
 	
 	cvs.image(MainMenuImage, 0, 0, cvs.canvas.width, cvs.canvas.height);
 	chr.draw(360, 100, 0.25, cvs);	
@@ -94,7 +95,7 @@ function MainMenu() {
 	cvs.setnewfont("Arial, FreeSans", "16");
 	
 	cvs.text("(c) Martin/MegapolisPlayer, Jiri/KohoutGD 2023", 650, 472);
-	cvs.text("build date 2/6/2023, prerelease test version", 650, 492);
+	cvs.text("build date 3/6/2023, prerelease test version", 650, 492);
 	
 	cvs.setnewcolor("#333399");
 	cvs.setnewfont("Arial, FreeSans", "48");
@@ -131,6 +132,7 @@ function PlayMenu() {
 		buttonNew.deleteButton();
 		buttonLoad.deleteButton();
 		buttonBack.deleteButton();
+		setMoney(100000); //debug!!!!! todo: REMOVE remove REMOVE!!!!!!!
 		Intro();
 	});
 	buttonLoad.button.addEventListener("click", (event) => {

@@ -25,6 +25,10 @@ function timerEnd() {
 function timerToString() {
 	return String(Math.floor(TimerValues.OverallTime / 60) + ":" + String("00" + Number(TimerValues.OverallTime % 60) ).slice(-2) + " ([M]M:SS)");
 }
+function timerToNumber() {
+	timerEnd(); //doesnt really end it
+	return Number(Math.floor(TimerValues.OverallTime));
+}
 function timerReset() {
 	TimerValues.StartTime = 0;
 	TimerValues.CurrentTime = 0;
@@ -64,8 +68,7 @@ function timelimitToString() {
 function timelimitToNumber() {
 	timelimitUpdate();
 	return Number(
-			Math.floor((TimerlimitValues.TimeLimit - TimerlimitValues.OverallTime) / 60)
-			+ ":" + String("00" + Number((TimerlimitValues.TimeLimit - TimerlimitValues.OverallTime) % 60)).slice(-2)
+			Math.floor(TimerlimitValues.TimeLimit - TimerlimitValues.OverallTime)
 		);
 }
 function timelimitRender(canvasobj) {

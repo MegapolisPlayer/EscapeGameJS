@@ -88,6 +88,7 @@ class TableManager {
 				case 2:
 				case 3:
 					//waiting - recieved
+					ap.playSFX(3); //success
 					if(WaiterGameValues.IsOrderSelected === this.tableno) {
 						this.reset();
 						WaiterGameValues.AmountEarned += 15;
@@ -140,6 +141,7 @@ class TableManager {
 			case 1:
 				if(this.counter >= 100) { //10s
 					//didnt click on order fast enough
+					ap.playSFX(4); //fail
 					WaiterGameValues.AmountEarned -= 5;
 					this.remove();
 					this.status = 4;
@@ -155,6 +157,7 @@ class TableManager {
 			case 3:
 				if(this.counter >= 50) { //5s
 					//fail
+					ap.playSFX(4);
 					WaiterGameValues.AmountEarned -= 15;
 					this.remove();
 					this.status = 4;
@@ -494,6 +497,8 @@ function FishGameComponentMain(canvas) {
 		canvas.clear("#2066d6");
 		//render bg
 		canvas.setnewcolor("#03ddff");
+		canvas.box(0, 90, canvas.canvas.width, 20);
+		canvas.setnewcolor("#633200");
 		canvas.box(0, 0, canvas.canvas.width, 100);
 		//render assets and stuff
 		chrf.draw(470, 10, 0.2, canvas);
@@ -534,16 +539,21 @@ function FishGameComponentMain(canvas) {
 				if(FishGameValues.Length <= 100) {
 					FishGameValues.LengthReverseResize = false;
 					FishGameValues.LengthResize = false;
-					FishObjects.splice(FishGameValues.IsHauling, 1);
+					if(FishObjects.length !== 1) {
+						FishObjects.splice(FishGameValues.IsHauling, 1); //splice fails when size = 1, doesnt delete
+					}
 					FishGameValues.IsHauling = -1;
 					switch(FishGameValues.TypeOfHauledCargo) {
 						case 0:
+							ap.playSFX(3); //success
 							FishGameValues.AmountEarned += 50;
 							break;
 						case 1:
+							ap.playSFX(4);  //fail
 							FishGameValues.AmountEarned += 10;
 							break;
 						case 2:
+							ap.playSFX(4);  //fail
 							FishGameValues.AmountEarned += 5;
 							break;
 						case 3:
@@ -551,16 +561,19 @@ function FishGameComponentMain(canvas) {
 							let what = randomNumber(2);
 							switch(what) {
 								case 0:
+									ap.playSFX(4); //fail
 									//got tire
 									FishGameValues.AmountEarned += 10;
 									break;
 								case 1:
+									ap.playSFX(4); //fail
 									//got shoe
 									FishGameValues.AmountEarned += 5;
 									break;
 								case 2:
-									//got random amount of money (at least 35CZK, max. 150)
-									FishGameValues.AmountEarned += 35 + randomNumber(150 - 35);
+									ap.playSFX(3); //success
+									//got random amount of money (at least 75CZK, max. 150)
+									FishGameValues.AmountEarned += 75 + randomNumber(75);
 									break;
 							}
 							break;

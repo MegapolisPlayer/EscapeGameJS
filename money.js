@@ -1,10 +1,6 @@
 let MoneyAmount = 0;
 
 function drawMoneyCount(canvasobj) {
-	if(MoneyAmount < -250) {
-		//lose instantly
-		
-	}
 	canvasobj.setnewfont("Arial, FreeSans", "32");
 	canvasobj.setnewcolor("#ffffff");
 	let text = TranslatedText[SettingsValues.Language][51]+": "+MoneyAmount+" ";

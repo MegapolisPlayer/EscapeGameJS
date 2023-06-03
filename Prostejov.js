@@ -237,8 +237,8 @@ function ProstejovCafe(canvas) {
 	});
 	
 	canvas.image(pro_Locations[4], 0, 0, canvas.canvas.width, canvas.canvas.height);
-	chr.draw(500, 120, 0.8, canvas);
-	cook.draw(200, 180, 0.8, canvas);
+	chr.draw(500, 100, 0.8, canvas);
+	cook.draw(200, 10, 0.8, canvas);
 	ArrowToNamesti.draw(canvas);
 	PauseButton.draw(canvas);
 	drawMoneyCount(canvas);
@@ -325,7 +325,7 @@ function ProstejovNastupisteJob(canvas) {
 				return;
 			}
 			else {
-				dialogue.makeBubble(3,TranslationGetMultipleLines(SettingsValues.Language, 190, 2));
+				dialogue.makeBubble(3, TranslationGetMultipleLines(SettingsValues.Language, 190, 2));
 				return;
 			}
 		}

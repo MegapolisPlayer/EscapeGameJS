@@ -61,8 +61,8 @@ function Credits(iscalledfrommm, canvasobj) {
 		canvasobj.text(TranslatedText[SettingsValues.Language][72], 50, 160);
 		canvasobj.setfontweight("bold");
 		canvasobj.textml(
-			"SReality, Pixabay, VlakemJednoduse.cz, Freepik: jcomp\n"+
-			"Fortes Interactive, VagonWeb.cz, Wikipedia Commons:\n"+
+			"SReality, Pixabay (authors in res/ folders), Freepik: jcomp\n"+
+			"VlakemJednoduse.cz, Fortes Interactive, VagonWeb.cz, Wikipedia Commons:\n"+
 			"Marie Čchiedzeová, Vojtěch Dočkal, Jiří Komárek, JirkaSv\n"+
 			"Dezidor, Vitezslava, Kamil Czianskim, Michal Klajban\n"+
 			"STERUSSTUDENKA, Draceane, Herbert Frank, Palickap\n"+
@@ -77,7 +77,12 @@ function Credits(iscalledfrommm, canvasobj) {
 		canvasobj.image(finalCreditsImage, 0, 0, canvasobj.canvas.width, canvasobj.canvas.height);
 		canvasobj.text(TranslatedText[SettingsValues.Language][73], 50, 190);
 		canvasobj.setfontweight("bold");
-		canvasobj.textml("All music by Kevin Macleod (incompetech.com)\nLicensed under CC-BY 3.0\n", 100, 230);
+		canvasobj.textml("All music by Kevin Macleod (incompetech.com)\n"+
+						"Licensed under CC-BY 4.0\n"+
+						"https://creativecommons.org/licenses/by/4.0/\n"+
+						"SFX from Pixabay\n"+
+						"The list of authors is in the res/sfx/ folder.\n"
+						, 100, 230);
 		canvasobj.resetfontweight();
 	}, 3 * delay);
 
@@ -177,7 +182,13 @@ function CreditsButtonRegister(canvasobj) {
 	finalCreditsImage.onload = () => { Credits(true, canvasobj); };
 }
 
-function debug_Credits(iscalledfrommm, canvasobj) {
+function CreditsCaller(canvasobj) {
+	canvasobj.loadingMsg();
+	finalCreditsImage.src = "res/Credits.jpg";
+	finalCreditsImage.onload = () => { Credits(false, canvasobj); };
+}
+
+function debugCredits(iscalledfrommm, canvasobj) {
 	canvasobj.loadingMsg();
 	finalCreditsImage.src = "res/Credits.jpg";
 	finalCreditsImage.onload = () => { Credits(iscalledfrommm, canvasobj); };

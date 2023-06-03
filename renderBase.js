@@ -11,9 +11,10 @@ class Canvas {
         this.context.font = fontsize+"px "+font;
         this.context.fillStyle = this.color;
 		let canvasbuffer = document.createElement("div");
+		canvasbuffer.id = "CanvasBuffer"+id;
 		canvasbuffer.style.setProperty("width", this.canvas.width+"px");
 		canvasbuffer.style.setProperty("height", this.canvas.height+"px");
-		document.getElementById(id).parentElement.appendChild(canvasbuffer);
+		this.canvas.parentElement.appendChild(canvasbuffer);
     }
     //sets new color
     setnewcolor(newcolor) {
@@ -151,6 +152,8 @@ class Button {
 		
 		this.button.appendChild(this.buttontext);
 		document.getElementById(container_id).appendChild(this.button);
+		
+		this.button.setAttribute("onclick", () => { ap.playSFX(0); });	
     }
 	changeText(newtext) {
 		if((typeof this.button === "undefined")) { 
@@ -164,9 +167,6 @@ class Button {
 	}
 	deleteButton() {
 		this.button.remove();
-	}
-	setCallback(callback) {
-		this.button.setAttribute("onclick", callback);
 	}
     constructor(xoffset, yoffset, width, height, fontsize, text, container_id) {
 		this.button = document.createElement("button");
@@ -235,6 +235,8 @@ class Arrow {
 		this.button.style.setProperty("left", this.xoffset+"px");
 		this.button.style.setProperty("top", this.yoffset+"px");
 		
+		this.button.setAttribute("onclick", () => { ap.playSFX(0); });
+
 		if(canvasobj !== null) {
 			canvasobj.canvas.parentElement.appendChild(this.button);
         	canvasobj.context.drawImage(ArrowImages[this.imageId], this.xoffset, this.yoffset, this.width, this.height);
@@ -276,9 +278,6 @@ class Arrow {
 		}
 		canvasobj.canvas.parentElement.appendChild(this.button);
 	}
-	setCallback(callback) {
-		this.button.setAttribute("onclick", callback);
-	}
 	newOffset(newxo, newyo) {
 		this.xoffset = newxo;
 		this.yoffset = newyo;
@@ -310,29 +309,41 @@ class AudioPlayer {
 		this.audioTracks = [];
 		this.audioTrackCounter = 0;
 		//music
-		this.audioTracks.push(new Audio("res/music/Stormfront.mp3"));             //main menu
-		this.audioTracks.push(new Audio("res/music/Faceoff.mp3"));                //intro
-		this.audioTracks.push(new Audio("res/music/ImpendingBoom.mp3"));          //hranice
-		this.audioTracks.push(new Audio("res/music/Nerves.mp3"));                 //prerov
-		this.audioTracks.push(new Audio("res/music/LateNightRadio.mp3"));         //nezamyslice
-		this.audioTracks.push(new Audio("res/music/StringImpromptu1.mp3"));       //prostejov
-		this.audioTracks.push(new Audio("res/music/FailingDefense.mp3"));         //olomouc
-		this.audioTracks.push(new Audio("res/music/RoyalCoupling.mp3"));          //studenka
-		this.audioTracks.push(new Audio("res/music/TheParting.mp3"));             //ostrava
-		this.audioTracks.push(new Audio("res/music/StartingOutWaltzVivace.mp3")); //credits, ending
-		this.audioTracks.push(new Audio("res/music/AlmostBliss.mp3"));            //waiter minigame
-		this.audioTracks.push(new Audio("res/music/PorchSwingDays.mp3"));         //fishing
-		this.audioTracks.push(new Audio("res/music/AVeryBradySpecial.mp3"));      //ticket sale
-																				  //dialect translation
-																				  //cashier minigame
-																				  //cleaning minigame
-																				  //cheesemaking
-																				  //defense minigame
-		this.audioTracks.push(new Audio("res/music/Pride.mp3"));                  //wagon cutscenes
-		for(let Id = 0; Id < 14; Id++) {
+		this.audioTracks.push(new Audio("res/music/Stormfront.mp3"));                //main menu
+		this.audioTracks.push(new Audio("res/music/Faceoff.mp3"));                   //intro
+		this.audioTracks.push(new Audio("res/music/ImpendingBoom.mp3"));             //hranice
+		this.audioTracks.push(new Audio("res/music/Nerves.mp3"));                    //prerov
+		this.audioTracks.push(new Audio("res/music/LateNightRadio.mp3"));            //nezamyslice
+		this.audioTracks.push(new Audio("res/music/StringImpromptu1.mp3"));          //prostejov
+		this.audioTracks.push(new Audio("res/music/RoyalCoupling.mp3"));             //olomouc
+		this.audioTracks.push(new Audio("res/music/FailingDefense.mp3"));            //studenka
+		this.audioTracks.push(new Audio("res/music/TheParting.mp3"));                //ostrava
+		this.audioTracks.push(new Audio("res/music/StartingOutWaltzVivace.mp3"));    //credits, ending
+		this.audioTracks.push(new Audio("res/music/AlmostBliss.mp3"));               //waiter minigame
+		this.audioTracks.push(new Audio("res/music/PorchSwingDays.mp3"));            //fishing
+		this.audioTracks.push(new Audio("res/music/AVeryBradySpecial.mp3"));         //ticket sale
+		this.audioTracks.push(new Audio("res/music/DevonshireWaltzAllegretto.mp3")); //dialect translation
+		this.audioTracks.push(new Audio("res/music/Nonstop.mp3"));                   //cashier minigame
+		this.audioTracks.push(new Audio("res/music/Cipher.mp3"));                    //cleaning minigame
+		this.audioTracks.push(new Audio("res/music/NeonLaserHorizon.mp3"));          //cheesemaking
+		this.audioTracks.push(new Audio("res/music/FiveArmies.mp3"));                //defense minigame
+		this.audioTracks.push(new Audio("res/music/Pride.mp3"));                     //wagon cutscenes
+		for(let Id = 0; Id < 19; Id++) {
 			this.audioTracks[Id].loop = true;
 		}
-		//sfx
+		
+		//sfx - no looping
+		this.sfx = [];
+		this.sfx.push(new Audio("res/sfx/Click.mp3"));
+		this.sfx.push(new Audio("res/sfx/DialogueYes.mp3"));
+		this.sfx.push(new Audio("res/sfx/DialogueNo.mp3"));
+		this.sfx.push(new Audio("res/sfx/Success.mp3"));
+		this.sfx.push(new Audio("res/sfx/Fail.mp3"));
+		this.sfx.push(new Audio("res/sfx/Ticket.mp3"));
+		this.sfx.push(new Audio("res/sfx/Beep.mp3"));
+		this.sfx.push(new Audio("res/sfx/Shoot.mp3"));
+		this.sfx.push(new Audio("res/sfx/GameOver.mp3"));
+		this.sfx.push(new Audio("res/sfx/TrainBrake.mp3"));
 		
 		this.allowed = false;
 	}
@@ -376,6 +387,11 @@ class AudioPlayer {
 	toggleSound() {
 		if(this.allowed) { this.stop(); }
 		else { this.start(); }
+	}
+	playSFX(id) {
+		if(this.allowed) { 
+			this.sfx[id].play();
+		}
 	}
 };
 const ap = new AudioPlayer();

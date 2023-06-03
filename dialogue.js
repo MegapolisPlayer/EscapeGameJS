@@ -40,6 +40,7 @@ class Character {
 };
 let chr = new Character("res/Character.png");
 let chrf = new Character("res/CharacterFisher.png");
+let chrs = new Character("res/CharacterSitting.png");
 let cook = new Character("res/Cook.png");
 let traindriver = new Character("res/TrainDriver.png");
 let schl = new Character("res/Scholar.png");
@@ -107,9 +108,11 @@ class Dialogue {
 		NoButton.button.setAttribute("class", NoButton.button.getAttribute("class")+" DialogueArrow");		
 		
 		YesButton.button.addEventListener("click", () => {
+			ap.playSFX(1);
 			this.choice_result = 1;
 		}, this, { once: true });
 		NoButton.button.addEventListener("click", () => {
+			ap.playSFX(2);
 			this.choice_result = 0;
 		}, this, { once: true });
 		

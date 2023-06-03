@@ -9,10 +9,12 @@ let TranslatedText = [];
 let AmountTranslations = 0;
 
 function TranslationLoad(lang, lid) {
+	console.log("Loading LC-"+lang);
 	TranslatedText.push([]);
 	let req = new XMLHttpRequest();
 	req.open("GET", "lang/text"+lang+".txt");
 	req.onload = (event) => {
+		console.log("Processing LC-"+lang);
 		let splittext = req.responseText.split('\n');
 		for(let Id = 0; Id < splittext.length; Id++) {
 			splittext[Id] = splittext[Id].replaceAll('\r', ''); //for windows compatibility
