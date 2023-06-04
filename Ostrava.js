@@ -155,7 +155,7 @@ function KatowiceCutscene(canvas) {
 			if(dialogue.counter === 2) {
 				clearInterval(thisInterval);
 				dialogue.end();
-				canvas.image(ost_Locations[3], 0, 0, canvas.canvas.width, canvas.canvas.height);
+				canvas.image(ost_Locations[4], 0, 0, canvas.canvas.width, canvas.canvas.height);
 				chrs.draw(160, 160, 0.65, canvas);
 				setTimeout(() => {
 					CreditsCaller(canvas);
