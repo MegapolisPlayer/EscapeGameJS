@@ -349,6 +349,7 @@ function HraniceNaMoraveNastupisteJob(canvas) {
 						return;
 					}
 					removeMoney(Math.floor(650 * SettingsValues.MoneyCostIncrease));
+					ap.playSFX(5);
 					doesHaveTicket = true;
 					dialogue.makeBubble(4, TranslatedText[SettingsValues.Language][143]);
 					return;

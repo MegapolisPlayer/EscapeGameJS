@@ -119,7 +119,7 @@ Pokud nevyzvedneš objednávku tak ztratíš 5Kč.
 Kilkni na stůl aby jsi přijal objednávku a klikní na
 objednávku a potom na stůl aby si ji dostavil.
 
-Objednávka
+Objednávek
 
 Rybářská minihra
 Vylov co nejvíc ryb za minutu.
@@ -128,7 +128,7 @@ Za boty dostaneš 5Kč, za pneumatiky 10Kč.
 Krabice mají vždy neznámý počet peněz (<150Kč)
 nebo nejaký objekt (kromě ryb).
 
-Současně
+Vyděláno
 
 Minihra o čistění
 Prostě čisti.

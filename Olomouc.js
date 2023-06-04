@@ -169,7 +169,7 @@ function OlomoucNamesti(canvas) {
 		ArrowToRestaurace.deleteButton();
     	OlomoucNadrazi(canvas);
 	}, { once: true });
-	let ArrowToObchod = new Arrow(650, 300, 100, 100, ArrowDirections.Up, canvas);
+	let ArrowToObchod = new Arrow(650, 300, 100, 100, ArrowDirections.Right, canvas);
 	ArrowToObchod.button.addEventListener("click", () => {
 		if(GamePaused) { return; }
 		ArrowToNadrazi.deleteButton();
@@ -330,6 +330,7 @@ function OlomoucNastupisteJob(canvas) {
 						return;
 					}
 					removeMoney(Math.floor(1840 * SettingsValues.MoneyCostIncrease));
+					ap.playSFX(5);
 					doesHaveTicket = true;
 					dialogue.makeBubble(4, TranslatedText[SettingsValues.Language][202]);
 					return;

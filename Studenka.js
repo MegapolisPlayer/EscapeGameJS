@@ -49,7 +49,6 @@ function StudenkaCutscene(canvas) {
 				ap.sfx[9].pause();
 				canvas.clear("#000000");
 				setTimeout(() => {
-					canvas.image(stu_Locations[0], 0, 0, canvas.canvas.width, canvas.canvas.height);
 					dialogue.makeBubble(2, TranslationGetMultipleLines(SettingsValues.Language, 207, 2));
 					let thisInterval = window.setInterval((dialogue, canvas) => {
 						if(dialogue.counter === 3) {
@@ -86,37 +85,165 @@ function StudenkaMap(canvas) {
 function StudenkaPrejezd(canvas) {
 	console.log("stu prejezd");
 	localLocationId = 0;
+	
+	let ArrowToNamesti = new Arrow(100, 400, 100, 100, ArrowDirections.Down, canvas);
+	ArrowToNamesti.button.addEventListener("click", () => {
+		if(GamePaused) { return; }
+		ArrowToNamesti.deleteButton();
+    	StudenkaNamesti(canvas);
+	}, { once: true });	
+	
 	canvas.image(stu_Locations[0], 0, 0, canvas.canvas.width, canvas.canvas.height);
+	chr.draw(100, 300, 0.3, canvas);
+	ArrowToNamesti.draw(canvas);
+	PauseButton.draw(canvas);
+	drawMoneyCount(canvas);
+	RenderStatus(canvas);
 }
 
 function StudenkaNamesti(canvas) {
 	console.log("stu namesti");
 	localLocationId = 1;
+	
+	let ArrowToPrejezd = new Arrow(450, 400, 100, 100, ArrowDirections.Down, canvas);
+	ArrowToPrejezd.button.addEventListener("click", () => {
+		if(GamePaused) { return; }
+		ArrowToPrejezd.deleteButton();
+		ArrowToMost.deleteButton();
+		ArrowToNadrazi.deleteButton();
+		ArrowToPole.deleteButton();
+    	StudenkaPrejezd(canvas);
+	}, { once: true });	
+	let ArrowToMost = new Arrow(100, 350, 100, 100, ArrowDirections.Left, canvas);
+	ArrowToMost.button.addEventListener("click", () => {
+		if(GamePaused) { return; }
+		ArrowToPrejezd.deleteButton();
+		ArrowToMost.deleteButton();
+		ArrowToNadrazi.deleteButton();
+		ArrowToPole.deleteButton();
+    	StudenkaMost(canvas);
+	}, { once: true });	
+	let ArrowToNadrazi = new Arrow(100, 400, 100, 100, ArrowDirections.Down, canvas);
+	ArrowToNadrazi.button.addEventListener("click", () => {
+		if(GamePaused) { return; }
+		ArrowToPrejezd.deleteButton();
+		ArrowToMost.deleteButton();
+		ArrowToNadrazi.deleteButton();
+		ArrowToPole.deleteButton();
+    	StudenkaNadrazi(canvas);
+	}, { once: true });	
+	let ArrowToPole = new Arrow(100, 400, 100, 100, ArrowDirections.Down, canvas);
+	ArrowToPole.button.addEventListener("click", () => {
+		if(GamePaused) { return; }
+		ArrowToPrejezd.deleteButton();
+		ArrowToMost.deleteButton();
+		ArrowToNadrazi.deleteButton();
+		ArrowToPole.deleteButton();
+    	StudenkaPole(canvas);
+	}, { once: true });	
+	
 	canvas.image(stu_Locations[1], 0, 0, canvas.canvas.width, canvas.canvas.height);
+	chr.draw(650, 200, 0.5, canvas);
+	ArrowToPrejezd.draw(canvas);
+	ArrowToMost.draw(canvas);
+	ArrowToNadrazi.draw(canvas);
+	ArrowToPole.draw(canvas);
+	PauseButton.draw(canvas);
+	drawMoneyCount(canvas);
+	RenderStatus(canvas);
 }
 
 function StudenkaMost(canvas) {
 	console.log("stu most");
 	localLocationId = 2;
+
+	let PayRespect = new Arrow(500, 300, 100, 100, ArrowDirections.Here, canvas);
+	PayRespect.button.addEventListener("click", () => {
+		if(GamePaused) { return; }
+		PayRespect.deleteButton();
+		ArrowToNamesti.deleteButton();
+    	StudenkaRespect(canvas);
+	}, { once: true });	
+	let ArrowToNamesti = new Arrow(800, 400, 100, 100, ArrowDirections.Right, canvas);
+	ArrowToNamesti.button.addEventListener("click", () => {
+		if(GamePaused) { return; }
+		PayRespect.deleteButton();
+		ArrowToNamesti.deleteButton();
+    	StudenkaNamesti(canvas);
+	}, { once: true });	
+	
 	canvas.image(stu_Locations[2], 0, 0, canvas.canvas.width, canvas.canvas.height);
+	chr.draw(700, 300, 0.4, canvas);
+	PayRespect.draw(canvas);
+	ArrowToNamesti.draw(canvas);
+	PauseButton.draw(canvas);
+	drawMoneyCount(canvas);
+	RenderStatus(canvas);
 }
 
 function StudenkaNadrazi(canvas) {
 	console.log("stu nadrazi");
 	localLocationId = 3;
+	
+	let ArrowToNamesti = new Arrow(100, 400, 100, 100, ArrowDirections.Left, canvas);
+	ArrowToNamesti.button.addEventListener("click", () => {
+		if(GamePaused) { return; }
+		ArrowToNamesti.deleteButton();
+		ArrowToNastupiste.deleteButton();
+    	StudenkaNamesti(canvas);
+	}, { once: true });	
+	let ArrowToNastupiste = new Arrow(900, 400, 100, 100, ArrowDirections.Right, canvas);
+	ArrowToNastupiste.button.addEventListener("click", () => {
+		if(GamePaused) { return; }
+		ArrowToNamesti.deleteButton();
+		ArrowToNastupiste.deleteButton();
+    	StudenkaNastupiste(canvas);
+	}, { once: true });		
+	
 	canvas.image(stu_Locations[3], 0, 0, canvas.canvas.width, canvas.canvas.height);
+	chr.draw(800, 200, 0.6, canvas);
+	ArrowToNamesti.draw(canvas);
+	ArrowToNastupiste.draw(canvas);
+	PauseButton.draw(canvas);
+	drawMoneyCount(canvas);
+	RenderStatus(canvas);
 }
 
 function StudenkaNastupiste(canvas) {
 	console.log("stu nastupiste");
 	localLocationId = 4;
+	
+	let ArrowToNadrazi = new Arrow(500, 300, 100, 100, ArrowDirections.Here, canvas);
+	ArrowToNadrazi.button.addEventListener("click", () => {
+		if(GamePaused) { return; }
+		ArrowToNadrazi.deleteButton();
+    	StudenkaNadrazi(canvas);
+	}, { once: true });	
+	
 	canvas.image(stu_Locations[4], 0, 0, canvas.canvas.width, canvas.canvas.height);
+	chr.draw(100, 300, 0.4, canvas);
+	ArrowToNadrazi.draw(canvas);
+	PauseButton.draw(canvas);
+	drawMoneyCount(canvas);
+	RenderStatus(canvas);
 }
 
 function StudenkaPole(canvas) {
 	console.log("stu pole");
 	localLocationId = 5;
+
+	let ArrowToNamesti = new Arrow(350, 400, 100, 100, ArrowDirections.Down, canvas);
+	ArrowToNamesti.button.addEventListener("click", () => {
+		if(GamePaused) { return; }
+		ArrowToNamesti.deleteButton();
+    	StudenkaNamesti(canvas);
+	}, { once: true });		
+	
 	canvas.image(stu_Locations[5], 0, 0, canvas.canvas.width, canvas.canvas.height);
+	chr.draw(100, 200, 0.3, canvas);
+	PauseButton.draw(canvas);
+	drawMoneyCount(canvas);
+	RenderStatus(canvas);
 }
 
 function StudenkaDefenseJob(canvas) {
@@ -124,5 +251,18 @@ function StudenkaDefenseJob(canvas) {
 }
 
 function StudenkaNastupisteJob(canvas) {
+	
+}
 
+function StudenkaRespect(canvas) {
+	let dialogue = new Dialogue();
+	dialogue.begin(canvas);
+	dialogue.makeBubble(0, "EC 108 Comenius, 8.8.2008");
+	dialogue.makeBubble(1, "R.I.P.");
+	
+	let dWaitInterval = window.setInterval((dialogue) => {
+		if(dialogue.counter === 2) {
+			StudenkaMost(canvas);
+		}
+	}, 100, dialogue);
 }

@@ -56,21 +56,32 @@ function Credits(iscalledfrommm, canvasobj) {
 	}, 1 * delay);
 	
 	setTimeout(() => {
-		//images - all of them
+		//images - wikipedia
 		canvasobj.image(finalCreditsImage, 0, 0, canvasobj.canvas.width, canvasobj.canvas.height);
 		canvasobj.text(TranslatedText[SettingsValues.Language][72], 50, 160);
 		canvasobj.setfontweight("bold");
 		canvasobj.textml(
-			"SReality, Pixabay (authors in res/ folders), Freepik: jcomp\n"+
-			"VlakemJednoduse.cz, Fortes Interactive, VagonWeb.cz, Wikipedia Commons:\n"+
+			"SReality, Freepik: jcomp, VlakemJednoduse.cz, Fortes Interactive\n"+
+			"VagonWeb.cz, Pixabay: PickupImage, pexels\n"+
+			"All other assets are custom-made.\n"
+		, 75, 200);
+		canvasobj.resetfontweight();
+	}, 2 * delay);
+	
+	setTimeout(() => {
+		//images - non-wikipedia
+		canvasobj.image(finalCreditsImage, 0, 0, canvasobj.canvas.width, canvasobj.canvas.height);
+		canvasobj.text(TranslatedText[SettingsValues.Language][72], 50, 160);
+		canvasobj.setfontweight("bold");
+		canvasobj.textml(
+			"From Wikimedia Commons (in no particular order):\n"+
 			"Marie Čchiedzeová, Vojtěch Dočkal, Jiří Komárek, JirkaSv\n"+
 			"Dezidor, Vitezslava, Kamil Czianskim, Michal Klajban\n"+
 			"STERUSSTUDENKA, Draceane, Herbert Frank, Palickap\n"+
 			"RPekar\n"
 		, 75, 200);
 		canvasobj.resetfontweight();
-	}, 2 * delay);	
-
+	}, 3 * delay);	
 
 	setTimeout(() => {
 		//music
@@ -84,7 +95,7 @@ function Credits(iscalledfrommm, canvasobj) {
 						"The list of authors is in the res/sfx/ folder.\n"
 						, 100, 230);
 		canvasobj.resetfontweight();
-	}, 3 * delay);
+	}, 4 * delay);
 
 	setTimeout(() => {
 		//translations
@@ -93,7 +104,7 @@ function Credits(iscalledfrommm, canvasobj) {
 		canvasobj.setfontweight("bold");
 		canvasobj.textml("Čeština, English, Русский - Martin\nDeutsch, Susština - Jirka\n", 100, 230);
 		canvasobj.resetfontweight();
-	}, 4 * delay);
+	}, 5 * delay);
 
 	setTimeout(() => {
 		//translations
@@ -102,7 +113,7 @@ function Credits(iscalledfrommm, canvasobj) {
 		canvasobj.setfontweight("bold");
 		canvasobj.textml("Licensed under CC-BY-SA 4.0\nImages - Content License, CC-BY-SA 4.0\nMusic - CC-BY 4.0", 100, 230);
 		canvasobj.resetfontweight();
-	}, 5 * delay);
+	}, 6 * delay);
 	
 	if(!iscalledfrommm) {
 		setTimeout(() => {
@@ -113,7 +124,7 @@ function Credits(iscalledfrommm, canvasobj) {
 			canvasobj.text(TranslatedText[SettingsValues.Language][76], 500, 250); 
 			canvasobj.setnewfont("Arial, FreeSans", "32", "normal");
 			canvasobj.resetalign();
-		}, 6 * delay);
+		}, 7 * delay);
 		
 		setTimeout(() => {
 			//achievements - medal for speed
@@ -123,7 +134,7 @@ function Credits(iscalledfrommm, canvasobj) {
 			canvasobj.text(TranslatedText[SettingsValues.Language][78], 500, 450); 
 			canvasobj.resetalign()
 			CreditsRenderAchievement(CreditsValues.gotAchievementSpeed, AchievementImages[1], AchievementImages[0], canvasobj);
-		}, 7 * delay);
+		}, 8 * delay);
 
 		setTimeout(() => {
 			//achievements - waiters medal
@@ -133,7 +144,7 @@ function Credits(iscalledfrommm, canvasobj) {
 			canvasobj.text(TranslatedText[SettingsValues.Language][80], 500, 450); 
 			canvasobj.resetalign()
 			CreditsRenderAchievement(CreditsValues.gotAchievementWaiter, AchievementImages[2], AchievementImages[0], canvasobj);
-		}, 8 * delay);
+		}, 9 * delay);
 
 		setTimeout(() => {
 			//achievements - help medal
@@ -143,7 +154,7 @@ function Credits(iscalledfrommm, canvasobj) {
 			canvasobj.text(TranslatedText[SettingsValues.Language][82], 500, 450); 
 			canvasobj.resetalign()
 			CreditsRenderAchievement(CreditsValues.gotAchievementHelp, AchievementImages[3], AchievementImages[0], canvasobj);
-		}, 9 * delay);
+		}, 10 * delay);
 		
 		setTimeout(() => {
 			//achievements - sus medal
@@ -153,7 +164,7 @@ function Credits(iscalledfrommm, canvasobj) {
 			canvasobj.text(TranslatedText[SettingsValues.Language][84], 500, 450); 
 			canvasobj.resetalign()
 			CreditsRenderAchievement(CreditsValues.gotAchievementSus, AchievementImages[4], AchievementImages[0], canvasobj);
-		}, 10 * delay);
+		}, 11 * delay);
 		setTimeout(() => {
 			//time played
 			canvasobj.image(finalCreditsImage, 0, 0, canvasobj.canvas.width, canvasobj.canvas.height);
@@ -161,7 +172,7 @@ function Credits(iscalledfrommm, canvasobj) {
 			canvasobj.setfontweight("bold");
 			canvasobj.text(timerToString(), 100, 230);
 			canvasobj.resetfontweight();
-		}, 11 * delay);
+		}, 12 * delay);
 	}
 
 	setTimeout(() => {
@@ -171,7 +182,7 @@ function Credits(iscalledfrommm, canvasobj) {
 		window.addEventListener("click", (event) => {
 			location.reload();		
 		});
-	}, (iscalledfrommm ? 7 : 12) * delay);
+	}, (iscalledfrommm ? 8 : 13) * delay);
 	
 }
 

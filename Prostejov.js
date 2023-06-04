@@ -314,6 +314,7 @@ function ProstejovNastupisteJob(canvas) {
 						return;
 					}
 					removeMoney(Math.floor(1470 * SettingsValues.MoneyCostIncrease));
+					ap.playSFX(5);
 					doesHaveTicket = true;
 					dialogue.makeBubble(3, TranslatedText[SettingsValues.Language][188]);
 					return;

@@ -73,14 +73,14 @@ function DecrementDifficulty() {
 }
 function IncrementLanguage() {
 	SettingsValues.Language++;
-	if(SettingsValues.Language === 4) {
+	if(SettingsValues.Language === 6) {
 		SettingsValues.Language = 0;
 	}
 }
 function DecrementLanguage() {
 	SettingsValues.Language--;
 	if(SettingsValues.Language === -1) {
-		SettingsValues.Language = 3;
+		SettingsValues.Language = 5;
 	}
 }
 
@@ -141,6 +141,12 @@ function SettingsRenderLanguageRelatedText(canvasobj) {
 		break;
 		case 3:
 			canvasobj.text("Русский", 700, 150);
+		break;
+		case 4:
+			canvasobj.text("Susština", 700, 150); //vtip/joke
+		break;
+		case 5:
+			canvasobj.text("Bašta", 700, 150); //vtip/joke
 		break;
 	}
 }

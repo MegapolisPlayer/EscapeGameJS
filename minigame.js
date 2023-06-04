@@ -497,9 +497,9 @@ function FishGameComponentMain(canvas) {
 		canvas.clear("#2066d6");
 		//render bg
 		canvas.setnewcolor("#03ddff");
-		canvas.box(0, 90, canvas.canvas.width, 20);
-		canvas.setnewcolor("#633200");
 		canvas.box(0, 0, canvas.canvas.width, 100);
+		canvas.setnewcolor("#633200");
+		canvas.box(0, 90, canvas.canvas.width, 20);
 		//render assets and stuff
 		chrf.draw(470, 10, 0.2, canvas);
 		canvas.image(FishingImages[3], 100, 30, 75, 75);
@@ -579,6 +579,9 @@ function FishGameComponentMain(canvas) {
 							break;
 					}
 					FishGameValues.TypeOfHauledCargo = -1;
+					if(FishObjects.length === 1) {
+						FishObjects.length = 0; //clear array
+					}
 				}
 			}
 			else {
@@ -607,7 +610,7 @@ function FishGameComponentMain(canvas) {
 		renderTextAsMinigameStatus(TranslatedText[SettingsValues.Language][109], FishGameValues.AmountEarned, canvas);
 		//time stuff
 		timelimitRender(canvas);
-		if(timelimitIsDone()) {
+		if(timelimitIsDone() && FishObjects.length === 0) {
 			clearInterval(timerInterval);
 			addMoney(FishGameValues.AmountEarned); //50Kc fish, 10Kc pneu, 5Kc boots, boxes random
 			window.removeEventListener("click", SetResizeToTrue);	

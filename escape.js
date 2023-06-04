@@ -37,7 +37,8 @@ function MainMenuSetup() {
 	TranslationLoad("CZ", 1);
 	TranslationLoad("DE", 2);
 	TranslationLoad("RU", 3);
-	//TranslationLoad("SUS", 4); //jirkas custom lang
+	TranslationLoad("SUS", 4); //jirkas custom lang
+	TranslationLoad("BA", 5); //jirkas custom lang
 
 	//key buttons activation
 	window.addEventListener("keydown", (event) => {
@@ -49,7 +50,7 @@ function MainMenuSetup() {
 	//checks if all images loaded
 	let thisInterval = window.setInterval(() => {
 		if(
-			AmountTranslations === 4 && 
+			AmountTranslations === 6 && 
 			TicketImagesLoaded === 2 &&
 			AchievementImagesLoaded === 5 &&
 			ArrowImagesLoaded === 9 &&
@@ -70,14 +71,14 @@ function MainMenu() {
 	cvs.setnewborder("#ffffff");
 	cvs.setnewcolor("#333399");
 	
-	mainMenuButtons.push(new Button(0,   400, 150, 100, 25, TranslatedText[SettingsValues.Language][4], "canvas_container"));
+	mainMenuButtons.push(new Button(0,   400, 150, 100, 25, ap.allowed ? TranslatedText[SettingsValues.Language][5] : TranslatedText[SettingsValues.Language][4], "canvas_container"));
 	mainMenuButtons.push(new Button(150, 400, 150, 100, 25, TranslatedText[SettingsValues.Language][6], "canvas_container"));
 	mainMenuButtons.push(new Button(600, 100, 300, 100, 50, TranslatedText[SettingsValues.Language][1], "canvas_container"));
 	mainMenuButtons.push(new Button(600, 200, 300, 100, 50, TranslatedText[SettingsValues.Language][2], "canvas_container"));
 	mainMenuButtons.push(new Button(600, 300, 300, 100, 50, TranslatedText[SettingsValues.Language][3], "canvas_container"));
 
 	mainMenuButtons[0].button.addEventListener("click", AudioEnabler);
-	mainMenuButtons[1].button.addEventListener("click", ap.resetTrack);
+	mainMenuButtons[1].button.addEventListener("click", (event) => { ap.resetTrack() });
 	
 	mainMenuButtons[2].button.addEventListener("click", (event) => { ButtonsRouter(0) });
 	mainMenuButtons[3].button.addEventListener("click", (event) => { ButtonsRouter(1) });
@@ -95,7 +96,7 @@ function MainMenu() {
 	cvs.setnewfont("Arial, FreeSans", "16");
 	
 	cvs.text("(c) Martin/MegapolisPlayer, Jiri/KohoutGD 2023", 650, 472);
-	cvs.text("build date 3/6/2023, prerelease test version", 650, 492);
+	cvs.text("beta version 0.90, build date 4/6/2023", 650, 492);
 	
 	cvs.setnewcolor("#333399");
 	cvs.setnewfont("Arial, FreeSans", "48");

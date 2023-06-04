@@ -263,6 +263,7 @@ function PrerovNastupisteJob(canvas) {
 						return;
 					}
 					removeMoney(Math.floor(1220 * SettingsValues.MoneyCostIncrease));
+					ap.playSFX(5);
 					doesHaveTicket = true;
 					dialogue.makeBubble(3, TranslatedText[SettingsValues.Language][161]);
 					return;

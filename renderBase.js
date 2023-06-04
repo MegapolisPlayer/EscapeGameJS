@@ -150,10 +150,10 @@ class Button {
 		this.button.style.setProperty("top", this.yoffset+"px");
 		this.button.style.setProperty("font-size", this.fontsize+"px");
 		
+		this.button.setAttribute("onclick", ap.playSFX(0));	
+		
 		this.button.appendChild(this.buttontext);
 		document.getElementById(container_id).appendChild(this.button);
-		
-		this.button.setAttribute("onclick", () => { ap.playSFX(0); });	
     }
 	changeText(newtext) {
 		if((typeof this.button === "undefined")) { 
@@ -235,7 +235,7 @@ class Arrow {
 		this.button.style.setProperty("left", this.xoffset+"px");
 		this.button.style.setProperty("top", this.yoffset+"px");
 		
-		this.button.setAttribute("onclick", () => { ap.playSFX(0); });
+		this.button.setAttribute("onclick", ap.playSFX(0));
 
 		if(canvasobj !== null) {
 			canvasobj.canvas.parentElement.appendChild(this.button);
@@ -389,9 +389,9 @@ class AudioPlayer {
 		else { this.start(); }
 	}
 	playSFX(id) {
-		if(this.allowed) { 
-			this.sfx[id].play();
-		}
+		if(this.allowed === false) { return; }
+		this.sfx[id].currentTime = 0;
+		this.sfx[id].play();
 	}
 };
 const ap = new AudioPlayer();

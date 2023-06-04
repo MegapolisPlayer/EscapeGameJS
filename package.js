@@ -150,10 +150,10 @@ class Button {
 		this.button.style.setProperty("top", this.yoffset+"px");
 		this.button.style.setProperty("font-size", this.fontsize+"px");
 		
+		this.button.setAttribute("onclick", ap.playSFX(0));	
+		
 		this.button.appendChild(this.buttontext);
 		document.getElementById(container_id).appendChild(this.button);
-		
-		this.button.setAttribute("onclick", () => { ap.playSFX(0); });	
     }
 	changeText(newtext) {
 		if((typeof this.button === "undefined")) { 
@@ -235,7 +235,7 @@ class Arrow {
 		this.button.style.setProperty("left", this.xoffset+"px");
 		this.button.style.setProperty("top", this.yoffset+"px");
 		
-		this.button.setAttribute("onclick", () => { ap.playSFX(0); });
+		this.button.setAttribute("onclick", ap.playSFX(0));
 
 		if(canvasobj !== null) {
 			canvasobj.canvas.parentElement.appendChild(this.button);
@@ -389,9 +389,9 @@ class AudioPlayer {
 		else { this.start(); }
 	}
 	playSFX(id) {
-		if(this.allowed) { 
-			this.sfx[id].play();
-		}
+		if(this.allowed === false) { return; }
+		this.sfx[id].currentTime = 0;
+		this.sfx[id].play();
 	}
 };
 const ap = new AudioPlayer();
@@ -786,14 +786,14 @@ function DecrementDifficulty() {
 }
 function IncrementLanguage() {
 	SettingsValues.Language++;
-	if(SettingsValues.Language === 4) {
+	if(SettingsValues.Language === 6) {
 		SettingsValues.Language = 0;
 	}
 }
 function DecrementLanguage() {
 	SettingsValues.Language--;
 	if(SettingsValues.Language === -1) {
-		SettingsValues.Language = 3;
+		SettingsValues.Language = 5;
 	}
 }
 
@@ -854,6 +854,12 @@ function SettingsRenderLanguageRelatedText(canvasobj) {
 		break;
 		case 3:
 			canvasobj.text("Русский", 700, 150);
+		break;
+		case 4:
+			canvasobj.text("Susština", 700, 150); //vtip/joke
+		break;
+		case 5:
+			canvasobj.text("Bašta", 700, 150); //vtip/joke
 		break;
 	}
 }
@@ -989,21 +995,32 @@ function Credits(iscalledfrommm, canvasobj) {
 	}, 1 * delay);
 	
 	setTimeout(() => {
-		//images - all of them
+		//images - wikipedia
 		canvasobj.image(finalCreditsImage, 0, 0, canvasobj.canvas.width, canvasobj.canvas.height);
 		canvasobj.text(TranslatedText[SettingsValues.Language][72], 50, 160);
 		canvasobj.setfontweight("bold");
 		canvasobj.textml(
-			"SReality, Pixabay (authors in res/ folders), Freepik: jcomp\n"+
-			"VlakemJednoduse.cz, Fortes Interactive, VagonWeb.cz, Wikipedia Commons:\n"+
+			"SReality, Freepik: jcomp, VlakemJednoduse.cz, Fortes Interactive\n"+
+			"VagonWeb.cz, Pixabay: PickupImage, pexels\n"+
+			"All other assets are custom-made.\n"
+		, 75, 200);
+		canvasobj.resetfontweight();
+	}, 2 * delay);
+	
+	setTimeout(() => {
+		//images - non-wikipedia
+		canvasobj.image(finalCreditsImage, 0, 0, canvasobj.canvas.width, canvasobj.canvas.height);
+		canvasobj.text(TranslatedText[SettingsValues.Language][72], 50, 160);
+		canvasobj.setfontweight("bold");
+		canvasobj.textml(
+			"From Wikimedia Commons (in no particular order):\n"+
 			"Marie Čchiedzeová, Vojtěch Dočkal, Jiří Komárek, JirkaSv\n"+
 			"Dezidor, Vitezslava, Kamil Czianskim, Michal Klajban\n"+
 			"STERUSSTUDENKA, Draceane, Herbert Frank, Palickap\n"+
 			"RPekar\n"
 		, 75, 200);
 		canvasobj.resetfontweight();
-	}, 2 * delay);	
-
+	}, 3 * delay);	
 
 	setTimeout(() => {
 		//music
@@ -1017,7 +1034,7 @@ function Credits(iscalledfrommm, canvasobj) {
 						"The list of authors is in the res/sfx/ folder.\n"
 						, 100, 230);
 		canvasobj.resetfontweight();
-	}, 3 * delay);
+	}, 4 * delay);
 
 	setTimeout(() => {
 		//translations
@@ -1026,7 +1043,7 @@ function Credits(iscalledfrommm, canvasobj) {
 		canvasobj.setfontweight("bold");
 		canvasobj.textml("Čeština, English, Русский - Martin\nDeutsch, Susština - Jirka\n", 100, 230);
 		canvasobj.resetfontweight();
-	}, 4 * delay);
+	}, 5 * delay);
 
 	setTimeout(() => {
 		//translations
@@ -1035,7 +1052,7 @@ function Credits(iscalledfrommm, canvasobj) {
 		canvasobj.setfontweight("bold");
 		canvasobj.textml("Licensed under CC-BY-SA 4.0\nImages - Content License, CC-BY-SA 4.0\nMusic - CC-BY 4.0", 100, 230);
 		canvasobj.resetfontweight();
-	}, 5 * delay);
+	}, 6 * delay);
 	
 	if(!iscalledfrommm) {
 		setTimeout(() => {
@@ -1046,7 +1063,7 @@ function Credits(iscalledfrommm, canvasobj) {
 			canvasobj.text(TranslatedText[SettingsValues.Language][76], 500, 250); 
 			canvasobj.setnewfont("Arial, FreeSans", "32", "normal");
 			canvasobj.resetalign();
-		}, 6 * delay);
+		}, 7 * delay);
 		
 		setTimeout(() => {
 			//achievements - medal for speed
@@ -1056,7 +1073,7 @@ function Credits(iscalledfrommm, canvasobj) {
 			canvasobj.text(TranslatedText[SettingsValues.Language][78], 500, 450); 
 			canvasobj.resetalign()
 			CreditsRenderAchievement(CreditsValues.gotAchievementSpeed, AchievementImages[1], AchievementImages[0], canvasobj);
-		}, 7 * delay);
+		}, 8 * delay);
 
 		setTimeout(() => {
 			//achievements - waiters medal
@@ -1066,7 +1083,7 @@ function Credits(iscalledfrommm, canvasobj) {
 			canvasobj.text(TranslatedText[SettingsValues.Language][80], 500, 450); 
 			canvasobj.resetalign()
 			CreditsRenderAchievement(CreditsValues.gotAchievementWaiter, AchievementImages[2], AchievementImages[0], canvasobj);
-		}, 8 * delay);
+		}, 9 * delay);
 
 		setTimeout(() => {
 			//achievements - help medal
@@ -1076,7 +1093,7 @@ function Credits(iscalledfrommm, canvasobj) {
 			canvasobj.text(TranslatedText[SettingsValues.Language][82], 500, 450); 
 			canvasobj.resetalign()
 			CreditsRenderAchievement(CreditsValues.gotAchievementHelp, AchievementImages[3], AchievementImages[0], canvasobj);
-		}, 9 * delay);
+		}, 10 * delay);
 		
 		setTimeout(() => {
 			//achievements - sus medal
@@ -1086,7 +1103,7 @@ function Credits(iscalledfrommm, canvasobj) {
 			canvasobj.text(TranslatedText[SettingsValues.Language][84], 500, 450); 
 			canvasobj.resetalign()
 			CreditsRenderAchievement(CreditsValues.gotAchievementSus, AchievementImages[4], AchievementImages[0], canvasobj);
-		}, 10 * delay);
+		}, 11 * delay);
 		setTimeout(() => {
 			//time played
 			canvasobj.image(finalCreditsImage, 0, 0, canvasobj.canvas.width, canvasobj.canvas.height);
@@ -1094,7 +1111,7 @@ function Credits(iscalledfrommm, canvasobj) {
 			canvasobj.setfontweight("bold");
 			canvasobj.text(timerToString(), 100, 230);
 			canvasobj.resetfontweight();
-		}, 11 * delay);
+		}, 12 * delay);
 	}
 
 	setTimeout(() => {
@@ -1104,7 +1121,7 @@ function Credits(iscalledfrommm, canvasobj) {
 		window.addEventListener("click", (event) => {
 			location.reload();		
 		});
-	}, (iscalledfrommm ? 7 : 12) * delay);
+	}, (iscalledfrommm ? 8 : 13) * delay);
 	
 }
 
@@ -1625,9 +1642,9 @@ function FishGameComponentMain(canvas) {
 		canvas.clear("#2066d6");
 		//render bg
 		canvas.setnewcolor("#03ddff");
-		canvas.box(0, 90, canvas.canvas.width, 20);
-		canvas.setnewcolor("#633200");
 		canvas.box(0, 0, canvas.canvas.width, 100);
+		canvas.setnewcolor("#633200");
+		canvas.box(0, 90, canvas.canvas.width, 20);
 		//render assets and stuff
 		chrf.draw(470, 10, 0.2, canvas);
 		canvas.image(FishingImages[3], 100, 30, 75, 75);
@@ -1707,6 +1724,9 @@ function FishGameComponentMain(canvas) {
 							break;
 					}
 					FishGameValues.TypeOfHauledCargo = -1;
+					if(FishObjects.length === 1) {
+						FishObjects.length = 0; //clear array
+					}
 				}
 			}
 			else {
@@ -1735,7 +1755,7 @@ function FishGameComponentMain(canvas) {
 		renderTextAsMinigameStatus(TranslatedText[SettingsValues.Language][109], FishGameValues.AmountEarned, canvas);
 		//time stuff
 		timelimitRender(canvas);
-		if(timelimitIsDone()) {
+		if(timelimitIsDone() && FishObjects.length === 0) {
 			clearInterval(timerInterval);
 			addMoney(FishGameValues.AmountEarned); //50Kc fish, 10Kc pneu, 5Kc boots, boxes random
 			window.removeEventListener("click", SetResizeToTrue);	
@@ -2255,6 +2275,7 @@ function HraniceNaMoraveNastupisteJob(canvas) {
 						return;
 					}
 					removeMoney(Math.floor(650 * SettingsValues.MoneyCostIncrease));
+					ap.playSFX(5);
 					doesHaveTicket = true;
 					dialogue.makeBubble(4, TranslatedText[SettingsValues.Language][143]);
 					return;
@@ -2546,6 +2567,7 @@ function PrerovNastupisteJob(canvas) {
 						return;
 					}
 					removeMoney(Math.floor(1220 * SettingsValues.MoneyCostIncrease));
+					ap.playSFX(5);
 					doesHaveTicket = true;
 					dialogue.makeBubble(3, TranslatedText[SettingsValues.Language][161]);
 					return;
@@ -2799,6 +2821,7 @@ function NezamysliceNastupisteJob(canvas) {
 					}
 					removeMoney(Math.floor(940 * SettingsValues.MoneyCostIncrease));
 					doesHaveTicket = true;
+					ap.playSFX(5);
 					dialogue.makeBubble(3, TranslatedText[SettingsValues.Language][175]);
 					return;
 				}
@@ -3140,6 +3163,7 @@ function ProstejovNastupisteJob(canvas) {
 						return;
 					}
 					removeMoney(Math.floor(1470 * SettingsValues.MoneyCostIncrease));
+					ap.playSFX(5);
 					doesHaveTicket = true;
 					dialogue.makeBubble(3, TranslatedText[SettingsValues.Language][188]);
 					return;
@@ -3339,7 +3363,7 @@ function OlomoucNamesti(canvas) {
 		ArrowToRestaurace.deleteButton();
     	OlomoucNadrazi(canvas);
 	}, { once: true });
-	let ArrowToObchod = new Arrow(650, 300, 100, 100, ArrowDirections.Up, canvas);
+	let ArrowToObchod = new Arrow(650, 300, 100, 100, ArrowDirections.Right, canvas);
 	ArrowToObchod.button.addEventListener("click", () => {
 		if(GamePaused) { return; }
 		ArrowToNadrazi.deleteButton();
@@ -3500,6 +3524,7 @@ function OlomoucNastupisteJob(canvas) {
 						return;
 					}
 					removeMoney(Math.floor(1840 * SettingsValues.MoneyCostIncrease));
+					ap.playSFX(5);
 					doesHaveTicket = true;
 					dialogue.makeBubble(4, TranslatedText[SettingsValues.Language][202]);
 					return;
@@ -3565,7 +3590,7 @@ function StudenkaCutscene(canvas) {
 	
 	setTimeout(() => {
 		ap.sfx[9].loop = true;
-		ap.sfx[9].volume = 1;
+		ap.sfx[9].volume = 0.7; //wayy too boosted
 		ap.playSFX(9);
 		let dialogue = new Dialogue();
 		dialogue.begin(canvas);
@@ -3577,7 +3602,6 @@ function StudenkaCutscene(canvas) {
 				ap.sfx[9].pause();
 				canvas.clear("#000000");
 				setTimeout(() => {
-					canvas.image(stu_Locations[0], 0, 0, canvas.canvas.width, canvas.canvas.height);
 					dialogue.makeBubble(2, TranslationGetMultipleLines(SettingsValues.Language, 207, 2));
 					let thisInterval = window.setInterval((dialogue, canvas) => {
 						if(dialogue.counter === 3) {
@@ -3614,37 +3638,165 @@ function StudenkaMap(canvas) {
 function StudenkaPrejezd(canvas) {
 	console.log("stu prejezd");
 	localLocationId = 0;
+	
+	let ArrowToNamesti = new Arrow(100, 400, 100, 100, ArrowDirections.Down, canvas);
+	ArrowToNamesti.button.addEventListener("click", () => {
+		if(GamePaused) { return; }
+		ArrowToNamesti.deleteButton();
+    	StudenkaNamesti(canvas);
+	}, { once: true });	
+	
 	canvas.image(stu_Locations[0], 0, 0, canvas.canvas.width, canvas.canvas.height);
+	chr.draw(100, 300, 0.3, canvas);
+	ArrowToNamesti.draw(canvas);
+	PauseButton.draw(canvas);
+	drawMoneyCount(canvas);
+	RenderStatus(canvas);
 }
 
 function StudenkaNamesti(canvas) {
 	console.log("stu namesti");
 	localLocationId = 1;
+	
+	let ArrowToPrejezd = new Arrow(450, 400, 100, 100, ArrowDirections.Down, canvas);
+	ArrowToPrejezd.button.addEventListener("click", () => {
+		if(GamePaused) { return; }
+		ArrowToPrejezd.deleteButton();
+		ArrowToMost.deleteButton();
+		ArrowToNadrazi.deleteButton();
+		ArrowToPole.deleteButton();
+    	StudenkaPrejezd(canvas);
+	}, { once: true });	
+	let ArrowToMost = new Arrow(100, 350, 100, 100, ArrowDirections.Left, canvas);
+	ArrowToMost.button.addEventListener("click", () => {
+		if(GamePaused) { return; }
+		ArrowToPrejezd.deleteButton();
+		ArrowToMost.deleteButton();
+		ArrowToNadrazi.deleteButton();
+		ArrowToPole.deleteButton();
+    	StudenkaMost(canvas);
+	}, { once: true });	
+	let ArrowToNadrazi = new Arrow(100, 400, 100, 100, ArrowDirections.Down, canvas);
+	ArrowToNadrazi.button.addEventListener("click", () => {
+		if(GamePaused) { return; }
+		ArrowToPrejezd.deleteButton();
+		ArrowToMost.deleteButton();
+		ArrowToNadrazi.deleteButton();
+		ArrowToPole.deleteButton();
+    	StudenkaNadrazi(canvas);
+	}, { once: true });	
+	let ArrowToPole = new Arrow(100, 400, 100, 100, ArrowDirections.Down, canvas);
+	ArrowToPole.button.addEventListener("click", () => {
+		if(GamePaused) { return; }
+		ArrowToPrejezd.deleteButton();
+		ArrowToMost.deleteButton();
+		ArrowToNadrazi.deleteButton();
+		ArrowToPole.deleteButton();
+    	StudenkaPole(canvas);
+	}, { once: true });	
+	
 	canvas.image(stu_Locations[1], 0, 0, canvas.canvas.width, canvas.canvas.height);
+	chr.draw(650, 200, 0.5, canvas);
+	ArrowToPrejezd.draw(canvas);
+	ArrowToMost.draw(canvas);
+	ArrowToNadrazi.draw(canvas);
+	ArrowToPole.draw(canvas);
+	PauseButton.draw(canvas);
+	drawMoneyCount(canvas);
+	RenderStatus(canvas);
 }
 
 function StudenkaMost(canvas) {
 	console.log("stu most");
 	localLocationId = 2;
+
+	let PayRespect = new Arrow(500, 300, 100, 100, ArrowDirections.Here, canvas);
+	PayRespect.button.addEventListener("click", () => {
+		if(GamePaused) { return; }
+		PayRespect.deleteButton();
+		ArrowToNamesti.deleteButton();
+    	StudenkaRespect(canvas);
+	}, { once: true });	
+	let ArrowToNamesti = new Arrow(800, 400, 100, 100, ArrowDirections.Right, canvas);
+	ArrowToNamesti.button.addEventListener("click", () => {
+		if(GamePaused) { return; }
+		PayRespect.deleteButton();
+		ArrowToNamesti.deleteButton();
+    	StudenkaNamesti(canvas);
+	}, { once: true });	
+	
 	canvas.image(stu_Locations[2], 0, 0, canvas.canvas.width, canvas.canvas.height);
+	chr.draw(700, 300, 0.4, canvas);
+	PayRespect.draw(canvas);
+	ArrowToNamesti.draw(canvas);
+	PauseButton.draw(canvas);
+	drawMoneyCount(canvas);
+	RenderStatus(canvas);
 }
 
 function StudenkaNadrazi(canvas) {
 	console.log("stu nadrazi");
 	localLocationId = 3;
+	
+	let ArrowToNamesti = new Arrow(100, 400, 100, 100, ArrowDirections.Left, canvas);
+	ArrowToNamesti.button.addEventListener("click", () => {
+		if(GamePaused) { return; }
+		ArrowToNamesti.deleteButton();
+		ArrowToNastupiste.deleteButton();
+    	StudenkaNamesti(canvas);
+	}, { once: true });	
+	let ArrowToNastupiste = new Arrow(900, 400, 100, 100, ArrowDirections.Right, canvas);
+	ArrowToNastupiste.button.addEventListener("click", () => {
+		if(GamePaused) { return; }
+		ArrowToNamesti.deleteButton();
+		ArrowToNastupiste.deleteButton();
+    	StudenkaNastupiste(canvas);
+	}, { once: true });		
+	
 	canvas.image(stu_Locations[3], 0, 0, canvas.canvas.width, canvas.canvas.height);
+	chr.draw(800, 200, 0.6, canvas);
+	ArrowToNamesti.draw(canvas);
+	ArrowToNastupiste.draw(canvas);
+	PauseButton.draw(canvas);
+	drawMoneyCount(canvas);
+	RenderStatus(canvas);
 }
 
 function StudenkaNastupiste(canvas) {
 	console.log("stu nastupiste");
 	localLocationId = 4;
+	
+	let ArrowToNadrazi = new Arrow(500, 300, 100, 100, ArrowDirections.Here, canvas);
+	ArrowToNadrazi.button.addEventListener("click", () => {
+		if(GamePaused) { return; }
+		ArrowToNadrazi.deleteButton();
+    	StudenkaNadrazi(canvas);
+	}, { once: true });	
+	
 	canvas.image(stu_Locations[4], 0, 0, canvas.canvas.width, canvas.canvas.height);
+	chr.draw(100, 300, 0.4, canvas);
+	ArrowToNadrazi.draw(canvas);
+	PauseButton.draw(canvas);
+	drawMoneyCount(canvas);
+	RenderStatus(canvas);
 }
 
 function StudenkaPole(canvas) {
 	console.log("stu pole");
 	localLocationId = 5;
+
+	let ArrowToNamesti = new Arrow(350, 400, 100, 100, ArrowDirections.Down, canvas);
+	ArrowToNamesti.button.addEventListener("click", () => {
+		if(GamePaused) { return; }
+		ArrowToNamesti.deleteButton();
+    	StudenkaNamesti(canvas);
+	}, { once: true });		
+	
 	canvas.image(stu_Locations[5], 0, 0, canvas.canvas.width, canvas.canvas.height);
+	chr.draw(100, 200, 0.3, canvas);
+	PauseButton.draw(canvas);
+	drawMoneyCount(canvas);
+	RenderStatus(canvas);
 }
 
 function StudenkaDefenseJob(canvas) {
@@ -3652,7 +3804,20 @@ function StudenkaDefenseJob(canvas) {
 }
 
 function StudenkaNastupisteJob(canvas) {
+	
+}
 
+function StudenkaRespect(canvas) {
+	let dialogue = new Dialogue();
+	dialogue.begin(canvas);
+	dialogue.makeBubble(0, "EC 108 Comenius, 8.8.2008");
+	dialogue.makeBubble(1, "R.I.P.");
+	
+	let dWaitInterval = window.setInterval((dialogue) => {
+		if(dialogue.counter === 2) {
+			StudenkaMost(canvas);
+		}
+	}, 100, dialogue);
 }
 let ost_Locations = [];
 let ost_AmountLoadedImages = 0;
@@ -4047,7 +4212,8 @@ function MainMenuSetup() {
 	TranslationLoad("CZ", 1);
 	TranslationLoad("DE", 2);
 	TranslationLoad("RU", 3);
-	//TranslationLoad("SUS", 4); //jirkas custom lang
+	TranslationLoad("SUS", 4); //jirkas custom lang
+	TranslationLoad("BA", 5); //jirkas custom lang
 
 	//key buttons activation
 	window.addEventListener("keydown", (event) => {
@@ -4059,7 +4225,7 @@ function MainMenuSetup() {
 	//checks if all images loaded
 	let thisInterval = window.setInterval(() => {
 		if(
-			AmountTranslations === 4 && 
+			AmountTranslations === 6 && 
 			TicketImagesLoaded === 2 &&
 			AchievementImagesLoaded === 5 &&
 			ArrowImagesLoaded === 9 &&
@@ -4080,14 +4246,14 @@ function MainMenu() {
 	cvs.setnewborder("#ffffff");
 	cvs.setnewcolor("#333399");
 	
-	mainMenuButtons.push(new Button(0,   400, 150, 100, 25, TranslatedText[SettingsValues.Language][4], "canvas_container"));
+	mainMenuButtons.push(new Button(0,   400, 150, 100, 25, ap.allowed ? TranslatedText[SettingsValues.Language][5] : TranslatedText[SettingsValues.Language][4], "canvas_container"));
 	mainMenuButtons.push(new Button(150, 400, 150, 100, 25, TranslatedText[SettingsValues.Language][6], "canvas_container"));
 	mainMenuButtons.push(new Button(600, 100, 300, 100, 50, TranslatedText[SettingsValues.Language][1], "canvas_container"));
 	mainMenuButtons.push(new Button(600, 200, 300, 100, 50, TranslatedText[SettingsValues.Language][2], "canvas_container"));
 	mainMenuButtons.push(new Button(600, 300, 300, 100, 50, TranslatedText[SettingsValues.Language][3], "canvas_container"));
 
 	mainMenuButtons[0].button.addEventListener("click", AudioEnabler);
-	mainMenuButtons[1].button.addEventListener("click", ap.resetTrack);
+	mainMenuButtons[1].button.addEventListener("click", (event) => { ap.resetTrack() });
 	
 	mainMenuButtons[2].button.addEventListener("click", (event) => { ButtonsRouter(0) });
 	mainMenuButtons[3].button.addEventListener("click", (event) => { ButtonsRouter(1) });
@@ -4105,7 +4271,7 @@ function MainMenu() {
 	cvs.setnewfont("Arial, FreeSans", "16");
 	
 	cvs.text("(c) Martin/MegapolisPlayer, Jiri/KohoutGD 2023", 650, 472);
-	cvs.text("build date 3/6/2023, prerelease test version", 650, 492);
+	cvs.text("beta version 0.90, build date 4/6/2023", 650, 492);
 	
 	cvs.setnewcolor("#333399");
 	cvs.setnewfont("Arial, FreeSans", "48");

@@ -225,6 +225,7 @@ function NezamysliceNastupisteJob(canvas) {
 					}
 					removeMoney(Math.floor(940 * SettingsValues.MoneyCostIncrease));
 					doesHaveTicket = true;
+					ap.playSFX(5);
 					dialogue.makeBubble(3, TranslatedText[SettingsValues.Language][175]);
 					return;
 				}
