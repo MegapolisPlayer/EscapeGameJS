@@ -130,9 +130,20 @@ function NezamysliceNadrazi(canvas) {
 	console.log("nzm nadrazi");
 	localLocationId = 1;
 	
+	info.append(canvas);
+	info.resetEventListeners();
+	info.button.addEventListener("click", () => {
+		if(GamePaused) { return; }
+		info.deleteButton();
+		ArrowToNadrazi.deleteButton();
+		ArrowToTrain.deleteButton();
+		NezamysliceNadraziJob(canvas);
+	}, { once: true });
+
 	let ArrowToNastupiste = new Arrow(500, 370, 100, 100, ArrowDirections.Down, canvas);
 	ArrowToNastupiste.button.addEventListener("click", () => {
 		if(GamePaused) { return; }
+		info.deleteButton();
 		ArrowToNastupiste.deleteButton();
 		ArrowToPodnikVenek.deleteButton();
     	NezamysliceNastupiste(canvas);
@@ -140,6 +151,7 @@ function NezamysliceNadrazi(canvas) {
 	let ArrowToPodnikVenek = new Arrow(100, 350, 100, 100, ArrowDirections.Left, canvas);
 	ArrowToPodnikVenek.button.addEventListener("click", () => {
 		if(GamePaused) { return; }
+		info.deleteButton();
 		ArrowToNastupiste.deleteButton();
 		ArrowToPodnikVenek.deleteButton();
     	NezamyslicePodnikVenek(canvas);
@@ -147,6 +159,7 @@ function NezamysliceNadrazi(canvas) {
 	
 	canvas.image(nzm_Locations[1], 0, 0, canvas.canvas.width, canvas.canvas.height);
 	chr.draw(250, 250, 0.5, canvas);
+	info.draw(750, 250, 0.5, canvas);
 	ArrowToNastupiste.draw(canvas);
 	ArrowToPodnikVenek.draw(canvas);
 	PauseButton.draw(canvas);
@@ -186,9 +199,19 @@ function NezamyslicePodnikVnitrek(canvas) {
 	console.log("nzm podnik vnitrek");
 	localLocationId = 3;
 	
+	schl.append(canvas);
+	schl.resetEventListeners();
+	schl.button.addEventListener("click", (event) => {
+		if(GamePaused) { return; }
+		schl.deleteButton();
+		ArrowToPodnikVenek.deleteButton();
+		NezamyslicePodnikVnitrekJob(canvas);
+	});
+	
 	let ArrowToPodnikVenek = new Arrow(870, 370, 100, 100, ArrowDirections.Up, canvas);
 	ArrowToPodnikVenek.button.addEventListener("click", () => {
 		if(GamePaused) { return; }
+		schl.deleteButton();
 		ArrowToPodnikVenek.deleteButton();
     	NezamyslicePodnikVenek(canvas);
 	}, { once: true });
@@ -200,6 +223,10 @@ function NezamyslicePodnikVnitrek(canvas) {
 	PauseButton.draw(canvas);
 	drawMoneyCount(canvas);
 	RenderStatus(canvas);
+}
+
+function NezamysliceNadraziJob(canvas) {
+	console.log("nzm nadrazi job");
 }
 
 function NezamyslicePodnikVnitrekJob(canvas) {

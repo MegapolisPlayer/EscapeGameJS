@@ -636,27 +636,28 @@ function FishGameReset() {
 
 //ticket sale minigame - nezamyslice
 
-let TicketSaleGameValues = {
+let InfodeskGameValues = {
 	IsIntroEnd: false,
 	IsOver: -1
 }
 
 //literally selection minigame - map image and random points - if correct tip (few buttons w/ text) +1 point and money
+//info game
 
-function TicketSaleGame(canvas) {
+function InfodeskGame(canvas) {
 	TicketSaleGameValues.IsOver = -1;
 	console.log("ticket sale game");
 }
 
-function TicketSaleGameComponentIntro(canvas) {
+function InfodeskGameComponentIntro(canvas) {
 	canvas.clear("#03ddff");
 } 
-function TicketSaleGameComponentMain(canvas) {
+function InfodeskGameComponentMain(canvas) {
 	canvas.clear("#03ddff");
 }
 
-function TicketSaleGameReset() {
-	TicketSaleGame.IsOver = -1;
+function InfodeskGameGameReset() {
+	InfodeskGameValues.IsOver = -1;
 }
 
 //dialect translation - nezamyslice
@@ -756,6 +757,9 @@ function CheeseGameReset() {
 }
 
 //defense - studenka
+
+//tonks - strategic capture the flag with tanks and vehicles game
+//no direct shooting!
 
 let DefenseGameValues = {
 	IsIntroEnd: false,

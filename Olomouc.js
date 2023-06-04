@@ -240,7 +240,7 @@ function OlomoucObchodVnitrek(canvas) {
 	console.log("olo obchod vnitrek");
 	localLocationId = 4;
 	
-	let ArrowToJob = new Arrow(900, 400, 100, 100, ArrowDirections.Right, canvas);
+	let ArrowToJob = new Arrow(100, 350, 50, 50, ArrowDirections.Here, canvas);
 	ArrowToJob.button.addEventListener("click", () => {
 		if(GamePaused) { return; }
 		ArrowToJob.deleteButton();
@@ -266,10 +266,21 @@ function OlomoucObchodVnitrek(canvas) {
 function OlomoucSyrarna(canvas) {
 	console.log("olo syrarna");
 	localLocationId = 5;
+
+	chse.append(canvas);
+	chse.resetEventListeners();
+	chse.button.addEventListener("click", () => {
+		if(GamePaused) { return; }
+		chse.deleteButton();
+		ArrowToNamesti.deleteButton();
+		OlomoucSyrarnaJob(canvas);
+	}, { once: true });	
+	
 	
 	let ArrowToNamesti = new Arrow(900, 400, 100, 100, ArrowDirections.Up, canvas);
 	ArrowToNamesti.button.addEventListener("click", () => {
 		if(GamePaused) { return; }
+		chse.deleteButton();
 		ArrowToNamesti.deleteButton();
     	OlomoucNamesti(canvas);
 	}, { once: true });
@@ -287,9 +298,19 @@ function OlomoucRestaurace(canvas) {
 	console.log("olo restaurace");
 	localLocationId = 6;
 	
+	cook.append(canvas);
+	cook.resetEventListeners();
+	cook.button.addEventListener("click", (event) => {
+		if(GamePaused) { return; }
+		cook.deleteButton();
+		ArrowToNamesti.deleteButton();
+		OlomoucWaiterJob(canvas);
+	});
+	
 	let ArrowToNamesti = new Arrow(550, 400, 100, 100, ArrowDirections.Down, canvas);
 	ArrowToNamesti.button.addEventListener("click", () => {
 		if(GamePaused) { return; }
+		cook.deleteButton();
 		ArrowToNamesti.deleteButton();
     	OlomoucNamesti(canvas);
 	}, { once: true });
@@ -353,7 +374,6 @@ function OlomoucWaiterJob(canvas) {
 
 function OlomoucObchodJob(canvas) {
 	console.log("olo obchod job");
-	
 }
 
 function OlomoucSyrarnaJob(canvas) {

@@ -161,9 +161,21 @@ function ProstejovNamesti(canvas) {
 	console.log("pro namesti");
 	localLocationId = 2;
 	
+	util.append(canvas);
+	util.resetEventListeners();
+	util.button.addEventListener("click", () => {
+		if(GamePaused) { return; }
+		util.deleteButton();
+		ArrowToNadrazi.deleteButton();
+		ArrowToCafe.deleteButton();
+		ArrowToObchod.deleteButton();
+		ProstejovNamestiJob(canvas);
+	}, { once: true });	
+	
 	let ArrowToNadrazi = new Arrow(100, 400, 100, 100, ArrowDirections.Left, canvas);
 	ArrowToNadrazi.button.addEventListener("click", () => {
 		if(GamePaused) { return; }
+		util.deleteButton();
 		ArrowToNadrazi.deleteButton();
 		ArrowToCafe.deleteButton();
 		ArrowToObchod.deleteButton();
@@ -172,6 +184,7 @@ function ProstejovNamesti(canvas) {
 	let ArrowToCafe = new Arrow(100, 250, 100, 100, ArrowDirections.Left, canvas);
 	ArrowToCafe.button.addEventListener("click", () => {
 		if(GamePaused) { return; }
+		util.deleteButton();
 		ArrowToNadrazi.deleteButton();
 		ArrowToCafe.deleteButton();
 		ArrowToObchod.deleteButton();
@@ -180,6 +193,7 @@ function ProstejovNamesti(canvas) {
 	let ArrowToObchod = new Arrow(640, 250, 100, 100, ArrowDirections.Right, canvas);
 	ArrowToObchod.button.addEventListener("click", () => {
 		if(GamePaused) { return; }
+		util.deleteButton();
 		ArrowToNadrazi.deleteButton();
 		ArrowToCafe.deleteButton();
 		ArrowToObchod.deleteButton();
@@ -293,9 +307,14 @@ function ProstejovCafeWaiterJob(canvas) {
 	}, 100, dialogue, canvas);
 }
 
+function ProstejovNamestiJob(canvas) {
+	console.log("pro namesti job");
+}
+
 function ProstejovObchodJob(canvas) {
 	console.log("pro obchod job");
 }
+
 function ProstejovNastupisteJob(canvas) {
 	console.log("pro nastupiste job");
 	AllowedToPause = false;

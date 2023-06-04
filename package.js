@@ -486,9 +486,11 @@ let chrs = new Character("res/CharacterSitting.png");
 
 let cook = new Character("res/Cook.png");
 let traindriver = new Character("res/TrainDriver.png");
+let info = new Character("res/StationInfo.png");
 let schl = new Character("res/Scholar.png");
 let util = new Character("res/UtilityMan.png");
 let chse = new Character("res/Cheesemaker.png");
+let army = new Character("res/Army.png");
 
 class Dialogue {
 	constructor() {
@@ -1786,27 +1788,28 @@ function FishGameReset() {
 
 //ticket sale minigame - nezamyslice
 
-let TicketSaleGameValues = {
+let InfodeskGameValues = {
 	IsIntroEnd: false,
 	IsOver: -1
 }
 
 //literally selection minigame - map image and random points - if correct tip (few buttons w/ text) +1 point and money
+//info game
 
-function TicketSaleGame(canvas) {
+function InfodeskGame(canvas) {
 	TicketSaleGameValues.IsOver = -1;
 	console.log("ticket sale game");
 }
 
-function TicketSaleGameComponentIntro(canvas) {
+function InfodeskGameComponentIntro(canvas) {
 	canvas.clear("#03ddff");
 } 
-function TicketSaleGameComponentMain(canvas) {
+function InfodeskGameComponentMain(canvas) {
 	canvas.clear("#03ddff");
 }
 
-function TicketSaleGameReset() {
-	TicketSaleGame.IsOver = -1;
+function InfodeskGameGameReset() {
+	InfodeskGameValues.IsOver = -1;
 }
 
 //dialect translation - nezamyslice
@@ -1906,6 +1909,9 @@ function CheeseGameReset() {
 }
 
 //defense - studenka
+
+//tonks - strategic capture the flag with tanks and vehicles game
+//no direct shooting!
 
 let DefenseGameValues = {
 	IsIntroEnd: false,
@@ -2731,9 +2737,20 @@ function NezamysliceNadrazi(canvas) {
 	console.log("nzm nadrazi");
 	localLocationId = 1;
 	
+	info.append(canvas);
+	info.resetEventListeners();
+	info.button.addEventListener("click", () => {
+		if(GamePaused) { return; }
+		info.deleteButton();
+		ArrowToNadrazi.deleteButton();
+		ArrowToTrain.deleteButton();
+		NezamysliceNadraziJob(canvas);
+	}, { once: true });
+
 	let ArrowToNastupiste = new Arrow(500, 370, 100, 100, ArrowDirections.Down, canvas);
 	ArrowToNastupiste.button.addEventListener("click", () => {
 		if(GamePaused) { return; }
+		info.deleteButton();
 		ArrowToNastupiste.deleteButton();
 		ArrowToPodnikVenek.deleteButton();
     	NezamysliceNastupiste(canvas);
@@ -2741,6 +2758,7 @@ function NezamysliceNadrazi(canvas) {
 	let ArrowToPodnikVenek = new Arrow(100, 350, 100, 100, ArrowDirections.Left, canvas);
 	ArrowToPodnikVenek.button.addEventListener("click", () => {
 		if(GamePaused) { return; }
+		info.deleteButton();
 		ArrowToNastupiste.deleteButton();
 		ArrowToPodnikVenek.deleteButton();
     	NezamyslicePodnikVenek(canvas);
@@ -2748,6 +2766,7 @@ function NezamysliceNadrazi(canvas) {
 	
 	canvas.image(nzm_Locations[1], 0, 0, canvas.canvas.width, canvas.canvas.height);
 	chr.draw(250, 250, 0.5, canvas);
+	info.draw(750, 250, 0.5, canvas);
 	ArrowToNastupiste.draw(canvas);
 	ArrowToPodnikVenek.draw(canvas);
 	PauseButton.draw(canvas);
@@ -2787,9 +2806,19 @@ function NezamyslicePodnikVnitrek(canvas) {
 	console.log("nzm podnik vnitrek");
 	localLocationId = 3;
 	
+	schl.append(canvas);
+	schl.resetEventListeners();
+	schl.button.addEventListener("click", (event) => {
+		if(GamePaused) { return; }
+		schl.deleteButton();
+		ArrowToPodnikVenek.deleteButton();
+		NezamyslicePodnikVnitrekJob(canvas);
+	});
+	
 	let ArrowToPodnikVenek = new Arrow(870, 370, 100, 100, ArrowDirections.Up, canvas);
 	ArrowToPodnikVenek.button.addEventListener("click", () => {
 		if(GamePaused) { return; }
+		schl.deleteButton();
 		ArrowToPodnikVenek.deleteButton();
     	NezamyslicePodnikVenek(canvas);
 	}, { once: true });
@@ -2801,6 +2830,10 @@ function NezamyslicePodnikVnitrek(canvas) {
 	PauseButton.draw(canvas);
 	drawMoneyCount(canvas);
 	RenderStatus(canvas);
+}
+
+function NezamysliceNadraziJob(canvas) {
+	console.log("nzm nadrazi job");
 }
 
 function NezamyslicePodnikVnitrekJob(canvas) {
@@ -3016,9 +3049,21 @@ function ProstejovNamesti(canvas) {
 	console.log("pro namesti");
 	localLocationId = 2;
 	
+	util.append(canvas);
+	util.resetEventListeners();
+	util.button.addEventListener("click", () => {
+		if(GamePaused) { return; }
+		util.deleteButton();
+		ArrowToNadrazi.deleteButton();
+		ArrowToCafe.deleteButton();
+		ArrowToObchod.deleteButton();
+		ProstejovNamestiJob(canvas);
+	}, { once: true });	
+	
 	let ArrowToNadrazi = new Arrow(100, 400, 100, 100, ArrowDirections.Left, canvas);
 	ArrowToNadrazi.button.addEventListener("click", () => {
 		if(GamePaused) { return; }
+		util.deleteButton();
 		ArrowToNadrazi.deleteButton();
 		ArrowToCafe.deleteButton();
 		ArrowToObchod.deleteButton();
@@ -3027,6 +3072,7 @@ function ProstejovNamesti(canvas) {
 	let ArrowToCafe = new Arrow(100, 250, 100, 100, ArrowDirections.Left, canvas);
 	ArrowToCafe.button.addEventListener("click", () => {
 		if(GamePaused) { return; }
+		util.deleteButton();
 		ArrowToNadrazi.deleteButton();
 		ArrowToCafe.deleteButton();
 		ArrowToObchod.deleteButton();
@@ -3035,6 +3081,7 @@ function ProstejovNamesti(canvas) {
 	let ArrowToObchod = new Arrow(640, 250, 100, 100, ArrowDirections.Right, canvas);
 	ArrowToObchod.button.addEventListener("click", () => {
 		if(GamePaused) { return; }
+		util.deleteButton();
 		ArrowToNadrazi.deleteButton();
 		ArrowToCafe.deleteButton();
 		ArrowToObchod.deleteButton();
@@ -3148,9 +3195,14 @@ function ProstejovCafeWaiterJob(canvas) {
 	}, 100, dialogue, canvas);
 }
 
+function ProstejovNamestiJob(canvas) {
+	console.log("pro namesti job");
+}
+
 function ProstejovObchodJob(canvas) {
 	console.log("pro obchod job");
 }
+
 function ProstejovNastupisteJob(canvas) {
 	console.log("pro nastupiste job");
 	AllowedToPause = false;
@@ -3441,7 +3493,7 @@ function OlomoucObchodVnitrek(canvas) {
 	console.log("olo obchod vnitrek");
 	localLocationId = 4;
 	
-	let ArrowToJob = new Arrow(900, 400, 100, 100, ArrowDirections.Right, canvas);
+	let ArrowToJob = new Arrow(100, 350, 50, 50, ArrowDirections.Here, canvas);
 	ArrowToJob.button.addEventListener("click", () => {
 		if(GamePaused) { return; }
 		ArrowToJob.deleteButton();
@@ -3467,10 +3519,21 @@ function OlomoucObchodVnitrek(canvas) {
 function OlomoucSyrarna(canvas) {
 	console.log("olo syrarna");
 	localLocationId = 5;
+
+	chse.append(canvas);
+	chse.resetEventListeners();
+	chse.button.addEventListener("click", () => {
+		if(GamePaused) { return; }
+		chse.deleteButton();
+		ArrowToNamesti.deleteButton();
+		OlomoucSyrarnaJob(canvas);
+	}, { once: true });	
+	
 	
 	let ArrowToNamesti = new Arrow(900, 400, 100, 100, ArrowDirections.Up, canvas);
 	ArrowToNamesti.button.addEventListener("click", () => {
 		if(GamePaused) { return; }
+		chse.deleteButton();
 		ArrowToNamesti.deleteButton();
     	OlomoucNamesti(canvas);
 	}, { once: true });
@@ -3488,9 +3551,19 @@ function OlomoucRestaurace(canvas) {
 	console.log("olo restaurace");
 	localLocationId = 6;
 	
+	cook.append(canvas);
+	cook.resetEventListeners();
+	cook.button.addEventListener("click", (event) => {
+		if(GamePaused) { return; }
+		cook.deleteButton();
+		ArrowToNamesti.deleteButton();
+		OlomoucWaiterJob(canvas);
+	});
+	
 	let ArrowToNamesti = new Arrow(550, 400, 100, 100, ArrowDirections.Down, canvas);
 	ArrowToNamesti.button.addEventListener("click", () => {
 		if(GamePaused) { return; }
+		cook.deleteButton();
 		ArrowToNamesti.deleteButton();
     	OlomoucNamesti(canvas);
 	}, { once: true });
@@ -3554,7 +3627,6 @@ function OlomoucWaiterJob(canvas) {
 
 function OlomoucObchodJob(canvas) {
 	console.log("olo obchod job");
-	
 }
 
 function OlomoucSyrarnaJob(canvas) {
@@ -4078,7 +4150,7 @@ function KatowiceCutscene(canvas) {
 			if(dialogue.counter === 2) {
 				clearInterval(thisInterval);
 				dialogue.end();
-				canvas.image(ost_Locations[3], 0, 0, canvas.canvas.width, canvas.canvas.height);
+				canvas.image(ost_Locations[4], 0, 0, canvas.canvas.width, canvas.canvas.height);
 				chrs.draw(160, 160, 0.65, canvas);
 				setTimeout(() => {
 					CreditsCaller(canvas);
