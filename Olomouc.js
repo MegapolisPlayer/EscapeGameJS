@@ -101,7 +101,7 @@ function OlomoucNastupiste(canvas) {
 		ArrowToNadrazi.deleteButton();
 		ArrowToTrain.deleteButton();
 		if(doesHaveTicket) {
-			doesHaveTicket = false;
+			//dont set ticket to false, needed in studenka
     		StudenkaLoad(canvas);
 		}
 		else {
@@ -240,9 +240,17 @@ function OlomoucObchodVnitrek(canvas) {
 	console.log("olo obchod vnitrek");
 	localLocationId = 4;
 	
+	let ArrowToJob = new Arrow(900, 400, 100, 100, ArrowDirections.Right, canvas);
+	ArrowToJob.button.addEventListener("click", () => {
+		if(GamePaused) { return; }
+		ArrowToJob.deleteButton();
+		ArrowToObchodVenek.deleteButton();
+    	OlomoucObchodJob(canvas);
+	}, { once: true });
 	let ArrowToObchodVenek = new Arrow(900, 400, 100, 100, ArrowDirections.Right, canvas);
 	ArrowToObchodVenek.button.addEventListener("click", () => {
 		if(GamePaused) { return; }
+		ArrowToJob.deleteButton();
 		ArrowToObchodVenek.deleteButton();
     	OlomoucObchodVenek(canvas);
 	}, { once: true });
@@ -267,7 +275,8 @@ function OlomoucSyrarna(canvas) {
 	}, { once: true });
 	
 	canvas.image(olo_Locations[5], 0, 0, canvas.canvas.width, canvas.canvas.height);
-	chr.draw(300, 320, 0.3, canvas);
+	chr.draw(400, 320, 0.3, canvas);
+	chse.draw(300, 320, 0.3, canvas);
 	ArrowToNamesti.draw(canvas);
 	PauseButton.draw(canvas);
 	drawMoneyCount(canvas);
@@ -295,8 +304,50 @@ function OlomoucRestaurace(canvas) {
 }
 
 function OlomoucWaiterJob(canvas) {
-	console.log("olo obchod job");
+	console.log("olo waiter job");
+	AllowedToPause = false;
+	PauseButton.deleteButton();
+	let dialogue = new Dialogue();
+	dialogue.begin(canvas);
+	dialogue.makeBubble(0, TranslationGetMultipleLines(SettingsValues.Language, 52, 2));
+	dialogue.makeBubble(1, TranslationGetMultipleLines(SettingsValues.Language, 54, 2));
+	dialogue.makeChoice(2);
 	
+	let dWaitInterval = window.setInterval((dialogue) => {
+		if(dialogue.choice_result !== -1) {
+			clearInterval(dWaitInterval);
+			if(dialogue.choice_result === 1) {
+				dialogue.makeBubble(3, TranslatedText[SettingsValues.Language][56]);
+				return;
+			}
+			else {
+				dialogue.makeBubble(3, TranslationGetMultipleLines(SettingsValues.Language, 57, 2));
+				return;
+			}
+		}
+	}, 100, dialogue);
+	
+	let thisInterval = window.setInterval((dialogue, canvas) => {
+		if(dialogue.counter === 4) {
+			dialogue.end();
+			if(dialogue.choice_result === 1) {
+				WaiterGame(canvas);
+				return;
+			}
+			if(dialogue.choice_result === 0) {
+				WaiterGameValues.IsOver = 0;
+				return;
+			}
+		}
+		if(WaiterGameValues.IsOver !== -1) {
+			clearInterval(thisInterval);
+			WaiterGameReset();
+			PauseButton.append(canvas);
+			AllowedToPause = true;
+			ap.playTrack(6);
+			OlomoucRestaurace(canvas);
+		}
+	}, 100, dialogue, canvas);
 }
 
 

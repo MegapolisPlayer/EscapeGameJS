@@ -187,7 +187,8 @@ function ProstejovNamesti(canvas) {
 	}, { once: true });
 	
 	canvas.image(pro_Locations[2], 0, 0, canvas.canvas.width, canvas.canvas.height);
-	chr.draw(450, 300, 0.3, canvas);
+	chr.draw(500, 300, 0.3, canvas);
+	util.draw(350, 310, 0.3, canvas);
 	ArrowToNadrazi.draw(canvas);
 	ArrowToCafe.draw(canvas);
 	ArrowToObchod.draw(canvas);
@@ -286,7 +287,7 @@ function ProstejovCafeWaiterJob(canvas) {
 			WaiterGameReset();
 			PauseButton.append(canvas);
 			AllowedToPause = true;
-			ap.playTrack(2);
+			ap.playTrack(5);
 			ProstejovCafe(canvas);
 		}
 	}, 100, dialogue, canvas);

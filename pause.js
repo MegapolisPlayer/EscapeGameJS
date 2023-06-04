@@ -58,12 +58,84 @@ function SetState(canvasobj) {
 			}
 			return;
 		case 4:
+			switch(localLocationId) {
+				case 0:
+					ProstejovNastupiste(canvasobj);	
+					return;
+				case 1:
+					ProstejovNadrazi(canvasobj);	
+					return;
+				case 2:
+					ProstejovNamesti(canvasobj);
+					return;
+				case 3:
+					ProstejovObchod(canvasobj);
+					return;
+				case 4:
+					ProstejovCafe(canvasobj);
+					return;
+			}
 			return;
 		case 5:
+			switch(localLocationId) {
+				case 0:
+					OlomoucNastupiste(canvasobj);	
+					return;
+				case 1:
+					OlomoucNadrazi(canvasobj);	
+					return;
+				case 2:
+					OlomoucNamesti(canvasobj);
+					return;
+				case 3:
+					OlomoucObchodVenek(canvasobj);
+					return;
+				case 4:
+					OlomoucObchodVnitrek(canvasobj);
+					return;
+				case 5:
+					OlomoucSyrarna(canvasobj);
+					return;
+				case 6:
+					OlomoucRestaurace(canvasobj);
+					return;
+				
+			}
 			return;
 		case 6:
+			switch(localLocationId) {
+				case 0:
+					StudenkaPrejezd(canvasobj);	
+					return;
+				case 1:
+					StudenkaNamesti(canvasobj);	
+					return;
+				case 2:
+					StudenkaMost(canvasobj);
+					return;
+				case 3:
+					StudenkaNadrazi(canvasobj);
+					return;
+				case 4:
+					StudenkaNastupiste(canvasobj);
+					return;
+				case 5:
+					StudenkaPole(canvasobj);
+					return;
+			}
 			return;
 		case 7:
+			switch(localLocationId) {
+				case 0:
+					OstravaNastupiste(canvasobj);	
+					return;
+				case 1:
+					OstravaNadrazi(canvasobj);	
+					return;
+				case 2:
+					OstravaNastupiste2(canvasobj);	
+					return;
+			}
 			return;
 	}
 	return;	

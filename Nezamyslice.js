@@ -194,7 +194,8 @@ function NezamyslicePodnikVnitrek(canvas) {
 	}, { once: true });
 
 	canvas.image(nzm_Locations[3], 0, 0, canvas.canvas.width, canvas.canvas.height);
-	chr.draw(700, 250, 0.5, canvas);
+	chr.draw(800, 100, 0.85, canvas);
+	schl.draw(600, 100, 0.85, canvas);
 	ArrowToPodnikVenek.draw(canvas);
 	PauseButton.draw(canvas);
 	drawMoneyCount(canvas);

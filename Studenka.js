@@ -1,6 +1,8 @@
 let stu_Locations = [];
 let stu_AmountLoadedImages = 0;
 
+let stu_IsDefended = false;
+
 function StudenkaImageLoaded() {
 	stu_AmountLoadedImages++;
 }
@@ -105,7 +107,7 @@ function StudenkaNamesti(canvas) {
 	console.log("stu namesti");
 	localLocationId = 1;
 	
-	let ArrowToPrejezd = new Arrow(450, 400, 100, 100, ArrowDirections.Down, canvas);
+	let ArrowToPrejezd = new Arrow(350, 400, 100, 100, ArrowDirections.Down, canvas);
 	ArrowToPrejezd.button.addEventListener("click", () => {
 		if(GamePaused) { return; }
 		ArrowToPrejezd.deleteButton();
@@ -114,7 +116,7 @@ function StudenkaNamesti(canvas) {
 		ArrowToPole.deleteButton();
     	StudenkaPrejezd(canvas);
 	}, { once: true });	
-	let ArrowToMost = new Arrow(100, 350, 100, 100, ArrowDirections.Left, canvas);
+	let ArrowToMost = new Arrow(100, 300, 100, 100, ArrowDirections.Left, canvas);
 	ArrowToMost.button.addEventListener("click", () => {
 		if(GamePaused) { return; }
 		ArrowToPrejezd.deleteButton();
@@ -123,7 +125,7 @@ function StudenkaNamesti(canvas) {
 		ArrowToPole.deleteButton();
     	StudenkaMost(canvas);
 	}, { once: true });	
-	let ArrowToNadrazi = new Arrow(100, 400, 100, 100, ArrowDirections.Down, canvas);
+	let ArrowToNadrazi = new Arrow(800, 300, 100, 100, ArrowDirections.Right, canvas);
 	ArrowToNadrazi.button.addEventListener("click", () => {
 		if(GamePaused) { return; }
 		ArrowToPrejezd.deleteButton();
@@ -132,7 +134,7 @@ function StudenkaNamesti(canvas) {
 		ArrowToPole.deleteButton();
     	StudenkaNadrazi(canvas);
 	}, { once: true });	
-	let ArrowToPole = new Arrow(100, 400, 100, 100, ArrowDirections.Down, canvas);
+	let ArrowToPole = new Arrow(100, 400, 100, 100, ArrowDirections.Left, canvas);
 	ArrowToPole.button.addEventListener("click", () => {
 		if(GamePaused) { return; }
 		ArrowToPrejezd.deleteButton();
@@ -157,7 +159,7 @@ function StudenkaMost(canvas) {
 	console.log("stu most");
 	localLocationId = 2;
 
-	let PayRespect = new Arrow(500, 300, 100, 100, ArrowDirections.Here, canvas);
+	let PayRespect = new Arrow(400, 300, 100, 100, ArrowDirections.Here, canvas);
 	PayRespect.button.addEventListener("click", () => {
 		if(GamePaused) { return; }
 		PayRespect.deleteButton();
@@ -173,7 +175,7 @@ function StudenkaMost(canvas) {
 	}, { once: true });	
 	
 	canvas.image(stu_Locations[2], 0, 0, canvas.canvas.width, canvas.canvas.height);
-	chr.draw(700, 300, 0.4, canvas);
+	chr.draw(100, 150, 0.6, canvas);
 	PayRespect.draw(canvas);
 	ArrowToNamesti.draw(canvas);
 	PauseButton.draw(canvas);
@@ -201,7 +203,7 @@ function StudenkaNadrazi(canvas) {
 	}, { once: true });		
 	
 	canvas.image(stu_Locations[3], 0, 0, canvas.canvas.width, canvas.canvas.height);
-	chr.draw(800, 200, 0.6, canvas);
+	chr.draw(300, 150, 0.7, canvas);
 	ArrowToNamesti.draw(canvas);
 	ArrowToNastupiste.draw(canvas);
 	PauseButton.draw(canvas);
@@ -213,15 +215,48 @@ function StudenkaNastupiste(canvas) {
 	console.log("stu nastupiste");
 	localLocationId = 4;
 	
-	let ArrowToNadrazi = new Arrow(500, 300, 100, 100, ArrowDirections.Here, canvas);
+	let ArrowToTrain = new Arrow(450, 400, 100, 100, ArrowDirections.Down, canvas);
+	ArrowToTrain.button.addEventListener("click", () => {
+		if(GamePaused) { return; }
+		ArrowToTrain.deleteButton();
+		ArrowToNadrazi.deleteButton();
+		if(stu_IsDefended) {
+			//dont check tickets but checking if defended, needed in ostrava
+    		let dialogue = new Dialogue();
+			dialogue.begin(canvas);
+			dialogue.makeBubble(0, TranslatedText[SettingsValues.Language][210]);
+			let thisInterval = window.setInterval((dialogue, canvas) => {
+				if(dialogue.counter === 1) {
+					clearInterval(thisInterval);
+					dialogue.end();
+					OstravaLoad(canvas);
+				}
+			}, 100, dialogue, canvas);
+		}
+		else {
+			let dialogue = new Dialogue();
+			dialogue.begin(canvas);
+			dialogue.makeBubble(0, TranslatedText[SettingsValues.Language][209]);
+			let thisInterval = window.setInterval((dialogue, canvas) => {
+				if(dialogue.counter === 1) {
+					clearInterval(thisInterval);
+					dialogue.end();
+					StudenkaNastupiste(canvas);
+				}
+			}, 100, dialogue, canvas);
+		}
+	}, { once: true });	
+	let ArrowToNadrazi = new Arrow(350, 300, 100, 100, ArrowDirections.Right, canvas);
 	ArrowToNadrazi.button.addEventListener("click", () => {
 		if(GamePaused) { return; }
+		ArrowToTrain.deleteButton();
 		ArrowToNadrazi.deleteButton();
     	StudenkaNadrazi(canvas);
 	}, { once: true });	
 	
 	canvas.image(stu_Locations[4], 0, 0, canvas.canvas.width, canvas.canvas.height);
-	chr.draw(100, 300, 0.4, canvas);
+	chr.draw(800, 310, 0.3, canvas);
+	ArrowToTrain.draw(canvas);
 	ArrowToNadrazi.draw(canvas);
 	PauseButton.draw(canvas);
 	drawMoneyCount(canvas);
@@ -232,15 +267,25 @@ function StudenkaPole(canvas) {
 	console.log("stu pole");
 	localLocationId = 5;
 
+	let ArrowToJob = new Arrow(500, 200, 75, 75, ArrowDirections.Here, canvas);
+	ArrowToJob.button.addEventListener("click", () => {
+		if(GamePaused) { return; }
+		ArrowToJob.deleteButton();
+		ArrowToNamesti.deleteButton();
+    	StudenkaDefenseJob(canvas);
+	}, { once: true });	
 	let ArrowToNamesti = new Arrow(350, 400, 100, 100, ArrowDirections.Down, canvas);
 	ArrowToNamesti.button.addEventListener("click", () => {
 		if(GamePaused) { return; }
+		ArrowToJob.deleteButton();
 		ArrowToNamesti.deleteButton();
     	StudenkaNamesti(canvas);
 	}, { once: true });		
 	
 	canvas.image(stu_Locations[5], 0, 0, canvas.canvas.width, canvas.canvas.height);
-	chr.draw(100, 200, 0.3, canvas);
+	chr.draw(100, 250, 0.5, canvas);
+	ArrowToJob.draw(canvas);
+	ArrowToNamesti.draw(canvas);
 	PauseButton.draw(canvas);
 	drawMoneyCount(canvas);
 	RenderStatus(canvas);
@@ -248,10 +293,8 @@ function StudenkaPole(canvas) {
 
 function StudenkaDefenseJob(canvas) {
 	console.log("stu defense job");
-}
-
-function StudenkaNastupisteJob(canvas) {
-	
+	stu_IsDefended = true;
+	StudenkaPole(canvas);
 }
 
 function StudenkaRespect(canvas) {
@@ -262,6 +305,7 @@ function StudenkaRespect(canvas) {
 	
 	let dWaitInterval = window.setInterval((dialogue) => {
 		if(dialogue.counter === 2) {
+			dialogue.end();
 			StudenkaMost(canvas);
 		}
 	}, 100, dialogue);

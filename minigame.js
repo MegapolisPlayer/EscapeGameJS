@@ -298,10 +298,7 @@ function WaiterGameComponentMain(canvas) {
 			}
 		}
 		orderFLCounter = 0;
-		//is selected
-		if(WaiterGameValues.IsOrderSelected !== -1) {
-			renderTextAsMinigameStatus(TranslatedText[SettingsValues.Language][102], WaiterGameValues.AmountOrders, canvas);
-		}
+		renderTextAsMinigameStatus(TranslatedText[SettingsValues.Language][102], WaiterGameValues.AmountOrders, canvas);
 		//time stuff
 		timelimitRender(canvas);
 		if(timelimitIsDone()) {
@@ -499,7 +496,7 @@ function FishGameComponentMain(canvas) {
 		canvas.setnewcolor("#03ddff");
 		canvas.box(0, 0, canvas.canvas.width, 100);
 		canvas.setnewcolor("#633200");
-		canvas.box(0, 90, canvas.canvas.width, 20);
+		canvas.box(0, 90, canvas.canvas.width, 35);
 		//render assets and stuff
 		chrf.draw(470, 10, 0.2, canvas);
 		canvas.image(FishingImages[3], 100, 30, 75, 75);
@@ -508,6 +505,9 @@ function FishGameComponentMain(canvas) {
 		//render line - length of line
 		let finalx = (Math.sin(toRadians(FishGameValues.Angle)) * FishGameValues.Length) + 500;
 		let finaly = (Math.cos(toRadians(FishGameValues.Angle)) * FishGameValues.Length) + 50;
+		if(finaly >= 500 || finalx >= 1000 || finalx <= 0) {
+			FishGameValues.LengthReverseResize = true; //out of bounds check
+		}
 		canvas.line(500, 50, finalx, finaly, 15, "#dddddd");
 		//render objects
 		for(let Id = 0; Id < FishObjects.length; Id++) {
@@ -539,10 +539,10 @@ function FishGameComponentMain(canvas) {
 				if(FishGameValues.Length <= 100) {
 					FishGameValues.LengthReverseResize = false;
 					FishGameValues.LengthResize = false;
-					if(FishObjects.length !== 1) {
+					if(IsHauling !== -1) {
 						FishObjects.splice(FishGameValues.IsHauling, 1); //splice fails when size = 1, doesnt delete
+						FishGameValues.IsHauling = -1;
 					}
-					FishGameValues.IsHauling = -1;
 					switch(FishGameValues.TypeOfHauledCargo) {
 						case 0:
 							ap.playSFX(3); //success
@@ -586,7 +586,7 @@ function FishGameComponentMain(canvas) {
 			}
 			else {
 				FishGameValues.Length += 2;
-				if(FishGameValues.Length >= 440) {
+				if(FishGameValues.Length >= 500) {
 					FishGameValues.LengthReverseResize = true;
 				}
 			}
@@ -610,7 +610,7 @@ function FishGameComponentMain(canvas) {
 		renderTextAsMinigameStatus(TranslatedText[SettingsValues.Language][109], FishGameValues.AmountEarned, canvas);
 		//time stuff
 		timelimitRender(canvas);
-		if(timelimitIsDone() && FishObjects.length === 0) {
+		if(timelimitIsDone() || FishObjects.length === 0) {
 			clearInterval(timerInterval);
 			addMoney(FishGameValues.AmountEarned); //50Kc fish, 10Kc pneu, 5Kc boots, boxes random
 			window.removeEventListener("click", SetResizeToTrue);	

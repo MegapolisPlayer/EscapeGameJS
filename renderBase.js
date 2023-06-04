@@ -329,7 +329,9 @@ class AudioPlayer {
 		this.audioTracks.push(new Audio("res/music/FiveArmies.mp3"));                //defense minigame
 		this.audioTracks.push(new Audio("res/music/Pride.mp3"));                     //wagon cutscenes
 		for(let Id = 0; Id < 19; Id++) {
-			this.audioTracks[Id].loop = true;
+			this.audioTracks[Id].onended = () => {
+				
+			};
 		}
 		
 		//sfx - no looping

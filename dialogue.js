@@ -38,13 +38,16 @@ class Character {
 		this.button = newElem;
 	}
 };
+
 let chr = new Character("res/Character.png");
 let chrf = new Character("res/CharacterFisher.png");
 let chrs = new Character("res/CharacterSitting.png");
+
 let cook = new Character("res/Cook.png");
 let traindriver = new Character("res/TrainDriver.png");
 let schl = new Character("res/Scholar.png");
 let util = new Character("res/UtilityMan.png");
+let chse = new Character("res/Cheesemaker.png");
 
 class Dialogue {
 	constructor() {
