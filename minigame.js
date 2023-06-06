@@ -88,8 +88,8 @@ class TableManager {
 				case 2:
 				case 3:
 					//waiting - recieved
-					ap.playSFX(3); //success
 					if(WaiterGameValues.IsOrderSelected === this.tableno) {
+						ap.playSFX(3); //success
 						this.reset();
 						WaiterGameValues.AmountEarned += 15;
 						this.remove();
@@ -189,7 +189,7 @@ class TableManager {
 //waiter game - hranice, prostejov
 
 function WaiterGame(canvas) {
-	WaiterGameValues.IsOver = -1;
+	WaiterGameReset();
 	console.log("waiter game");
 	WaiterGameComponentIntro(canvas);
 	let introInterval = window.setInterval((canvas) => {
@@ -407,8 +407,7 @@ class LeObject {
 };
 
 function FishGame(canvas) {
-	FishGameValues.LeFishCaught = 0;
-	FishGameValues.IsOver = -1;
+	FishGameReset();
 	console.log("fish game");
 	canvas.clear("#03ddff");
 	FishGameComponentIntro(canvas);
@@ -539,7 +538,10 @@ function FishGameComponentMain(canvas) {
 				if(FishGameValues.Length <= 100) {
 					FishGameValues.LengthReverseResize = false;
 					FishGameValues.LengthResize = false;
-					if(IsHauling !== -1) {
+					if(FishObjects.length === 1) {
+						FishObjects.length = 0; //clear array
+					}
+					if(FishGameValues.IsHauling !== -1) {
 						FishObjects.splice(FishGameValues.IsHauling, 1); //splice fails when size = 1, doesnt delete
 						FishGameValues.IsHauling = -1;
 					}
@@ -579,9 +581,6 @@ function FishGameComponentMain(canvas) {
 							break;
 					}
 					FishGameValues.TypeOfHauledCargo = -1;
-					if(FishObjects.length === 1) {
-						FishObjects.length = 0; //clear array
-					}
 				}
 			}
 			else {
@@ -638,26 +637,71 @@ function FishGameReset() {
 
 let InfodeskGameValues = {
 	IsIntroEnd: false,
-	IsOver: -1
+	IsOver: -1,
+	AmountEarned: 0,
+	
 }
 
 //literally selection minigame - map image and random points - if correct tip (few buttons w/ text) +1 point and money
 //info game
 
 function InfodeskGame(canvas) {
-	TicketSaleGameValues.IsOver = -1;
-	console.log("ticket sale game");
+	InfodeskGameReset();
+	console.log("infodesk game");
+	canvas.clear("#ccc27a");
+	InfodeskGameComponentIntro(canvas);
+	let thisInterval = window.setInterval((canvas) => {
+		if(InfodeskGameValues.IsIntroEnd === true) {
+			clearInterval(thisInterval);
+			InfodeskGameComponentMain(canvas);
+		}
+	}, 100, canvas);
 }
 
 function InfodeskGameComponentIntro(canvas) {
-	canvas.clear("#03ddff");
+	ap.playTrack(12);
+	canvas.clear("#ccc27a");
+	canvas.setnewcolor("#000000");
+	canvas.setfontweight("bold");
+	canvas.text(TranslatedText[SettingsValues.Language][91] + " - " + TranslatedText[SettingsValues.Language][110], 50, 50);
+	canvas.resetfontweight();
+	canvas.textml(TranslationGetMultipleLines(SettingsValues.Language, 111, 5), 50, 100);
+	let ArrowEnd = new Arrow(950, 450, 50, 50, ArrowDirections.Right, canvas);
+	ArrowEnd.button.addEventListener("click", (event) => {
+		ArrowEnd.deleteButton();
+		InfodeskGameValues.IsIntroEnd = true;
+	}, { once: true });
+	canvas.setnewcolor("#333399");
+	canvas.setalign("right");
+	canvas.text(TranslatedText[SettingsValues.Language][92], 930, 490);
+	canvas.setalign("left");
+	ArrowEnd.draw(canvas);
+	canvas.setnewcolor("#ffffff");
 } 
 function InfodeskGameComponentMain(canvas) {
-	canvas.clear("#03ddff");
+	canvas.clear("#ccc27a");
+		//main game
+	timelimitStart(120); //2:00 min
+	let timerInterval = window.setInterval((canvas) => {
+		//amount earned info
+		renderTextAsMinigameStatus(TranslatedText[SettingsValues.Language][116], InfodeskGameValues.AmountEarned, canvas);
+		//time stuff
+		timelimitRender(canvas);
+		if(timelimitIsDone()) {
+			clearInterval(timerInterval);
+			addMoney(InfodeskGameValues.AmountEarned); //10Kc per help
+			window.removeEventListener("click", SetResizeToTrue);	
+			deleteCanvasInputElems(canvas);
+			InfodeskGameValues.IsOver = 1;
+			return;
+		}
+	}, 100, canvas);
 }
 
-function InfodeskGameGameReset() {
+function InfodeskGameReset() {
+	InfodeskGameValues.IsIntroEnd = -1;
 	InfodeskGameValues.IsOver = -1;
+	InfodeskGameValues.AmountEarned = 0;
 }
 
 //dialect translation - nezamyslice
@@ -666,23 +710,55 @@ function InfodeskGameGameReset() {
 
 let DialectTranslationGameValues = {
 	IsIntroEnd: false,
-	IsOver: -1
+	IsOver: -1,
+	AmountEarned: 0,
+	AmountTranslated: 0,
 }
 
 function DialectTranslationGame(canvas) {
-	WaiterGameValues.IsOver = -1;
-	console.log("waiter game");
+	DialectTranslationGameReset();
+	console.log("translation game");
+	canvas.clear("#ffffff");
+	DialectTranslationGameComponentIntro(canvas);
+	let thisInterval = window.setInterval((canvas) => {
+		if(DialectTranslationGameValues.IsIntroEnd === true) {
+			clearInterval(thisInterval);
+			DialectTranslationGameComponentMain(canvas);
+		}
+	}, 100, canvas);
 }
 
 function DialectTranslationGameComponentIntro(canvas) {
-	canvas.clear("#03ddff");
+	ap.playTrack(13);
+	canvas.clear("#ffffff");
+	canvas.setnewcolor("#000000");
+	canvas.setfontweight("bold");
+	canvas.text(TranslatedText[SettingsValues.Language][91] + " - " + TranslatedText[SettingsValues.Language][117], 50, 50);
+	canvas.resetfontweight();
+	canvas.textml(TranslationGetMultipleLines(SettingsValues.Language, 118, 5), 50, 100);
+	let ArrowEnd = new Arrow(950, 450, 50, 50, ArrowDirections.Right, canvas);
+	ArrowEnd.button.addEventListener("click", (event) => {
+		ArrowEnd.deleteButton();
+		DialectTranslationGameValues.IsIntroEnd = true;
+	}, { once: true });
+	canvas.setnewcolor("#333399");
+	canvas.setalign("right");
+	canvas.text(TranslatedText[SettingsValues.Language][92], 930, 490);
+	canvas.setalign("left");
+	ArrowEnd.draw(canvas);
+	canvas.setnewcolor("#ffffff");
 } 
 function DialectTranslationGameComponentMain(canvas) {
-	canvas.clear("#03ddff");
+	canvas.clear("#ffffff");
+	renderTextAsMinigameStatus(TranslatedText[SettingsValues.Language][123], DialectTranslationGameValues.AmountEarned, canvas);
+	DialectTranslationGameValues.IsOver = 1;
 }
 
 function DialectTranslationGameReset() {
-	WaiterGameValues.IsOver = -1;
+	DialectTranslationGameValues.IsIntroEnd = false;
+	DialectTranslationGameValues.IsOver = -1;
+	DialectTranslationGameValues.AmountEarned = 0;
+	DialectTranslationGameValues.AmountTranslated = 0;
 }
 
 //cashier - prostejov, olomouc
@@ -696,63 +772,169 @@ let CashierGameValues = {
 }
 
 function CashierGame(canvas) {
-	CashierGameValues.IsOver = -1;
+	CashierGameReset();
 	console.log("cashier game");
+	canvas.clear("#dddddd");
+	CashierGameComponentIntro(canvas);
+	let thisInterval = window.setInterval((canvas) => {
+		if(CashierGameValues.IsIntroEnd === true) {
+			clearInterval(thisInterval);
+			CashierGameComponentMain(canvas);
+		}
+	}, 100, canvas);
 }
 
 function CashierGameComponentIntro(canvas) {
-	
+	ap.playTrack(14);
+	canvas.clear("#dddddd");
+	canvas.setnewcolor("#000000");
+	canvas.setfontweight("bold");
+	canvas.text(TranslatedText[SettingsValues.Language][91] + " - " + TranslatedText[SettingsValues.Language][124], 50, 50);
+	canvas.resetfontweight();
+	canvas.textml(TranslationGetMultipleLines(SettingsValues.Language, 125, 5), 50, 100);
+	let ArrowEnd = new Arrow(950, 450, 50, 50, ArrowDirections.Right, canvas);
+	ArrowEnd.button.addEventListener("click", (event) => {
+		ArrowEnd.deleteButton();
+		CashierGameValues.IsIntroEnd = true;
+	}, { once: true });
+	canvas.setnewcolor("#333399");
+	canvas.setalign("right");
+	canvas.text(TranslatedText[SettingsValues.Language][92], 930, 490);
+	canvas.setalign("left");
+	ArrowEnd.draw(canvas);
+	canvas.setnewcolor("#ffffff");
 } 
 function CashierGameComponentMain(canvas) {
-	
+	CashierGameValues.IsOver = 1;
 }
 
 function CashierGameReset() {
+	CashierGameValues.IsIntroEnd = false;
 	CashierGameValues.IsOver = -1;
 }
 
 //cleaning the benches on the square - olomouc
 
 let CleaningGameValues = {
+	IsIntroEnd: false,
 	IsOver: -1
 }
 
 function CleaningGame(canvas) {
-	CleaningGameValues.IsOver = -1;
+	CleaningGameReset();
 	console.log("cleaning game");
+	canvas.clear("#9c9c9c");
+	CleaningGameComponentIntro(canvas);
+	let thisInterval = window.setInterval((canvas) => {
+		if(CleaningGameValues.IsIntroEnd === true) {
+			clearInterval(thisInterval);
+			CleaningGameComponentMain(canvas);
+		}
+	}, 100, canvas);
 }
 
 function CleaningGameComponentIntro(canvas) {
-
+	ap.playTrack(15);
+	canvas.clear("#9c9c9c");
+	canvas.setnewcolor("#000000");
+	canvas.setfontweight("bold");
+	canvas.text(TranslatedText[SettingsValues.Language][91] + " - " + TranslatedText[SettingsValues.Language][131], 50, 50);
+	canvas.resetfontweight();
+	canvas.textml(TranslationGetMultipleLines(SettingsValues.Language, 132, 5), 50, 100);
+	let ArrowEnd = new Arrow(950, 450, 50, 50, ArrowDirections.Right, canvas);
+	ArrowEnd.button.addEventListener("click", (event) => {
+		ArrowEnd.deleteButton();
+		CleaningGameValues.IsIntroEnd = true;
+	}, { once: true });
+	canvas.setnewcolor("#333399");
+	canvas.setalign("right");
+	canvas.text(TranslatedText[SettingsValues.Language][92], 930, 490);
+	canvas.setalign("left");
+	ArrowEnd.draw(canvas);
+	canvas.setnewcolor("#ffffff");
 }
 function CleaningGameComponentMain(canvas) {
-
+	CleaningGameValues.IsOver = 1;
 }
 
 function CleaningGameReset(canvas) {
+	CleaningGameValues.IsIntroEnd = false;
 	CleaningGameValues.IsOver = -1;
 }
 
 //cheese making - olomouc
+
+//build factory and then run it
 
 let CheeseGameValues = {
 	IsIntroEnd: false,
 	IsOver: -1
 }
 
+let CheesemakingImages = [];
+let CheesemakingImagesLoaded = 0;
+for(let Id = 0; Id < 5; Id++) {
+	CheesemakingImages.push(new Image());
+	CheesemakingImages[Id].onload = () => { CheesemakingImagesLoaded++ };
+}
+
+CheesemakingImages[0].src = "res/Quark.png";
+CheesemakingImages[1].src = "res/FormedQuark.png";
+CheesemakingImages[2].src = "res/TvaruzekDirty.png";
+CheesemakingImages[3].src = "res/TvaruzekDone.png";
+CheesemakingImages[4].src = "res/TvaruzekFailed.png";
+
+let CheesemakingThingsImages = [];
+let CheesemakingThingsImagesLoaded = 0;
+for(let Id = 0; Id < 4; Id++) {
+	CheesemakingThingsImages.push(new Image());
+	CheesemakingThingsImages[Id].onload = () => { CheesemakingThingsImagesLoaded++ };
+}
+
+CheesemakingThingsImages[0].src = "res/SaltTable.png";
+CheesemakingThingsImages[1].src = "res/Rack.png";
+CheesemakingThingsImages[2].src = "res/Bath.png";
+CheesemakingThingsImages[3].src = "res/Cooler.png";
+
 function CheeseGame(canvas) {
-	CheeseGameValues.IsOver = -1;
+	CheeseGameReset();
 	console.log("cheese game");
+	canvas.clear("#404040");
+	CheeseGameComponentIntro(canvas);
+	let thisInterval = window.setInterval((canvas) => {
+		if(CheeseGameValues.IsIntroEnd === true) {
+			clearInterval(thisInterval);
+			CheeseGameComponentMain(canvas);
+		}
+	}, 100, canvas);
 }
 
 function CheeseGameComponentIntro(canvas) {
-
+	ap.playTrack(16);
+	canvas.clear("#404040");
+	canvas.setnewcolor("#000000");
+	canvas.setfontweight("bold");
+	canvas.text(TranslatedText[SettingsValues.Language][91] + " - " + TranslatedText[SettingsValues.Language][138], 50, 50);
+	canvas.resetfontweight();
+	canvas.textml(TranslationGetMultipleLines(SettingsValues.Language, 139, 5), 50, 100);
+	let ArrowEnd = new Arrow(950, 450, 50, 50, ArrowDirections.Right, canvas);
+	ArrowEnd.button.addEventListener("click", (event) => {
+		ArrowEnd.deleteButton();
+		CheeseGameValues.IsIntroEnd = true;
+	}, { once: true });
+	canvas.setnewcolor("#333399");
+	canvas.setalign("right");
+	canvas.text(TranslatedText[SettingsValues.Language][92], 930, 490);
+	canvas.setalign("left");
+	ArrowEnd.draw(canvas);
+	canvas.setnewcolor("#ffffff");
 } 
 function CheeseGameComponentMain(canvas) {
-	
+	CheeseGameValues.IsOver = 1;
 }
 
 function CheeseGameReset() {
+	CheeseGameValues.IsIntroEnd = false;
 	CheeseGameValues.IsOver = -1;
 }
 
@@ -763,23 +945,72 @@ function CheeseGameReset() {
 
 let DefenseGameValues = {
 	IsIntroEnd: false,
-	IsOver: -1
+	IsOver: -1,
+	WavesRemaining: 10,
+	HasDefended: false,
 }
 
+let ArmyImages = [];
+let ArmyImagesLoaded = 0;
+for(let Id = 0; Id < 10; Id++) {
+	ArmyImages.push(new Image());
+	ArmyImages[Id].onload = () => { ArmyImagesLoaded++ };
+}
+
+//1st - okay, 2nd - destroyed
+
+ArmyImages[0].src = "res/Antitank1.png";
+ArmyImages[1].src = "res/Antitank2.png";
+ArmyImages[2].src = "res/Tank1.png";
+ArmyImages[3].src = "res/Tank2.png";
+ArmyImages[4].src = "res/Pillbox1.png";
+ArmyImages[5].src = "res/Pillbox2.png";
+ArmyImages[6].src = "res/UAV.png";
+ArmyImages[7].src = "res/AirSupport.png";
+ArmyImages[8].src = "res/Shell.png";
+ArmyImages[9].src = "res/Truck.png";
+
 function DefenseGame(canvas) {
-	DefenseGameValues.IsOver = -1;
+	DefenseGameReset();
 	console.log("defense game");
+	canvas.clear("#36291b");
+	DefenseGameComponentIntro(canvas);
+	let thisInterval = window.setInterval((canvas) => {
+		if(DefenseGameValues.IsIntroEnd === true) {
+			clearInterval(thisInterval);
+			DefenseGameComponentMain(canvas);
+		}
+	}, 100, canvas);
 }
 
 function DefenseGameComponentIntro(canvas) {
-	canvas.clear("#03ddff");
+	ap.playTrack(17);
+	canvas.clear("#36291b");
+	canvas.setnewcolor("#000000");
+	canvas.setfontweight("bold");
+	canvas.text(TranslatedText[SettingsValues.Language][91] + " - " + TranslatedText[SettingsValues.Language][145], 50, 50);
+	canvas.resetfontweight();
+	canvas.textml(TranslationGetMultipleLines(SettingsValues.Language, 146, 5), 50, 100);
+	let ArrowEnd = new Arrow(950, 450, 50, 50, ArrowDirections.Right, canvas);
+	ArrowEnd.button.addEventListener("click", (event) => {
+		ArrowEnd.deleteButton();
+		DefenseGameValues.IsIntroEnd = true;
+	}, { once: true });
+	canvas.setnewcolor("#333399");
+	canvas.setalign("right");
+	canvas.text(TranslatedText[SettingsValues.Language][92], 930, 490);
+	canvas.setalign("left");
+	ArrowEnd.draw(canvas);
+	canvas.setnewcolor("#ffffff");
 } 
 function DefenseGameComponentMain(canvas) {
-	canvas.clear("#03ddff");
+	canvas.clear("#36291b");
+	DefenseGameValues.IsOver = 1;
+	DefenseGameValues.HasDefended = true;
 }
 
 function DefenseGameReset() {
 	DefenseGameValues.IsOver = -1;
 }
 
-//ostrava not really a big location
+//ostrava not really a big location, no minigames

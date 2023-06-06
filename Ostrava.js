@@ -5,7 +5,7 @@ function OstravaImageLoaded() {
 	ost_AmountLoadedImages++;
 }
 
-function OstravaLoad(canvas) {
+function OstravaLoad(canvas, calledbysetstate = false) {
 	AllowedToPause = false;	
 	timerPause();
 	canvas.loadingMsg();
@@ -20,7 +20,9 @@ function OstravaLoad(canvas) {
 	ost_Locations[3].src = "res/map/7.png";
 	ost_Locations[4].src = "res/katowice/cutscene/B10bmnouz.jpg";
 	
-	OstravaMap(canvas);
+	if(calledbysetstate !== true) {
+		OstravaMap(canvas);
+	}
 }
 
 function OstravaMap(canvas) {
@@ -50,7 +52,7 @@ function Ostrava(canvas) {
 	
 	let dialogue = new Dialogue();
 	dialogue.begin(canvas);
-	dialogue.makeBubble(0, TranslatedText[SettingsValues.Language][211]);
+	dialogue.makeBubble(0, TranslatedText[SettingsValues.Language][225]);
 	let thisInterval = window.setInterval((dialogue, canvas) => {
 		if(dialogue.counter === 1) {
 			clearInterval(thisInterval);
@@ -149,8 +151,8 @@ function KatowiceCutscene(canvas) {
 	setTimeout(() => {
 		let dialogue = new Dialogue();
 		dialogue.begin(canvas);
-		dialogue.makeBubble(0, TranslatedText[SettingsValues.Language][212]);
-		dialogue.makeBubble(1, TranslatedText[SettingsValues.Language][213]);
+		dialogue.makeBubble(0, TranslatedText[SettingsValues.Language][226]);
+		dialogue.makeBubble(1, TranslatedText[SettingsValues.Language][227]);
 		let thisInterval = window.setInterval((dialogue, canvas) => {
 			if(dialogue.counter === 2) {
 				clearInterval(thisInterval);

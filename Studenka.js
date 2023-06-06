@@ -1,13 +1,11 @@
 let stu_Locations = [];
 let stu_AmountLoadedImages = 0;
 
-let stu_IsDefended = false;
-
 function StudenkaImageLoaded() {
 	stu_AmountLoadedImages++;
 }
 
-function StudenkaLoad(canvas) {
+function StudenkaLoad(canvas, calledbysetstate = false) {
 	AllowedToPause = false;	
 	timerPause();
 	canvas.loadingMsg();
@@ -25,7 +23,9 @@ function StudenkaLoad(canvas) {
 	stu_Locations[6].src = "res/map/6.png";
 	stu_Locations[7].src = "res/studenka/cutscene/Bmz245.jpg";
 	
-	StudenkaCutscene(canvas); //cutscene first, then map
+	if(calledbysetstate !== true) {
+		StudenkaCutscene(canvas); //cutscene first, then map
+	}
 }
 
 function StudenkaCutscene(canvas) {
@@ -43,15 +43,15 @@ function StudenkaCutscene(canvas) {
 		ap.playSFX(9);
 		let dialogue = new Dialogue();
 		dialogue.begin(canvas);
-		dialogue.makeBubble(0, TranslatedText[SettingsValues.Language][205]);
-		dialogue.makeBubble(1, TranslatedText[SettingsValues.Language][206]);
+		dialogue.makeBubble(0, TranslatedText[SettingsValues.Language][219]);
+		dialogue.makeBubble(1, TranslatedText[SettingsValues.Language][220]);
 		let thisInterval = window.setInterval((dialogue, canvas) => {
 			if(dialogue.counter === 2) {
 				clearInterval(thisInterval);
 				ap.sfx[9].pause();
 				canvas.clear("#000000");
 				setTimeout(() => {
-					dialogue.makeBubble(2, TranslationGetMultipleLines(SettingsValues.Language, 207, 2));
+					dialogue.makeBubble(2, TranslationGetMultipleLines(SettingsValues.Language, 221, 2));
 					let thisInterval = window.setInterval((dialogue, canvas) => {
 						if(dialogue.counter === 3) {
 							clearInterval(thisInterval);
@@ -66,6 +66,10 @@ function StudenkaCutscene(canvas) {
 }
 
 function StudenkaMap(canvas) {
+	if(stu_AmountLoadedImages != 8) {
+      	window.setTimeout(StudenkaMap, 100, canvas); //here kinda redundant, when loading in save required!
+		return;
+    }
 	//map scene
 	ap.playTrack(7);
 	canvas.setnewcolor("#333399");
@@ -220,11 +224,12 @@ function StudenkaNastupiste(canvas) {
 		if(GamePaused) { return; }
 		ArrowToTrain.deleteButton();
 		ArrowToNadrazi.deleteButton();
-		if(stu_IsDefended) {
+		if(DefenseGameValues.HasDefended) {
 			//dont check tickets but checking if defended, needed in ostrava
+			//defense game only once, here in studenka
     		let dialogue = new Dialogue();
 			dialogue.begin(canvas);
-			dialogue.makeBubble(0, TranslatedText[SettingsValues.Language][210]);
+			dialogue.makeBubble(0, TranslatedText[SettingsValues.Language][224]);
 			let thisInterval = window.setInterval((dialogue, canvas) => {
 				if(dialogue.counter === 1) {
 					clearInterval(thisInterval);
@@ -236,7 +241,7 @@ function StudenkaNastupiste(canvas) {
 		else {
 			let dialogue = new Dialogue();
 			dialogue.begin(canvas);
-			dialogue.makeBubble(0, TranslatedText[SettingsValues.Language][209]);
+			dialogue.makeBubble(0, TranslatedText[SettingsValues.Language][223]);
 			let thisInterval = window.setInterval((dialogue, canvas) => {
 				if(dialogue.counter === 1) {
 					clearInterval(thisInterval);
@@ -267,24 +272,26 @@ function StudenkaPole(canvas) {
 	console.log("stu pole");
 	localLocationId = 5;
 
-	let ArrowToJob = new Arrow(500, 200, 75, 75, ArrowDirections.Here, canvas);
-	ArrowToJob.button.addEventListener("click", () => {
+	army.append(canvas);
+	army.resetEventListeners();
+	army.button.addEventListener("click", (event) => {
 		if(GamePaused) { return; }
-		ArrowToJob.deleteButton();
+		army.deleteButton();
 		ArrowToNamesti.deleteButton();
-    	StudenkaDefenseJob(canvas);
-	}, { once: true });	
+		StudenkaDefenseJob(canvas);
+	});
+	
 	let ArrowToNamesti = new Arrow(350, 400, 100, 100, ArrowDirections.Down, canvas);
 	ArrowToNamesti.button.addEventListener("click", () => {
 		if(GamePaused) { return; }
-		ArrowToJob.deleteButton();
+		army.deleteButton();
 		ArrowToNamesti.deleteButton();
     	StudenkaNamesti(canvas);
 	}, { once: true });		
 	
 	canvas.image(stu_Locations[5], 0, 0, canvas.canvas.width, canvas.canvas.height);
 	chr.draw(100, 250, 0.5, canvas);
-	ArrowToJob.draw(canvas);
+	army.draw(800, 250, 0.5, canvas);
 	ArrowToNamesti.draw(canvas);
 	PauseButton.draw(canvas);
 	drawMoneyCount(canvas);
@@ -293,8 +300,49 @@ function StudenkaPole(canvas) {
 
 function StudenkaDefenseJob(canvas) {
 	console.log("stu defense job");
-	stu_IsDefended = true;
-	StudenkaPole(canvas);
+	AllowedToPause = false;
+	PauseButton.deleteButton();
+	let dialogue = new Dialogue();
+	dialogue.begin(canvas);
+	dialogue.makeBubble(0, TranslationGetMultipleLines(SettingsValues.Language, 248, 2));
+	dialogue.makeBubble(1, TranslationGetMultipleLines(SettingsValues.Language, 250, 2));
+	dialogue.makeChoice(2);
+	
+	let dWaitInterval = window.setInterval((dialogue) => {
+		if(dialogue.choice_result !== -1) {
+			clearInterval(dWaitInterval);
+			if(dialogue.choice_result === 1) {
+				dialogue.makeBubble(3, TranslatedText[SettingsValues.Language][252]);
+				return;
+			}
+			else {
+				dialogue.makeBubble(3, TranslatedText[SettingsValues.Language][253]);
+				return;
+			}
+		}
+	}, 100, dialogue);
+	
+	let thisInterval = window.setInterval((dialogue, canvas) => {
+		if(dialogue.counter === 4) {
+			dialogue.end();
+			if(dialogue.choice_result === 1) {
+				DefenseGame(canvas);
+				return;
+			}
+			if(dialogue.choice_result === 0) {
+				DefenseGameValues.IsOver = 0;
+				return;
+			}
+		}
+		if(DefenseGameValues.IsOver !== -1) {
+			clearInterval(thisInterval);
+			DefenseGameReset();
+			PauseButton.append(canvas);
+			AllowedToPause = true;
+			ap.playTrack(7);
+			StudenkaPole(canvas);
+		}
+	}, 100, dialogue, canvas);
 }
 
 function StudenkaRespect(canvas) {

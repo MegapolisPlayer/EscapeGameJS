@@ -4,6 +4,7 @@ let AllowedToPause = true;
 function SetState(canvasobj) {
 	deleteCanvasInputElems(); //local functions will remake
 	PauseButton.append(canvasobj);
+	console.log("SetState called!");
 	switch(locationId) {
 		case 1:
 			switch(localLocationId) {
@@ -300,6 +301,54 @@ function SetStateFile(filecontent, canvas) {
 					clearInterval(thisInterval3);
 					AllowedToPause = true;
 					ap.playTrack(4);
+					SetState(canvas);
+				}
+			}, 100);
+		break;
+		case 4:
+			pro_AmountLoadedImages = 0;
+			ProstejovLoad(canvas, true);
+			let thisInterval4 = window.setInterval(() => {
+				if(pro_AmountLoadedImages === 6) {
+					clearInterval(thisInterval4);
+					AllowedToPause = true;
+					ap.playTrack(5);
+					SetState(canvas);
+				}
+			}, 100);
+		break;
+		case 5:
+			olo_AmountLoadedImages = 0;
+			OlomoucLoad(canvas, true);
+			let thisInterval5 = window.setInterval(() => {
+				if(olo_AmountLoadedImages === 8) {
+					clearInterval(thisInterval5);
+					AllowedToPause = true;
+					ap.playTrack(6);
+					SetState(canvas);
+				}
+			}, 100);
+		break;
+		case 6:
+			stu_AmountLoadedImages = 0;
+			StudenkaLoad(canvas, true);
+			let thisInterval6 = window.setInterval(() => {
+				if(stu_AmountLoadedImages === 8) {
+					clearInterval(thisInterval6);
+					AllowedToPause = true;
+					ap.playTrack(7);
+					SetState(canvas);
+				}
+			}, 100);
+		break;
+		case 7:
+			ost_AmountLoadedImages = 0;
+			OstravaLoad(canvas, true);
+			let thisInterval7 = window.setInterval(() => {
+				if(ost_AmountLoadedImages === 5) {
+					clearInterval(thisInterval7);
+					AllowedToPause = true;
+					ap.playTrack(8);
 					SetState(canvas);
 				}
 			}, 100);

@@ -5,7 +5,7 @@ function NezamysliceImageLoaded() {
 	nzm_AmountLoadedImages++;
 }
 
-function NezamysliceLoad(canvas) {
+function NezamysliceLoad(canvas, calledbysetstate = false) {
 	AllowedToPause = false;	
 	timerPause();
 	canvas.loadingMsg();
@@ -20,7 +20,9 @@ function NezamysliceLoad(canvas) {
 	nzm_Locations[3].src = "res/nezamyslice/podnik_vnitrek.jpg";
 	nzm_Locations[4].src = "res/map/3.png";
 	
-	NezamysliceMap(canvas);
+	if(calledbysetstate !== true) {
+		NezamysliceMap(canvas);
+	}
 }
 
 function NezamysliceMap(canvas) {
@@ -53,10 +55,10 @@ function Nezamyslice(canvas) {
 
 	let FirstDialogue = new Dialogue();
 	FirstDialogue.begin(canvas);
-	FirstDialogue.makeBubble(0, TranslationGetMultipleLines(SettingsValues.Language, 164, 2));
-	FirstDialogue.makeBubble(1, TranslationGetMultipleLines(SettingsValues.Language, 166, 2));
-	FirstDialogue.makeBubble(2, TranslationGetMultipleLines(SettingsValues.Language, 168, 2));
-	FirstDialogue.makeBubble(3, TranslatedText[SettingsValues.Language][170].slice(0, -1) + " " + Math.floor(940 * SettingsValues.MoneyCostIncrease) + " " + TranslatedText[SettingsValues.Language][90]);	
+	FirstDialogue.makeBubble(0, TranslationGetMultipleLines(SettingsValues.Language, 178, 2));
+	FirstDialogue.makeBubble(1, TranslationGetMultipleLines(SettingsValues.Language, 180, 2));
+	FirstDialogue.makeBubble(2, TranslationGetMultipleLines(SettingsValues.Language, 182, 2));
+	FirstDialogue.makeBubble(3, TranslatedText[SettingsValues.Language][184].slice(0, -1) + " " + Math.floor(940 * SettingsValues.MoneyCostIncrease) + " " + TranslatedText[SettingsValues.Language][90]);	
 	
 	let thisInterval = window.setInterval((dialogue, canvas) => {
 		if(dialogue.counter === 4) {
@@ -105,7 +107,7 @@ function NezamysliceNastupiste(canvas) {
 		else {
 			let dialogue = new Dialogue();
 			dialogue.begin(canvas);
-			dialogue.makeBubble(0, TranslatedText[SettingsValues.Language][147]);
+			dialogue.makeBubble(0, TranslatedText[SettingsValues.Language][161]);
 			let thisInterval = window.setInterval((dialogue, canvas) => {
 				if(dialogue.counter === 1) {
 					clearInterval(thisInterval);
@@ -135,8 +137,8 @@ function NezamysliceNadrazi(canvas) {
 	info.button.addEventListener("click", () => {
 		if(GamePaused) { return; }
 		info.deleteButton();
-		ArrowToNadrazi.deleteButton();
-		ArrowToTrain.deleteButton();
+		ArrowToNastupiste.deleteButton();
+		ArrowToPodnikVenek.deleteButton();
 		NezamysliceNadraziJob(canvas);
 	}, { once: true });
 
@@ -158,8 +160,7 @@ function NezamysliceNadrazi(canvas) {
 	}, { once: true });
 	
 	canvas.image(nzm_Locations[1], 0, 0, canvas.canvas.width, canvas.canvas.height);
-	chr.draw(250, 250, 0.5, canvas);
-	info.draw(750, 250, 0.5, canvas);
+	info.draw(750, 140, 0.7, canvas);
 	ArrowToNastupiste.draw(canvas);
 	ArrowToPodnikVenek.draw(canvas);
 	PauseButton.draw(canvas);
@@ -227,10 +228,97 @@ function NezamyslicePodnikVnitrek(canvas) {
 
 function NezamysliceNadraziJob(canvas) {
 	console.log("nzm nadrazi job");
+	AllowedToPause = false;
+	PauseButton.deleteButton();
+	let dialogue = new Dialogue();
+	dialogue.begin(canvas);
+	dialogue.makeBubble(0, TranslationGetMultipleLines(SettingsValues.Language, 228, 2));
+	dialogue.makeBubble(1, TranslatedText[SettingsValues.Language][230]);
+	dialogue.makeChoice(2);
+	
+	let dWaitInterval = window.setInterval((dialogue) => {
+		if(dialogue.choice_result !== -1) {
+			clearInterval(dWaitInterval);
+			if(dialogue.choice_result === 1) {
+				dialogue.makeBubble(3, TranslatedText[SettingsValues.Language][231]);
+				return;
+			}
+			else {
+				dialogue.makeBubble(3, TranslatedText[SettingsValues.Language][232]);
+				return;
+			}
+		}
+	}, 100, dialogue);
+	
+	let thisInterval = window.setInterval((dialogue, canvas) => {
+		if(dialogue.counter === 4) {
+			dialogue.end();
+			if(dialogue.choice_result === 1) {
+				InfodeskGame(canvas);
+				return;
+			}
+			if(dialogue.choice_result === 0) {
+				InfodeskGameValues.IsOver = 0;
+				return;
+			}
+		}
+		if(InfodeskGameValues.IsOver !== -1) {
+			clearInterval(thisInterval);
+			InfodeskGameReset();
+			PauseButton.append(canvas);
+			AllowedToPause = true;
+			ap.playTrack(4);
+			NezamysliceNadrazi(canvas);
+		}
+	}, 100, dialogue, canvas);
 }
 
 function NezamyslicePodnikVnitrekJob(canvas) {
 	console.log("nzm podnik vnitrek job");
+	AllowedToPause = false;
+	PauseButton.deleteButton();
+	let dialogue = new Dialogue();
+	dialogue.begin(canvas);
+	dialogue.makeBubble(0, TranslatedText[SettingsValues.Language][233]);
+	dialogue.makeBubble(1, TranslationGetMultipleLines(SettingsValues.Language, 234, 2));
+	dialogue.makeBubble(2, TranslatedText[SettingsValues.Language][236]);
+	dialogue.makeChoice(3);
+	
+	let dWaitInterval = window.setInterval((dialogue) => {
+		if(dialogue.choice_result !== -1) {
+			clearInterval(dWaitInterval);
+			if(dialogue.choice_result === 1) {
+				dialogue.makeBubble(4, TranslatedText[SettingsValues.Language][237]);
+				return;
+			}
+			else {
+				dialogue.makeBubble(4, TranslatedText[SettingsValues.Language][238]);
+				return;
+			}
+		}
+	}, 100, dialogue);
+	
+	let thisInterval = window.setInterval((dialogue, canvas) => {
+		if(dialogue.counter === 5) {
+			dialogue.end();
+			if(dialogue.choice_result === 1) {
+				DialectTranslationGame(canvas);
+				return;
+			}
+			if(dialogue.choice_result === 0) {
+				DialectTranslationGameValues.IsOver = 0;
+				return;
+			}
+		}
+		if(DialectTranslationGameValues.IsOver !== -1) {
+			clearInterval(thisInterval);
+			DialectTranslationGameReset();
+			PauseButton.append(canvas);
+			AllowedToPause = true;
+			ap.playTrack(4);
+			NezamyslicePodnikVnitrek(canvas);
+		}
+	}, 100, dialogue, canvas);
 }
 
 function NezamysliceNastupisteJob(canvas) {
@@ -238,8 +326,8 @@ function NezamysliceNastupisteJob(canvas) {
 	AllowedToPause = false;
 	let dialogue = new Dialogue();
 	dialogue.begin(canvas);
-	dialogue.makeBubble(0, TranslationGetMultipleLines(SettingsValues.Language, 171, 2).slice(0, -1) + " " + Math.floor(940 * SettingsValues.MoneyCostIncrease) + " " + TranslatedText[SettingsValues.Language][90]);
-	dialogue.makeBubble(1, TranslationGetMultipleLines(SettingsValues.Language, 173, 2));
+	dialogue.makeBubble(0, TranslationGetMultipleLines(SettingsValues.Language, 185, 2).slice(0, -1) + " " + Math.floor(940 * SettingsValues.MoneyCostIncrease) + " " + TranslatedText[SettingsValues.Language][90]);
+	dialogue.makeBubble(1, TranslationGetMultipleLines(SettingsValues.Language, 187, 2));
 	dialogue.makeChoice(2);
 	
 	let dWaitInterval = window.setInterval((dialogue) => {
@@ -248,23 +336,23 @@ function NezamysliceNastupisteJob(canvas) {
 			if(dialogue.choice_result === 1) {
 				if(MoneyAmount >= Math.floor(940 * SettingsValues.MoneyCostIncrease)) {
 					if(doesHaveTicket) {
-						dialogue.makeBubble(3, TranslatedText[SettingsValues.Language][148]);
+						dialogue.makeBubble(3, TranslatedText[SettingsValues.Language][162]);
 						return;
 					}
 					removeMoney(Math.floor(940 * SettingsValues.MoneyCostIncrease));
 					doesHaveTicket = true;
 					ap.playSFX(5);
-					dialogue.makeBubble(3, TranslatedText[SettingsValues.Language][175]);
+					dialogue.makeBubble(3, TranslatedText[SettingsValues.Language][189]);
 					return;
 				}
 				else {
-					dialogue.makeBubble(3, TranslatedText[SettingsValues.Language][176]);
+					dialogue.makeBubble(3, TranslatedText[SettingsValues.Language][190]);
 					return;
 				}
 				return;
 			}
 			else {
-				dialogue.makeBubble(3, TranslatedText[SettingsValues.Language][177]);
+				dialogue.makeBubble(3, TranslatedText[SettingsValues.Language][191]);
 				return;
 			}
 		}

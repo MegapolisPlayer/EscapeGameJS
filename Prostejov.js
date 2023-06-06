@@ -5,7 +5,7 @@ function ProstejovImageLoaded() {
 	pro_AmountLoadedImages++;
 }
 
-function ProstejovLoad(canvas) {
+function ProstejovLoad(canvas, calledbysetstate = false) {
 	AllowedToPause = false;	
 	timerPause();
 	canvas.loadingMsg();
@@ -21,7 +21,9 @@ function ProstejovLoad(canvas) {
 	pro_Locations[4].src = "res/prostejov/cafe.jpg";
 	pro_Locations[5].src = "res/map/4.png";
 	
-	ProstejovMap(canvas);
+	if(calledbysetstate !== true) {
+		ProstejovMap(canvas);
+	}
 }
 
 function ProstejovMap(canvas) {
@@ -54,13 +56,13 @@ function Prostejov(canvas) {
 	
 	let FirstDialogue = new Dialogue();
 	FirstDialogue.begin(canvas);
-	FirstDialogue.makeBubble(0, TranslationGetMultipleLines(SettingsValues.Language, 178, 2));
-	FirstDialogue.makeBubble(1, TranslationGetMultipleLines(SettingsValues.Language, 180, 2));
+	FirstDialogue.makeBubble(0, TranslationGetMultipleLines(SettingsValues.Language, 192, 2));
+	FirstDialogue.makeBubble(1, TranslationGetMultipleLines(SettingsValues.Language, 194, 2));
 	FirstDialogue.makeBubble(2, 
-		(TranslatedText[SettingsValues.Language][182].slice(0, -1) + " " + 
+		(TranslatedText[SettingsValues.Language][196].slice(0, -1) + " " + 
 		Math.floor(1470 * SettingsValues.MoneyCostIncrease) + " "  + TranslatedText[SettingsValues.Language][90])
-		+ "\n" + TranslatedText[SettingsValues.Language][183]);
-	FirstDialogue.makeBubble(3, TranslatedText[SettingsValues.Language][184]);	
+		+ "\n" + TranslatedText[SettingsValues.Language][197]);
+	FirstDialogue.makeBubble(3, TranslatedText[SettingsValues.Language][198]);	
 	
 	let thisInterval = window.setInterval((dialogue, canvas) => {
 		if(dialogue.counter === 4) {
@@ -215,9 +217,17 @@ function ProstejovObchod(canvas) {
 	console.log("pro obchod");
 	localLocationId = 3;
 
+	let ArrowToJob = new Arrow(300, 200, 100, 100, ArrowDirections.Here, canvas);
+	ArrowToJob.button.addEventListener("click", () => {
+		if(GamePaused) { return; }
+		ArrowToJob.deleteButton();
+		ArrowToNamesti.deleteButton();
+    	ProstejovObchodJob(canvas);
+	}, { once: true });
 	let ArrowToNamesti = new Arrow(900, 400, 100, 100, ArrowDirections.Down, canvas);
 	ArrowToNamesti.button.addEventListener("click", () => {
 		if(GamePaused) { return; }
+		ArrowToJob.deleteButton();
 		ArrowToNamesti.deleteButton();
     	ProstejovNamesti(canvas);
 	}, { once: true });
@@ -225,6 +235,7 @@ function ProstejovObchod(canvas) {
 	canvas.image(pro_Locations[3], 0, 0, canvas.canvas.width, canvas.canvas.height);
 	chr.draw(800, 150, 0.8, canvas);
 	ArrowToNamesti.draw(canvas);
+	ArrowToJob.draw(canvas);
 	PauseButton.draw(canvas);
 	drawMoneyCount(canvas);
 	RenderStatus(canvas);
@@ -238,6 +249,7 @@ function ProstejovCafe(canvas) {
 	
 	ArrowToNamesti.button.addEventListener("click", () => {
 		if(GamePaused) { return; }
+		cook.deleteButton();
 		ArrowToNamesti.deleteButton();
     	ProstejovNamesti(canvas);
 	}, { once: true });
@@ -309,10 +321,66 @@ function ProstejovCafeWaiterJob(canvas) {
 
 function ProstejovNamestiJob(canvas) {
 	console.log("pro namesti job");
+	AllowedToPause = false;
+	PauseButton.deleteButton();
+	let dialogue = new Dialogue();
+	dialogue.begin(canvas);
+	dialogue.makeBubble(0, TranslationGetMultipleLines(SettingsValues.Language, 239, 2));
+	dialogue.makeBubble(1, TranslatedText[SettingsValues.Language][241]);
+	dialogue.makeChoice(2);
+	
+	let dWaitInterval = window.setInterval((dialogue) => {
+		if(dialogue.choice_result !== -1) {
+			clearInterval(dWaitInterval);
+			if(dialogue.choice_result === 1) {
+				dialogue.makeBubble(3, TranslatedText[SettingsValues.Language][242]);
+				return;
+			}
+			else {
+				dialogue.makeBubble(3, TranslatedText[SettingsValues.Language][243]);
+				return;
+			}
+		}
+	}, 100, dialogue);
+	
+	let thisInterval = window.setInterval((dialogue, canvas) => {
+		if(dialogue.counter === 4) {
+			dialogue.end();
+			if(dialogue.choice_result === 1) {
+				CleaningGame(canvas);
+				return;
+			}
+			if(dialogue.choice_result === 0) {
+				CleaningGameValues.IsOver = 0;
+				return;
+			}
+		}
+		if(CleaningGameValues.IsOver !== -1) {
+			clearInterval(thisInterval);
+			CleaningGameReset();
+			PauseButton.append(canvas);
+			AllowedToPause = true;
+			ap.playTrack(5);
+			ProstejovNamesti(canvas);
+		}
+	}, 100, dialogue, canvas);
 }
 
 function ProstejovObchodJob(canvas) {
 	console.log("pro obchod job");
+	AllowedToPause = false;
+	PauseButton.deleteButton();
+	CashierGame(canvas);
+	let thisInterval = window.setInterval((canvas) => {
+		if(CashierGameValues.IsOver !== -1) {
+			clearInterval(thisInterval);
+			CashierGameReset();
+			PauseButton.append(canvas);
+			AllowedToPause = true;
+			ap.playTrack(5);
+			ProstejovObchod(canvas);
+		}
+	}, 100, canvas);
 }
 
 function ProstejovNastupisteJob(canvas) {
@@ -320,8 +388,8 @@ function ProstejovNastupisteJob(canvas) {
 	AllowedToPause = false;
 	let dialogue = new Dialogue();
 	dialogue.begin(canvas);
-	dialogue.makeBubble(0, TranslatedText[SettingsValues.Language][185].slice(0, -1) + " " + Math.floor(1470 * SettingsValues.MoneyCostIncrease) + " " + TranslatedText[SettingsValues.Language][90]);
-	dialogue.makeBubble(1, TranslationGetMultipleLines(SettingsValues.Language, 186, 2));
+	dialogue.makeBubble(0, TranslatedText[SettingsValues.Language][199].slice(0, -1) + " " + Math.floor(1470 * SettingsValues.MoneyCostIncrease) + " " + TranslatedText[SettingsValues.Language][90]);
+	dialogue.makeBubble(1, TranslationGetMultipleLines(SettingsValues.Language, 200, 2));
 	dialogue.makeChoice(2);
 	
 	let dWaitInterval = window.setInterval((dialogue) => {
@@ -330,23 +398,23 @@ function ProstejovNastupisteJob(canvas) {
 			if(dialogue.choice_result === 1) {
 				if(MoneyAmount >= Math.floor(1470 * SettingsValues.MoneyCostIncrease)) {
 					if(doesHaveTicket) {
-						dialogue.makeBubble(3, TranslatedText[SettingsValues.Language][148]);
+						dialogue.makeBubble(3, TranslatedText[SettingsValues.Language][162]);
 						return;
 					}
 					removeMoney(Math.floor(1470 * SettingsValues.MoneyCostIncrease));
 					ap.playSFX(5);
 					doesHaveTicket = true;
-					dialogue.makeBubble(3, TranslatedText[SettingsValues.Language][188]);
+					dialogue.makeBubble(3, TranslatedText[SettingsValues.Language][202]);
 					return;
 				}
 				else {
-					dialogue.makeBubble(3, TranslatedText[SettingsValues.Language][189]);
+					dialogue.makeBubble(3, TranslatedText[SettingsValues.Language][203]);
 					return;
 				}
 				return;
 			}
 			else {
-				dialogue.makeBubble(3, TranslationGetMultipleLines(SettingsValues.Language, 190, 2));
+				dialogue.makeBubble(3, TranslationGetMultipleLines(SettingsValues.Language, 204, 2));
 				return;
 			}
 		}

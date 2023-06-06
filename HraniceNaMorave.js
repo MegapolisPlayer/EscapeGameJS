@@ -230,7 +230,7 @@ function HraniceNaMoraveNastupiste(canvas) {
 		else {
 			let dialogue = new Dialogue();
 			dialogue.begin(canvas);
-			dialogue.makeBubble(0, TranslatedText[SettingsValues.Language][147]);
+			dialogue.makeBubble(0, TranslatedText[SettingsValues.Language][161]);
 			let thisInterval = window.setInterval((dialogue, canvas) => {
 				if(dialogue.counter === 1) {
 					clearInterval(thisInterval);
@@ -334,9 +334,9 @@ function HraniceNaMoraveNastupisteJob(canvas) {
 	AllowedToPause = false;
 	let dialogue = new Dialogue();
 	dialogue.begin(canvas);
-	dialogue.makeBubble(0, TranslationGetMultipleLines(SettingsValues.Language, 138, 2).slice(0, -1) + " " + Math.floor(650 * SettingsValues.MoneyCostIncrease) + " " + TranslatedText[SettingsValues.Language][90]);
-	dialogue.makeBubble(1, TranslationGetMultipleLines(SettingsValues.Language, 140, 2));
-	dialogue.makeBubble(2, TranslatedText[SettingsValues.Language][142]);
+	dialogue.makeBubble(0, TranslationGetMultipleLines(SettingsValues.Language, 152, 2).slice(0, -1) + " " + Math.floor(650 * SettingsValues.MoneyCostIncrease) + " " + TranslatedText[SettingsValues.Language][90]);
+	dialogue.makeBubble(1, TranslationGetMultipleLines(SettingsValues.Language, 154, 2));
+	dialogue.makeBubble(2, TranslatedText[SettingsValues.Language][156]);
 	dialogue.makeChoice(3);
 	
 	let dWaitInterval = window.setInterval((dialogue) => {
@@ -345,23 +345,23 @@ function HraniceNaMoraveNastupisteJob(canvas) {
 			if(dialogue.choice_result === 1) {
 				if(MoneyAmount >= Math.floor(650 * SettingsValues.MoneyCostIncrease)) {
 					if(doesHaveTicket) {
-						dialogue.makeBubble(4, TranslatedText[SettingsValues.Language][148]);
+						dialogue.makeBubble(4, TranslatedText[SettingsValues.Language][162]);
 						return;
 					}
 					removeMoney(Math.floor(650 * SettingsValues.MoneyCostIncrease));
 					ap.playSFX(5);
 					doesHaveTicket = true;
-					dialogue.makeBubble(4, TranslatedText[SettingsValues.Language][143]);
+					dialogue.makeBubble(4, TranslatedText[SettingsValues.Language][157]);
 					return;
 				}
 				else {
-					dialogue.makeBubble(4, TranslationGetMultipleLines(SettingsValues.Language, 144, 2));
+					dialogue.makeBubble(4, TranslationGetMultipleLines(SettingsValues.Language, 158, 2));
 					return;
 				}
 				return;
 			}
 			else {
-				dialogue.makeBubble(4, TranslatedText[SettingsValues.Language][146]);
+				dialogue.makeBubble(4, TranslatedText[SettingsValues.Language][160]);
 				return;
 			}
 		}

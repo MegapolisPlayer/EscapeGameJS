@@ -321,7 +321,7 @@ class AudioPlayer {
 		this.audioTracks.push(new Audio("res/music/StartingOutWaltzVivace.mp3"));    //credits, ending
 		this.audioTracks.push(new Audio("res/music/AlmostBliss.mp3"));               //waiter minigame
 		this.audioTracks.push(new Audio("res/music/PorchSwingDays.mp3"));            //fishing
-		this.audioTracks.push(new Audio("res/music/AVeryBradySpecial.mp3"));         //ticket sale
+		this.audioTracks.push(new Audio("res/music/AVeryBradySpecial.mp3"));         //info minigame
 		this.audioTracks.push(new Audio("res/music/DevonshireWaltzAllegretto.mp3")); //dialect translation
 		this.audioTracks.push(new Audio("res/music/Nonstop.mp3"));                   //cashier minigame
 		this.audioTracks.push(new Audio("res/music/Cipher.mp3"));                    //cleaning minigame

@@ -21,7 +21,9 @@ function PrerovLoad(canvas, calledbysetstate = false) {
 	pre_Locations[4].src = "res/prerov/becva.jpg";
 	pre_Locations[5].src = "res/map/2.png";
 	
-	PrerovMap(canvas);
+	if(calledbysetstate !== true) {
+		PrerovMap(canvas);
+	}
 	//no condition for pause - either added during HnM phase or added by setstatefile
 }
 
@@ -55,11 +57,11 @@ function Prerov(canvas) {
 	
 	let FirstDialogue = new Dialogue();
 	FirstDialogue.begin(canvas);
-	FirstDialogue.makeBubble(0, TranslationGetMultipleLines(SettingsValues.Language, 149, 2));
-	FirstDialogue.makeBubble(1, TranslationGetMultipleLines(SettingsValues.Language, 151, 2));
-	FirstDialogue.makeBubble(2, TranslationGetMultipleLines(SettingsValues.Language, 153, 2).slice(0, -1) + " " + Math.floor(1220 * SettingsValues.MoneyCostIncrease) + " " + TranslatedText[SettingsValues.Language][90]);
-	FirstDialogue.makeBubble(3, TranslationGetMultipleLines(SettingsValues.Language, 155, 2));
-	FirstDialogue.makeBubble(4, TranslatedText[SettingsValues.Language][157]);	
+	FirstDialogue.makeBubble(0, TranslationGetMultipleLines(SettingsValues.Language, 163, 2));
+	FirstDialogue.makeBubble(1, TranslationGetMultipleLines(SettingsValues.Language, 165, 2));
+	FirstDialogue.makeBubble(2, TranslationGetMultipleLines(SettingsValues.Language, 167, 2).slice(0, -1) + " " + Math.floor(1220 * SettingsValues.MoneyCostIncrease) + " " + TranslatedText[SettingsValues.Language][90]);
+	FirstDialogue.makeBubble(3, TranslationGetMultipleLines(SettingsValues.Language, 169, 2));
+	FirstDialogue.makeBubble(4, TranslatedText[SettingsValues.Language][171]);	
 	
 	let thisInterval = window.setInterval((dialogue, canvas) => {
 		if(dialogue.counter === 5) {
@@ -109,7 +111,7 @@ function PrerovNastupiste(canvas) {
 		else {
 			let dialogue = new Dialogue();
 			dialogue.begin(canvas);
-			dialogue.makeBubble(0, TranslatedText[SettingsValues.Language][147]);
+			dialogue.makeBubble(0, TranslatedText[SettingsValues.Language][161]);
 			let thisInterval = window.setInterval((dialogue, canvas) => {
 				if(dialogue.counter === 1) {
 					clearInterval(thisInterval);
@@ -218,7 +220,7 @@ function PrerovBecva(canvas) {
 		if(GamePaused) { return; }
 		ArrowToNamesti.deleteButton();
 		ArrowToBecvaJob.deleteButton();
-    	PrerovBecvaJob1(canvas);
+    	PrerovBecvaJob(canvas);
 	}, { once: true });
 	canvas.image(pre_Locations[4], 0, 0, canvas.canvas.width, canvas.canvas.height);
 	chr.draw(170, 320, 0.25, canvas);
@@ -228,7 +230,8 @@ function PrerovBecva(canvas) {
 	drawMoneyCount(canvas);
 	RenderStatus(canvas);
 }
-function PrerovBecvaJob1(canvas) {
+function PrerovBecvaJob(canvas) {
+	console.log("pre becva job");
 	AllowedToPause = false;
 	PauseButton.deleteButton();
 	FishGame(canvas);
@@ -249,8 +252,8 @@ function PrerovNastupisteJob(canvas) {
 	AllowedToPause = false;
 	let dialogue = new Dialogue();
 	dialogue.begin(canvas);
-	dialogue.makeBubble(0, TranslationGetMultipleLines(SettingsValues.Language, 158, 2).slice(0, -1) + " " + Math.floor(1220 * SettingsValues.MoneyCostIncrease) + " " + TranslatedText[SettingsValues.Language][90]);
-	dialogue.makeBubble(1, TranslatedText[SettingsValues.Language][160]);
+	dialogue.makeBubble(0, TranslationGetMultipleLines(SettingsValues.Language, 172, 2).slice(0, -1) + " " + Math.floor(1220 * SettingsValues.MoneyCostIncrease) + " " + TranslatedText[SettingsValues.Language][90]);
+	dialogue.makeBubble(1, TranslatedText[SettingsValues.Language][174]);
 	dialogue.makeChoice(2);
 	
 	let dWaitInterval = window.setInterval((dialogue) => {
@@ -259,23 +262,23 @@ function PrerovNastupisteJob(canvas) {
 			if(dialogue.choice_result === 1) {
 				if(MoneyAmount >= Math.floor(1220 * SettingsValues.MoneyCostIncrease)) {
 					if(doesHaveTicket) {
-						dialogue.makeBubble(3, TranslatedText[SettingsValues.Language][148]);
+						dialogue.makeBubble(3, TranslatedText[SettingsValues.Language][162]);
 						return;
 					}
 					removeMoney(Math.floor(1220 * SettingsValues.MoneyCostIncrease));
 					ap.playSFX(5);
 					doesHaveTicket = true;
-					dialogue.makeBubble(3, TranslatedText[SettingsValues.Language][161]);
+					dialogue.makeBubble(3, TranslatedText[SettingsValues.Language][175]);
 					return;
 				}
 				else {
-					dialogue.makeBubble(3, TranslatedText[SettingsValues.Language][162]);
+					dialogue.makeBubble(3, TranslatedText[SettingsValues.Language][176]);
 					return;
 				}
 				return;
 			}
 			else {
-				dialogue.makeBubble(3, TranslatedText[SettingsValues.Language][163]);
+				dialogue.makeBubble(3, TranslatedText[SettingsValues.Language][177]);
 				return;
 			}
 		}

@@ -321,7 +321,7 @@ class AudioPlayer {
 		this.audioTracks.push(new Audio("res/music/StartingOutWaltzVivace.mp3"));    //credits, ending
 		this.audioTracks.push(new Audio("res/music/AlmostBliss.mp3"));               //waiter minigame
 		this.audioTracks.push(new Audio("res/music/PorchSwingDays.mp3"));            //fishing
-		this.audioTracks.push(new Audio("res/music/AVeryBradySpecial.mp3"));         //ticket sale
+		this.audioTracks.push(new Audio("res/music/AVeryBradySpecial.mp3"));         //info minigame
 		this.audioTracks.push(new Audio("res/music/DevonshireWaltzAllegretto.mp3")); //dialect translation
 		this.audioTracks.push(new Audio("res/music/Nonstop.mp3"));                   //cashier minigame
 		this.audioTracks.push(new Audio("res/music/Cipher.mp3"));                    //cleaning minigame
@@ -1240,8 +1240,8 @@ class TableManager {
 				case 2:
 				case 3:
 					//waiting - recieved
-					ap.playSFX(3); //success
 					if(WaiterGameValues.IsOrderSelected === this.tableno) {
+						ap.playSFX(3); //success
 						this.reset();
 						WaiterGameValues.AmountEarned += 15;
 						this.remove();
@@ -1341,7 +1341,7 @@ class TableManager {
 //waiter game - hranice, prostejov
 
 function WaiterGame(canvas) {
-	WaiterGameValues.IsOver = -1;
+	WaiterGameReset();
 	console.log("waiter game");
 	WaiterGameComponentIntro(canvas);
 	let introInterval = window.setInterval((canvas) => {
@@ -1559,8 +1559,7 @@ class LeObject {
 };
 
 function FishGame(canvas) {
-	FishGameValues.LeFishCaught = 0;
-	FishGameValues.IsOver = -1;
+	FishGameReset();
 	console.log("fish game");
 	canvas.clear("#03ddff");
 	FishGameComponentIntro(canvas);
@@ -1691,7 +1690,10 @@ function FishGameComponentMain(canvas) {
 				if(FishGameValues.Length <= 100) {
 					FishGameValues.LengthReverseResize = false;
 					FishGameValues.LengthResize = false;
-					if(IsHauling !== -1) {
+					if(FishObjects.length === 1) {
+						FishObjects.length = 0; //clear array
+					}
+					if(FishGameValues.IsHauling !== -1) {
 						FishObjects.splice(FishGameValues.IsHauling, 1); //splice fails when size = 1, doesnt delete
 						FishGameValues.IsHauling = -1;
 					}
@@ -1731,9 +1733,6 @@ function FishGameComponentMain(canvas) {
 							break;
 					}
 					FishGameValues.TypeOfHauledCargo = -1;
-					if(FishObjects.length === 1) {
-						FishObjects.length = 0; //clear array
-					}
 				}
 			}
 			else {
@@ -1790,26 +1789,71 @@ function FishGameReset() {
 
 let InfodeskGameValues = {
 	IsIntroEnd: false,
-	IsOver: -1
+	IsOver: -1,
+	AmountEarned: 0,
+	
 }
 
 //literally selection minigame - map image and random points - if correct tip (few buttons w/ text) +1 point and money
 //info game
 
 function InfodeskGame(canvas) {
-	TicketSaleGameValues.IsOver = -1;
-	console.log("ticket sale game");
+	InfodeskGameReset();
+	console.log("infodesk game");
+	canvas.clear("#ccc27a");
+	InfodeskGameComponentIntro(canvas);
+	let thisInterval = window.setInterval((canvas) => {
+		if(InfodeskGameValues.IsIntroEnd === true) {
+			clearInterval(thisInterval);
+			InfodeskGameComponentMain(canvas);
+		}
+	}, 100, canvas);
 }
 
 function InfodeskGameComponentIntro(canvas) {
-	canvas.clear("#03ddff");
+	ap.playTrack(12);
+	canvas.clear("#ccc27a");
+	canvas.setnewcolor("#000000");
+	canvas.setfontweight("bold");
+	canvas.text(TranslatedText[SettingsValues.Language][91] + " - " + TranslatedText[SettingsValues.Language][110], 50, 50);
+	canvas.resetfontweight();
+	canvas.textml(TranslationGetMultipleLines(SettingsValues.Language, 111, 5), 50, 100);
+	let ArrowEnd = new Arrow(950, 450, 50, 50, ArrowDirections.Right, canvas);
+	ArrowEnd.button.addEventListener("click", (event) => {
+		ArrowEnd.deleteButton();
+		InfodeskGameValues.IsIntroEnd = true;
+	}, { once: true });
+	canvas.setnewcolor("#333399");
+	canvas.setalign("right");
+	canvas.text(TranslatedText[SettingsValues.Language][92], 930, 490);
+	canvas.setalign("left");
+	ArrowEnd.draw(canvas);
+	canvas.setnewcolor("#ffffff");
 } 
 function InfodeskGameComponentMain(canvas) {
-	canvas.clear("#03ddff");
+	canvas.clear("#ccc27a");
+		//main game
+	timelimitStart(120); //2:00 min
+	let timerInterval = window.setInterval((canvas) => {
+		//amount earned info
+		renderTextAsMinigameStatus(TranslatedText[SettingsValues.Language][116], InfodeskGameValues.AmountEarned, canvas);
+		//time stuff
+		timelimitRender(canvas);
+		if(timelimitIsDone()) {
+			clearInterval(timerInterval);
+			addMoney(InfodeskGameValues.AmountEarned); //10Kc per help
+			window.removeEventListener("click", SetResizeToTrue);	
+			deleteCanvasInputElems(canvas);
+			InfodeskGameValues.IsOver = 1;
+			return;
+		}
+	}, 100, canvas);
 }
 
-function InfodeskGameGameReset() {
+function InfodeskGameReset() {
+	InfodeskGameValues.IsIntroEnd = -1;
 	InfodeskGameValues.IsOver = -1;
+	InfodeskGameValues.AmountEarned = 0;
 }
 
 //dialect translation - nezamyslice
@@ -1818,23 +1862,55 @@ function InfodeskGameGameReset() {
 
 let DialectTranslationGameValues = {
 	IsIntroEnd: false,
-	IsOver: -1
+	IsOver: -1,
+	AmountEarned: 0,
+	AmountTranslated: 0,
 }
 
 function DialectTranslationGame(canvas) {
-	WaiterGameValues.IsOver = -1;
-	console.log("waiter game");
+	DialectTranslationGameReset();
+	console.log("translation game");
+	canvas.clear("#ffffff");
+	DialectTranslationGameComponentIntro(canvas);
+	let thisInterval = window.setInterval((canvas) => {
+		if(DialectTranslationGameValues.IsIntroEnd === true) {
+			clearInterval(thisInterval);
+			DialectTranslationGameComponentMain(canvas);
+		}
+	}, 100, canvas);
 }
 
 function DialectTranslationGameComponentIntro(canvas) {
-	canvas.clear("#03ddff");
+	ap.playTrack(13);
+	canvas.clear("#ffffff");
+	canvas.setnewcolor("#000000");
+	canvas.setfontweight("bold");
+	canvas.text(TranslatedText[SettingsValues.Language][91] + " - " + TranslatedText[SettingsValues.Language][117], 50, 50);
+	canvas.resetfontweight();
+	canvas.textml(TranslationGetMultipleLines(SettingsValues.Language, 118, 5), 50, 100);
+	let ArrowEnd = new Arrow(950, 450, 50, 50, ArrowDirections.Right, canvas);
+	ArrowEnd.button.addEventListener("click", (event) => {
+		ArrowEnd.deleteButton();
+		DialectTranslationGameValues.IsIntroEnd = true;
+	}, { once: true });
+	canvas.setnewcolor("#333399");
+	canvas.setalign("right");
+	canvas.text(TranslatedText[SettingsValues.Language][92], 930, 490);
+	canvas.setalign("left");
+	ArrowEnd.draw(canvas);
+	canvas.setnewcolor("#ffffff");
 } 
 function DialectTranslationGameComponentMain(canvas) {
-	canvas.clear("#03ddff");
+	canvas.clear("#ffffff");
+	renderTextAsMinigameStatus(TranslatedText[SettingsValues.Language][123], DialectTranslationGameValues.AmountEarned, canvas);
+	DialectTranslationGameValues.IsOver = 1;
 }
 
 function DialectTranslationGameReset() {
-	WaiterGameValues.IsOver = -1;
+	DialectTranslationGameValues.IsIntroEnd = false;
+	DialectTranslationGameValues.IsOver = -1;
+	DialectTranslationGameValues.AmountEarned = 0;
+	DialectTranslationGameValues.AmountTranslated = 0;
 }
 
 //cashier - prostejov, olomouc
@@ -1848,63 +1924,169 @@ let CashierGameValues = {
 }
 
 function CashierGame(canvas) {
-	CashierGameValues.IsOver = -1;
+	CashierGameReset();
 	console.log("cashier game");
+	canvas.clear("#dddddd");
+	CashierGameComponentIntro(canvas);
+	let thisInterval = window.setInterval((canvas) => {
+		if(CashierGameValues.IsIntroEnd === true) {
+			clearInterval(thisInterval);
+			CashierGameComponentMain(canvas);
+		}
+	}, 100, canvas);
 }
 
 function CashierGameComponentIntro(canvas) {
-	
+	ap.playTrack(14);
+	canvas.clear("#dddddd");
+	canvas.setnewcolor("#000000");
+	canvas.setfontweight("bold");
+	canvas.text(TranslatedText[SettingsValues.Language][91] + " - " + TranslatedText[SettingsValues.Language][124], 50, 50);
+	canvas.resetfontweight();
+	canvas.textml(TranslationGetMultipleLines(SettingsValues.Language, 125, 5), 50, 100);
+	let ArrowEnd = new Arrow(950, 450, 50, 50, ArrowDirections.Right, canvas);
+	ArrowEnd.button.addEventListener("click", (event) => {
+		ArrowEnd.deleteButton();
+		CashierGameValues.IsIntroEnd = true;
+	}, { once: true });
+	canvas.setnewcolor("#333399");
+	canvas.setalign("right");
+	canvas.text(TranslatedText[SettingsValues.Language][92], 930, 490);
+	canvas.setalign("left");
+	ArrowEnd.draw(canvas);
+	canvas.setnewcolor("#ffffff");
 } 
 function CashierGameComponentMain(canvas) {
-	
+	CashierGameValues.IsOver = 1;
 }
 
 function CashierGameReset() {
+	CashierGameValues.IsIntroEnd = false;
 	CashierGameValues.IsOver = -1;
 }
 
 //cleaning the benches on the square - olomouc
 
 let CleaningGameValues = {
+	IsIntroEnd: false,
 	IsOver: -1
 }
 
 function CleaningGame(canvas) {
-	CleaningGameValues.IsOver = -1;
+	CleaningGameReset();
 	console.log("cleaning game");
+	canvas.clear("#9c9c9c");
+	CleaningGameComponentIntro(canvas);
+	let thisInterval = window.setInterval((canvas) => {
+		if(CleaningGameValues.IsIntroEnd === true) {
+			clearInterval(thisInterval);
+			CleaningGameComponentMain(canvas);
+		}
+	}, 100, canvas);
 }
 
 function CleaningGameComponentIntro(canvas) {
-
+	ap.playTrack(15);
+	canvas.clear("#9c9c9c");
+	canvas.setnewcolor("#000000");
+	canvas.setfontweight("bold");
+	canvas.text(TranslatedText[SettingsValues.Language][91] + " - " + TranslatedText[SettingsValues.Language][131], 50, 50);
+	canvas.resetfontweight();
+	canvas.textml(TranslationGetMultipleLines(SettingsValues.Language, 132, 5), 50, 100);
+	let ArrowEnd = new Arrow(950, 450, 50, 50, ArrowDirections.Right, canvas);
+	ArrowEnd.button.addEventListener("click", (event) => {
+		ArrowEnd.deleteButton();
+		CleaningGameValues.IsIntroEnd = true;
+	}, { once: true });
+	canvas.setnewcolor("#333399");
+	canvas.setalign("right");
+	canvas.text(TranslatedText[SettingsValues.Language][92], 930, 490);
+	canvas.setalign("left");
+	ArrowEnd.draw(canvas);
+	canvas.setnewcolor("#ffffff");
 }
 function CleaningGameComponentMain(canvas) {
-
+	CleaningGameValues.IsOver = 1;
 }
 
 function CleaningGameReset(canvas) {
+	CleaningGameValues.IsIntroEnd = false;
 	CleaningGameValues.IsOver = -1;
 }
 
 //cheese making - olomouc
+
+//build factory and then run it
 
 let CheeseGameValues = {
 	IsIntroEnd: false,
 	IsOver: -1
 }
 
+let CheesemakingImages = [];
+let CheesemakingImagesLoaded = 0;
+for(let Id = 0; Id < 5; Id++) {
+	CheesemakingImages.push(new Image());
+	CheesemakingImages[Id].onload = () => { CheesemakingImagesLoaded++ };
+}
+
+CheesemakingImages[0].src = "res/Quark.png";
+CheesemakingImages[1].src = "res/FormedQuark.png";
+CheesemakingImages[2].src = "res/TvaruzekDirty.png";
+CheesemakingImages[3].src = "res/TvaruzekDone.png";
+CheesemakingImages[4].src = "res/TvaruzekFailed.png";
+
+let CheesemakingThingsImages = [];
+let CheesemakingThingsImagesLoaded = 0;
+for(let Id = 0; Id < 4; Id++) {
+	CheesemakingThingsImages.push(new Image());
+	CheesemakingThingsImages[Id].onload = () => { CheesemakingThingsImagesLoaded++ };
+}
+
+CheesemakingThingsImages[0].src = "res/SaltTable.png";
+CheesemakingThingsImages[1].src = "res/Rack.png";
+CheesemakingThingsImages[2].src = "res/Bath.png";
+CheesemakingThingsImages[3].src = "res/Cooler.png";
+
 function CheeseGame(canvas) {
-	CheeseGameValues.IsOver = -1;
+	CheeseGameReset();
 	console.log("cheese game");
+	canvas.clear("#404040");
+	CheeseGameComponentIntro(canvas);
+	let thisInterval = window.setInterval((canvas) => {
+		if(CheeseGameValues.IsIntroEnd === true) {
+			clearInterval(thisInterval);
+			CheeseGameComponentMain(canvas);
+		}
+	}, 100, canvas);
 }
 
 function CheeseGameComponentIntro(canvas) {
-
+	ap.playTrack(16);
+	canvas.clear("#404040");
+	canvas.setnewcolor("#000000");
+	canvas.setfontweight("bold");
+	canvas.text(TranslatedText[SettingsValues.Language][91] + " - " + TranslatedText[SettingsValues.Language][138], 50, 50);
+	canvas.resetfontweight();
+	canvas.textml(TranslationGetMultipleLines(SettingsValues.Language, 139, 5), 50, 100);
+	let ArrowEnd = new Arrow(950, 450, 50, 50, ArrowDirections.Right, canvas);
+	ArrowEnd.button.addEventListener("click", (event) => {
+		ArrowEnd.deleteButton();
+		CheeseGameValues.IsIntroEnd = true;
+	}, { once: true });
+	canvas.setnewcolor("#333399");
+	canvas.setalign("right");
+	canvas.text(TranslatedText[SettingsValues.Language][92], 930, 490);
+	canvas.setalign("left");
+	ArrowEnd.draw(canvas);
+	canvas.setnewcolor("#ffffff");
 } 
 function CheeseGameComponentMain(canvas) {
-	
+	CheeseGameValues.IsOver = 1;
 }
 
 function CheeseGameReset() {
+	CheeseGameValues.IsIntroEnd = false;
 	CheeseGameValues.IsOver = -1;
 }
 
@@ -1915,26 +2097,75 @@ function CheeseGameReset() {
 
 let DefenseGameValues = {
 	IsIntroEnd: false,
-	IsOver: -1
+	IsOver: -1,
+	WavesRemaining: 10,
+	HasDefended: false,
 }
 
+let ArmyImages = [];
+let ArmyImagesLoaded = 0;
+for(let Id = 0; Id < 10; Id++) {
+	ArmyImages.push(new Image());
+	ArmyImages[Id].onload = () => { ArmyImagesLoaded++ };
+}
+
+//1st - okay, 2nd - destroyed
+
+ArmyImages[0].src = "res/Antitank1.png";
+ArmyImages[1].src = "res/Antitank2.png";
+ArmyImages[2].src = "res/Tank1.png";
+ArmyImages[3].src = "res/Tank2.png";
+ArmyImages[4].src = "res/Pillbox1.png";
+ArmyImages[5].src = "res/Pillbox2.png";
+ArmyImages[6].src = "res/UAV.png";
+ArmyImages[7].src = "res/AirSupport.png";
+ArmyImages[8].src = "res/Shell.png";
+ArmyImages[9].src = "res/Truck.png";
+
 function DefenseGame(canvas) {
-	DefenseGameValues.IsOver = -1;
+	DefenseGameReset();
 	console.log("defense game");
+	canvas.clear("#36291b");
+	DefenseGameComponentIntro(canvas);
+	let thisInterval = window.setInterval((canvas) => {
+		if(DefenseGameValues.IsIntroEnd === true) {
+			clearInterval(thisInterval);
+			DefenseGameComponentMain(canvas);
+		}
+	}, 100, canvas);
 }
 
 function DefenseGameComponentIntro(canvas) {
-	canvas.clear("#03ddff");
+	ap.playTrack(17);
+	canvas.clear("#36291b");
+	canvas.setnewcolor("#000000");
+	canvas.setfontweight("bold");
+	canvas.text(TranslatedText[SettingsValues.Language][91] + " - " + TranslatedText[SettingsValues.Language][145], 50, 50);
+	canvas.resetfontweight();
+	canvas.textml(TranslationGetMultipleLines(SettingsValues.Language, 146, 5), 50, 100);
+	let ArrowEnd = new Arrow(950, 450, 50, 50, ArrowDirections.Right, canvas);
+	ArrowEnd.button.addEventListener("click", (event) => {
+		ArrowEnd.deleteButton();
+		DefenseGameValues.IsIntroEnd = true;
+	}, { once: true });
+	canvas.setnewcolor("#333399");
+	canvas.setalign("right");
+	canvas.text(TranslatedText[SettingsValues.Language][92], 930, 490);
+	canvas.setalign("left");
+	ArrowEnd.draw(canvas);
+	canvas.setnewcolor("#ffffff");
 } 
 function DefenseGameComponentMain(canvas) {
-	canvas.clear("#03ddff");
+	canvas.clear("#36291b");
+	DefenseGameValues.IsOver = 1;
+	DefenseGameValues.HasDefended = true;
 }
 
 function DefenseGameReset() {
 	DefenseGameValues.IsOver = -1;
 }
 
-//ostrava not really a big location
+//ostrava not really a big location, no minigames
 //global for all locations, HnM is just first
 
 let locationId = 0; //HnM, Prerov, etc... (HnM = 1, 0 is for main menu)
@@ -2167,7 +2398,7 @@ function HraniceNaMoraveNastupiste(canvas) {
 		else {
 			let dialogue = new Dialogue();
 			dialogue.begin(canvas);
-			dialogue.makeBubble(0, TranslatedText[SettingsValues.Language][147]);
+			dialogue.makeBubble(0, TranslatedText[SettingsValues.Language][161]);
 			let thisInterval = window.setInterval((dialogue, canvas) => {
 				if(dialogue.counter === 1) {
 					clearInterval(thisInterval);
@@ -2271,9 +2502,9 @@ function HraniceNaMoraveNastupisteJob(canvas) {
 	AllowedToPause = false;
 	let dialogue = new Dialogue();
 	dialogue.begin(canvas);
-	dialogue.makeBubble(0, TranslationGetMultipleLines(SettingsValues.Language, 138, 2).slice(0, -1) + " " + Math.floor(650 * SettingsValues.MoneyCostIncrease) + " " + TranslatedText[SettingsValues.Language][90]);
-	dialogue.makeBubble(1, TranslationGetMultipleLines(SettingsValues.Language, 140, 2));
-	dialogue.makeBubble(2, TranslatedText[SettingsValues.Language][142]);
+	dialogue.makeBubble(0, TranslationGetMultipleLines(SettingsValues.Language, 152, 2).slice(0, -1) + " " + Math.floor(650 * SettingsValues.MoneyCostIncrease) + " " + TranslatedText[SettingsValues.Language][90]);
+	dialogue.makeBubble(1, TranslationGetMultipleLines(SettingsValues.Language, 154, 2));
+	dialogue.makeBubble(2, TranslatedText[SettingsValues.Language][156]);
 	dialogue.makeChoice(3);
 	
 	let dWaitInterval = window.setInterval((dialogue) => {
@@ -2282,23 +2513,23 @@ function HraniceNaMoraveNastupisteJob(canvas) {
 			if(dialogue.choice_result === 1) {
 				if(MoneyAmount >= Math.floor(650 * SettingsValues.MoneyCostIncrease)) {
 					if(doesHaveTicket) {
-						dialogue.makeBubble(4, TranslatedText[SettingsValues.Language][148]);
+						dialogue.makeBubble(4, TranslatedText[SettingsValues.Language][162]);
 						return;
 					}
 					removeMoney(Math.floor(650 * SettingsValues.MoneyCostIncrease));
 					ap.playSFX(5);
 					doesHaveTicket = true;
-					dialogue.makeBubble(4, TranslatedText[SettingsValues.Language][143]);
+					dialogue.makeBubble(4, TranslatedText[SettingsValues.Language][157]);
 					return;
 				}
 				else {
-					dialogue.makeBubble(4, TranslationGetMultipleLines(SettingsValues.Language, 144, 2));
+					dialogue.makeBubble(4, TranslationGetMultipleLines(SettingsValues.Language, 158, 2));
 					return;
 				}
 				return;
 			}
 			else {
-				dialogue.makeBubble(4, TranslatedText[SettingsValues.Language][146]);
+				dialogue.makeBubble(4, TranslatedText[SettingsValues.Language][160]);
 				return;
 			}
 		}
@@ -2336,7 +2567,9 @@ function PrerovLoad(canvas, calledbysetstate = false) {
 	pre_Locations[4].src = "res/prerov/becva.jpg";
 	pre_Locations[5].src = "res/map/2.png";
 	
-	PrerovMap(canvas);
+	if(calledbysetstate !== true) {
+		PrerovMap(canvas);
+	}
 	//no condition for pause - either added during HnM phase or added by setstatefile
 }
 
@@ -2370,11 +2603,11 @@ function Prerov(canvas) {
 	
 	let FirstDialogue = new Dialogue();
 	FirstDialogue.begin(canvas);
-	FirstDialogue.makeBubble(0, TranslationGetMultipleLines(SettingsValues.Language, 149, 2));
-	FirstDialogue.makeBubble(1, TranslationGetMultipleLines(SettingsValues.Language, 151, 2));
-	FirstDialogue.makeBubble(2, TranslationGetMultipleLines(SettingsValues.Language, 153, 2).slice(0, -1) + " " + Math.floor(1220 * SettingsValues.MoneyCostIncrease) + " " + TranslatedText[SettingsValues.Language][90]);
-	FirstDialogue.makeBubble(3, TranslationGetMultipleLines(SettingsValues.Language, 155, 2));
-	FirstDialogue.makeBubble(4, TranslatedText[SettingsValues.Language][157]);	
+	FirstDialogue.makeBubble(0, TranslationGetMultipleLines(SettingsValues.Language, 163, 2));
+	FirstDialogue.makeBubble(1, TranslationGetMultipleLines(SettingsValues.Language, 165, 2));
+	FirstDialogue.makeBubble(2, TranslationGetMultipleLines(SettingsValues.Language, 167, 2).slice(0, -1) + " " + Math.floor(1220 * SettingsValues.MoneyCostIncrease) + " " + TranslatedText[SettingsValues.Language][90]);
+	FirstDialogue.makeBubble(3, TranslationGetMultipleLines(SettingsValues.Language, 169, 2));
+	FirstDialogue.makeBubble(4, TranslatedText[SettingsValues.Language][171]);	
 	
 	let thisInterval = window.setInterval((dialogue, canvas) => {
 		if(dialogue.counter === 5) {
@@ -2424,7 +2657,7 @@ function PrerovNastupiste(canvas) {
 		else {
 			let dialogue = new Dialogue();
 			dialogue.begin(canvas);
-			dialogue.makeBubble(0, TranslatedText[SettingsValues.Language][147]);
+			dialogue.makeBubble(0, TranslatedText[SettingsValues.Language][161]);
 			let thisInterval = window.setInterval((dialogue, canvas) => {
 				if(dialogue.counter === 1) {
 					clearInterval(thisInterval);
@@ -2533,7 +2766,7 @@ function PrerovBecva(canvas) {
 		if(GamePaused) { return; }
 		ArrowToNamesti.deleteButton();
 		ArrowToBecvaJob.deleteButton();
-    	PrerovBecvaJob1(canvas);
+    	PrerovBecvaJob(canvas);
 	}, { once: true });
 	canvas.image(pre_Locations[4], 0, 0, canvas.canvas.width, canvas.canvas.height);
 	chr.draw(170, 320, 0.25, canvas);
@@ -2543,7 +2776,8 @@ function PrerovBecva(canvas) {
 	drawMoneyCount(canvas);
 	RenderStatus(canvas);
 }
-function PrerovBecvaJob1(canvas) {
+function PrerovBecvaJob(canvas) {
+	console.log("pre becva job");
 	AllowedToPause = false;
 	PauseButton.deleteButton();
 	FishGame(canvas);
@@ -2564,8 +2798,8 @@ function PrerovNastupisteJob(canvas) {
 	AllowedToPause = false;
 	let dialogue = new Dialogue();
 	dialogue.begin(canvas);
-	dialogue.makeBubble(0, TranslationGetMultipleLines(SettingsValues.Language, 158, 2).slice(0, -1) + " " + Math.floor(1220 * SettingsValues.MoneyCostIncrease) + " " + TranslatedText[SettingsValues.Language][90]);
-	dialogue.makeBubble(1, TranslatedText[SettingsValues.Language][160]);
+	dialogue.makeBubble(0, TranslationGetMultipleLines(SettingsValues.Language, 172, 2).slice(0, -1) + " " + Math.floor(1220 * SettingsValues.MoneyCostIncrease) + " " + TranslatedText[SettingsValues.Language][90]);
+	dialogue.makeBubble(1, TranslatedText[SettingsValues.Language][174]);
 	dialogue.makeChoice(2);
 	
 	let dWaitInterval = window.setInterval((dialogue) => {
@@ -2574,23 +2808,23 @@ function PrerovNastupisteJob(canvas) {
 			if(dialogue.choice_result === 1) {
 				if(MoneyAmount >= Math.floor(1220 * SettingsValues.MoneyCostIncrease)) {
 					if(doesHaveTicket) {
-						dialogue.makeBubble(3, TranslatedText[SettingsValues.Language][148]);
+						dialogue.makeBubble(3, TranslatedText[SettingsValues.Language][162]);
 						return;
 					}
 					removeMoney(Math.floor(1220 * SettingsValues.MoneyCostIncrease));
 					ap.playSFX(5);
 					doesHaveTicket = true;
-					dialogue.makeBubble(3, TranslatedText[SettingsValues.Language][161]);
+					dialogue.makeBubble(3, TranslatedText[SettingsValues.Language][175]);
 					return;
 				}
 				else {
-					dialogue.makeBubble(3, TranslatedText[SettingsValues.Language][162]);
+					dialogue.makeBubble(3, TranslatedText[SettingsValues.Language][176]);
 					return;
 				}
 				return;
 			}
 			else {
-				dialogue.makeBubble(3, TranslatedText[SettingsValues.Language][163]);
+				dialogue.makeBubble(3, TranslatedText[SettingsValues.Language][177]);
 				return;
 			}
 		}
@@ -2612,7 +2846,7 @@ function NezamysliceImageLoaded() {
 	nzm_AmountLoadedImages++;
 }
 
-function NezamysliceLoad(canvas) {
+function NezamysliceLoad(canvas, calledbysetstate = false) {
 	AllowedToPause = false;	
 	timerPause();
 	canvas.loadingMsg();
@@ -2627,7 +2861,9 @@ function NezamysliceLoad(canvas) {
 	nzm_Locations[3].src = "res/nezamyslice/podnik_vnitrek.jpg";
 	nzm_Locations[4].src = "res/map/3.png";
 	
-	NezamysliceMap(canvas);
+	if(calledbysetstate !== true) {
+		NezamysliceMap(canvas);
+	}
 }
 
 function NezamysliceMap(canvas) {
@@ -2660,10 +2896,10 @@ function Nezamyslice(canvas) {
 
 	let FirstDialogue = new Dialogue();
 	FirstDialogue.begin(canvas);
-	FirstDialogue.makeBubble(0, TranslationGetMultipleLines(SettingsValues.Language, 164, 2));
-	FirstDialogue.makeBubble(1, TranslationGetMultipleLines(SettingsValues.Language, 166, 2));
-	FirstDialogue.makeBubble(2, TranslationGetMultipleLines(SettingsValues.Language, 168, 2));
-	FirstDialogue.makeBubble(3, TranslatedText[SettingsValues.Language][170].slice(0, -1) + " " + Math.floor(940 * SettingsValues.MoneyCostIncrease) + " " + TranslatedText[SettingsValues.Language][90]);	
+	FirstDialogue.makeBubble(0, TranslationGetMultipleLines(SettingsValues.Language, 178, 2));
+	FirstDialogue.makeBubble(1, TranslationGetMultipleLines(SettingsValues.Language, 180, 2));
+	FirstDialogue.makeBubble(2, TranslationGetMultipleLines(SettingsValues.Language, 182, 2));
+	FirstDialogue.makeBubble(3, TranslatedText[SettingsValues.Language][184].slice(0, -1) + " " + Math.floor(940 * SettingsValues.MoneyCostIncrease) + " " + TranslatedText[SettingsValues.Language][90]);	
 	
 	let thisInterval = window.setInterval((dialogue, canvas) => {
 		if(dialogue.counter === 4) {
@@ -2712,7 +2948,7 @@ function NezamysliceNastupiste(canvas) {
 		else {
 			let dialogue = new Dialogue();
 			dialogue.begin(canvas);
-			dialogue.makeBubble(0, TranslatedText[SettingsValues.Language][147]);
+			dialogue.makeBubble(0, TranslatedText[SettingsValues.Language][161]);
 			let thisInterval = window.setInterval((dialogue, canvas) => {
 				if(dialogue.counter === 1) {
 					clearInterval(thisInterval);
@@ -2742,8 +2978,8 @@ function NezamysliceNadrazi(canvas) {
 	info.button.addEventListener("click", () => {
 		if(GamePaused) { return; }
 		info.deleteButton();
-		ArrowToNadrazi.deleteButton();
-		ArrowToTrain.deleteButton();
+		ArrowToNastupiste.deleteButton();
+		ArrowToPodnikVenek.deleteButton();
 		NezamysliceNadraziJob(canvas);
 	}, { once: true });
 
@@ -2765,8 +3001,7 @@ function NezamysliceNadrazi(canvas) {
 	}, { once: true });
 	
 	canvas.image(nzm_Locations[1], 0, 0, canvas.canvas.width, canvas.canvas.height);
-	chr.draw(250, 250, 0.5, canvas);
-	info.draw(750, 250, 0.5, canvas);
+	info.draw(750, 140, 0.7, canvas);
 	ArrowToNastupiste.draw(canvas);
 	ArrowToPodnikVenek.draw(canvas);
 	PauseButton.draw(canvas);
@@ -2834,10 +3069,97 @@ function NezamyslicePodnikVnitrek(canvas) {
 
 function NezamysliceNadraziJob(canvas) {
 	console.log("nzm nadrazi job");
+	AllowedToPause = false;
+	PauseButton.deleteButton();
+	let dialogue = new Dialogue();
+	dialogue.begin(canvas);
+	dialogue.makeBubble(0, TranslationGetMultipleLines(SettingsValues.Language, 228, 2));
+	dialogue.makeBubble(1, TranslatedText[SettingsValues.Language][230]);
+	dialogue.makeChoice(2);
+	
+	let dWaitInterval = window.setInterval((dialogue) => {
+		if(dialogue.choice_result !== -1) {
+			clearInterval(dWaitInterval);
+			if(dialogue.choice_result === 1) {
+				dialogue.makeBubble(3, TranslatedText[SettingsValues.Language][231]);
+				return;
+			}
+			else {
+				dialogue.makeBubble(3, TranslatedText[SettingsValues.Language][232]);
+				return;
+			}
+		}
+	}, 100, dialogue);
+	
+	let thisInterval = window.setInterval((dialogue, canvas) => {
+		if(dialogue.counter === 4) {
+			dialogue.end();
+			if(dialogue.choice_result === 1) {
+				InfodeskGame(canvas);
+				return;
+			}
+			if(dialogue.choice_result === 0) {
+				InfodeskGameValues.IsOver = 0;
+				return;
+			}
+		}
+		if(InfodeskGameValues.IsOver !== -1) {
+			clearInterval(thisInterval);
+			InfodeskGameReset();
+			PauseButton.append(canvas);
+			AllowedToPause = true;
+			ap.playTrack(4);
+			NezamysliceNadrazi(canvas);
+		}
+	}, 100, dialogue, canvas);
 }
 
 function NezamyslicePodnikVnitrekJob(canvas) {
 	console.log("nzm podnik vnitrek job");
+	AllowedToPause = false;
+	PauseButton.deleteButton();
+	let dialogue = new Dialogue();
+	dialogue.begin(canvas);
+	dialogue.makeBubble(0, TranslatedText[SettingsValues.Language][233]);
+	dialogue.makeBubble(1, TranslationGetMultipleLines(SettingsValues.Language, 234, 2));
+	dialogue.makeBubble(2, TranslatedText[SettingsValues.Language][236]);
+	dialogue.makeChoice(3);
+	
+	let dWaitInterval = window.setInterval((dialogue) => {
+		if(dialogue.choice_result !== -1) {
+			clearInterval(dWaitInterval);
+			if(dialogue.choice_result === 1) {
+				dialogue.makeBubble(4, TranslatedText[SettingsValues.Language][237]);
+				return;
+			}
+			else {
+				dialogue.makeBubble(4, TranslatedText[SettingsValues.Language][238]);
+				return;
+			}
+		}
+	}, 100, dialogue);
+	
+	let thisInterval = window.setInterval((dialogue, canvas) => {
+		if(dialogue.counter === 5) {
+			dialogue.end();
+			if(dialogue.choice_result === 1) {
+				DialectTranslationGame(canvas);
+				return;
+			}
+			if(dialogue.choice_result === 0) {
+				DialectTranslationGameValues.IsOver = 0;
+				return;
+			}
+		}
+		if(DialectTranslationGameValues.IsOver !== -1) {
+			clearInterval(thisInterval);
+			DialectTranslationGameReset();
+			PauseButton.append(canvas);
+			AllowedToPause = true;
+			ap.playTrack(4);
+			NezamyslicePodnikVnitrek(canvas);
+		}
+	}, 100, dialogue, canvas);
 }
 
 function NezamysliceNastupisteJob(canvas) {
@@ -2845,8 +3167,8 @@ function NezamysliceNastupisteJob(canvas) {
 	AllowedToPause = false;
 	let dialogue = new Dialogue();
 	dialogue.begin(canvas);
-	dialogue.makeBubble(0, TranslationGetMultipleLines(SettingsValues.Language, 171, 2).slice(0, -1) + " " + Math.floor(940 * SettingsValues.MoneyCostIncrease) + " " + TranslatedText[SettingsValues.Language][90]);
-	dialogue.makeBubble(1, TranslationGetMultipleLines(SettingsValues.Language, 173, 2));
+	dialogue.makeBubble(0, TranslationGetMultipleLines(SettingsValues.Language, 185, 2).slice(0, -1) + " " + Math.floor(940 * SettingsValues.MoneyCostIncrease) + " " + TranslatedText[SettingsValues.Language][90]);
+	dialogue.makeBubble(1, TranslationGetMultipleLines(SettingsValues.Language, 187, 2));
 	dialogue.makeChoice(2);
 	
 	let dWaitInterval = window.setInterval((dialogue) => {
@@ -2855,23 +3177,23 @@ function NezamysliceNastupisteJob(canvas) {
 			if(dialogue.choice_result === 1) {
 				if(MoneyAmount >= Math.floor(940 * SettingsValues.MoneyCostIncrease)) {
 					if(doesHaveTicket) {
-						dialogue.makeBubble(3, TranslatedText[SettingsValues.Language][148]);
+						dialogue.makeBubble(3, TranslatedText[SettingsValues.Language][162]);
 						return;
 					}
 					removeMoney(Math.floor(940 * SettingsValues.MoneyCostIncrease));
 					doesHaveTicket = true;
 					ap.playSFX(5);
-					dialogue.makeBubble(3, TranslatedText[SettingsValues.Language][175]);
+					dialogue.makeBubble(3, TranslatedText[SettingsValues.Language][189]);
 					return;
 				}
 				else {
-					dialogue.makeBubble(3, TranslatedText[SettingsValues.Language][176]);
+					dialogue.makeBubble(3, TranslatedText[SettingsValues.Language][190]);
 					return;
 				}
 				return;
 			}
 			else {
-				dialogue.makeBubble(3, TranslatedText[SettingsValues.Language][177]);
+				dialogue.makeBubble(3, TranslatedText[SettingsValues.Language][191]);
 				return;
 			}
 		}
@@ -2893,7 +3215,7 @@ function ProstejovImageLoaded() {
 	pro_AmountLoadedImages++;
 }
 
-function ProstejovLoad(canvas) {
+function ProstejovLoad(canvas, calledbysetstate = false) {
 	AllowedToPause = false;	
 	timerPause();
 	canvas.loadingMsg();
@@ -2909,7 +3231,9 @@ function ProstejovLoad(canvas) {
 	pro_Locations[4].src = "res/prostejov/cafe.jpg";
 	pro_Locations[5].src = "res/map/4.png";
 	
-	ProstejovMap(canvas);
+	if(calledbysetstate !== true) {
+		ProstejovMap(canvas);
+	}
 }
 
 function ProstejovMap(canvas) {
@@ -2942,13 +3266,13 @@ function Prostejov(canvas) {
 	
 	let FirstDialogue = new Dialogue();
 	FirstDialogue.begin(canvas);
-	FirstDialogue.makeBubble(0, TranslationGetMultipleLines(SettingsValues.Language, 178, 2));
-	FirstDialogue.makeBubble(1, TranslationGetMultipleLines(SettingsValues.Language, 180, 2));
+	FirstDialogue.makeBubble(0, TranslationGetMultipleLines(SettingsValues.Language, 192, 2));
+	FirstDialogue.makeBubble(1, TranslationGetMultipleLines(SettingsValues.Language, 194, 2));
 	FirstDialogue.makeBubble(2, 
-		(TranslatedText[SettingsValues.Language][182].slice(0, -1) + " " + 
+		(TranslatedText[SettingsValues.Language][196].slice(0, -1) + " " + 
 		Math.floor(1470 * SettingsValues.MoneyCostIncrease) + " "  + TranslatedText[SettingsValues.Language][90])
-		+ "\n" + TranslatedText[SettingsValues.Language][183]);
-	FirstDialogue.makeBubble(3, TranslatedText[SettingsValues.Language][184]);	
+		+ "\n" + TranslatedText[SettingsValues.Language][197]);
+	FirstDialogue.makeBubble(3, TranslatedText[SettingsValues.Language][198]);	
 	
 	let thisInterval = window.setInterval((dialogue, canvas) => {
 		if(dialogue.counter === 4) {
@@ -3103,9 +3427,17 @@ function ProstejovObchod(canvas) {
 	console.log("pro obchod");
 	localLocationId = 3;
 
+	let ArrowToJob = new Arrow(300, 200, 100, 100, ArrowDirections.Here, canvas);
+	ArrowToJob.button.addEventListener("click", () => {
+		if(GamePaused) { return; }
+		ArrowToJob.deleteButton();
+		ArrowToNamesti.deleteButton();
+    	ProstejovObchodJob(canvas);
+	}, { once: true });
 	let ArrowToNamesti = new Arrow(900, 400, 100, 100, ArrowDirections.Down, canvas);
 	ArrowToNamesti.button.addEventListener("click", () => {
 		if(GamePaused) { return; }
+		ArrowToJob.deleteButton();
 		ArrowToNamesti.deleteButton();
     	ProstejovNamesti(canvas);
 	}, { once: true });
@@ -3113,6 +3445,7 @@ function ProstejovObchod(canvas) {
 	canvas.image(pro_Locations[3], 0, 0, canvas.canvas.width, canvas.canvas.height);
 	chr.draw(800, 150, 0.8, canvas);
 	ArrowToNamesti.draw(canvas);
+	ArrowToJob.draw(canvas);
 	PauseButton.draw(canvas);
 	drawMoneyCount(canvas);
 	RenderStatus(canvas);
@@ -3126,6 +3459,7 @@ function ProstejovCafe(canvas) {
 	
 	ArrowToNamesti.button.addEventListener("click", () => {
 		if(GamePaused) { return; }
+		cook.deleteButton();
 		ArrowToNamesti.deleteButton();
     	ProstejovNamesti(canvas);
 	}, { once: true });
@@ -3197,10 +3531,66 @@ function ProstejovCafeWaiterJob(canvas) {
 
 function ProstejovNamestiJob(canvas) {
 	console.log("pro namesti job");
+	AllowedToPause = false;
+	PauseButton.deleteButton();
+	let dialogue = new Dialogue();
+	dialogue.begin(canvas);
+	dialogue.makeBubble(0, TranslationGetMultipleLines(SettingsValues.Language, 239, 2));
+	dialogue.makeBubble(1, TranslatedText[SettingsValues.Language][241]);
+	dialogue.makeChoice(2);
+	
+	let dWaitInterval = window.setInterval((dialogue) => {
+		if(dialogue.choice_result !== -1) {
+			clearInterval(dWaitInterval);
+			if(dialogue.choice_result === 1) {
+				dialogue.makeBubble(3, TranslatedText[SettingsValues.Language][242]);
+				return;
+			}
+			else {
+				dialogue.makeBubble(3, TranslatedText[SettingsValues.Language][243]);
+				return;
+			}
+		}
+	}, 100, dialogue);
+	
+	let thisInterval = window.setInterval((dialogue, canvas) => {
+		if(dialogue.counter === 4) {
+			dialogue.end();
+			if(dialogue.choice_result === 1) {
+				CleaningGame(canvas);
+				return;
+			}
+			if(dialogue.choice_result === 0) {
+				CleaningGameValues.IsOver = 0;
+				return;
+			}
+		}
+		if(CleaningGameValues.IsOver !== -1) {
+			clearInterval(thisInterval);
+			CleaningGameReset();
+			PauseButton.append(canvas);
+			AllowedToPause = true;
+			ap.playTrack(5);
+			ProstejovNamesti(canvas);
+		}
+	}, 100, dialogue, canvas);
 }
 
 function ProstejovObchodJob(canvas) {
 	console.log("pro obchod job");
+	AllowedToPause = false;
+	PauseButton.deleteButton();
+	CashierGame(canvas);
+	let thisInterval = window.setInterval((canvas) => {
+		if(CashierGameValues.IsOver !== -1) {
+			clearInterval(thisInterval);
+			CashierGameReset();
+			PauseButton.append(canvas);
+			AllowedToPause = true;
+			ap.playTrack(5);
+			ProstejovObchod(canvas);
+		}
+	}, 100, canvas);
 }
 
 function ProstejovNastupisteJob(canvas) {
@@ -3208,8 +3598,8 @@ function ProstejovNastupisteJob(canvas) {
 	AllowedToPause = false;
 	let dialogue = new Dialogue();
 	dialogue.begin(canvas);
-	dialogue.makeBubble(0, TranslatedText[SettingsValues.Language][185].slice(0, -1) + " " + Math.floor(1470 * SettingsValues.MoneyCostIncrease) + " " + TranslatedText[SettingsValues.Language][90]);
-	dialogue.makeBubble(1, TranslationGetMultipleLines(SettingsValues.Language, 186, 2));
+	dialogue.makeBubble(0, TranslatedText[SettingsValues.Language][199].slice(0, -1) + " " + Math.floor(1470 * SettingsValues.MoneyCostIncrease) + " " + TranslatedText[SettingsValues.Language][90]);
+	dialogue.makeBubble(1, TranslationGetMultipleLines(SettingsValues.Language, 200, 2));
 	dialogue.makeChoice(2);
 	
 	let dWaitInterval = window.setInterval((dialogue) => {
@@ -3218,23 +3608,23 @@ function ProstejovNastupisteJob(canvas) {
 			if(dialogue.choice_result === 1) {
 				if(MoneyAmount >= Math.floor(1470 * SettingsValues.MoneyCostIncrease)) {
 					if(doesHaveTicket) {
-						dialogue.makeBubble(3, TranslatedText[SettingsValues.Language][148]);
+						dialogue.makeBubble(3, TranslatedText[SettingsValues.Language][162]);
 						return;
 					}
 					removeMoney(Math.floor(1470 * SettingsValues.MoneyCostIncrease));
 					ap.playSFX(5);
 					doesHaveTicket = true;
-					dialogue.makeBubble(3, TranslatedText[SettingsValues.Language][188]);
+					dialogue.makeBubble(3, TranslatedText[SettingsValues.Language][202]);
 					return;
 				}
 				else {
-					dialogue.makeBubble(3, TranslatedText[SettingsValues.Language][189]);
+					dialogue.makeBubble(3, TranslatedText[SettingsValues.Language][203]);
 					return;
 				}
 				return;
 			}
 			else {
-				dialogue.makeBubble(3, TranslationGetMultipleLines(SettingsValues.Language, 190, 2));
+				dialogue.makeBubble(3, TranslationGetMultipleLines(SettingsValues.Language, 204, 2));
 				return;
 			}
 		}
@@ -3258,7 +3648,7 @@ function OlomoucImageLoaded() {
 	olo_AmountLoadedImages++;
 }
 
-function OlomoucLoad(canvas) {
+function OlomoucLoad(canvas, calledbysetstate = false) {
 	AllowedToPause = false;	
 	timerPause();
 	canvas.loadingMsg();
@@ -3276,7 +3666,9 @@ function OlomoucLoad(canvas) {
 	olo_Locations[6].src = "res/olomouc/restaurant.jpg";
 	olo_Locations[7].src = "res/map/5.png";
 	
-	OlomoucMap(canvas);
+	if(calledbysetstate !== true) {
+		OlomoucMap(canvas);	
+	}
 }
 
 function OlomoucMap(canvas) {
@@ -3309,9 +3701,9 @@ function Olomouc(canvas) {
 
 	let FirstDialogue = new Dialogue();
 	FirstDialogue.begin(canvas);
-	FirstDialogue.makeBubble(0, TranslationGetMultipleLines(SettingsValues.Language, 192, 2));
-	FirstDialogue.makeBubble(1, TranslationGetMultipleLines(SettingsValues.Language, 194, 2));
-	FirstDialogue.makeBubble(2, TranslatedText[SettingsValues.Language][196].slice(0, -1) + " " + Math.floor(1840 * SettingsValues.MoneyCostIncrease) + " " + TranslatedText[SettingsValues.Language][90]);	
+	FirstDialogue.makeBubble(0, TranslationGetMultipleLines(SettingsValues.Language, 206, 2));
+	FirstDialogue.makeBubble(1, TranslationGetMultipleLines(SettingsValues.Language, 208, 2));
+	FirstDialogue.makeBubble(2, TranslatedText[SettingsValues.Language][210].slice(0, -1) + " " + Math.floor(1840 * SettingsValues.MoneyCostIncrease) + " " + TranslatedText[SettingsValues.Language][90]);	
 	
 	let thisInterval = window.setInterval((dialogue, canvas) => {
 		if(dialogue.counter === 3) {
@@ -3493,7 +3885,7 @@ function OlomoucObchodVnitrek(canvas) {
 	console.log("olo obchod vnitrek");
 	localLocationId = 4;
 	
-	let ArrowToJob = new Arrow(100, 350, 50, 50, ArrowDirections.Here, canvas);
+	let ArrowToJob = new Arrow(400, 250, 100, 100, ArrowDirections.Here, canvas);
 	ArrowToJob.button.addEventListener("click", () => {
 		if(GamePaused) { return; }
 		ArrowToJob.deleteButton();
@@ -3510,6 +3902,7 @@ function OlomoucObchodVnitrek(canvas) {
 	
 	canvas.image(olo_Locations[4], 0, 0, canvas.canvas.width, canvas.canvas.height);
 	chr.draw(900, 50, 0.45, canvas);
+	ArrowToJob.draw(canvas);
 	ArrowToObchodVenek.draw(canvas);
 	PauseButton.draw(canvas);
 	drawMoneyCount(canvas);
@@ -3627,11 +4020,65 @@ function OlomoucWaiterJob(canvas) {
 
 function OlomoucObchodJob(canvas) {
 	console.log("olo obchod job");
+	AllowedToPause = false;
+	PauseButton.deleteButton();
+	CashierGame(canvas);
+	let thisInterval = window.setInterval((canvas) => {
+		if(CashierGameValues.IsOver !== -1) {
+			clearInterval(thisInterval);
+			CashierGameReset();
+			PauseButton.append(canvas);
+			AllowedToPause = true;
+			ap.playTrack(6);
+			OlomoucObchodVnitrek(canvas);
+		}
+	}, 100, canvas);
 }
 
 function OlomoucSyrarnaJob(canvas) {
 	console.log("olo syrarna job");
+	AllowedToPause = false;
+	PauseButton.deleteButton();
+	let dialogue = new Dialogue();
+	dialogue.begin(canvas);
+	dialogue.makeBubble(0, TranslationGetMultipleLines(SettingsValues.Language, 244, 2));
+	dialogue.makeChoice(1);
 	
+	let dWaitInterval = window.setInterval((dialogue) => {
+		if(dialogue.choice_result !== -1) {
+			clearInterval(dWaitInterval);
+			if(dialogue.choice_result === 1) {
+				dialogue.makeBubble(2, TranslatedText[SettingsValues.Language][246]);
+				return;
+			}
+			else {
+				dialogue.makeBubble(2, TranslatedText[SettingsValues.Language][247]);
+				return;
+			}
+		}
+	}, 100, dialogue);
+	
+	let thisInterval = window.setInterval((dialogue, canvas) => {
+		if(dialogue.counter === 3) {
+			dialogue.end();
+			if(dialogue.choice_result === 1) {
+				CheeseGame(canvas);
+				return;
+			}
+			if(dialogue.choice_result === 0) {
+				CheeseGameValues.IsOver = 0;
+				return;
+			}
+		}
+		if(CheeseGameValues.IsOver !== -1) {
+			clearInterval(thisInterval);
+			CheeseGameReset();
+			PauseButton.append(canvas);
+			AllowedToPause = true;
+			ap.playTrack(6);
+			OlomoucSyrarna(canvas);
+		}
+	}, 100, dialogue, canvas);
 }
 
 function OlomoucNastupisteJob(canvas) {
@@ -3639,9 +4086,9 @@ function OlomoucNastupisteJob(canvas) {
 	AllowedToPause = false;
 	let dialogue = new Dialogue();
 	dialogue.begin(canvas);
-	dialogue.makeBubble(0, TranslationGetMultipleLines(SettingsValues.Language, 197, 2).slice(0, -1) + " " + Math.floor(1840 * SettingsValues.MoneyCostIncrease) + " " + TranslatedText[SettingsValues.Language][90]);
-	dialogue.makeBubble(1, TranslationGetMultipleLines(SettingsValues.Language, 199, 2));
-	dialogue.makeBubble(2, TranslatedText[SettingsValues.Language][201]);
+	dialogue.makeBubble(0, TranslationGetMultipleLines(SettingsValues.Language, 211, 2).slice(0, -1) + " " + Math.floor(1840 * SettingsValues.MoneyCostIncrease) + " " + TranslatedText[SettingsValues.Language][90]);
+	dialogue.makeBubble(1, TranslationGetMultipleLines(SettingsValues.Language, 213, 2));
+	dialogue.makeBubble(2, TranslatedText[SettingsValues.Language][215]);
 	dialogue.makeChoice(3);
 	
 	let dWaitInterval = window.setInterval((dialogue) => {
@@ -3650,23 +4097,23 @@ function OlomoucNastupisteJob(canvas) {
 			if(dialogue.choice_result === 1) {
 				if(MoneyAmount >= Math.floor(1840 * SettingsValues.MoneyCostIncrease)) {
 					if(doesHaveTicket) {
-						dialogue.makeBubble(4, TranslatedText[SettingsValues.Language][148]);
+						dialogue.makeBubble(4, TranslatedText[SettingsValues.Language][162]);
 						return;
 					}
 					removeMoney(Math.floor(1840 * SettingsValues.MoneyCostIncrease));
 					ap.playSFX(5);
 					doesHaveTicket = true;
-					dialogue.makeBubble(4, TranslatedText[SettingsValues.Language][202]);
+					dialogue.makeBubble(4, TranslatedText[SettingsValues.Language][216]);
 					return;
 				}
 				else {
-					dialogue.makeBubble(4, TranslatedText[SettingsValues.Language][203]);
+					dialogue.makeBubble(4, TranslatedText[SettingsValues.Language][217]);
 					return;
 				}
 				return;
 			}
 			else {
-				dialogue.makeBubble(4,  TranslatedText[SettingsValues.Language][204]);
+				dialogue.makeBubble(4,  TranslatedText[SettingsValues.Language][218]);
 				return;
 			}
 		}
@@ -3684,13 +4131,11 @@ function OlomoucNastupisteJob(canvas) {
 let stu_Locations = [];
 let stu_AmountLoadedImages = 0;
 
-let stu_IsDefended = false;
-
 function StudenkaImageLoaded() {
 	stu_AmountLoadedImages++;
 }
 
-function StudenkaLoad(canvas) {
+function StudenkaLoad(canvas, calledbysetstate = false) {
 	AllowedToPause = false;	
 	timerPause();
 	canvas.loadingMsg();
@@ -3708,7 +4153,9 @@ function StudenkaLoad(canvas) {
 	stu_Locations[6].src = "res/map/6.png";
 	stu_Locations[7].src = "res/studenka/cutscene/Bmz245.jpg";
 	
-	StudenkaCutscene(canvas); //cutscene first, then map
+	if(calledbysetstate !== true) {
+		StudenkaCutscene(canvas); //cutscene first, then map
+	}
 }
 
 function StudenkaCutscene(canvas) {
@@ -3726,15 +4173,15 @@ function StudenkaCutscene(canvas) {
 		ap.playSFX(9);
 		let dialogue = new Dialogue();
 		dialogue.begin(canvas);
-		dialogue.makeBubble(0, TranslatedText[SettingsValues.Language][205]);
-		dialogue.makeBubble(1, TranslatedText[SettingsValues.Language][206]);
+		dialogue.makeBubble(0, TranslatedText[SettingsValues.Language][219]);
+		dialogue.makeBubble(1, TranslatedText[SettingsValues.Language][220]);
 		let thisInterval = window.setInterval((dialogue, canvas) => {
 			if(dialogue.counter === 2) {
 				clearInterval(thisInterval);
 				ap.sfx[9].pause();
 				canvas.clear("#000000");
 				setTimeout(() => {
-					dialogue.makeBubble(2, TranslationGetMultipleLines(SettingsValues.Language, 207, 2));
+					dialogue.makeBubble(2, TranslationGetMultipleLines(SettingsValues.Language, 221, 2));
 					let thisInterval = window.setInterval((dialogue, canvas) => {
 						if(dialogue.counter === 3) {
 							clearInterval(thisInterval);
@@ -3749,6 +4196,10 @@ function StudenkaCutscene(canvas) {
 }
 
 function StudenkaMap(canvas) {
+	if(stu_AmountLoadedImages != 8) {
+      	window.setTimeout(StudenkaMap, 100, canvas); //here kinda redundant, when loading in save required!
+		return;
+    }
 	//map scene
 	ap.playTrack(7);
 	canvas.setnewcolor("#333399");
@@ -3903,11 +4354,12 @@ function StudenkaNastupiste(canvas) {
 		if(GamePaused) { return; }
 		ArrowToTrain.deleteButton();
 		ArrowToNadrazi.deleteButton();
-		if(stu_IsDefended) {
+		if(DefenseGameValues.HasDefended) {
 			//dont check tickets but checking if defended, needed in ostrava
+			//defense game only once, here in studenka
     		let dialogue = new Dialogue();
 			dialogue.begin(canvas);
-			dialogue.makeBubble(0, TranslatedText[SettingsValues.Language][210]);
+			dialogue.makeBubble(0, TranslatedText[SettingsValues.Language][224]);
 			let thisInterval = window.setInterval((dialogue, canvas) => {
 				if(dialogue.counter === 1) {
 					clearInterval(thisInterval);
@@ -3919,7 +4371,7 @@ function StudenkaNastupiste(canvas) {
 		else {
 			let dialogue = new Dialogue();
 			dialogue.begin(canvas);
-			dialogue.makeBubble(0, TranslatedText[SettingsValues.Language][209]);
+			dialogue.makeBubble(0, TranslatedText[SettingsValues.Language][223]);
 			let thisInterval = window.setInterval((dialogue, canvas) => {
 				if(dialogue.counter === 1) {
 					clearInterval(thisInterval);
@@ -3950,24 +4402,26 @@ function StudenkaPole(canvas) {
 	console.log("stu pole");
 	localLocationId = 5;
 
-	let ArrowToJob = new Arrow(500, 200, 75, 75, ArrowDirections.Here, canvas);
-	ArrowToJob.button.addEventListener("click", () => {
+	army.append(canvas);
+	army.resetEventListeners();
+	army.button.addEventListener("click", (event) => {
 		if(GamePaused) { return; }
-		ArrowToJob.deleteButton();
+		army.deleteButton();
 		ArrowToNamesti.deleteButton();
-    	StudenkaDefenseJob(canvas);
-	}, { once: true });	
+		StudenkaDefenseJob(canvas);
+	});
+	
 	let ArrowToNamesti = new Arrow(350, 400, 100, 100, ArrowDirections.Down, canvas);
 	ArrowToNamesti.button.addEventListener("click", () => {
 		if(GamePaused) { return; }
-		ArrowToJob.deleteButton();
+		army.deleteButton();
 		ArrowToNamesti.deleteButton();
     	StudenkaNamesti(canvas);
 	}, { once: true });		
 	
 	canvas.image(stu_Locations[5], 0, 0, canvas.canvas.width, canvas.canvas.height);
 	chr.draw(100, 250, 0.5, canvas);
-	ArrowToJob.draw(canvas);
+	army.draw(800, 250, 0.5, canvas);
 	ArrowToNamesti.draw(canvas);
 	PauseButton.draw(canvas);
 	drawMoneyCount(canvas);
@@ -3976,8 +4430,49 @@ function StudenkaPole(canvas) {
 
 function StudenkaDefenseJob(canvas) {
 	console.log("stu defense job");
-	stu_IsDefended = true;
-	StudenkaPole(canvas);
+	AllowedToPause = false;
+	PauseButton.deleteButton();
+	let dialogue = new Dialogue();
+	dialogue.begin(canvas);
+	dialogue.makeBubble(0, TranslationGetMultipleLines(SettingsValues.Language, 248, 2));
+	dialogue.makeBubble(1, TranslationGetMultipleLines(SettingsValues.Language, 250, 2));
+	dialogue.makeChoice(2);
+	
+	let dWaitInterval = window.setInterval((dialogue) => {
+		if(dialogue.choice_result !== -1) {
+			clearInterval(dWaitInterval);
+			if(dialogue.choice_result === 1) {
+				dialogue.makeBubble(3, TranslatedText[SettingsValues.Language][252]);
+				return;
+			}
+			else {
+				dialogue.makeBubble(3, TranslatedText[SettingsValues.Language][253]);
+				return;
+			}
+		}
+	}, 100, dialogue);
+	
+	let thisInterval = window.setInterval((dialogue, canvas) => {
+		if(dialogue.counter === 4) {
+			dialogue.end();
+			if(dialogue.choice_result === 1) {
+				DefenseGame(canvas);
+				return;
+			}
+			if(dialogue.choice_result === 0) {
+				DefenseGameValues.IsOver = 0;
+				return;
+			}
+		}
+		if(DefenseGameValues.IsOver !== -1) {
+			clearInterval(thisInterval);
+			DefenseGameReset();
+			PauseButton.append(canvas);
+			AllowedToPause = true;
+			ap.playTrack(7);
+			StudenkaPole(canvas);
+		}
+	}, 100, dialogue, canvas);
 }
 
 function StudenkaRespect(canvas) {
@@ -4000,7 +4495,7 @@ function OstravaImageLoaded() {
 	ost_AmountLoadedImages++;
 }
 
-function OstravaLoad(canvas) {
+function OstravaLoad(canvas, calledbysetstate = false) {
 	AllowedToPause = false;	
 	timerPause();
 	canvas.loadingMsg();
@@ -4015,7 +4510,9 @@ function OstravaLoad(canvas) {
 	ost_Locations[3].src = "res/map/7.png";
 	ost_Locations[4].src = "res/katowice/cutscene/B10bmnouz.jpg";
 	
-	OstravaMap(canvas);
+	if(calledbysetstate !== true) {
+		OstravaMap(canvas);
+	}
 }
 
 function OstravaMap(canvas) {
@@ -4045,7 +4542,7 @@ function Ostrava(canvas) {
 	
 	let dialogue = new Dialogue();
 	dialogue.begin(canvas);
-	dialogue.makeBubble(0, TranslatedText[SettingsValues.Language][211]);
+	dialogue.makeBubble(0, TranslatedText[SettingsValues.Language][225]);
 	let thisInterval = window.setInterval((dialogue, canvas) => {
 		if(dialogue.counter === 1) {
 			clearInterval(thisInterval);
@@ -4144,8 +4641,8 @@ function KatowiceCutscene(canvas) {
 	setTimeout(() => {
 		let dialogue = new Dialogue();
 		dialogue.begin(canvas);
-		dialogue.makeBubble(0, TranslatedText[SettingsValues.Language][212]);
-		dialogue.makeBubble(1, TranslatedText[SettingsValues.Language][213]);
+		dialogue.makeBubble(0, TranslatedText[SettingsValues.Language][226]);
+		dialogue.makeBubble(1, TranslatedText[SettingsValues.Language][227]);
 		let thisInterval = window.setInterval((dialogue, canvas) => {
 			if(dialogue.counter === 2) {
 				clearInterval(thisInterval);
@@ -4165,6 +4662,7 @@ let AllowedToPause = true;
 function SetState(canvasobj) {
 	deleteCanvasInputElems(); //local functions will remake
 	PauseButton.append(canvasobj);
+	console.log("SetState called!");
 	switch(locationId) {
 		case 1:
 			switch(localLocationId) {
@@ -4465,6 +4963,54 @@ function SetStateFile(filecontent, canvas) {
 				}
 			}, 100);
 		break;
+		case 4:
+			pro_AmountLoadedImages = 0;
+			ProstejovLoad(canvas, true);
+			let thisInterval4 = window.setInterval(() => {
+				if(pro_AmountLoadedImages === 6) {
+					clearInterval(thisInterval4);
+					AllowedToPause = true;
+					ap.playTrack(5);
+					SetState(canvas);
+				}
+			}, 100);
+		break;
+		case 5:
+			olo_AmountLoadedImages = 0;
+			OlomoucLoad(canvas, true);
+			let thisInterval5 = window.setInterval(() => {
+				if(olo_AmountLoadedImages === 8) {
+					clearInterval(thisInterval5);
+					AllowedToPause = true;
+					ap.playTrack(6);
+					SetState(canvas);
+				}
+			}, 100);
+		break;
+		case 6:
+			stu_AmountLoadedImages = 0;
+			StudenkaLoad(canvas, true);
+			let thisInterval6 = window.setInterval(() => {
+				if(stu_AmountLoadedImages === 8) {
+					clearInterval(thisInterval6);
+					AllowedToPause = true;
+					ap.playTrack(7);
+					SetState(canvas);
+				}
+			}, 100);
+		break;
+		case 7:
+			ost_AmountLoadedImages = 0;
+			OstravaLoad(canvas, true);
+			let thisInterval7 = window.setInterval(() => {
+				if(ost_AmountLoadedImages === 5) {
+					clearInterval(thisInterval7);
+					AllowedToPause = true;
+					ap.playTrack(8);
+					SetState(canvas);
+				}
+			}, 100);
+		break;
 	}
 }
 
@@ -4622,7 +5168,7 @@ function MainMenu() {
 	cvs.setnewfont("Arial, FreeSans", "16");
 	
 	cvs.text("(c) Martin/MegapolisPlayer, Jiri/KohoutGD 2023", 650, 472);
-	cvs.text("beta version 0.90, build date 4/6/2023", 650, 492);
+	cvs.text("beta version 0.91, build date 6/6/2023", 650, 492);
 	
 	cvs.setnewcolor("#333399");
 	cvs.setnewfont("Arial, FreeSans", "48");

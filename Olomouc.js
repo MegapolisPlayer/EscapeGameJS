@@ -5,7 +5,7 @@ function OlomoucImageLoaded() {
 	olo_AmountLoadedImages++;
 }
 
-function OlomoucLoad(canvas) {
+function OlomoucLoad(canvas, calledbysetstate = false) {
 	AllowedToPause = false;	
 	timerPause();
 	canvas.loadingMsg();
@@ -23,7 +23,9 @@ function OlomoucLoad(canvas) {
 	olo_Locations[6].src = "res/olomouc/restaurant.jpg";
 	olo_Locations[7].src = "res/map/5.png";
 	
-	OlomoucMap(canvas);
+	if(calledbysetstate !== true) {
+		OlomoucMap(canvas);	
+	}
 }
 
 function OlomoucMap(canvas) {
@@ -56,9 +58,9 @@ function Olomouc(canvas) {
 
 	let FirstDialogue = new Dialogue();
 	FirstDialogue.begin(canvas);
-	FirstDialogue.makeBubble(0, TranslationGetMultipleLines(SettingsValues.Language, 192, 2));
-	FirstDialogue.makeBubble(1, TranslationGetMultipleLines(SettingsValues.Language, 194, 2));
-	FirstDialogue.makeBubble(2, TranslatedText[SettingsValues.Language][196].slice(0, -1) + " " + Math.floor(1840 * SettingsValues.MoneyCostIncrease) + " " + TranslatedText[SettingsValues.Language][90]);	
+	FirstDialogue.makeBubble(0, TranslationGetMultipleLines(SettingsValues.Language, 206, 2));
+	FirstDialogue.makeBubble(1, TranslationGetMultipleLines(SettingsValues.Language, 208, 2));
+	FirstDialogue.makeBubble(2, TranslatedText[SettingsValues.Language][210].slice(0, -1) + " " + Math.floor(1840 * SettingsValues.MoneyCostIncrease) + " " + TranslatedText[SettingsValues.Language][90]);	
 	
 	let thisInterval = window.setInterval((dialogue, canvas) => {
 		if(dialogue.counter === 3) {
@@ -240,7 +242,7 @@ function OlomoucObchodVnitrek(canvas) {
 	console.log("olo obchod vnitrek");
 	localLocationId = 4;
 	
-	let ArrowToJob = new Arrow(100, 350, 50, 50, ArrowDirections.Here, canvas);
+	let ArrowToJob = new Arrow(400, 250, 100, 100, ArrowDirections.Here, canvas);
 	ArrowToJob.button.addEventListener("click", () => {
 		if(GamePaused) { return; }
 		ArrowToJob.deleteButton();
@@ -257,6 +259,7 @@ function OlomoucObchodVnitrek(canvas) {
 	
 	canvas.image(olo_Locations[4], 0, 0, canvas.canvas.width, canvas.canvas.height);
 	chr.draw(900, 50, 0.45, canvas);
+	ArrowToJob.draw(canvas);
 	ArrowToObchodVenek.draw(canvas);
 	PauseButton.draw(canvas);
 	drawMoneyCount(canvas);
@@ -374,11 +377,65 @@ function OlomoucWaiterJob(canvas) {
 
 function OlomoucObchodJob(canvas) {
 	console.log("olo obchod job");
+	AllowedToPause = false;
+	PauseButton.deleteButton();
+	CashierGame(canvas);
+	let thisInterval = window.setInterval((canvas) => {
+		if(CashierGameValues.IsOver !== -1) {
+			clearInterval(thisInterval);
+			CashierGameReset();
+			PauseButton.append(canvas);
+			AllowedToPause = true;
+			ap.playTrack(6);
+			OlomoucObchodVnitrek(canvas);
+		}
+	}, 100, canvas);
 }
 
 function OlomoucSyrarnaJob(canvas) {
 	console.log("olo syrarna job");
+	AllowedToPause = false;
+	PauseButton.deleteButton();
+	let dialogue = new Dialogue();
+	dialogue.begin(canvas);
+	dialogue.makeBubble(0, TranslationGetMultipleLines(SettingsValues.Language, 244, 2));
+	dialogue.makeChoice(1);
 	
+	let dWaitInterval = window.setInterval((dialogue) => {
+		if(dialogue.choice_result !== -1) {
+			clearInterval(dWaitInterval);
+			if(dialogue.choice_result === 1) {
+				dialogue.makeBubble(2, TranslatedText[SettingsValues.Language][246]);
+				return;
+			}
+			else {
+				dialogue.makeBubble(2, TranslatedText[SettingsValues.Language][247]);
+				return;
+			}
+		}
+	}, 100, dialogue);
+	
+	let thisInterval = window.setInterval((dialogue, canvas) => {
+		if(dialogue.counter === 3) {
+			dialogue.end();
+			if(dialogue.choice_result === 1) {
+				CheeseGame(canvas);
+				return;
+			}
+			if(dialogue.choice_result === 0) {
+				CheeseGameValues.IsOver = 0;
+				return;
+			}
+		}
+		if(CheeseGameValues.IsOver !== -1) {
+			clearInterval(thisInterval);
+			CheeseGameReset();
+			PauseButton.append(canvas);
+			AllowedToPause = true;
+			ap.playTrack(6);
+			OlomoucSyrarna(canvas);
+		}
+	}, 100, dialogue, canvas);
 }
 
 function OlomoucNastupisteJob(canvas) {
@@ -386,9 +443,9 @@ function OlomoucNastupisteJob(canvas) {
 	AllowedToPause = false;
 	let dialogue = new Dialogue();
 	dialogue.begin(canvas);
-	dialogue.makeBubble(0, TranslationGetMultipleLines(SettingsValues.Language, 197, 2).slice(0, -1) + " " + Math.floor(1840 * SettingsValues.MoneyCostIncrease) + " " + TranslatedText[SettingsValues.Language][90]);
-	dialogue.makeBubble(1, TranslationGetMultipleLines(SettingsValues.Language, 199, 2));
-	dialogue.makeBubble(2, TranslatedText[SettingsValues.Language][201]);
+	dialogue.makeBubble(0, TranslationGetMultipleLines(SettingsValues.Language, 211, 2).slice(0, -1) + " " + Math.floor(1840 * SettingsValues.MoneyCostIncrease) + " " + TranslatedText[SettingsValues.Language][90]);
+	dialogue.makeBubble(1, TranslationGetMultipleLines(SettingsValues.Language, 213, 2));
+	dialogue.makeBubble(2, TranslatedText[SettingsValues.Language][215]);
 	dialogue.makeChoice(3);
 	
 	let dWaitInterval = window.setInterval((dialogue) => {
@@ -397,23 +454,23 @@ function OlomoucNastupisteJob(canvas) {
 			if(dialogue.choice_result === 1) {
 				if(MoneyAmount >= Math.floor(1840 * SettingsValues.MoneyCostIncrease)) {
 					if(doesHaveTicket) {
-						dialogue.makeBubble(4, TranslatedText[SettingsValues.Language][148]);
+						dialogue.makeBubble(4, TranslatedText[SettingsValues.Language][162]);
 						return;
 					}
 					removeMoney(Math.floor(1840 * SettingsValues.MoneyCostIncrease));
 					ap.playSFX(5);
 					doesHaveTicket = true;
-					dialogue.makeBubble(4, TranslatedText[SettingsValues.Language][202]);
+					dialogue.makeBubble(4, TranslatedText[SettingsValues.Language][216]);
 					return;
 				}
 				else {
-					dialogue.makeBubble(4, TranslatedText[SettingsValues.Language][203]);
+					dialogue.makeBubble(4, TranslatedText[SettingsValues.Language][217]);
 					return;
 				}
 				return;
 			}
 			else {
-				dialogue.makeBubble(4,  TranslatedText[SettingsValues.Language][204]);
+				dialogue.makeBubble(4,  TranslatedText[SettingsValues.Language][218]);
 				return;
 			}
 		}

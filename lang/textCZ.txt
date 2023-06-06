@@ -130,17 +130,17 @@ nebo nejaký objekt (kromě ryb).
 
 Vyděláno
 
-Minihra o čistění
-Prostě čisti.
-Dostaneš 250Kč.
+Informační minihra
+-
+-
 -
 -
 -
 
-Vyčistěno
+Informováno
 
-Minihra - Překlad
-Převeď co nejvíce slov.
+Překladová minihra
+Přelož co nejvíc slov z daného nářečí.
 Za každé slovo dostaneš 5Kč.
 -
 -
@@ -148,23 +148,41 @@ Za každé slovo dostaneš 5Kč.
 
 Přeloženo
 
-Minihra - Pokladník
-Zprocesuj co nejvíce produktů.
+Pokladnická minihra
+Naskenuj co nejvíce produktů tím že je otočíš.
 Za každý produkt dostaneš 5Kč.
--
+Zrychli rotaci šipkami a zastav jí tlačítkem X.
 -
 -
 
 Naskenováno
 
-Minihra - Obranná
-Obraň Studenku!
-Dostaneš jízdenku do Ostravy.
+Čištící minihra
+Vyčisti co nejvíce věcí co můžeš.
+-
 -
 -
 -
 
-Zbývajicích vln
+Vyčistěno
+
+Minihra - Výroba tvarůžků
+Vyrob co nejvíc tvarůžků dodržením tradiční receptury. Recept: 
+Nejdříve polož kus tvarohu do soli, dej ho do sušárny zrát a 
+potom je zapotřebí tvarůžek umýt a nechat ho zase zrát v sušárně.
+Nenechejte ho tam ale příliš dlouho, může zplesnivět. Za každý
+tvarůžek 50Kč, pokud zplesniví -50Kč.
+
+Vyděláno
+
+Obranná minihra
+Obraň Studénku!
+Postav různé jednotky na pole. Pro použití jednotky klikni na ní.
+Je zapotřebí ubránit Studénku (t.j. nenechat nikoho projít) za
+každou cenu. Vzdušná podpora či drony jsou dostupné v ohraničeném počtu.
+Budeš muset ubránit několik vln.
+
+Zbývajících vln
 
 ...potřebuješ jízdenku, tak?
 Do Přerova to stojí 
@@ -256,3 +274,34 @@ Tak a teď přestoupit na správný vlak!
 
 Nakonec v Polsku!
 Jej!
+
+Ahoj, potřebuji se ihned dostat na jedno místo kvůli osobním
+důvodům ale můj náčelník mi zakázal opustit nádraží!
+Mohl bys tady hodinku za mně být? Dám ti za to 300Kč.
+Strašně ti děkuji!
+Ok, nemůžu být na tebe ani naštvaný asi.
+
+Dobrý den milý muži, mohl by jsi mi pomoci s pochopením textu?
+Je napsaný v nějakém divném nářečí a protože zde bydlíš tak to
+to možná budeš vědet líp.
+Pomohl bys mi?
+Fakt díky, ušetříš mi hodně práce.
+Ok, budu muset se jestě někoho zeptat.
+
+Čus, pomohl bys mi vyčistit pár laviček?
+Dal bych ti 400 korun.
+Souhlasíš?
+Díky!
+Ok, fajn.
+
+Ahoj, pomohl bys nám s výrobou tvarůžků?
+Není to příliš težke a dostaneš hodně peněz, věř mi!
+Tak jdeme do toho!
+Aha, oukej.
+
+Aha, ty chceš pomoct ochránit vesnici?
+Super!
+Jeden z naších 2 batalionů byl odvolán a potřebujeme
+pár lidí abychom byli bojeschopní! Pomůžes svým rodákům?
+Tak do práce!
+Zrádce, přijď ihned zpátky!
