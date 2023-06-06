@@ -8,6 +8,32 @@ function renderTextAsMinigameStatus(text, number, canvas) {
 	canvas.text(textf, 1000 - metrics.width - 10, 80);
 }
 
+function renderTextAsMinigameStatus2(text, number, canvas) {
+	canvas.setnewfont("Arial, FreeSans", "32");
+	canvas.setnewcolor("#ffffff");
+	let textf = text+": "+number+" ";
+	let metrics = canvas.context.measureText(textf);
+	canvas.box(1000 - metrics.width - 20, 100, metrics.width + 20, 50);
+	canvas.setnewcolor("#333399");
+	canvas.text(textf, 1000 - metrics.width - 10, 120);
+}
+
+//returns if is collision
+function DetectCollisions(xleft1, ytop1, xright1, ybottom1, xleft2, ytop2, xright2, ybottom2) {
+	//if it works dont question it - kinda get that 2 statements are just for not bugging out when behing obj but still
+	if(
+		xleft1 < xright2 &&
+		xright1 > xleft2 &&
+		ytop1 < ybottom2 &&
+		ybottom1 > ytop2
+	) {
+		return true;
+	}
+	else {
+		return false;
+	}
+}
+
 //waiter game
 
 let WaiterGameValues = {
@@ -319,22 +345,6 @@ function WaiterGameReset() {
 	WaiterGameValues.OrdersList = [];
 	WaiterGameValues.IsOrderSelected = -1;
 	WaiterGameValues.AmountOrders = 0;
-}
-
-//returns if is collision
-function DetectCollisions(xleft1, ytop1, xright1, ybottom1, xleft2, ytop2, xright2, ybottom2) {
-	//if it works dont question it - kinda get that 2 statements are just for not bugging out when behing obj but still
-	if(
-		xleft1 < xright2 &&
-		xright1 > xleft2 &&
-		ytop1 < ybottom2 &&
-		ybottom1 > ytop2
-	) {
-		return true;
-	}
-	else {
-		return false;
-	}
 }
 
 //le fish game - becva in prerov
@@ -680,7 +690,7 @@ function InfodeskGameComponentIntro(canvas) {
 } 
 function InfodeskGameComponentMain(canvas) {
 	canvas.clear("#ccc27a");
-		//main game
+	//main game
 	timelimitStart(120); //2:00 min
 	let timerInterval = window.setInterval((canvas) => {
 		//amount earned info
@@ -750,8 +760,23 @@ function DialectTranslationGameComponentIntro(canvas) {
 } 
 function DialectTranslationGameComponentMain(canvas) {
 	canvas.clear("#ffffff");
-	renderTextAsMinigameStatus(TranslatedText[SettingsValues.Language][123], DialectTranslationGameValues.AmountEarned, canvas);
-	DialectTranslationGameValues.IsOver = 1;
+	//main game
+	timelimitStart(120); //2:00 min
+	let timerInterval = window.setInterval((canvas) => {
+		
+		//amount earned info
+		renderTextAsMinigameStatus(TranslatedText[SettingsValues.Language][123], DialectTranslationGameValues.AmountEarned, canvas);
+		//time stuff
+		timelimitRender(canvas);
+		if(timelimitIsDone()) {
+			clearInterval(timerInterval);
+			addMoney(DialectTranslationGameValues.AmountEarned); //10Kc per help
+			window.removeEventListener("click", SetResizeToTrue);	
+			deleteCanvasInputElems(canvas);
+			DialectTranslationGameValues.IsOver = 1;
+			return;
+		}
+	}, 100, canvas);
 }
 
 function DialectTranslationGameReset() {
@@ -805,7 +830,23 @@ function CashierGameComponentIntro(canvas) {
 	canvas.setnewcolor("#ffffff");
 } 
 function CashierGameComponentMain(canvas) {
-	CashierGameValues.IsOver = 1;
+	//main game
+	timelimitStart(120); //2:00 min
+	let timerInterval = window.setInterval((canvas) => {
+		
+		//amount earned info
+		renderTextAsMinigameStatus(TranslatedText[SettingsValues.Language][130], CashierGameValues.AmountEarned, canvas);
+		//time stuff
+		timelimitRender(canvas);
+		if(timelimitIsDone()) {
+			clearInterval(timerInterval);
+			addMoney(CashierGameValues.AmountEarned); //10Kc per help
+			window.removeEventListener("click", SetResizeToTrue);	
+			deleteCanvasInputElems(canvas);
+			CashierGameValues.IsOver = 1;
+			return;
+		}
+	}, 100, canvas);
 }
 
 function CashierGameReset() {
@@ -854,7 +895,23 @@ function CleaningGameComponentIntro(canvas) {
 	canvas.setnewcolor("#ffffff");
 }
 function CleaningGameComponentMain(canvas) {
-	CleaningGameValues.IsOver = 1;
+	//main game
+	timelimitStart(120); //2:00 min
+	let timerInterval = window.setInterval((canvas) => {
+		
+		//amount earned info
+		renderTextAsMinigameStatus(TranslatedText[SettingsValues.Language][137], CashierGameValues.AmountEarned, canvas);
+		//time stuff
+		timelimitRender(canvas);
+		if(timelimitIsDone()) {
+			clearInterval(timerInterval);
+			addMoney(CleaningGameValues.AmountEarned); //10Kc per help
+			window.removeEventListener("click", SetResizeToTrue);	
+			deleteCanvasInputElems(canvas);
+			CleaningGameValues.IsOver = 1;
+			return;
+		}
+	}, 100, canvas);
 }
 
 function CleaningGameReset(canvas) {
@@ -930,7 +987,23 @@ function CheeseGameComponentIntro(canvas) {
 	canvas.setnewcolor("#ffffff");
 } 
 function CheeseGameComponentMain(canvas) {
-	CheeseGameValues.IsOver = 1;
+	//main game
+	timelimitStart(120); //2:00 min
+	let timerInterval = window.setInterval((canvas) => {
+		
+		//amount earned info
+		renderTextAsMinigameStatus(TranslatedText[SettingsValues.Language][144], CashierGameValues.AmountEarned, canvas);
+		//time stuff
+		timelimitRender(canvas);
+		if(timelimitIsDone()) {
+			clearInterval(timerInterval);
+			addMoney(CheeseGameValues.AmountEarned); //10Kc per help
+			window.removeEventListener("click", SetResizeToTrue);	
+			deleteCanvasInputElems(canvas);
+			CheeseGameValues.IsOver = 1;
+			return;
+		}
+	}, 100, canvas);
 }
 
 function CheeseGameReset() {
@@ -940,19 +1013,31 @@ function CheeseGameReset() {
 
 //defense - studenka
 
-//tonks - strategic capture the flag with tanks and vehicles game
+//tonks - defense game with tonks
 //no direct shooting!
+
+//available units
+//anti-air / AA - only weapon against UAVs, 1HP (1 hit)
+//anti-tank / AT - deals a lot of damage but can withstand some
+//tank / TN
+//pillbox / PB
 
 let DefenseGameValues = {
 	IsIntroEnd: false,
+	IsPrepEnd: false,
+	IsDefenseEnd: false,
 	IsOver: -1,
+	Points: 100, //points system - 10 for AT gun, 30 for tank, 20 for AA and 50 for pillbox
 	WavesRemaining: 10,
+	WaveUAVs: 0, //enemy UAV
 	HasDefended: false,
+	EnemyUnits: [],
+	PlayerUnits: [],
 }
 
 let ArmyImages = [];
 let ArmyImagesLoaded = 0;
-for(let Id = 0; Id < 10; Id++) {
+for(let Id = 0; Id < 13; Id++) {
 	ArmyImages.push(new Image());
 	ArmyImages[Id].onload = () => { ArmyImagesLoaded++ };
 }
@@ -965,10 +1050,83 @@ ArmyImages[2].src = "res/Tank1.png";
 ArmyImages[3].src = "res/Tank2.png";
 ArmyImages[4].src = "res/Pillbox1.png";
 ArmyImages[5].src = "res/Pillbox2.png";
-ArmyImages[6].src = "res/UAV.png";
-ArmyImages[7].src = "res/AirSupport.png";
-ArmyImages[8].src = "res/Shell.png";
-ArmyImages[9].src = "res/Truck.png";
+ArmyImages[6].src = "res/Antiair1.png";
+ArmyImages[7].src = "res/Antiair2.png";
+ArmyImages[8].src = "res/UAV.png";
+ArmyImages[9].src = "res/AirSupport.png";
+ArmyImages[10].src = "res/Shell.png";
+ArmyImages[11].src = "res/EnemyShell.png";
+ArmyImages[12].src = "res/Truck.png";
+
+const UnitCosts = [10, 30, 50, 20]; //in order of AT, TN, PB, AA
+
+class UnitSelector {
+	constructor(id, canvas) {
+		this.id = id;
+		this.isselected = false;
+		
+		this.button = document.createElement("button"); //new button, no need to del event listeners
+		this.button.setAttribute("class", "CanvasInputElement MinigameElement Invisible");
+		this.button.style.setProperty("width", canvas.canvas.height * 0.2+"px");
+		this.button.style.setProperty("height", canvas.canvas.height * 0.2+"px");
+		this.button.style.setProperty("left", canvas.canvas.width * 0.2 * this.id+"px");
+		this.button.style.setProperty("top", canvas.canvas.height * 0.8+"px");
+		
+		this.button.addEventListener("click", (event) => {
+			if(!this.isselected) {
+				this.isselected = true;
+			}
+			else {
+				this.isselected = false;
+			}
+		});
+		
+		canvas.canvas.parentElement.append(this.button);
+	}
+	draw() {
+		if(this.isselected) {
+			canvas.setnewcolor("#ffef00");
+			canvas.box(canvas.canvas.width * 0.2 * this.id, canvas.canvas.height * 0.8, canvas.canvas.height * 0.2, canvas.canvas.height * 0.2);
+		}
+		canvas.image(ArmyImages[this.id * 2], canvas.canvas.width * 0.2 * this.id, canvas.canvas.height * 0.8, canvas.canvas.height * 0.2, canvas.canvas.height * 0.2);
+		canvas.setnewcolor("#800000");
+		canvas.resetalign();
+		canvas.text(String(UnitCosts[this.id]) + TranslatedText[SettingsValues.Language][90], canvas.canvas.width * 0.2 * this.id, canvas.canvas.height * 0.95);
+		canvas.setalign("left");
+	}
+	aim() {
+		
+	}
+	fire() {
+		
+	}
+}
+
+class PlayerUnit {
+	constructor() {
+		this.x = 0;
+		this.y = 0;
+	}
+	update() {
+		
+	}
+	findnearestenemy() {
+		
+	}
+}
+
+class EnemyUnit {
+	constructor() {
+		this.x = 0;
+		this.y = 0;
+	}
+	update() {
+				
+	}
+	findnearestenemy() {
+		
+	}
+}
 
 function DefenseGame(canvas) {
 	DefenseGameReset();
@@ -986,7 +1144,7 @@ function DefenseGame(canvas) {
 function DefenseGameComponentIntro(canvas) {
 	ap.playTrack(17);
 	canvas.clear("#36291b");
-	canvas.setnewcolor("#000000");
+	canvas.setnewcolor("#ffffff");
 	canvas.setfontweight("bold");
 	canvas.text(TranslatedText[SettingsValues.Language][91] + " - " + TranslatedText[SettingsValues.Language][145], 50, 50);
 	canvas.resetfontweight();
@@ -1003,14 +1161,162 @@ function DefenseGameComponentIntro(canvas) {
 	ArrowEnd.draw(canvas);
 	canvas.setnewcolor("#ffffff");
 } 
-function DefenseGameComponentMain(canvas) {
+
+function DefenseGameComponentPrep(canvas) {
 	canvas.clear("#36291b");
-	DefenseGameValues.IsOver = 1;
-	DefenseGameValues.HasDefended = true;
+	//main game
+	let ArrowSkip = new Arrow(950, 450, 50, 50, ArrowDirections.Right, canvas);
+	ArrowSkip.button.addEventListener("click", (event) => {
+		ArrowSkip.deleteButton();
+		DefenseGameValues.IsPrepEnd = true;
+		deleteCanvasInputElems(canvas);
+	}, { once: true });
+	timelimitStart(60); //1:00 min to prepare defense, skippable
+	let UnitSelectors = [];
+	for(let Id = 0; Id < 4; Id++) {
+		UnitSelectors.push(new UnitSelector(Id, canvas));
+	}
+	let timerInterval = window.setInterval((canvas) => {
+		//bg render
+		canvas.clear("#36291b");
+		canvas.setnewcolor("#dddddd");
+		canvas.box(0, canvas.canvas.height * 0.8, canvas.canvas.width, canvas.canvas.height * 0.2);
+		canvas.setnewcolor("#aaaaaa");
+		canvas.box(0, canvas.canvas.height * 0.8, canvas.canvas.height * 0.2, canvas.canvas.height * 0.2);
+		canvas.setnewcolor("#800000");
+		canvas.resetalign();
+		canvas.text(DefenseGameValues.Points, canvas.canvas.width * 0.9, canvas.canvas.height * 0.9);
+		canvas.setalign("left");
+		canvas.setnewcolor("#000000");
+		ArrowSkip.draw(canvas);
+		//selection menu
+		for(let Id = 0; Id < 4; Id++) {
+			UnitSelectors[Id].draw();
+		}
+		//waves
+		renderTextAsMinigameStatus(TranslatedText[SettingsValues.Language][151], DefenseGameValues.WavesRemaining, canvas);
+		//time stuff
+		timelimitRender(canvas);
+		if(timelimitIsDone()) {
+			clearInterval(timerInterval);
+			DefenseGameValues.IsPrepEnd = true;
+			deleteCanvasInputElems(canvas);
+		} //time limit check
+	}, 100, canvas, UnitSelectors); //preparation interval func
+}
+
+function DefenseGameComponentDefense(canvas) {
+	if(!DefenseGameValues.IsPrepEnd) {
+      	window.setTimeout(DefenseGameComponentDefense, 100, canvas); // this checks the flag every 100 milliseconds
+		return;
+    }
+
+	DefenseGameValues.IsDefenseEnd = false;
+	
+	//main game, defenses auto target, player can only call in air support and UAVs, reposition tonks
+	//always aim at nearest
+	
+	//wave ids
+	switch((11 - DefenseGameValues.WavesRemaining)) {
+		case 1:
+			DefenseGameValues.WaveEnemies = SettingsValues.Difficulty; //1-3
+			DefenseGameValues.WaveUAVs = 0;
+		break;
+		case 2:
+			DefenseGameValues.WaveEnemies = SettingsValues.Difficulty + 1; //2-4
+			DefenseGameValues.WaveUAVs = 0;
+		break;
+		case 3:
+			DefenseGameValues.WaveEnemies = SettingsValues.Difficulty + 1; //2-4
+			DefenseGameValues.WaveUAVs = -1 + SettingsValues.Difficulty; //0-2
+		break;
+		case 4:
+			DefenseGameValues.WaveEnemies = SettingsValues.Difficulty + 1; //2-4
+			DefenseGameValues.WaveUAVs = SettingsValues.Difficulty; //1-3
+		break;
+		case 5:
+			DefenseGameValues.WaveEnemies = (SettingsValues.Difficulty + 1) * 2; //4-8
+			DefenseGameValues.WaveUAVs = -1 + SettingsValues.Difficulty; //0-2
+		break;
+		case 6:
+			DefenseGameValues.WaveEnemies = (SettingsValues.Difficulty + 1) * 2; //4-8
+			DefenseGameValues.WaveUAVs = SettingsValues.Difficulty; //1-3
+		break;
+		case 7:
+			DefenseGameValues.WaveEnemies = ((SettingsValues.Difficulty + 1) * 2 + 1); //5-9
+			DefenseGameValues.WaveUAVs = SettingsValues.Difficulty; //1-3
+		break;
+		case 8:
+			DefenseGameValues.WaveEnemies = ((SettingsValues.Difficulty + 1) * 2 + 2); //6-10
+			DefenseGameValues.WaveUAVs = SettingsValues.Difficulty; //1-3
+		break;
+		case 9:
+			DefenseGameValues.WaveEnemies = ((SettingsValues.Difficulty + 1) * 3); //6-12
+			DefenseGameValues.WaveUAVs = SettingsValues.Difficulty; //1-3
+		break;
+		case 10:
+			DefenseGameValues.WaveEnemies = ((SettingsValues.Difficulty + 1) * 3); //6-12
+			DefenseGameValues.WaveUAVs = SettingsValues.Difficulty + 1; //2-4
+		break;
+	}
+	
+	let mainInterval = window.setInterval((canvas) => {
+		canvas.clear("#36291b");
+		renderTextAsMinigameStatus(TranslatedText[SettingsValues.Language][151], DefenseGameValues.WavesRemaining, canvas); //waves
+		renderTextAsMinigameStatus2(TranslatedText[SettingsValues.Language][254], DefenseGameValues.EnemyUnits.length, canvas); //enemies
+		//checks
+		//win check (enemy units = 0) - first because if no enemies but no player divs you still kinda win (you can rebuild)
+		if(DefenseGameValues.EnemyUnits.length === 0) {
+			DefenseGameValues.WavesRemaining--;
+			DefenseGameValues.IsDefenseEnd = true;
+			clearInterval(mainInterval);
+			deleteCanvasInputElems(canvas);
+			return;
+		}
+		//loss check (player units = 0)
+		if(DefenseGameValues.PlayerUnits.length === 0) {
+			DefenseGameValues.WavesRemaining = 0; //to stop recursion
+			InstantLossScreen(2, canvas); //slovak city capture game over screen
+			DefenseGameValues.IsDefenseEnd = true;
+			clearInterval(mainInterval);
+			deleteCanvasInputElems(canvas);
+			return;
+		}
+	}, 20, canvas); //main interval func
+} 
+
+function DefenseGameComponentMain(canvas) {
+	DefenseGameComponentMainLoop(canvas);
+}
+
+function DefenseGameComponentMainLoop(canvas) {
+	if(DefenseGameValues.WavesRemaining === 0) {
+		DefenseGameValues.HasDefended = true;
+		DefenseGameValues.IsOver = 1;
+		return; //stop!
+	}
+	DefenseGameComponentPrep(canvas);
+	DefenseGameComponentDefense(canvas);
+	let timerInterval = window.setInterval((canvas) => {
+		if(DefenseGameValues.IsDefenseEnd && DefenseGameValues.IsPrepEnd) {
+			DefenseGameValues.IsDefenseEnd = false;
+			DefenseGameValues.IsPrepEnd = false;
+			DefenseGameComponentMainLoop(canvas);
+		}
+	}, 100, canvas);
 }
 
 function DefenseGameReset() {
+	DefenseGameValues.IsIntroEnd = false;
+	DefenseGameValues.IsPrepEnd = false;
+	DefenseGameValues.IsDefenseEnd = false;
 	DefenseGameValues.IsOver = -1;
+	DefenseGameValues.Points = 100;
+	DefenseGameValues.WavesRemaining = 10;
+	DefenseGameValues.WaveUAVs = 0;
+	DefenseGameValues.HasDefended = false;
+	DefenseGameValues.EnemyUnits = [];
+	DefenseGameValues.PlayerUnits = [];
 }
 
 //ostrava not really a big location, no minigames

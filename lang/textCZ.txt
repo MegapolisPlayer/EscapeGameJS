@@ -178,9 +178,9 @@ Vyděláno
 Obranná minihra
 Obraň Studénku!
 Postav různé jednotky na pole. Pro použití jednotky klikni na ní.
-Je zapotřebí ubránit Studénku (t.j. nenechat nikoho projít) za
-každou cenu. Vzdušná podpora či drony jsou dostupné v ohraničeném počtu.
-Budeš muset ubránit několik vln.
+Na jednotky máš určitý počet bodů. Vzdušná podpora či drony jsou
+dostupné v ohraničeném počtu.
+Budeš muset ubránit několik vln. Pozor na drony!
 
 Zbývajících vln
 
@@ -305,3 +305,5 @@ Jeden z naších 2 batalionů byl odvolán a potřebujeme
 pár lidí abychom byli bojeschopní! Pomůžes svým rodákům?
 Tak do práce!
 Zrádce, přijď ihned zpátky!
+
+Protivníci:

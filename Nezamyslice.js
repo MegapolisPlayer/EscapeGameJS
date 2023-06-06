@@ -160,6 +160,7 @@ function NezamysliceNadrazi(canvas) {
 	}, { once: true });
 	
 	canvas.image(nzm_Locations[1], 0, 0, canvas.canvas.width, canvas.canvas.height);
+	chr.draw(250, 140, 0.7, canvas);
 	info.draw(750, 140, 0.7, canvas);
 	ArrowToNastupiste.draw(canvas);
 	ArrowToPodnikVenek.draw(canvas);

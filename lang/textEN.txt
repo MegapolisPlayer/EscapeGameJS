@@ -177,9 +177,9 @@ Earned
 
 Defense minigame
 Defend Studénka!
-Place different units and vehicles on the field.
-Actions are available after click on unit.
-You need to defend multiple waves of enemies.
+Place different units and vehicles on the field. Each unit
+costs a certain amount of points. Actions are available
+after click on unit. You need to defend 10 waves of enemies.
 Air support or UAVs are available in limited quantities.
 
 Waves remaining
@@ -255,7 +255,7 @@ The tickets to Katowice cost
 Okay so are we going to Poland?
 The ticket to Katowice costs 
 I'm sure nothing will ever happen along the way - I mean we
-aren`t going through any 
+aren`t going through any known places...
 Okay so are we actually going to Poland?
 It seems that the answer is indeed yes!
 You don`t have money again???
@@ -305,3 +305,5 @@ One of our 2 batalions just got called back and we need someone
 to fill our ranks. Will you help your countrymen?
 Let's get to work!
 Coward! Come back ASAP!
+
+Enemies:
