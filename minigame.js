@@ -13,9 +13,9 @@ function renderTextAsMinigameStatus2(text, number, canvas) {
 	canvas.setnewcolor("#ffffff");
 	let textf = text+": "+number+" ";
 	let metrics = canvas.context.measureText(textf);
-	canvas.box(1000 - metrics.width - 20, 100, metrics.width + 20, 50);
+	canvas.box(0, 0, metrics.width + 20, 50);
 	canvas.setnewcolor("#333399");
-	canvas.text(textf, 1000 - metrics.width - 10, 120);
+	canvas.text(textf, 10, 40);
 }
 
 //returns if is collision
@@ -32,6 +32,13 @@ function DetectCollisions(xleft1, ytop1, xright1, ybottom1, xleft2, ytop2, xrigh
 	else {
 		return false;
 	}
+}
+
+//calculates distance using pythagoreas theorem
+function GetDistance(x1, y1, x2, y2) {
+	let deltaX = Math.abs(x1 - x2);
+	let deltaY = Math.abs(y1 - y2);
+	return Math.sqrt((deltaX * deltaX) + (deltaY * deltaY))
 }
 
 //waiter game
@@ -53,11 +60,11 @@ for(let Id = 0; Id < 5; Id++) {
 	TableImages[Id].onload = () => { TableImagesLoaded++ };
 }
 
-TableImages[0].src = "res/table_empty.png";
-TableImages[1].src = "res/table_order.png";
-TableImages[2].src = "res/table_waiting.png";
-TableImages[3].src = "res/table_waiting2.png";
-TableImages[4].src = "res/table_fail.png"; 
+TableImages[0].src = "res/waiter/table_empty.png";
+TableImages[1].src = "res/waiter/table_order.png";
+TableImages[2].src = "res/waiter/table_waiting.png";
+TableImages[3].src = "res/waiter/table_waiting2.png";
+TableImages[4].src = "res/waiter/table_fail.png"; 
 
 let OrderImages = [];
 let OrderImagesLoaded = 0;
@@ -66,8 +73,8 @@ for(let Id = 0; Id < 2; Id++) {
 	OrderImages[Id].onload = () => { OrderImagesLoaded++ };
 }
 
-OrderImages[0].src = "res/order.png";
-OrderImages[1].src = "res/order_selected.png";
+OrderImages[0].src = "res/waiter/order.png";
+OrderImages[1].src = "res/waiter/order_selected.png";
 
 //orders, etc
 class TableManager {
@@ -373,11 +380,10 @@ for(let Id = 0; Id < 4; Id++) {
 	FishingImages[Id].onload = () => { FishingImagesLoaded++ };
 }
 
-FishingImages[0].src = "res/fish.png";
-FishingImages[1].src = "res/tire.png";
-FishingImages[2].src = "res/boot.png";
-FishingImages[3].src = "res/box.png";
-
+FishingImages[0].src = "res/fish/fish.png";
+FishingImages[1].src = "res/fish/tire.png";
+FishingImages[2].src = "res/fish/boot.png";
+FishingImages[3].src = "res/fish/box.png";
 
 class LeObject {
 	constructor(objtype, doesmovevertically, doesmovehorizontally, canvas) {
@@ -935,11 +941,11 @@ for(let Id = 0; Id < 5; Id++) {
 	CheesemakingImages[Id].onload = () => { CheesemakingImagesLoaded++ };
 }
 
-CheesemakingImages[0].src = "res/Quark.png";
-CheesemakingImages[1].src = "res/FormedQuark.png";
-CheesemakingImages[2].src = "res/TvaruzekDirty.png";
-CheesemakingImages[3].src = "res/TvaruzekDone.png";
-CheesemakingImages[4].src = "res/TvaruzekFailed.png";
+CheesemakingImages[0].src = "res/cheesemaking/Quark.png";
+CheesemakingImages[1].src = "res/cheesemaking/FormedQuark.png";
+CheesemakingImages[2].src = "res/cheesemaking/TvaruzekDirty.png";
+CheesemakingImages[3].src = "res/cheesemaking/TvaruzekDone.png";
+CheesemakingImages[4].src = "res/cheesemaking/TvaruzekFailed.png";
 
 let CheesemakingThingsImages = [];
 let CheesemakingThingsImagesLoaded = 0;
@@ -948,10 +954,10 @@ for(let Id = 0; Id < 4; Id++) {
 	CheesemakingThingsImages[Id].onload = () => { CheesemakingThingsImagesLoaded++ };
 }
 
-CheesemakingThingsImages[0].src = "res/SaltTable.png";
-CheesemakingThingsImages[1].src = "res/Rack.png";
-CheesemakingThingsImages[2].src = "res/Bath.png";
-CheesemakingThingsImages[3].src = "res/Cooler.png";
+CheesemakingThingsImages[0].src = "res/cheesemaking/SaltTable.png";
+CheesemakingThingsImages[1].src = "res/cheesemaking/Rack.png";
+CheesemakingThingsImages[2].src = "res/cheesemaking/Bath.png";
+CheesemakingThingsImages[3].src = "res/cheesemaking/Cooler.png";
 
 function CheeseGame(canvas) {
 	CheeseGameReset();
@@ -1025,7 +1031,9 @@ function CheeseGameReset() {
 let DefenseGameValues = {
 	IsIntroEnd: false,
 	IsPrepEnd: false,
+	PrepUnitSelected: -1,
 	IsDefenseEnd: false,
+	DefUnitSelected: -1,
 	IsOver: -1,
 	Points: 100, //points system - 10 for AT gun, 30 for tank, 20 for AA and 50 for pillbox
 	WavesRemaining: 10,
@@ -1033,6 +1041,8 @@ let DefenseGameValues = {
 	HasDefended: false,
 	EnemyUnits: [],
 	PlayerUnits: [],
+	UAVLeft: 3,
+	AirSupportLeft: 1,
 }
 
 let ArmyImages = [];
@@ -1044,55 +1054,112 @@ for(let Id = 0; Id < 13; Id++) {
 
 //1st - okay, 2nd - destroyed
 
-ArmyImages[0].src = "res/Antitank1.png";
-ArmyImages[1].src = "res/Antitank2.png";
-ArmyImages[2].src = "res/Tank1.png";
-ArmyImages[3].src = "res/Tank2.png";
-ArmyImages[4].src = "res/Pillbox1.png";
-ArmyImages[5].src = "res/Pillbox2.png";
-ArmyImages[6].src = "res/Antiair1.png";
-ArmyImages[7].src = "res/Antiair2.png";
-ArmyImages[8].src = "res/UAV.png";
-ArmyImages[9].src = "res/AirSupport.png";
-ArmyImages[10].src = "res/Shell.png";
-ArmyImages[11].src = "res/EnemyShell.png";
-ArmyImages[12].src = "res/Truck.png";
+ArmyImages[0].src = "res/army/Antiair1.png";
+ArmyImages[1].src = "res/army/Antiair2.png";
+ArmyImages[2].src = "res/army/Antitank1.png";
+ArmyImages[3].src = "res/army/Antitank2.png";
+ArmyImages[4].src = "res/army/Tank1.png";
+ArmyImages[5].src = "res/army/Tank2.png";
+ArmyImages[6].src = "res/army/Pillbox1.png";
+ArmyImages[7].src = "res/army/Pillbox2.png";
+ArmyImages[8].src = "res/army/UAV.png";
+ArmyImages[9].src = "res/army/AirSupport.png";
+ArmyImages[10].src = "res/army/Shell.png";
+ArmyImages[11].src = "res/army/EnemyShell.png";
+ArmyImages[12].src = "res/army/Truck.png";
 
-const UnitCosts = [10, 30, 50, 20]; //in order of AT, TN, PB, AA
+let HPImages = [];
+let HPImagesLoaded = 0;
+for(let Id = 0; Id < 4; Id++) {
+	HPImages.push(new Image());
+	HPImages[Id].onload = () => { HPImagesLoaded++ };
+}
+
+HPImages[0].src = "res/hpbar/1-2.png";
+HPImages[1].src = "res/hpbar/1-3.png";
+HPImages[2].src = "res/hpbar/2-3.png";
+HPImages[3].src = "res/hpbar/full.png";
+
+//in order of AA, AT, TN, PB, UAV
+let UnitTypes = [
+	{
+		code: "AA",
+		cost: 10,
+		hp: 1,
+		damage: 1, //only against UAVs
+		cooldown: 2, //in seconds
+	},
+	{
+		code: "AT",
+		cost: 20,
+		hp: 1,
+		damage: 2,
+		cooldown: 5,
+	},
+	{
+		code: "TN",
+		cost: 40,
+		hp: 2,
+		damage: 2,
+		cooldown: 3,
+	},
+	{
+		code: "PB",
+		cost: 60,
+		hp: 3,
+		damage: 0.5,
+		cooldown: 0.5
+	}
+];
 
 class UnitSelector {
 	constructor(id, canvas) {
 		this.id = id;
-		this.isselected = false;
+		this.canvas_info = canvas;
 		
 		this.button = document.createElement("button"); //new button, no need to del event listeners
 		this.button.setAttribute("class", "CanvasInputElement MinigameElement Invisible");
-		this.button.style.setProperty("width", canvas.canvas.height * 0.2+"px");
-		this.button.style.setProperty("height", canvas.canvas.height * 0.2+"px");
-		this.button.style.setProperty("left", canvas.canvas.width * 0.2 * this.id+"px");
-		this.button.style.setProperty("top", canvas.canvas.height * 0.8+"px");
+		this.button.style.setProperty("width", this.canvas_info.canvas.height * 0.2+"px");
+		this.button.style.setProperty("height", this.canvas_info.canvas.height * 0.2+"px");
+		this.button.style.setProperty("left", this.canvas_info.canvas.height * 0.2 * this.id+"px");
+		this.button.style.setProperty("top", this.canvas_info.canvas.height * 0.8+"px");
 		
 		this.button.addEventListener("click", (event) => {
-			if(!this.isselected) {
-				this.isselected = true;
-			}
-			else {
-				this.isselected = false;
-			}
+			DefenseGameValues.PrepUnitSelected = this.id;
 		});
 		
 		canvas.canvas.parentElement.append(this.button);
 	}
 	draw() {
-		if(this.isselected) {
-			canvas.setnewcolor("#ffef00");
-			canvas.box(canvas.canvas.width * 0.2 * this.id, canvas.canvas.height * 0.8, canvas.canvas.height * 0.2, canvas.canvas.height * 0.2);
-		}
-		canvas.image(ArmyImages[this.id * 2], canvas.canvas.width * 0.2 * this.id, canvas.canvas.height * 0.8, canvas.canvas.height * 0.2, canvas.canvas.height * 0.2);
-		canvas.setnewcolor("#800000");
-		canvas.resetalign();
-		canvas.text(String(UnitCosts[this.id]) + TranslatedText[SettingsValues.Language][90], canvas.canvas.width * 0.2 * this.id, canvas.canvas.height * 0.95);
-		canvas.setalign("left");
+		this.canvas_info.image(ArmyImages[this.id * 2], this.canvas_info.canvas.height * 0.2 * this.id, this.canvas_info.canvas.height * 0.8, this.canvas_info.canvas.height * 0.2, this.canvas_info.canvas.height * 0.2);
+		this.canvas_info.setnewcolor("#800000");
+		this.canvas_info.resetalign();
+		this.canvas_info.text(String(UnitTypes[this.id].cost)+" "+UnitTypes[this.id].code, this.canvas_info.canvas.height * 0.2 * this.id, this.canvas_info.canvas.height * 0.95);
+		this.canvas_info.setalign("left");
+	}
+}
+
+function DefenseGameDrawUnitSelectorPrepBackground(canvas) {
+	canvas.setnewcolor("#ffef00");
+	canvas.box(canvas.canvas.height * 0.2 * DefenseGameValues.PrepUnitSelected, canvas.canvas.height * 0.8, canvas.canvas.height * 0.2, canvas.canvas.height * 0.2);
+}
+
+class PlayerUnit {
+	constructor(cx, cy, canvas) {
+		this.x = cx;
+		this.y = cy;
+		this.id = DefenseGameValues.PrepUnitSelected * 2;
+		this.hp = UnitTypes[DefenseGameValues.PrepUnitSelected].hp;
+		this.damage = UnitTypes[DefenseGameValues.PrepUnitSelected].damage;
+		this.canvas_info = canvas;
+	}
+	draw() {
+		this.canvas_info.context.save();
+		this.canvas_info.context.translate(this.x, this.y);
+		this.canvas_info.context.rotate(toRadians(90));
+		this.canvas_info.context.translate(-this.x, -this.y);
+		this.canvas_info.image(ArmyImages[this.id], this.x - 35, this.y - 35, 70, 70);
+		this.canvas_info.context.restore();
 	}
 	aim() {
 		
@@ -1100,18 +1167,18 @@ class UnitSelector {
 	fire() {
 		
 	}
-}
-
-class PlayerUnit {
-	constructor() {
-		this.x = 0;
-		this.y = 0;
-	}
 	update() {
 		
 	}
 	findnearestenemy() {
-		
+		let LowestDistance = 1000;
+		let Distance = GetDistance();
+		for(let Id = 0; Id < DefenseGameValues.EnemyUnits; Id++) {
+			Distance = GetDistance(this.x, this.y, DefenseGameValues.EnemyUnits[Id].x, DefenseGameValues.EnemyUnits[Id].y);
+			if(Distance < LowestDistance) {
+				LowestDistance = Distance;
+			}
+		}
 	}
 }
 
@@ -1125,6 +1192,29 @@ class EnemyUnit {
 	}
 	findnearestenemy() {
 		
+	}
+}
+
+class UAV {
+	constructor(canvas) {
+		this.xtargeted = DefenseGameValues.PlayerUnits[randomNumber(DefenseGameValues.PlayerUnits.length)].x;
+		this.ytargeted = DefenseGameValues.PlayerUnits[randomNumber(DefenseGameValues.PlayerUnits.length)].y;
+		this.xoffset = 700 + randomNumber(400); //700-1100
+		this.yoffset = randomNumber(500); //0-500
+		this.canvas_info = canvas;
+	}
+	draw() {
+		//moveTo(cx, cy);
+		this.canvas_info.context.save();
+		this.canvas_info.context.translate(this.xoffset, this.yoffset);
+		//this.canvas_info.context.rotate(toRadians());
+		this.canvas_info.context.translate(-this.xoffset, -this.yoffset);
+		this.canvas_info.image(ArmyImages[8], 0, 0, 50, 50);
+		this.canvas_info.context.restore();
+	}
+	moveTo(x, y) {
+		this.xoffset = x;
+		this.yoffset = y;
 	}
 }
 
@@ -1162,56 +1252,125 @@ function DefenseGameComponentIntro(canvas) {
 	canvas.setnewcolor("#ffffff");
 } 
 
+function DefenseGameComponentDrawArmyImage(id, angle, x, y, canvas) {
+	canvas.context.save();
+	canvas.context.translate(x, y);
+	canvas.context.rotate(toRadians(angle));
+	canvas.context.translate(-x, -y);
+	canvas.image(ArmyImages[id], x - 25, y - 25, 50, 50);
+	canvas.context.restore();
+}
+
+function DefenseGameComponentDrawTruck(angle, x, y, canvas) {
+	DefenseGameComponentDrawArmyImage(12, angle, x, y, canvas);
+}
+
+function DefenseGameComponentDrawUAV(angle, x, y, canvas) {
+	DefenseGameComponentDrawArmyImage(8, angle, x, y, canvas);
+}
+
+function DefenseGameComponentPrepDropoffCallback(event) {
+	//y location check, cost check
+	if(
+		DefenseGameValues.PrepUnitSelected !== -1 &&
+		MousePos.X > 100 + 35 && MousePos.X < 500 - 35 &&
+		MousePos.Y < (event.currentTarget.canvasParam.canvas.height * 0.8) - 35 &&
+		UnitTypes[DefenseGameValues.PrepUnitSelected].cost <= DefenseGameValues.Points
+	) {
+		DefenseGameValues.Points -= UnitTypes[DefenseGameValues.PrepUnitSelected].cost;
+		DefenseGameValues.PlayerUnits.push(new PlayerUnit(MousePos.X, MousePos.Y, event.currentTarget.canvasParam));
+		DefenseGameValues.PrepUnitSelected = -1;
+	}
+}
+
 function DefenseGameComponentPrep(canvas) {
+	if(DefenseGameValues.WavesRemaining === 0) {
+		return;
+	}
+	console.log("defense game prep");
 	canvas.clear("#36291b");
+	
+	window.addEventListener("click", DefenseGameComponentPrepDropoffCallback);
+	window.canvasParam = canvas;
+	
 	//main game
 	let ArrowSkip = new Arrow(950, 450, 50, 50, ArrowDirections.Right, canvas);
 	ArrowSkip.button.addEventListener("click", (event) => {
 		ArrowSkip.deleteButton();
 		DefenseGameValues.IsPrepEnd = true;
-		deleteCanvasInputElems(canvas);
 	}, { once: true });
 	timelimitStart(60); //1:00 min to prepare defense, skippable
 	let UnitSelectors = [];
 	for(let Id = 0; Id < 4; Id++) {
 		UnitSelectors.push(new UnitSelector(Id, canvas));
 	}
+	DefenseGameDrawUnitSelectorPrepBackground(canvas);
 	let timerInterval = window.setInterval((canvas) => {
-		//bg render
+		//update mouse pos
+		mouseAssignOffsets(cvs.canvas);
+		//screen clear
 		canvas.clear("#36291b");
+		//border lines render
+		canvas.line(100, 0, 100, 500, 15, "#800000");
+		canvas.line(500, 0, 500, 500, 15, "#800000");
+		//bg render
 		canvas.setnewcolor("#dddddd");
 		canvas.box(0, canvas.canvas.height * 0.8, canvas.canvas.width, canvas.canvas.height * 0.2);
 		canvas.setnewcolor("#aaaaaa");
-		canvas.box(0, canvas.canvas.height * 0.8, canvas.canvas.height * 0.2, canvas.canvas.height * 0.2);
+		canvas.box(canvas.canvas.width * 0.9, canvas.canvas.height * 0.8, canvas.canvas.width * 0.1, canvas.canvas.height * 0.2);
 		canvas.setnewcolor("#800000");
 		canvas.resetalign();
-		canvas.text(DefenseGameValues.Points, canvas.canvas.width * 0.9, canvas.canvas.height * 0.9);
+		canvas.text(DefenseGameValues.Points, canvas.canvas.width * 0.92, canvas.canvas.height * 0.9);
 		canvas.setalign("left");
 		canvas.setnewcolor("#000000");
 		ArrowSkip.draw(canvas);
+		//sprites and assets render
+		for(let Id = 0; Id < DefenseGameValues.UAVLeft; Id++) {
+			DefenseGameComponentDrawUAV(90, 50, 100 + Id * 30, canvas);
+		}
+		DefenseGameComponentDrawTruck(270, 25, 250, canvas);
+		DefenseGameComponentDrawTruck(225, 25, 300, canvas);
+		DefenseGameComponentDrawTruck(200, 25, 350, canvas);
+		DefenseGameComponentDrawTruck(200, 60, 350, canvas);
+		//selector - render first!
+		if(DefenseGameValues.PrepUnitSelected !== -1) {
+			DefenseGameDrawUnitSelectorPrepBackground(canvas);
+		}
+		//units
+		for(let Id = 0; Id < DefenseGameValues.PlayerUnits.length; Id++) {
+			DefenseGameValues.PlayerUnits[Id].draw();
+		}
 		//selection menu
 		for(let Id = 0; Id < 4; Id++) {
 			UnitSelectors[Id].draw();
 		}
+		canvas.text("UAV: "+DefenseGameValues.UAVLeft, canvas.canvas.width * 0.7, canvas.canvas.height * 0.88); //UAVs
+		canvas.text(TranslatedText[SettingsValues.Language][255]+": "+DefenseGameValues.AirSupportLeft, canvas.canvas.width * 0.7, canvas.canvas.height * 0.98); //air support
 		//waves
-		renderTextAsMinigameStatus(TranslatedText[SettingsValues.Language][151], DefenseGameValues.WavesRemaining, canvas);
+		renderTextAsMinigameStatus2(TranslatedText[SettingsValues.Language][151], DefenseGameValues.WavesRemaining, canvas);
 		//time stuff
 		timelimitRender(canvas);
-		if(timelimitIsDone()) {
+		if(timelimitIsDone() || DefenseGameValues.IsPrepEnd) {
 			clearInterval(timerInterval);
 			DefenseGameValues.IsPrepEnd = true;
+			DefenseGameValues.PrepUnitSelected = -1;
 			deleteCanvasInputElems(canvas);
+			window.removeEventListener("click", DefenseGameComponentPrepDropoffCallback);
 		} //time limit check
-	}, 100, canvas, UnitSelectors); //preparation interval func
+	}, 50, canvas, UnitSelectors); //preparation interval func
 }
 
 function DefenseGameComponentDefense(canvas) {
+	if(DefenseGameValues.WavesRemaining === 0) {
+		return;
+	}
 	if(!DefenseGameValues.IsPrepEnd) {
       	window.setTimeout(DefenseGameComponentDefense, 100, canvas); // this checks the flag every 100 milliseconds
 		return;
     }
 
 	DefenseGameValues.IsDefenseEnd = false;
+	console.log("defense game defense");	
 	
 	//main game, defenses auto target, player can only call in air support and UAVs, reposition tonks
 	//always aim at nearest
@@ -1286,35 +1445,52 @@ function DefenseGameComponentDefense(canvas) {
 } 
 
 function DefenseGameComponentMain(canvas) {
+	if(!DefenseGameValues.IsIntroEnd) {
+		window.setTimeout(DefenseGameComponentMain, 100, canvas);
+	}
 	DefenseGameComponentMainLoop(canvas);
 }
 
 function DefenseGameComponentMainLoop(canvas) {
+	let mainInterval = 0;
 	if(DefenseGameValues.WavesRemaining === 0) {
-		DefenseGameValues.HasDefended = true;
-		DefenseGameValues.IsOver = 1;
+		clearInterval(mainInterval);
 		return; //stop!
 	}
+	console.log("defense game next accepted");
 	DefenseGameComponentPrep(canvas);
 	DefenseGameComponentDefense(canvas);
-	let timerInterval = window.setInterval((canvas) => {
+	mainInterval = window.setInterval((canvas) => {
 		if(DefenseGameValues.IsDefenseEnd && DefenseGameValues.IsPrepEnd) {
 			DefenseGameValues.IsDefenseEnd = false;
 			DefenseGameValues.IsPrepEnd = false;
-			DefenseGameComponentMainLoop(canvas);
+			if(DefenseGameValues.WavesRemaining === 0) {
+				console.log("defense game stop!");
+				clearInterval(mainInterval);
+				DefenseGameValues.IsOver = 1;
+				DefenseGameValues.HasDefended = true;
+				return;
+			}
+			else {
+				console.log("defense game next");
+				DefenseGameComponentMainLoop(canvas);
+			}
 		}
+		else {}
 	}, 100, canvas);
 }
 
 function DefenseGameReset() {
 	DefenseGameValues.IsIntroEnd = false;
 	DefenseGameValues.IsPrepEnd = false;
+	DefenseGameValues.PrepUnitSelected = -1;
 	DefenseGameValues.IsDefenseEnd = false;
+	DefenseGameValues.DefUnitSelected = -1;
 	DefenseGameValues.IsOver = -1;
 	DefenseGameValues.Points = 100;
 	DefenseGameValues.WavesRemaining = 10;
 	DefenseGameValues.WaveUAVs = 0;
-	DefenseGameValues.HasDefended = false;
+	//has defended - NO RESETTING
 	DefenseGameValues.EnemyUnits = [];
 	DefenseGameValues.PlayerUnits = [];
 }

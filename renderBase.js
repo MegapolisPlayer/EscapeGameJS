@@ -208,15 +208,15 @@ for(let Id = 0; Id < 9; Id++) {
 }
 
 //arrow images
-ArrowImages[0].src = "res/arrow_top.png";
-ArrowImages[1].src = "res/arrow_up.png";
-ArrowImages[2].src = "res/arrow_right.png";
-ArrowImages[3].src = "res/arrow_down.png";
-ArrowImages[4].src = "res/arrow_left.png";
-ArrowImages[5].src = "res/pause.png";	
-ArrowImages[6].src = "res/yes.png";
-ArrowImages[7].src = "res/no.png";
-ArrowImages[8].src = "res/arrow_here.png";
+ArrowImages[0].src = "res/arrow/arrow_top.png";
+ArrowImages[1].src = "res/arrow/arrow_up.png";
+ArrowImages[2].src = "res/arrow/arrow_right.png";
+ArrowImages[3].src = "res/arrow/arrow_down.png";
+ArrowImages[4].src = "res/arrow/arrow_left.png";
+ArrowImages[5].src = "res/arrow/pause.png";	
+ArrowImages[6].src = "res/arrow/yes.png";
+ArrowImages[7].src = "res/arrow/no.png";
+ArrowImages[8].src = "res/arrow/arrow_here.png";
 
 class Arrow {
     insert(canvasobj) {
@@ -329,9 +329,7 @@ class AudioPlayer {
 		this.audioTracks.push(new Audio("res/music/FiveArmies.mp3"));                //defense minigame
 		this.audioTracks.push(new Audio("res/music/Pride.mp3"));                     //wagon cutscenes
 		for(let Id = 0; Id < 19; Id++) {
-			this.audioTracks[Id].onended = () => {
-				
-			};
+			this.audioTracks[Id].loop = true;
 		}
 		
 		//sfx - no looping
@@ -407,4 +405,37 @@ function toRadians(angle) {
 	return angle * (Math.PI / 180);
 }
 
+let MousePos = {
+	X: 0,
+	Y: 0,
+	canvasOffsetTop: 0,
+	canvasOffsetLeft: 0,
+}
+
+function getXOffset(element) {
+	return element.getBoundingClientRect().left;
+}
+function getYOffset(element) {
+	return element.getBoundingClientRect().top;
+}
+
+function mouseAssignTopOffset(topOffset) {
+	MousePos.canvasOffsetTop = element.getBoundingClientRect().top;
+}
+
+function mouseAssignLeftOffset(leftOffset) {
+	MousePos.canvasOffsetLeft = element.getBoundingClientRect().left;
+}
+
+function mouseAssignOffsets(element) {
+	MousePos.canvasOffsetTop = element.getBoundingClientRect().top;
+	MousePos.canvasOffsetLeft = element.getBoundingClientRect().left;
+}
+
+function mouseMover(event) {
+	MousePos.X = event.clientX - MousePos.canvasOffsetLeft;
+	MousePos.Y = event.clientY - MousePos.canvasOffsetTop;
+}
+
+document.onmousemove = mouseMover;
 

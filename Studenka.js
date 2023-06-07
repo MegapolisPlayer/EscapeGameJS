@@ -39,7 +39,7 @@ function StudenkaCutscene(canvas) {
 	
 	setTimeout(() => {
 		ap.sfx[9].loop = true;
-		ap.sfx[9].volume = 0.7; //wayy too boosted
+		ap.sfx[9].volume = 0.4; //wayy too boosted
 		ap.playSFX(9);
 		let dialogue = new Dialogue();
 		dialogue.begin(canvas);

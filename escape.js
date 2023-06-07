@@ -59,7 +59,8 @@ function MainMenuSetup() {
 			FishingImagesLoaded === 4 &&
 			CheesemakingImagesLoaded === 5 &&
 			CheesemakingThingsImagesLoaded === 4 &&
-			ArmyImagesLoaded === 13
+			ArmyImagesLoaded === 13 && 
+			HPImagesLoaded === 4
 		) {
 			clearInterval(thisInterval);
 			MainMenu();
@@ -99,7 +100,7 @@ function MainMenu() {
 	cvs.setnewfont("Arial, FreeSans", "16");
 	
 	cvs.text("(c) Martin/MegapolisPlayer, Jiri/KohoutGD 2023", 650, 472);
-	cvs.text("beta version 0.92, build date 7/6/2023", 650, 492);
+	cvs.text("beta version 0.92, build date 8/6/2023", 650, 492);
 	
 	cvs.setnewcolor("#333399");
 	cvs.setnewfont("Arial, FreeSans", "48");
