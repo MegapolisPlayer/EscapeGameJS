@@ -15,9 +15,10 @@ function TranslationLoad(lang, lid) {
 	req.open("GET", "lang/text"+lang+".txt");
 	req.onload = (event) => {
 		console.log("Processing LC-"+lang);
-		let splittext = req.responseText.split('\n');
+		let splittext = req.responseText;
+		splittext = splittext.replaceAll('\r', ''); //for windows compatibility
+		splittext = splittext.split('\n');
 		for(let Id = 0; Id < splittext.length; Id++) {
-			splittext[Id] = splittext[Id].replaceAll('\r', ''); //for windows compatibility
 			if(splittext[Id].length !== 0) {
 				(TranslatedText[lid]).push(splittext[Id]);
 			}

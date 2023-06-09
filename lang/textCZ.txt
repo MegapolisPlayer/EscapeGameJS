@@ -87,7 +87,7 @@ Utekl jsi!
 autoři hry
 autoři obrázků
 autoři audia a SFX
-autoři překladů
+autoři překladů a materiálů
 licenze:
 Vaše dostižení:
 Medalie za rychlost
@@ -311,3 +311,6 @@ Vz. podpora
 Odpálit dron
 
 Povrch č.
+
+Co znamená slovo
+?

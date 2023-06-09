@@ -87,7 +87,7 @@ You escaped from the Olomouc Region!
 a game by
 images by
 music and audio effects by
-translations by
+translations and material by
 license
 Your achievements:
 Medal for speed
@@ -294,6 +294,8 @@ Deal?
 Thanks!
 Ok, fair enough.
 
+What does the word
+mean?
 Hi, would you like to help us manufacture some cheese?
 It's not too difficult and you get a lot of money, I swear!
 Let's go!

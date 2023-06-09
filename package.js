@@ -641,9 +641,10 @@ function TranslationLoad(lang, lid) {
 	req.open("GET", "lang/text"+lang+".txt");
 	req.onload = (event) => {
 		console.log("Processing LC-"+lang);
-		let splittext = req.responseText.split('\n');
+		let splittext = req.responseText;
+		splittext = splittext.replaceAll('\r', ''); //for windows compatibility
+		splittext = splittext.split('\n');
 		for(let Id = 0; Id < splittext.length; Id++) {
-			splittext[Id] = splittext[Id].replaceAll('\r', ''); //for windows compatibility
 			if(splittext[Id].length !== 0) {
 				(TranslatedText[lid]).push(splittext[Id]);
 			}
@@ -1087,6 +1088,15 @@ function Credits(iscalledfrommm, canvasobj) {
 		canvasobj.textml("Licensed under CC-BY-SA 4.0\nImages - Content License, CC-BY-SA 4.0\nMusic - CC-BY 4.0", 100, 230);
 		canvasobj.resetfontweight();
 	}, 6 * delay);
+
+	setTimeout(() => {
+		//misc
+		canvasobj.image(finalCreditsImage, 0, 0, canvasobj.canvas.width, canvasobj.canvas.height);
+		canvasobj.text(TranslatedText[SettingsValues.Language][75], 50, 190);
+		canvasobj.setfontweight("bold");
+		canvasobj.textml("Nářečí ČJ: cs.wikiversity.org/wiki\nEnglish Dialect: -\nDeutsche Dialekte: -\nРусские диалекты: -\n", 100, 230);
+		canvasobj.resetfontweight();
+	}, 7 * delay);
 	
 	if(!iscalledfrommm) {
 		setTimeout(() => {
@@ -1097,7 +1107,7 @@ function Credits(iscalledfrommm, canvasobj) {
 			canvasobj.text(TranslatedText[SettingsValues.Language][76], 500, 250); 
 			canvasobj.setnewfont("Arial, FreeSans", "32", "normal");
 			canvasobj.resetalign();
-		}, 7 * delay);
+		}, 8 * delay);
 		
 		setTimeout(() => {
 			//achievements - medal for speed
@@ -1107,7 +1117,7 @@ function Credits(iscalledfrommm, canvasobj) {
 			canvasobj.text(TranslatedText[SettingsValues.Language][78], 500, 450); 
 			canvasobj.resetalign()
 			CreditsRenderAchievement(CreditsValues.gotAchievementSpeed, AchievementImages[1], AchievementImages[0], canvasobj);
-		}, 8 * delay);
+		}, 9 * delay);
 
 		setTimeout(() => {
 			//achievements - waiters medal
@@ -1117,7 +1127,7 @@ function Credits(iscalledfrommm, canvasobj) {
 			canvasobj.text(TranslatedText[SettingsValues.Language][80], 500, 450); 
 			canvasobj.resetalign()
 			CreditsRenderAchievement(CreditsValues.gotAchievementWaiter, AchievementImages[2], AchievementImages[0], canvasobj);
-		}, 9 * delay);
+		}, 10 * delay);
 
 		setTimeout(() => {
 			//achievements - help medal
@@ -1127,7 +1137,7 @@ function Credits(iscalledfrommm, canvasobj) {
 			canvasobj.text(TranslatedText[SettingsValues.Language][82], 500, 450); 
 			canvasobj.resetalign()
 			CreditsRenderAchievement(CreditsValues.gotAchievementHelp, AchievementImages[3], AchievementImages[0], canvasobj);
-		}, 10 * delay);
+		}, 11 * delay);
 		
 		setTimeout(() => {
 			//achievements - sus medal
@@ -1137,7 +1147,7 @@ function Credits(iscalledfrommm, canvasobj) {
 			canvasobj.text(TranslatedText[SettingsValues.Language][84], 500, 450); 
 			canvasobj.resetalign()
 			CreditsRenderAchievement(CreditsValues.gotAchievementSus, AchievementImages[4], AchievementImages[0], canvasobj);
-		}, 11 * delay);
+		}, 12 * delay);
 		setTimeout(() => {
 			//time played
 			canvasobj.image(finalCreditsImage, 0, 0, canvasobj.canvas.width, canvasobj.canvas.height);
@@ -1145,7 +1155,7 @@ function Credits(iscalledfrommm, canvasobj) {
 			canvasobj.setfontweight("bold");
 			canvasobj.text(timerToString(), 100, 230);
 			canvasobj.resetfontweight();
-		}, 12 * delay);
+		}, 13 * delay);
 	}
 
 	setTimeout(() => {
@@ -1155,7 +1165,7 @@ function Credits(iscalledfrommm, canvasobj) {
 		window.addEventListener("click", (event) => {
 			location.reload();		
 		});
-	}, (iscalledfrommm ? 8 : 13) * delay);
+	}, (iscalledfrommm ? 9 : 14) * delay);
 	
 }
 
@@ -1927,6 +1937,9 @@ let DialectTranslationGameValues = {
 	IsOver: -1,
 	AmountEarned: 0,
 	AmountTranslated: 0,
+	DialectWords: [],
+	CorrectAnswers: [],
+	//other options are randomly picked from the list of correct answers except for the actual correct answer
 }
 
 function DialectTranslationGame(canvas) {
@@ -1962,19 +1975,61 @@ function DialectTranslationGameComponentIntro(canvas) {
 	ArrowEnd.draw(canvas);
 	canvas.setnewcolor("#ffffff");
 } 
+
+function DialectTranslationMinigameLoadFiles() {
+	let reqd = new XMLHttpRequest();
+	let reqn = new XMLHttpRequest();
+	let code;
+	switch(SettingsValues.Language) {
+		case 0:
+			code = "EN";
+		case 1:
+			code = "CZ";
+		case 2:
+			code = "DE";
+		case 3:
+			code = "RU";
+		case 4:
+			code = "SUS";
+		case 5:
+			code = "BA";
+	}
+	reqd.open("GET", "res/minigames/dialect/dialect"+lang+".txt");
+	reqn.open("GET", "res/minigames/dialect/non"+lang+".txt");
+	reqd.onload = (event) => {
+		let splittext = req.responseText;
+		splittext = splittext.replaceAll('\r', '');
+		splittext = splittext.split('\n');
+		for(let Id = 0; Id < splittext.length; Id++) {
+			DialectTranslationGameValues.DialectWords.push(splittext[Id]);
+		}
+	}
+	reqn.onload = (event) => {
+		let splittext = req.responseText;
+		splittext = splittext.replaceAll('\r', '');
+		splittext = splittext.split('\n');
+		for(let Id = 0; Id < splittext.length; Id++) {
+			DialectTranslationGameValues.CorrectAnswers.push(splittext[Id]);
+		}
+	}
+	reqd.send();
+	reqn.send();
+}
+
 function DialectTranslationGameComponentMain(canvas) {
 	canvas.clear("#ffffff");
+	//load files
+	DialectTranslationMinigameLoadFiles();
 	//main game
 	timelimitStart(120); //2:00 min
 	let timerInterval = window.setInterval((canvas) => {
-		//selection minigame
-		//hardest part finding words (can be autoloaded in same way as translations)
-		//3 buttons with 2 incorrect and 1 correct answer
-		//points, on time
-		//balance can be tweaked
-		//extra simple
+		//bg render
+		canvas.clear("#ffffff");
+		//elements
+		canvas.setnewcolor("#dddddd");
+		canvas.box(0, canvas.canvas.height * 0.8, canvas.canvas.width, canvas.canvas.height * 0.2);
 		//amount earned info
-		renderTextAsMinigameStatus(TranslatedText[SettingsValues.Language][123], DialectTranslationGameValues.AmountEarned, canvas);
+		renderTextAsMinigameStatus2(TranslatedText[SettingsValues.Language][123], DialectTranslationGameValues.AmountEarned, canvas);
 		//time stuff
 		timelimitRender(canvas);
 		if(timelimitIsDone()) {
@@ -6146,7 +6201,7 @@ function MainMenu() {
 	cvs.setnewfont("Arial, FreeSans", "16");
 	
 	cvs.text("(c) Martin/MegapolisPlayer, Jiri/KohoutGD 2023", 650, 472);
-	cvs.text("beta version 0.95, build date 9/6/2023", 650, 492);
+	cvs.text("beta version 0.95, build date 10/6/2023", 650, 492);
 	
 	cvs.setnewcolor("#333399");
 	cvs.setnewfont("Arial, FreeSans", "48");

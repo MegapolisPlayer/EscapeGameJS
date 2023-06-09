@@ -748,6 +748,9 @@ let DialectTranslationGameValues = {
 	IsOver: -1,
 	AmountEarned: 0,
 	AmountTranslated: 0,
+	DialectWords: [],
+	CorrectAnswers: [],
+	//other options are randomly picked from the list of correct answers except for the actual correct answer
 }
 
 function DialectTranslationGame(canvas) {
@@ -783,19 +786,61 @@ function DialectTranslationGameComponentIntro(canvas) {
 	ArrowEnd.draw(canvas);
 	canvas.setnewcolor("#ffffff");
 } 
+
+function DialectTranslationMinigameLoadFiles() {
+	let reqd = new XMLHttpRequest();
+	let reqn = new XMLHttpRequest();
+	let code;
+	switch(SettingsValues.Language) {
+		case 0:
+			code = "EN";
+		case 1:
+			code = "CZ";
+		case 2:
+			code = "DE";
+		case 3:
+			code = "RU";
+		case 4:
+			code = "SUS";
+		case 5:
+			code = "BA";
+	}
+	reqd.open("GET", "res/minigames/dialect/dialect"+lang+".txt");
+	reqn.open("GET", "res/minigames/dialect/non"+lang+".txt");
+	reqd.onload = (event) => {
+		let splittext = req.responseText;
+		splittext = splittext.replaceAll('\r', '');
+		splittext = splittext.split('\n');
+		for(let Id = 0; Id < splittext.length; Id++) {
+			DialectTranslationGameValues.DialectWords.push(splittext[Id]);
+		}
+	}
+	reqn.onload = (event) => {
+		let splittext = req.responseText;
+		splittext = splittext.replaceAll('\r', '');
+		splittext = splittext.split('\n');
+		for(let Id = 0; Id < splittext.length; Id++) {
+			DialectTranslationGameValues.CorrectAnswers.push(splittext[Id]);
+		}
+	}
+	reqd.send();
+	reqn.send();
+}
+
 function DialectTranslationGameComponentMain(canvas) {
 	canvas.clear("#ffffff");
+	//load files
+	DialectTranslationMinigameLoadFiles();
 	//main game
 	timelimitStart(120); //2:00 min
 	let timerInterval = window.setInterval((canvas) => {
-		//selection minigame
-		//hardest part finding words (can be autoloaded in same way as translations)
-		//3 buttons with 2 incorrect and 1 correct answer
-		//points, on time
-		//balance can be tweaked
-		//extra simple
+		//bg render
+		canvas.clear("#ffffff");
+		//elements
+		canvas.setnewcolor("#dddddd");
+		canvas.box(0, canvas.canvas.height * 0.8, canvas.canvas.width, canvas.canvas.height * 0.2);
 		//amount earned info
-		renderTextAsMinigameStatus(TranslatedText[SettingsValues.Language][123], DialectTranslationGameValues.AmountEarned, canvas);
+		renderTextAsMinigameStatus2(TranslatedText[SettingsValues.Language][123], DialectTranslationGameValues.AmountEarned, canvas);
 		//time stuff
 		timelimitRender(canvas);
 		if(timelimitIsDone()) {
