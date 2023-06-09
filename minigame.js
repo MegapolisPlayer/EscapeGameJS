@@ -708,6 +708,9 @@ function InfodeskGameComponentMain(canvas) {
 	//main game
 	timelimitStart(120); //2:00 min
 	let timerInterval = window.setInterval((canvas) => {
+		//some ideas:
+		//geography quiz?
+		//best option - random trivia quiz about railroads (not too difficult, e.g. selection quiz about gauge and where is the widest, where is some medium sized city, czech administrative regions etc.)
 		//amount earned info
 		renderTextAsMinigameStatus(TranslatedText[SettingsValues.Language][116], InfodeskGameValues.AmountEarned, canvas);
 		//time stuff
@@ -778,7 +781,12 @@ function DialectTranslationGameComponentMain(canvas) {
 	//main game
 	timelimitStart(120); //2:00 min
 	let timerInterval = window.setInterval((canvas) => {
-		
+		//selection minigame
+		//hardest part finding words (can be autoloaded in same way as translations)
+		//3 buttons with 2 incorrect and 1 correct answer
+		//points, on time
+		//balance can be tweaked
+		//extra simple
 		//amount earned info
 		renderTextAsMinigameStatus(TranslatedText[SettingsValues.Language][123], DialectTranslationGameValues.AmountEarned, canvas);
 		//time stuff
@@ -848,7 +856,10 @@ function CashierGameComponentMain(canvas) {
 	//main game
 	timelimitStart(120); //2:00 min
 	let timerInterval = window.setInterval((canvas) => {
-		
+		//rotating box, raycasting in certain position
+		//a few assets of cereal boxes
+		//3 buttons
+		//literally takes <4hours to implement
 		//amount earned info
 		renderTextAsMinigameStatus(TranslatedText[SettingsValues.Language][130], CashierGameValues.AmountEarned, canvas);
 		//time stuff
@@ -913,7 +924,9 @@ function CleaningGameComponentMain(canvas) {
 	//main game
 	timelimitStart(120); //2:00 min
 	let timerInterval = window.setInterval((canvas) => {
-		
+		//scrubbing back and forth, basically draw a lot of randomized quads and when houbicka collides with them (it tracks cursor, learn to track finger movements on phone)
+		//it disapears, counter
+		//simple
 		//amount earned info
 		renderTextAsMinigameStatus(TranslatedText[SettingsValues.Language][137], CashierGameValues.AmountEarned, canvas);
 		//time stuff
