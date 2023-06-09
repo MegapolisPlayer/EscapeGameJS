@@ -149,20 +149,20 @@ Za každé slovo dostaneš 5Kč.
 Přeloženo
 
 Pokladnická minihra
-Naskenuj co nejvíce produktů tím že je otočíš.
-Za každý produkt dostaneš 5Kč.
-Zrychli rotaci šipkami a zastav jí tlačítkem X.
--
+Naskenuj čárové kódy (označené bílou) umístěné na produktech.
+Za každý produkt dostaneš 10Kč.
+Zrychli rotaci šipkami a zastav jí tlačítkem označeným tečkou.
+Naskenuj produkt tím že zmáčkneš tlačítko s křížem.
 -
 
 Naskenováno
 
 Čištící minihra
-Vyčisti co nejvíce věcí co můžeš.
--
--
--
--
+Vyčisti co nejvíce povrchů.
+Za každý vyčištěný povrch dostaaneš 50Kč.
+Čistí se tím, že pohybuješ myší popř. palcem.
+Musíš vyčistit celý povrch - ani jeden kus špíny
+tam nesmí zůstat.
 
 Vyčistěno
 
@@ -289,7 +289,7 @@ Fakt díky, ušetříš mi hodně práce.
 Ok, budu muset se jestě někoho zeptat.
 
 Čus, pomohl bys mi vyčistit pár laviček?
-Dal bych ti 400 korun.
+Dal bych ti 50 korun za každý vyčistěný povrch.
 Souhlasíš?
 Díky!
 Ok, fajn.
@@ -309,3 +309,5 @@ Zrádce, přijď ihned zpátky!
 Protivníci
 Vz. podpora
 Odpálit dron
+
+Povrch č.

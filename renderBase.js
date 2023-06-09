@@ -405,6 +405,17 @@ function toRadians(angle) {
 	return angle * (Math.PI / 180);
 }
 
+//from stack overflow, heavily edited and kinda needed tho
+
+function DecToHex(c) {
+  var hex = c.toString(16); //base16
+  return hex.length == 1 ? "0" + hex : hex; //zero padding
+}
+
+function RGBToHex(r, g, b) {
+  return String("#" + DecToHex(r) + DecToHex(g) + DecToHex(b));
+}
+
 let MousePos = {
 	X: 0,
 	Y: 0,

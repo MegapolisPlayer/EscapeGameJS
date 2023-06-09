@@ -189,18 +189,18 @@ function Credits(iscalledfrommm, canvasobj) {
 function CreditsButtonRegister(canvasobj) {
 	console.log("Registered CREDITS Button press!");
 	canvasobj.loadingMsg();
-	finalCreditsImage.src = "res/Credits.jpg";
+	finalCreditsImage.src = "res/katowice/Credits.jpg";
 	finalCreditsImage.onload = () => { Credits(true, canvasobj); };
 }
 
 function CreditsCaller(canvasobj) {
 	canvasobj.loadingMsg();
-	finalCreditsImage.src = "res/Credits.jpg";
+	finalCreditsImage.src = "res/katowice/Credits.jpg";
 	finalCreditsImage.onload = () => { Credits(false, canvasobj); };
 }
 
 function debugCredits(iscalledfrommm, canvasobj) {
 	canvasobj.loadingMsg();
-	finalCreditsImage.src = "res/Credits.jpg";
+	finalCreditsImage.src = "res/katowice/Credits.jpg";
 	finalCreditsImage.onload = () => { Credits(iscalledfrommm, canvasobj); };
 }

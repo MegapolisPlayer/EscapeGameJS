@@ -12,8 +12,9 @@ function deleteCanvasInputElems() {
 	}
 }
 
+//inclusive
 function randomNumber(maxRange) {
-  return Math.floor(Math.random() * maxRange);
+  return Math.floor(Math.random() * (maxRange + 1));
 }
 
 function InstantLossScreen(eventNo, canvasobj) {

@@ -405,6 +405,17 @@ function toRadians(angle) {
 	return angle * (Math.PI / 180);
 }
 
+//from stack overflow, heavily edited and kinda needed tho
+
+function DecToHex(c) {
+  var hex = c.toString(16); //base16
+  return hex.length == 1 ? "0" + hex : hex; //zero padding
+}
+
+function RGBToHex(r, g, b) {
+  return String("#" + DecToHex(r) + DecToHex(g) + DecToHex(b));
+}
+
 let MousePos = {
 	X: 0,
 	Y: 0,
@@ -763,8 +774,9 @@ function deleteCanvasInputElems() {
 	}
 }
 
+//inclusive
 function randomNumber(maxRange) {
-  return Math.floor(Math.random() * maxRange);
+  return Math.floor(Math.random() * (maxRange + 1));
 }
 
 function InstantLossScreen(eventNo, canvasobj) {
@@ -1150,19 +1162,19 @@ function Credits(iscalledfrommm, canvasobj) {
 function CreditsButtonRegister(canvasobj) {
 	console.log("Registered CREDITS Button press!");
 	canvasobj.loadingMsg();
-	finalCreditsImage.src = "res/Credits.jpg";
+	finalCreditsImage.src = "res/katowice/Credits.jpg";
 	finalCreditsImage.onload = () => { Credits(true, canvasobj); };
 }
 
 function CreditsCaller(canvasobj) {
 	canvasobj.loadingMsg();
-	finalCreditsImage.src = "res/Credits.jpg";
+	finalCreditsImage.src = "res/katowice/Credits.jpg";
 	finalCreditsImage.onload = () => { Credits(false, canvasobj); };
 }
 
 function debugCredits(iscalledfrommm, canvasobj) {
 	canvasobj.loadingMsg();
-	finalCreditsImage.src = "res/Credits.jpg";
+	finalCreditsImage.src = "res/katowice/Credits.jpg";
 	finalCreditsImage.onload = () => { Credits(iscalledfrommm, canvasobj); };
 }
 function renderTextAsMinigameStatusRoot(x, row, width, text, canvas) {
@@ -1192,6 +1204,13 @@ function renderTextAsMinigameStatus3(text, number, canvas) {
 	let textf = text+": "+number+" ";
 	let metrics = canvas.context.measureText(textf);
 	renderTextAsMinigameStatusRoot(1000 - metrics.width - 20, 0, metrics.width + 20, textf, canvas);
+}
+
+//center top
+function renderTextAsMinigameStatus4(text, number, canvas) {
+	let textf = text+": "+number+" ";
+	let metrics = canvas.context.measureText(textf);
+	renderTextAsMinigameStatusRoot(500 - (metrics.width / 2) - 10, 0, metrics.width + 20, textf, canvas);
 }
 
 //returns if is collision
@@ -1236,11 +1255,11 @@ for(let Id = 0; Id < 5; Id++) {
 	TableImages[Id].onload = () => { TableImagesLoaded++ };
 }
 
-TableImages[0].src = "res/waiter/table_empty.png";
-TableImages[1].src = "res/waiter/table_order.png";
-TableImages[2].src = "res/waiter/table_waiting.png";
-TableImages[3].src = "res/waiter/table_waiting2.png";
-TableImages[4].src = "res/waiter/table_fail.png"; 
+TableImages[0].src = "res/minigames/waiter/table_empty.png";
+TableImages[1].src = "res/minigames/waiter/table_order.png";
+TableImages[2].src = "res/minigames/waiter/table_waiting.png";
+TableImages[3].src = "res/minigames/waiter/table_waiting2.png";
+TableImages[4].src = "res/minigames/waiter/table_fail.png"; 
 
 let OrderImages = [];
 let OrderImagesLoaded = 0;
@@ -1249,8 +1268,8 @@ for(let Id = 0; Id < 2; Id++) {
 	OrderImages[Id].onload = () => { OrderImagesLoaded++ };
 }
 
-OrderImages[0].src = "res/waiter/order.png";
-OrderImages[1].src = "res/waiter/order_selected.png";
+OrderImages[0].src = "res/minigames/waiter/order.png";
+OrderImages[1].src = "res/minigames/waiter/order_selected.png";
 
 //orders, etc
 class TableManager {
@@ -1556,10 +1575,10 @@ for(let Id = 0; Id < 4; Id++) {
 	FishingImages[Id].onload = () => { FishingImagesLoaded++ };
 }
 
-FishingImages[0].src = "res/fish/fish.png";
-FishingImages[1].src = "res/fish/tire.png";
-FishingImages[2].src = "res/fish/boot.png";
-FishingImages[3].src = "res/fish/box.png";
+FishingImages[0].src = "res/minigames/fish/fish.png";
+FishingImages[1].src = "res/minigames/fish/tire.png";
+FishingImages[2].src = "res/minigames/fish/boot.png";
+FishingImages[3].src = "res/minigames/fish/box.png";
 
 class LeObject {
 	constructor(objtype, doesmovevertically, doesmovehorizontally, canvas) {
@@ -1875,6 +1894,9 @@ function InfodeskGameComponentMain(canvas) {
 	//main game
 	timelimitStart(120); //2:00 min
 	let timerInterval = window.setInterval((canvas) => {
+		//some ideas:
+		//geography quiz?
+		//best option - random trivia quiz about railroads (not too difficult, e.g. selection quiz about gauge and where is the widest, where is some medium sized city, czech administrative regions etc.)
 		//amount earned info
 		renderTextAsMinigameStatus(TranslatedText[SettingsValues.Language][116], InfodeskGameValues.AmountEarned, canvas);
 		//time stuff
@@ -1945,7 +1967,12 @@ function DialectTranslationGameComponentMain(canvas) {
 	//main game
 	timelimitStart(120); //2:00 min
 	let timerInterval = window.setInterval((canvas) => {
-		
+		//selection minigame
+		//hardest part finding words (can be autoloaded in same way as translations)
+		//3 buttons with 2 incorrect and 1 correct answer
+		//points, on time
+		//balance can be tweaked
+		//extra simple
 		//amount earned info
 		renderTextAsMinigameStatus(TranslatedText[SettingsValues.Language][123], DialectTranslationGameValues.AmountEarned, canvas);
 		//time stuff
@@ -1975,8 +2002,30 @@ function DialectTranslationGameReset() {
 
 let CashierGameValues = {
 	IsIntroEnd: false,
-	IsOver: -1
+	IsOver: -1,
+	AmountEarned: 0,
+	AmountScanned: 0,
+	IsObjectSelected: false, //for tracking some no issue with different obj every tick
+	CurrentObjectSelected: 1,
+	RotationSpeed: 0, //in degrees
+	CurrentDegrees: 0,
 }
+
+let CashierImages = [];
+let CashierImagesLoaded = 0;
+for(let Id = 0; Id < 6; Id++) {
+	CashierImages.push(new Image());
+	CashierImages[Id].onload = () => { CashierImagesLoaded++ };
+}
+
+CashierImages[0].src = "res/minigames/cashier/scanner.png";
+CashierImages[1].src = "res/minigames/cashier/box.png";
+CashierImages[2].src = "res/minigames/cashier/can.png";
+CashierImages[3].src = "res/minigames/cashier/chips.png";
+CashierImages[4].src = "res/minigames/cashier/pickles.png";
+CashierImages[5].src = "res/minigames/cashier/snackbox.png";
+
+let CashierObjectsBarcodeOffsets = [ 270, 0, 0, 270, 270 ];
 
 function CashierGame(canvas) {
 	CashierGameReset();
@@ -1989,6 +2038,25 @@ function CashierGame(canvas) {
 			CashierGameComponentMain(canvas);
 		}
 	}, 100, canvas);
+}
+
+function CashierGameComponentCheckIfAligned(canvas) {
+	//raycast from set position of scanner to object
+	//if that pixel has code #ffffff - good, next object
+	let hasfoundwhite = false;
+	let pixeldata = canvas.context.getImageData(460, 250, 80, 50);
+	for(let Id = 0; Id < pixeldata.data.length; Id+=4) {
+		if(pixeldata.data[Id + 0] === 255 && pixeldata.data[Id + 1] === 255 && pixeldata.data[Id + 2] === 255) {
+			hasfoundwhite = true;
+			break;
+		}
+	}
+	if(hasfoundwhite) {
+		CashierGameValues.AmountScanned += 1;
+		CashierGameValues.AmountEarned += 10;
+		CashierGameValues.CurrentObjectSelected = 1 + randomNumber(4); //1-5
+		CashierGameValues.CurrentDegrees = 0 + randomNumber(359); //0-359
+	}
 }
 
 function CashierGameComponentIntro(canvas) {
@@ -2012,23 +2080,69 @@ function CashierGameComponentIntro(canvas) {
 	canvas.setnewcolor("#ffffff");
 } 
 function CashierGameComponentMain(canvas) {
+	//buttons
+	let Scan = new Arrow(canvas.canvas.width * 0.6, canvas.canvas.height * 0.8, canvas.canvas.width * 0.1, canvas.canvas.height * 0.2, ArrowDirections.Center, canvas);
+	let SpeedLeft = new Arrow(canvas.canvas.width * 0.7, canvas.canvas.height * 0.8, canvas.canvas.width * 0.1, canvas.canvas.height * 0.2, ArrowDirections.Left, canvas);
+	let SpeedStop = new Arrow(canvas.canvas.width * 0.8, canvas.canvas.height * 0.8, canvas.canvas.width * 0.1, canvas.canvas.height * 0.2, ArrowDirections.Here, canvas);
+	let SpeedRight = new Arrow(canvas.canvas.width * 0.9, canvas.canvas.height * 0.8, canvas.canvas.width * 0.1, canvas.canvas.height * 0.2, ArrowDirections.Right, canvas);
+	//button event listeners
+	Scan.button.addEventListener("click", (event) => {
+		if(
+			Math.abs(CashierGameValues.CurrentDegrees - CashierObjectsBarcodeOffsets[CashierGameValues.CurrentObjectSelected - 1]) % 360 > 350 ||
+ 			Math.abs(CashierGameValues.CurrentDegrees - CashierObjectsBarcodeOffsets[CashierGameValues.CurrentObjectSelected - 1]) % 360 < 10
+		) {
+			CashierGameComponentCheckIfAligned(canvas);
+		}
+	});
+	SpeedLeft.button.addEventListener("click", (event) => {
+		CashierGameValues.RotationSpeed -= 1;
+	});
+	SpeedStop.button.addEventListener("click", (event) => {
+		CashierGameValues.RotationSpeed = 0;
+	});
+	SpeedRight.button.addEventListener("click", (event) => {
+		CashierGameValues.RotationSpeed += 1;
+	});	
+	
+	CashierGameValues.CurrentObjectSelected = 1 + randomNumber(4); //1-5
+	CashierGameValues.CurrentDegrees = 0 + randomNumber(359); //0-359, initial random pos
+	
 	//main game
 	timelimitStart(120); //2:00 min
 	let timerInterval = window.setInterval((canvas) => {
-		
-		//amount earned info
-		renderTextAsMinigameStatus(TranslatedText[SettingsValues.Language][130], CashierGameValues.AmountEarned, canvas);
+		CashierGameValues.CurrentDegrees += CashierGameValues.RotationSpeed;
+		//bg
+		canvas.clear("#dddddd");
+		//buttons
+		canvas.setnewcolor("#ffffff");
+		canvas.box(0, canvas.canvas.height * 0.8, canvas.canvas.width, canvas.canvas.height * 0.2);
+		Scan.draw(canvas);
+		SpeedLeft.draw(canvas);
+		SpeedStop.draw(canvas);
+		SpeedRight.draw(canvas);
+		//scanner
+		canvas.image(CashierImages[0], 450, canvas.canvas.height * 0.8 - 100, 100, 100);
+		//rotating box
+		canvas.context.save();
+		canvas.context.translate(500, 250);
+		canvas.context.rotate(toRadians(CashierGameValues.CurrentDegrees));
+		canvas.context.translate(-500, -250);
+		canvas.image(CashierImages[CashierGameValues.CurrentObjectSelected], 450, 200, 100, 100); //offset so center is @ 500,250
+		canvas.context.restore();
+		//info and stuff
+		canvas.setnewcolor("#ffffff");
+		canvas.box(0, 0, canvas.canvas.width, 50);
+		renderTextAsMinigameStatus2(TranslatedText[SettingsValues.Language][130], CashierGameValues.AmountScanned, canvas);
 		//time stuff
 		timelimitRender(canvas);
 		if(timelimitIsDone()) {
 			clearInterval(timerInterval);
 			addMoney(CashierGameValues.AmountEarned); //10Kc per help
-			window.removeEventListener("click", SetResizeToTrue);	
 			deleteCanvasInputElems(canvas);
 			CashierGameValues.IsOver = 1;
 			return;
 		}
-	}, 100, canvas);
+	}, 20, canvas);
 }
 
 function CashierGameReset() {
@@ -2040,7 +2154,37 @@ function CashierGameReset() {
 
 let CleaningGameValues = {
 	IsIntroEnd: false,
-	IsOver: -1
+	IsOver: -1,
+	AmountEarned: 0,
+	SpongeX: 500,
+	SpongeY: 250,
+	//sponge size: 80 x 20
+	DirtParticlesRemaining: 0, //set in main loop
+	DirtParticles: [], //dont remove, change to different color
+	AmountSurfaces: 0,
+ }
+
+class DirtParticle {
+	constructor(canvas) {
+		this.x = 10 + randomNumber(980); //10-990
+		this.y = 60 + randomNumber(430); //dont spawn at top, 60-490
+		this.cleaned = false;
+		this.canvas_info = canvas;
+	}
+	draw() {
+		if(this.cleaned) { return; }
+		else { this.canvas_info.setnewcolor("#33280a"); }
+		this.canvas_info.box(this.x - 5, this.y - 5, 10, 10);
+	}
+	update() {
+		if(this.cleaned) { return; }
+		//optimizaton, run collisions only if close by X or Y
+		if(Math.abs(this.x - CleaningGameValues.SpongeX) >= 100 || Math.abs(this.y - CleaningGameValues.SpongeY) >= 200) { return; }
+		if(DetectCollisions(this.x - 5, this.y - 5, this.x + 5, this.y + 5, CleaningGameValues.SpongeX - 10, CleaningGameValues.SpongeY - 40, CleaningGameValues.SpongeX + 10, CleaningGameValues.SpongeY + 40)) {
+			this.cleaned = true;
+			CleaningGameValues.DirtParticlesRemaining--;
+		}
+	}
 }
 
 function CleaningGame(canvas) {
@@ -2076,29 +2220,99 @@ function CleaningGameComponentIntro(canvas) {
 	ArrowEnd.draw(canvas);
 	canvas.setnewcolor("#ffffff");
 }
+
+function CleaningGameComponentGenDirt(canvas) {
+	switch(SettingsValues.Difficulty) {
+		case 1:
+			CleaningGameValues.DirtParticlesRemaining = 1000;
+		break;
+		case 2:
+			CleaningGameValues.DirtParticlesRemaining = 2500;
+		break;
+		case 3:
+			CleaningGameValues.DirtParticlesRemaining = 5000;
+		break;
+	}	
+	
+	for(let Id = 0; Id < CleaningGameValues.DirtParticlesRemaining; Id++) {
+		CleaningGameValues.DirtParticles.push(new DirtParticle(canvas));
+	}
+}
+
+function CleaningGameComponentResetDirt() {
+	switch(SettingsValues.Difficulty) {
+		case 1:
+			CleaningGameValues.DirtParticlesRemaining = 1000;
+		break;
+		case 2:
+			CleaningGameValues.DirtParticlesRemaining = 2500;
+		break;
+		case 3:
+			CleaningGameValues.DirtParticlesRemaining = 5000;
+		break;
+	}
+	for(let Id = 0; Id < CleaningGameValues.DirtParticles.length; Id++) {
+		CleaningGameValues.DirtParticles[Id].cleaned = false;
+	}
+}
+
 function CleaningGameComponentMain(canvas) {
 	//main game
-	timelimitStart(120); //2:00 min
+	timelimitStart(180); //3:00 min
+	CleaningGameComponentGenDirt(canvas);
+	let currenthexcode = "#9c9c9c";
 	let timerInterval = window.setInterval((canvas) => {
-		
-		//amount earned info
-		renderTextAsMinigameStatus(TranslatedText[SettingsValues.Language][137], CashierGameValues.AmountEarned, canvas);
-		//time stuff
+		//update mouse pos
+		mouseAssignOffsets(canvas.canvas);
+		CleaningGameValues.SpongeX = MousePos.X;
+		CleaningGameValues.SpongeY = MousePos.Y;
+		//bg render
+		canvas.clear(currenthexcode);
+		//dirt render
+		for(let Id = 0; Id < CleaningGameValues.DirtParticles.length; Id++) {
+			CleaningGameValues.DirtParticles[Id].update();
+			CleaningGameValues.DirtParticles[Id].draw();
+		}
+		//sponge render
+		canvas.setnewcolor("#cc9b16");
+		canvas.box(CleaningGameValues.SpongeX - 10, CleaningGameValues.SpongeY - 40, 20, 80);
+		//info and time
+		canvas.setnewcolor("#ffffff");
+		canvas.box(0, 0, canvas.canvas.width, 50);
+		renderTextAsMinigameStatus2(TranslatedText[SettingsValues.Language][137], (100 - Math.round(CleaningGameValues.DirtParticlesRemaining / CleaningGameValues.DirtParticles.length * 100))+"%", canvas); //amount clean
+		renderTextAsMinigameStatus4(TranslatedText[SettingsValues.Language][257], CleaningGameValues.AmountSurfaces + 1, canvas);
 		timelimitRender(canvas);
+		//next surface check
+		if(CleaningGameValues.DirtParticlesRemaining === 0) {
+			currenthexcode = RGBToHex(100 + randomNumber(155), 100 + randomNumber(155), 100 + randomNumber(155));
+			CleaningGameComponentResetDirt();
+			CleaningGameValues.AmountEarned += 50; //50kc per surface
+			CleaningGameValues.AmountSurfaces++;
+		}
+		//time check
 		if(timelimitIsDone()) {
+			//if when finishing you have more than or exactly 85 percent you will still get 20kc
+			if(Math.round(CleaningGameValues.DirtParticlesRemaining / CleaningGameValues.DirtParticles.length * 100) <= 15) {
+				CleaningGameValues.AmountEarned += 20;
+			}
 			clearInterval(timerInterval);
-			addMoney(CleaningGameValues.AmountEarned); //10Kc per help
-			window.removeEventListener("click", SetResizeToTrue);	
+			addMoney(CleaningGameValues.AmountEarned);
 			deleteCanvasInputElems(canvas);
 			CleaningGameValues.IsOver = 1;
 			return;
 		}
-	}, 100, canvas);
+	}, 20, canvas);
 }
 
 function CleaningGameReset(canvas) {
 	CleaningGameValues.IsIntroEnd = false;
 	CleaningGameValues.IsOver = -1;
+	CleaningGameValues.AmountEarned = 0;
+	CleaningGameValues.SpongeX = 500;
+	CleaningGameValues.SpongeY = 25;
+	CleaningGameValues.DirtParticlesRemaining = 0;
+	CleaningGameValues.DirtParticles = [];
+	CleaningGameValues.AmountSurfaces = 0;
 }
 
 //cheese making - olomouc
@@ -2117,11 +2331,11 @@ for(let Id = 0; Id < 5; Id++) {
 	CheesemakingImages[Id].onload = () => { CheesemakingImagesLoaded++ };
 }
 
-CheesemakingImages[0].src = "res/cheesemaking/Quark.png";
-CheesemakingImages[1].src = "res/cheesemaking/FormedQuark.png";
-CheesemakingImages[2].src = "res/cheesemaking/TvaruzekDirty.png";
-CheesemakingImages[3].src = "res/cheesemaking/TvaruzekDone.png";
-CheesemakingImages[4].src = "res/cheesemaking/TvaruzekFailed.png";
+CheesemakingImages[0].src = "res/minigames/cheesemaking/Quark.png";
+CheesemakingImages[1].src = "res/minigames/cheesemaking/FormedQuark.png";
+CheesemakingImages[2].src = "res/minigames/cheesemaking/TvaruzekDirty.png";
+CheesemakingImages[3].src = "res/minigames/cheesemaking/TvaruzekDone.png";
+CheesemakingImages[4].src = "res/minigames/cheesemaking/TvaruzekFailed.png";
 
 let CheesemakingThingsImages = [];
 let CheesemakingThingsImagesLoaded = 0;
@@ -2130,10 +2344,10 @@ for(let Id = 0; Id < 4; Id++) {
 	CheesemakingThingsImages[Id].onload = () => { CheesemakingThingsImagesLoaded++ };
 }
 
-CheesemakingThingsImages[0].src = "res/cheesemaking/SaltTable.png";
-CheesemakingThingsImages[1].src = "res/cheesemaking/Rack.png";
-CheesemakingThingsImages[2].src = "res/cheesemaking/Bath.png";
-CheesemakingThingsImages[3].src = "res/cheesemaking/Cooler.png";
+CheesemakingThingsImages[0].src = "res/minigames/cheesemaking/SaltTable.png";
+CheesemakingThingsImages[1].src = "res/minigames/cheesemaking/Rack.png";
+CheesemakingThingsImages[2].src = "res/minigames/cheesemaking/Bath.png";
+CheesemakingThingsImages[3].src = "res/minigames/cheesemaking/Cooler.png";
 
 function CheeseGame(canvas) {
 	CheeseGameReset();
@@ -2233,19 +2447,19 @@ for(let Id = 0; Id < 13; Id++) {
 
 //1st - okay, 2nd - destroyed
 
-ArmyImages[0].src = "res/army/Antiair1.png";
-ArmyImages[1].src = "res/army/Antiair2.png";
-ArmyImages[2].src = "res/army/Antitank1.png";
-ArmyImages[3].src = "res/army/Antitank2.png";
-ArmyImages[4].src = "res/army/Tank1.png";
-ArmyImages[5].src = "res/army/Tank2.png";
-ArmyImages[6].src = "res/army/Pillbox1.png";
-ArmyImages[7].src = "res/army/Pillbox2.png";
-ArmyImages[8].src = "res/army/UAV.png";
-ArmyImages[9].src = "res/army/AirSupport.png";
-ArmyImages[10].src = "res/army/Shell.png";
-ArmyImages[11].src = "res/army/EnemyShell.png";
-ArmyImages[12].src = "res/army/Truck.png";
+ArmyImages[0].src = "res/minigames/army/Antiair1.png";
+ArmyImages[1].src = "res/minigames/army/Antiair2.png";
+ArmyImages[2].src = "res/minigames/army/Antitank1.png";
+ArmyImages[3].src = "res/minigames/army/Antitank2.png";
+ArmyImages[4].src = "res/minigames/army/Tank1.png";
+ArmyImages[5].src = "res/minigames/army/Tank2.png";
+ArmyImages[6].src = "res/minigames/army/Pillbox1.png";
+ArmyImages[7].src = "res/minigames/army/Pillbox2.png";
+ArmyImages[8].src = "res/minigames/army/UAV.png";
+ArmyImages[9].src = "res/minigames/army/AirSupport.png";
+ArmyImages[10].src = "res/minigames/army/Shell.png";
+ArmyImages[11].src = "res/minigames/army/EnemyShell.png";
+ArmyImages[12].src = "res/minigames/army/Truck.png";
 
 let HPImages = [];
 let HPImagesLoaded = 0;
@@ -2254,10 +2468,10 @@ for(let Id = 0; Id < 4; Id++) {
 	HPImages[Id].onload = () => { HPImagesLoaded++ };
 }
 
-HPImages[0].src = "res/hpbar/1-2.png";
-HPImages[1].src = "res/hpbar/1-3.png";
-HPImages[2].src = "res/hpbar/2-3.png";
-HPImages[3].src = "res/hpbar/full.png";
+HPImages[0].src = "res/minigames/army/hpbar/1-2.png";
+HPImages[1].src = "res/minigames/army/hpbar/1-3.png";
+HPImages[2].src = "res/minigames/army/hpbar/2-3.png";
+HPImages[3].src = "res/minigames/army/hpbar/full.png";
 
 //in order of AA, AT, TN, PB, UAV
 let UnitTypes = [
@@ -2631,7 +2845,7 @@ function DefenseGameComponentPrep(canvas) {
 	DefenseGameDrawUnitSelectorPrepBackground(canvas);
 	let timerInterval = window.setInterval((canvas) => {
 		//update mouse pos
-		mouseAssignOffsets(cvs.canvas);
+		mouseAssignOffsets(canvas.canvas);
 		//screen clear
 		canvas.clear("#36291b");
 		//border lines render
@@ -5891,7 +6105,8 @@ function MainMenuSetup() {
 			CheesemakingImagesLoaded === 5 &&
 			CheesemakingThingsImagesLoaded === 4 &&
 			ArmyImagesLoaded === 13 && 
-			HPImagesLoaded === 4
+			HPImagesLoaded === 4 &&
+			CashierImagesLoaded === 6
 		) {
 			clearInterval(thisInterval);
 			MainMenu();

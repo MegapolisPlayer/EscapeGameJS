@@ -149,26 +149,26 @@ For every word you will get 5CZK.
 Translated
 
 Cashier minigame
-Process as many products as possible.
-For every product you will get 5CZK.
-Speed up rotation using 
--
--
+Scan barcodes (marked in plain white) by aiming for them
+with the barcode scanner. For every product you will get
+10CZK. Speed up rotation using the left and right arrows.
+Stop the rotation by clicking the dot.
+Scan by clicking the cross.
 
 Scanned
 
 Cleaning minigame
-Clean as much as possible.
--
--
--
--
+Clean as many surfaces as possible.
+For every surface cleaned you will recieve 50CZK.
+Clean the surface by dragging the mouse or your finger.
+You have to clean the entire surface - not a single
+particle can remain.
 
 Cleaned
 
 Cheesemaking minigame
 Make as many cheese wheels as possible.
-For every successful
+For every successful cheese wheel made you will get 20CZK.
 -
 -
 -
@@ -289,7 +289,7 @@ Thank you for saving me a lot of hassle.
 Ok, I'm going to have to ask someone else.
 
 Hi, could you help me clean some benches?
-I could pay you 400 CZK.
+I could pay you 50 CZK for each surface you clean.
 Deal?
 Thanks!
 Ok, fair enough.
@@ -309,3 +309,5 @@ Coward! Come back ASAP!
 Enemies
 Air support
 Launch UAV
+
+Surface no.

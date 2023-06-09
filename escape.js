@@ -60,7 +60,8 @@ function MainMenuSetup() {
 			CheesemakingImagesLoaded === 5 &&
 			CheesemakingThingsImagesLoaded === 4 &&
 			ArmyImagesLoaded === 13 && 
-			HPImagesLoaded === 4
+			HPImagesLoaded === 4 &&
+			CashierImagesLoaded === 6
 		) {
 			clearInterval(thisInterval);
 			MainMenu();
