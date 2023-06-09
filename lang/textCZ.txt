@@ -177,9 +177,9 @@ Vyděláno
 
 Obranná minihra
 Obraň Studénku!
-Postav různé jednotky na pole. Pro použití jednotky klikni na ní.
-Na jednotky máš určitý počet bodů. Vzdušná podpora či drony jsou
-dostupné v ohraničeném počtu.
+Postav různé jednotky na pole. Jednotky vždy střílí na nejbližšího
+protivníka. Na jednotky máš určitý počet bodů. Vzdušná podpora či
+drony jsou dostupné v ohraničeném počtu.
 Budeš muset ubránit několik vln. Pozor na drony!
 
 Zbývajících vln
@@ -308,3 +308,4 @@ Zrádce, přijď ihned zpátky!
 
 Protivníci
 Vz. podpora
+Odpálit dron

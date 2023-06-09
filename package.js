@@ -771,31 +771,15 @@ function InstantLossScreen(eventNo, canvasobj) {
 	deleteCanvasInputElems();
 	canvasobj.clear("black");
 	ap.playTrack(1);
-	canvasobj.resetalign(); 
+	canvasobj.setalign("center"); 
 	canvasobj.setnewfont("Arial, FreeSans", "48", "bold");
 	canvasobj.setnewcolor("#ff0000");
-	canvasobj.text(TranslatedText[SettingsValues.Language][60], 500, 100);
+	canvasobj.text(TranslatedText[SettingsValues.Language][59], 500, 100);
 	canvasobj.resetfontweight();
 	canvasobj.setnewcolor("#ffffff");
-	canvasobj.textml(TranslationGetMultipleLines(SettingsValues.Language, 55+(eventNo*2), 2), 500, 200);
-	InstantLossScreen.Quit = new Button(700, 400, 300, 100, 25, TranslatedText[SettingsValues.Language][17], "canvas_container");
-	InstantLossScreen.Quit.button.addEventListener("click", (event) => {
-		location.reload();
-	});
-}
-
-function MoneyLossScreen(canvasobj) {
-	deleteCanvasInputElems();
-	canvasobj.clear("black");
-	ap.playTrack(1);
-	canvasobj.resetalign(); 
-	canvasobj.setnewfont("Arial, FreeSans", "48", "bold");
-	canvasobj.setnewcolor("#ff0000");
-	canvasobj.text(TranslatedText[SettingsValues.Language][60], 500, 100);
-	canvasobj.resetfontweight();
-	canvasobj.setnewcolor("#ffffff");
-	canvasobj.textml(TranslationGetMultipleLines(SettingsValues.Language, 55+(eventNo*2), 2), 500, 200);
-	InstantLossScreen.Quit = new Button(700, 400, 300, 100, 25, TranslatedText[SettingsValues.Language][17], "canvas_container");
+	canvasobj.textml(TranslationGetMultipleLines(SettingsValues.Language, 60+(eventNo*2), 2), 500, 200);
+	canvasobj.resetalign();
+	InstantLossScreen.Quit = new Button(700, 400, 300, 100, 25, TranslatedText[SettingsValues.Language][11], "canvas_container");
 	InstantLossScreen.Quit.button.addEventListener("click", (event) => {
 		location.reload();
 	});
@@ -1181,24 +1165,33 @@ function debugCredits(iscalledfrommm, canvasobj) {
 	finalCreditsImage.src = "res/Credits.jpg";
 	finalCreditsImage.onload = () => { Credits(iscalledfrommm, canvasobj); };
 }
-function renderTextAsMinigameStatus(text, number, canvas) {
+function renderTextAsMinigameStatusRoot(x, row, width, text, canvas) {
 	canvas.setnewfont("Arial, FreeSans", "32");
 	canvas.setnewcolor("#ffffff");
-	let textf = text+": "+number+" ";
-	let metrics = canvas.context.measureText(textf);
-	canvas.box(1000 - metrics.width - 20, 50, metrics.width + 20, 50);
+	canvas.box(x, row * 50, width, 50);
 	canvas.setnewcolor("#333399");
-	canvas.text(textf, 1000 - metrics.width - 10, 80);
+	canvas.text(text, x + 10, 40 + row * 40);
 }
 
-function renderTextAsMinigameStatus2(text, number, canvas) {
-	canvas.setnewfont("Arial, FreeSans", "32");
-	canvas.setnewcolor("#ffffff");
+//right top corner, 2nd row
+function renderTextAsMinigameStatus(text, number, canvas) {
 	let textf = text+": "+number+" ";
 	let metrics = canvas.context.measureText(textf);
-	canvas.box(0, 0, metrics.width + 20, 50);
-	canvas.setnewcolor("#333399");
-	canvas.text(textf, 10, 40);
+	renderTextAsMinigameStatusRoot(1000 - metrics.width - 20, 1, metrics.width + 20, textf, canvas);
+}
+
+//left top corner
+function renderTextAsMinigameStatus2(text, number, canvas) {
+	let textf = text+": "+number+" ";
+	let metrics = canvas.context.measureText(textf);
+	renderTextAsMinigameStatusRoot(0, 0, metrics.width + 20, textf, canvas);
+}
+
+//right top corner
+function renderTextAsMinigameStatus3(text, number, canvas) {
+	let textf = text+": "+number+" ";
+	let metrics = canvas.context.measureText(textf);
+	renderTextAsMinigameStatusRoot(1000 - metrics.width - 20, 0, metrics.width + 20, textf, canvas);
 }
 
 //returns if is collision
@@ -2223,9 +2216,12 @@ let DefenseGameValues = {
 	WaveUAVs: 0, //enemy UAV
 	HasDefended: false,
 	EnemyUnits: [],
+	EnemyUAVs: [],
 	PlayerUnits: [],
+	PlayerAA: [],
 	UAVLeft: 3,
 	AirSupportLeft: 1,
+	DefenseCurrentTick: 0,
 }
 
 let ArmyImages = [];
@@ -2333,7 +2329,10 @@ class PlayerUnit {
 		this.y = cy;
 		this.id = DefenseGameValues.PrepUnitSelected * 2;
 		this.hp = UnitTypes[DefenseGameValues.PrepUnitSelected].hp;
+		this.cooldown = UnitTypes[DefenseGameValues.PrepUnitSelected].cooldown * 20; //tick every 50ms
+		this.cooldownlasttick = 0;
 		this.damage = UnitTypes[DefenseGameValues.PrepUnitSelected].damage;
+		this.destroyed = false;
 		this.canvas_info = canvas;
 	}
 	draw() {
@@ -2341,21 +2340,19 @@ class PlayerUnit {
 		this.canvas_info.context.translate(this.x, this.y);
 		this.canvas_info.context.rotate(toRadians(90));
 		this.canvas_info.context.translate(-this.x, -this.y);
-		this.canvas_info.image(ArmyImages[this.id], this.x - 35, this.y - 35, 70, 70);
+		this.canvas_info.image(ArmyImages[this.id + this.destroyed], this.x - 35, this.y - 35, 70, 70);
 		this.canvas_info.context.restore();
 	}
-	aim() {
-		
-	}
-	fire() {
-		
-	}
 	update() {
-		
+		if(this.destroyed) { return; }
+		if(this.cooldownlasttick + this.cooldown <= DefenseGameValues.DefenseCurrentTick) {
+			this.cooldownlasttick = DefenseGameValues.DefenseCurrentTick;
+		}
 	}
 	findnearestenemy() {
+		if(this.destroyed) { return; }
 		let LowestDistance = 1000;
-		let Distance = GetDistance();
+		let Distance = 0;
 		for(let Id = 0; Id < DefenseGameValues.EnemyUnits; Id++) {
 			Distance = GetDistance(this.x, this.y, DefenseGameValues.EnemyUnits[Id].x, DefenseGameValues.EnemyUnits[Id].y);
 			if(Distance < LowestDistance) {
@@ -2363,19 +2360,112 @@ class PlayerUnit {
 			}
 		}
 	}
+	setdestroyed() {
+		if(!this.destroyed) {
+			this.destroyed = true;
+		}
+	}
 }
 
+//enemy only has tanks and UAV, made for simplicity of coding and to not get in trouble with blood etc.
 class EnemyUnit {
-	constructor() {
+	constructor(canvas) {
 		this.x = 0;
 		this.y = 0;
+		this.id = 4; //tonk
+		this.hp = UnitTypes[2].hp;
+		this.cooldown = UnitTypes[2].cooldown * 20; //tick every 50ms
+		this.cooldownlasttick = 0;
+		this.damage = UnitTypes[2].damage;
+		this.destroyed = false;
+		this.canvas_info = canvas;
+	}
+	genpos() {
+		this.x = 800 + randomNumber(150); //800-950
+		this.y = this.canvas_info.canvas.height * 0.1 + randomNumber(this.canvas_info.canvas.height * 0.7);
+	}
+	draw() {
+		this.canvas_info.context.save();
+		this.canvas_info.context.translate(this.x, this.y);
+		this.canvas_info.context.rotate(toRadians(270));
+		this.canvas_info.context.translate(-this.x, -this.y);
+		this.canvas_info.image(ArmyImages[this.id + this.destroyed], this.x - 35, this.y - 35, 70, 70);
+		this.canvas_info.context.restore();
 	}
 	update() {
+		if(this.destroyed) { return; }
+		if(this.cooldownlasttick + this.cooldown <= DefenseGameValues.DefenseCurrentTick) {
+			this.cooldownlasttick = DefenseGameValues.DefenseCurrentTick;
+		}
+	}
+	findnearestplayer() {
+		if(this.destroyed) { return; }
+		let LowestDistance = 1000;
+		let Distance = 0;
+		for(let Id = 0; Id < DefenseGameValues.PlayerUnits; Id++) {
+			Distance = GetDistance(this.x, this.y, DefenseGameValues.EnemyUnits[Id].x, DefenseGameValues.EnemyUnits[Id].y);
+			if(Distance < LowestDistance) {
+				LowestDistance = Distance;
+			}
+		}
+	}
+	setdestroyed() {
+		if(!this.destroyed) {
+			this.destroyed = true;
+			DefenseGameValues.WaveEnemies--;
+			DefenseGameValues.Points += Math.round(40 / SettingsValues.Difficulty / 10) * 10; //round to tens, trick
+		}
+	}
+}
+
+class AntiAir {
+	constructor(cx, cy, canvas) {
+		this.x = cx;
+		this.y = cy;
+		this.hp = UnitTypes[0].hp;
+		this.cooldown = UnitTypes[0].cooldown * 20; //tick every 50ms
+		this.cooldownlasttick = 0;
+		this.damage = UnitTypes[0].damage;
+		this.destroyed = false;
+		this.canvas_info = canvas;
+	}
+	draw() {
+		this.canvas_info.context.save();
+		this.canvas_info.context.translate(this.x, this.y);
+		this.canvas_info.context.rotate(toRadians(90));
+		this.canvas_info.context.translate(-this.x, -this.y);
+		this.canvas_info.image(ArmyImages[0 + this.destroyed], this.x - 35, this.y - 35, 70, 70);
+		this.canvas_info.context.restore();
+	}
+	update() {
+		if(this.destroyed) { return; }
+		if(this.cooldownlasttick + this.cooldown <= DefenseGameValues.DefenseCurrentTick) {
+			this.cooldownlasttick = DefenseGameValues.DefenseCurrentTick;
+		}
+	}
+	findnearestUAV() {
+		if(this.destroyed) { return; }
+		let LowestDistance = 1000;
+		let Distance = 0;
+		for(let Id = 0; Id < DefenseGameValues.EnemyUnits.length; Id++) {
 				
+		}
 	}
-	findnearestenemy() {
-		
+	setDestroyed() {
+		this.destroyed = true;
 	}
+}
+
+function findMostHPPlayer() {
+	let IdFound = 0;
+	let MostHP = 1;
+	for(let Id = 0; Id < DefenseGameValues.PlayerUnits.length; Id++) {
+		if(DefenseGameValues.PlayerUnits[Id].hp > MostHP) {
+			MostHP = DefenseGameValues.PlayerUnits[Id].hp;
+			IdFound = Id;
+		}
+	}
+	return IdFound;
 }
 
 class UAV {
@@ -2384,22 +2474,66 @@ class UAV {
 		this.ytargeted = DefenseGameValues.PlayerUnits[randomNumber(DefenseGameValues.PlayerUnits.length)].y;
 		this.xoffset = 700 + randomNumber(400); //700-1100
 		this.yoffset = randomNumber(500); //0-500
+		this.angle = 0;
+		this.distance = 0;
+		this.lengthtraveled = 0;
+		this.starttick = 0;
+		this.islaunched = false;
 		this.canvas_info = canvas;
 	}
 	draw() {
-		//moveTo(cx, cy);
+		if(!this.islaunched) { return; }
+		this.lengthtraveled += 50/50;//50tps, 50pxs
+		this.xoffset = (Math.sin(toRadians(this.angle)) * this.lengthtraveled);
+		this.yoffset = (Math.cos(toRadians(this.angle)) * this.lengthtraveled);
 		this.canvas_info.context.save();
 		this.canvas_info.context.translate(this.xoffset, this.yoffset);
-		//this.canvas_info.context.rotate(toRadians());
+		this.canvas_info.context.rotate(toRadians(this.angle));
 		this.canvas_info.context.translate(-this.xoffset, -this.yoffset);
 		this.canvas_info.image(ArmyImages[8], 0, 0, 50, 50);
 		this.canvas_info.context.restore();
+		this.canvas_info.line(this.xtargeted, this.ytargeted, this.xoffset, this.yoffset, 15, "#800000");
 	}
 	moveTo(x, y) {
 		this.xoffset = x;
 		this.yoffset = y;
 	}
+	launch() {
+		this.islaunched = true;
+		DefenseGameValues.EnemyUAVs.splice(0, 1);
+		let targetId = findMostHPPlayer();
+		this.xtargeted = DefenseGameValues.PlayerUnits[targetId].x;
+		this.ytargeted = DefenseGameValues.PlayerUnits[targetId].y;
+		this.angle = toDegrees(Math.tan(Math.abs(this.yoffset - this.ytargeted) / Math.abs(this.xoffset - this.xtargeted)));
+		this.distance = GetDistance(this.xoffset, this.yoffset, this.xtargeted, this.ytargeted);
+		this.starttick = DefenseGameValues.DefenseCurrentTick;
+		DefenseGameValues.WaveUAVs--;
+	}
 }
+
+class AirSupport {
+	constructor(canvas) {
+		this.x = -100;
+		this.y = randomNumber(500);
+		this.wasused = false;
+		this.canvas_info = canvas;
+	}
+	draw() {
+		
+	}
+	update() {
+		for(let Id = 0; Id < DefenseGameValues.EnemyUnits.length; Id++) {
+			if(0) {
+				
+			}	
+		}
+	}
+	fly() {
+
+	}
+}
+
+let DefenseGameComponentVariablePlayerAirSupport = 0;
 
 function DefenseGame(canvas) {
 	DefenseGameReset();
@@ -2461,7 +2595,14 @@ function DefenseGameComponentPrepDropoffCallback(event) {
 		UnitTypes[DefenseGameValues.PrepUnitSelected].cost <= DefenseGameValues.Points
 	) {
 		DefenseGameValues.Points -= UnitTypes[DefenseGameValues.PrepUnitSelected].cost;
-		DefenseGameValues.PlayerUnits.push(new PlayerUnit(MousePos.X, MousePos.Y, event.currentTarget.canvasParam));
+		if(UnitTypes[DefenseGameValues.PrepUnitSelected].code !== "AA") {
+			//not AA
+			DefenseGameValues.PlayerUnits.push(new PlayerUnit(MousePos.X, MousePos.Y, event.currentTarget.canvasParam));
+		}
+		else {
+			//is AA
+			DefenseGameValues.PlayerAA.push(new AntiAir(MousePos.X, MousePos.Y, event.currentTarget.canvasParam));
+		}
 		DefenseGameValues.PrepUnitSelected = -1;
 	}
 }
@@ -2523,6 +2664,9 @@ function DefenseGameComponentPrep(canvas) {
 		for(let Id = 0; Id < DefenseGameValues.PlayerUnits.length; Id++) {
 			DefenseGameValues.PlayerUnits[Id].draw();
 		}
+		for(let Id = 0; Id < DefenseGameValues.PlayerAA.length; Id++) {
+			DefenseGameValues.PlayerAA[Id].draw();
+		}
 		//selection menu
 		for(let Id = 0; Id < 4; Id++) {
 			UnitSelectors[Id].draw();
@@ -2541,6 +2685,19 @@ function DefenseGameComponentPrep(canvas) {
 			window.removeEventListener("click", DefenseGameComponentPrepDropoffCallback);
 		} //time limit check
 	}, 50, canvas, UnitSelectors); //preparation interval func
+}
+
+function DefenseGameComponentLaunchPlayerUAV(canvas) {
+	if(DefenseGameValues.UAVLeft > 0) {
+		DefenseGameValues.UAVLeft--;
+			
+	}
+}
+function DefenseGameComponentLaunchPlayerAirSupport(canvas) {
+	if(DefenseGameValues.AirSupportLeft > 0) {
+		DefenseGameValues.AirSupportLeft--;
+		DefenseGameComponentVariablePlayerAirSupport.fly();
+	}
 }
 
 function DefenseGameComponentDefense(canvas) {
@@ -2602,13 +2759,94 @@ function DefenseGameComponentDefense(canvas) {
 		break;
 	}
 	
+	for(let Id = 0; Id < DefenseGameValues.WaveEnemies; Id++) {
+		DefenseGameValues.EnemyUnits.push(new EnemyUnit(canvas));
+		DefenseGameValues.EnemyUnits[Id].genpos();
+	}
+	
+	let collisionCheckPassed = true;
+	
+	do {
+		collisionCheckPassed = true;
+		//check for collisions
+		for(let Id = 0; Id < DefenseGameValues.EnemyUnits.length; Id++) {
+			for(let Id2 = 0; Id2 < DefenseGameValues.EnemyUnits.length; Id2++) {
+				if(Id2 !== Id) {
+					if(
+						DetectCollisions(
+							DefenseGameValues.EnemyUnits[Id].x - 35, DefenseGameValues.EnemyUnits[Id].y - 35, DefenseGameValues.EnemyUnits[Id].x + 35, DefenseGameValues.EnemyUnits[Id].y + 35,
+							DefenseGameValues.EnemyUnits[Id2].x - 35, DefenseGameValues.EnemyUnits[Id2].y - 35, DefenseGameValues.EnemyUnits[Id2].x + 35, DefenseGameValues.EnemyUnits[Id2].y + 35)
+					) {
+						DefenseGameValues.EnemyUnits[Id].genpos();
+						collisionCheckPassed = false;
+					}
+				}
+			}
+		}
+		if(collisionCheckPassed) {
+			break;
+		}
+	}
+	while(!collisionCheckPassed);
+	
+	for(let Id = 0; Id < DefenseGameValues.WaveUAVs; Id++) {
+		DefenseGameValues.EnemyUAVs.push(new UAV(canvas));
+	}
+	
+	//player uavs - how?
+	
+	//UI
+	let UAVLaunchButton = new Button(canvas.canvas.width * 0.7, canvas.canvas.height * 0.8, canvas.canvas.width * 0.3, canvas.canvas.height * 0.1, 20, TranslatedText[SettingsValues.Language][256], "canvas_container");
+	let AirSupportButton = new Button(canvas.canvas.width * 0.7, canvas.canvas.height * 0.9, canvas.canvas.width * 0.3, canvas.canvas.height * 0.1, 20, TranslatedText[SettingsValues.Language][255], "canvas_container");
+	UAVLaunchButton.button.addEventListener("click", (event) => {
+		DefenseGameComponentLaunchPlayerUAV(canvas);
+	});
+	AirSupportButton.button.addEventListener("click", (event) => {
+		DefenseGameComponentLaunchPlayerAirSupport(canvas);
+	});
+
+	let HasEnemyLaunchedUAV = false;
+	
 	let mainInterval = window.setInterval((canvas) => {
 		canvas.clear("#36291b");
-		renderTextAsMinigameStatus(TranslatedText[SettingsValues.Language][151], DefenseGameValues.WavesRemaining, canvas); //waves
-		renderTextAsMinigameStatus2(TranslatedText[SettingsValues.Language][254], DefenseGameValues.EnemyUnits.length, canvas); //enemies
+		canvas.setnewcolor("#dddddd");
+		canvas.box(0, canvas.canvas.height * 0.8, canvas.canvas.width, canvas.canvas.height * 0.2);
+		renderTextAsMinigameStatus3(TranslatedText[SettingsValues.Language][151], DefenseGameValues.WavesRemaining, canvas); //waves
+		renderTextAsMinigameStatus2(TranslatedText[SettingsValues.Language][254], DefenseGameValues.WaveEnemies+"+"+DefenseGameValues.WaveUAVs, canvas); //enemies
 		//checks
-		//win check (enemy units = 0) - first because if no enemies but no player divs you still kinda win (you can rebuild)
-		if(DefenseGameValues.EnemyUnits.length === 0) {
+		//sprites and assets render
+		for(let Id = 0; Id < DefenseGameValues.UAVLeft; Id++) {
+			DefenseGameComponentDrawUAV(90, 50, 100 + Id * 30, canvas);
+		}
+		DefenseGameComponentDrawTruck(270, 25, 250, canvas);
+		DefenseGameComponentDrawTruck(225, 25, 300, canvas);
+		DefenseGameComponentDrawTruck(200, 25, 350, canvas);
+		DefenseGameComponentDrawTruck(200, 60, 350, canvas);
+		//units
+		for(let Id = 0; Id < DefenseGameValues.PlayerUnits.length; Id++) {
+			DefenseGameValues.PlayerUnits[Id].draw();
+			DefenseGameValues.PlayerUnits[Id].findnearestenemy();
+			DefenseGameValues.PlayerUnits[Id].update();
+		}
+		for(let Id = 0; Id < DefenseGameValues.PlayerAA.length; Id++) {
+			DefenseGameValues.PlayerAA[Id].draw();
+			DefenseGameValues.PlayerAA[Id].findnearestUAV();
+			DefenseGameValues.PlayerAA[Id].update();
+		}
+		for(let Id = 0; Id < DefenseGameValues.EnemyUnits.length; Id++) {
+			DefenseGameValues.EnemyUnits[Id].draw();
+			DefenseGameValues.EnemyUnits[Id].findnearestplayer();
+			DefenseGameValues.EnemyUnits[Id].update();
+		}
+		//when enemy has no division, launching UAVs (other way around just too OP)
+		if(DefenseGameValues.WaveEnemies === 0 && HasEnemyLaunchedUAV === false) {
+			HasEnemyLaunchedUAV = true;
+			for(let Id = 0; Id < DefenseGameValues.EnemyUAVs.length; Id++) {
+				DefenseGameValues.EnemyUAVs[Id].launch();
+			}
+		}
+		//win check (enemy units = 0, no UAVs left) - first because if no enemies but no player divs you still kinda win (you can rebuild)
+		if(DefenseGameValues.WaveEnemies === 0 && DefenseGameValues.WaveUAVs === 0) {
 			DefenseGameValues.WavesRemaining--;
 			DefenseGameValues.IsDefenseEnd = true;
 			clearInterval(mainInterval);
@@ -2618,19 +2856,21 @@ function DefenseGameComponentDefense(canvas) {
 		//loss check (player units = 0)
 		if(DefenseGameValues.PlayerUnits.length === 0) {
 			DefenseGameValues.WavesRemaining = 0; //to stop recursion
-			InstantLossScreen(2, canvas); //slovak city capture game over screen
 			DefenseGameValues.IsDefenseEnd = true;
 			clearInterval(mainInterval);
 			deleteCanvasInputElems(canvas);
+			InstantLossScreen(1, canvas); //slovak city capture game over screen
 			return;
 		}
-	}, 20, canvas); //main interval func
+		DefenseGameValues.DefenseCurrentTick++;
+	}, 50, canvas); //main interval func
 } 
 
 function DefenseGameComponentMain(canvas) {
 	if(!DefenseGameValues.IsIntroEnd) {
 		window.setTimeout(DefenseGameComponentMain, 100, canvas);
 	}
+	DefenseGameComponentVariablePlayerAirSupport = new AirSupport(canvas);
 	DefenseGameComponentMainLoop(canvas);
 }
 
@@ -2675,7 +2915,12 @@ function DefenseGameReset() {
 	DefenseGameValues.WaveUAVs = 0;
 	//has defended - NO RESETTING
 	DefenseGameValues.EnemyUnits = [];
+	DefenseGameValues.EnemyUAVs = [];
 	DefenseGameValues.PlayerUnits = [];
+	DefenseGameValues.PlayerAA = [];
+	DefenseGameValues.UAVLeft = 3;
+	DefenseGameValues.AirSupportLeft = 1;
+	DefenseGameValues.DefenseCurrentTick = 0;
 }
 
 //ostrava not really a big location, no minigames
@@ -5686,7 +5931,7 @@ function MainMenu() {
 	cvs.setnewfont("Arial, FreeSans", "16");
 	
 	cvs.text("(c) Martin/MegapolisPlayer, Jiri/KohoutGD 2023", 650, 472);
-	cvs.text("beta version 0.92, build date 8/6/2023", 650, 492);
+	cvs.text("beta version 0.95, build date 9/6/2023", 650, 492);
 	
 	cvs.setnewcolor("#333399");
 	cvs.setnewfont("Arial, FreeSans", "48");

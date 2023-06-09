@@ -20,31 +20,15 @@ function InstantLossScreen(eventNo, canvasobj) {
 	deleteCanvasInputElems();
 	canvasobj.clear("black");
 	ap.playTrack(1);
-	canvasobj.resetalign(); 
+	canvasobj.setalign("center"); 
 	canvasobj.setnewfont("Arial, FreeSans", "48", "bold");
 	canvasobj.setnewcolor("#ff0000");
-	canvasobj.text(TranslatedText[SettingsValues.Language][60], 500, 100);
+	canvasobj.text(TranslatedText[SettingsValues.Language][59], 500, 100);
 	canvasobj.resetfontweight();
 	canvasobj.setnewcolor("#ffffff");
-	canvasobj.textml(TranslationGetMultipleLines(SettingsValues.Language, 55+(eventNo*2), 2), 500, 200);
-	InstantLossScreen.Quit = new Button(700, 400, 300, 100, 25, TranslatedText[SettingsValues.Language][17], "canvas_container");
-	InstantLossScreen.Quit.button.addEventListener("click", (event) => {
-		location.reload();
-	});
-}
-
-function MoneyLossScreen(canvasobj) {
-	deleteCanvasInputElems();
-	canvasobj.clear("black");
-	ap.playTrack(1);
-	canvasobj.resetalign(); 
-	canvasobj.setnewfont("Arial, FreeSans", "48", "bold");
-	canvasobj.setnewcolor("#ff0000");
-	canvasobj.text(TranslatedText[SettingsValues.Language][60], 500, 100);
-	canvasobj.resetfontweight();
-	canvasobj.setnewcolor("#ffffff");
-	canvasobj.textml(TranslationGetMultipleLines(SettingsValues.Language, 55+(eventNo*2), 2), 500, 200);
-	InstantLossScreen.Quit = new Button(700, 400, 300, 100, 25, TranslatedText[SettingsValues.Language][17], "canvas_container");
+	canvasobj.textml(TranslationGetMultipleLines(SettingsValues.Language, 60+(eventNo*2), 2), 500, 200);
+	canvasobj.resetalign();
+	InstantLossScreen.Quit = new Button(700, 400, 300, 100, 25, TranslatedText[SettingsValues.Language][11], "canvas_container");
 	InstantLossScreen.Quit.button.addEventListener("click", (event) => {
 		location.reload();
 	});

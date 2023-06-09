@@ -178,8 +178,8 @@ Earned
 Defense minigame
 Defend Studénka!
 Place different units and vehicles on the field. Each unit
-costs a certain amount of points. Actions are available
-after click on unit. You need to defend 10 waves of enemies.
+costs a certain amount of points. Units always shoot at the
+nearest enemy. You need to defend 10 waves of enemies.
 Air support or UAVs are available in limited quantities.
 
 Waves remaining
@@ -308,3 +308,4 @@ Coward! Come back ASAP!
 
 Enemies
 Air support
+Launch UAV
