@@ -680,6 +680,66 @@ let InfodeskGameValues = {
 
 //dialect translation - nezamyslice
 
+let DTMDW = [];
+let DTMCA = [];
+let AmountDTMLoaded = 0;
+
+function DialectTranslationMinigameLoad() {
+	let code;
+	switch(SettingsValues.Language) {
+		case 0:
+			code = "EN";
+			break;
+		case 1:
+			code = "CZ";
+			break;
+		case 2:
+			code = "DE";
+			break;
+		case 3:
+			code = "RU";
+			break;
+		case 4:
+			code = "SUS";
+			break;
+		case 5:
+			code = "BA";
+			break;
+	}
+	let reqd = new XMLHttpRequest();
+	let reqn = new XMLHttpRequest();
+	reqd.open("GET", "./res/minigames/dialect/dialect"+code+".txt");
+	reqn.open("GET", "./res/minigames/dialect/non"+code+".txt");
+	reqd.onload = (event) => {
+		console.log("reqd");
+		let splittext = reqd.responseText;
+		splittext = splittext.replaceAll('\r', '');
+		splittext = splittext.split('\n');
+		for(let Id = 0; Id < splittext.length; Id++) {
+			if(splittext[Id]) {
+				DTMDW.push(splittext[Id]);
+			}
+		}
+		AmountDTMLoaded++;
+		console.log(DTMDW);
+	}
+	reqn.onload = (event) => {
+		console.log("reqn");
+		let splittext = reqn.responseText;
+		splittext = splittext.replaceAll('\r', '');
+		splittext = splittext.split('\n');
+		for(let Id = 0; Id < splittext.length; Id++) {
+			if(splittext[Id]) {
+				DTMCA.push(splittext[Id]);
+			}
+		}
+		AmountDTMLoaded++;
+		console.log(DTMCA);
+	}
+	reqd.send();
+	reqn.send();
+}
+
 //word in dialect: selection of three (depending on difficulty) where one correct spelling in official dialect
 
 let DialectTranslationGameValues = {
@@ -687,8 +747,6 @@ let DialectTranslationGameValues = {
 	IsOver: -1,
 	AmountEarned: 0,
 	AmountTranslated: 0,
-	DialectWords: [],
-	CorrectAnswers: [],
 	CurrentDialectWord: "",
 	CurrentCorrectAnswer: "",
 	AnswerSubmitted: "",
@@ -732,9 +790,9 @@ function DialectTranslationGameComponentIntro(canvas) {
 }
 
 function DialectTranslationGameComponentGenerate() {
-	let randomId = randomNumber(DialectTranslationGameValues.DialectWords.length - 1);
-	DialectTranslationGameValues.CurrentDialectWord = DialectTranslationGameValues.DialectWords[randomId];
-	DialectTranslationGameValues.CurrentCorrectAnswer = DialectTranslationGameValues.CorrectAnswers[randomId];
+	let randomId = randomNumber(DTMDW.length - 1);
+	DialectTranslationGameValues.CurrentDialectWord = DTMDW[randomId];
+	DialectTranslationGameValues.CurrentCorrectAnswer = DTMCA[randomId];
 	let ButtonWCorrectAnswer = randomNumber(3);
 	DialectTranslationGameValues.Buttons[ButtonWCorrectAnswer].button.innerHTML = DialectTranslationGameValues.CurrentCorrectAnswer;
 	let randomAnswer;
@@ -742,10 +800,10 @@ function DialectTranslationGameComponentGenerate() {
 		if(Id === ButtonWCorrectAnswer) { continue; }
 		else {
 			do {
-				randomId = randomNumber(DialectTranslationGameValues.CorrectAnswers.length - 1);
+				randomId = randomNumber(DTMCA.length - 1);
 			}
-			while(DialectTranslationGameValues.CurrentCorrectAnswer === DialectTranslationGameValues.CorrectAnswers[randomId]);
-			DialectTranslationGameValues.Buttons[Id].button.innerHTML = DialectTranslationGameValues.CorrectAnswers[randomId];
+			while(DialectTranslationGameValues.CurrentCorrectAnswer === DTMCA[randomId]);
+			DialectTranslationGameValues.Buttons[Id].button.innerHTML = DTMCA[randomId];
 		}
 	}
 }
@@ -817,8 +875,6 @@ function DialectTranslationGameReset() {
 	DialectTranslationGameValues.IsOver = -1;
 	DialectTranslationGameValues.AmountEarned = 0;
 	DialectTranslationGameValues.AmountTranslated = 0;
-	DialectTranslationGameValues.DialectWords = [];
-	DialectTranslationGameValues.CorrectAnswers = [];
 	DialectTranslationGameValues.CurrentDialectWord = "";
 	DialectTranslationGameValues.CurrentCorrectAnswer = "";
 	DialectTranslationGameValues.AnswerSubmitted = "";
@@ -1147,76 +1203,9 @@ function CleaningGameReset(canvas) {
 	CleaningGameValues.AmountSurfaces = 0;
 }
 
-//cheese making - olomouc
-
-//build factory and then run it
-
-let CheeseGameValues = {
-	IsIntroEnd: false,
-	IsOver: -1,
-	AmountEarned: 0,
-}
-
 //CHEESEMAKING GAME SCRAPPED!
 
 //DEFENSE GAME SCRAPPED!
 
 //ostrava not really a big location, no minigames
 
-let AmountDTMLoaded = 0;
-
-function DialectTranslationMinigameLoad() {
-	let code;
-	switch(SettingsValues.Language) {
-		case 0:
-			code = "EN";
-			break;
-		case 1:
-			code = "CZ";
-			break;
-		case 2:
-			code = "DE";
-			break;
-		case 3:
-			code = "RU";
-			break;
-		case 4:
-			code = "SUS";
-			break;
-		case 5:
-			code = "BA";
-			break;
-	}
-	let reqd = new XMLHttpRequest();
-	let reqn = new XMLHttpRequest();
-	reqd.open("GET", "./res/minigames/dialect/dialect"+code+".txt");
-	reqn.open("GET", "./res/minigames/dialect/non"+code+".txt");
-	reqd.onload = (event) => {
-		console.log("reqd");
-		let splittext = reqd.responseText;
-		splittext = splittext.replaceAll('\r', '');
-		splittext = splittext.split('\n');
-		for(let Id = 0; Id < splittext.length; Id++) {
-			if(splittext[Id]) {
-				DialectTranslationGameValues.DialectWords.push(splittext[Id]);
-			}
-		}
-		AmountDTMLoaded++;
-		console.log(DialectTranslationGameValues.DialectWords);
-	}
-	reqn.onload = (event) => {
-		console.log("reqn");
-		let splittext = reqn.responseText;
-		splittext = splittext.replaceAll('\r', '');
-		splittext = splittext.split('\n');
-		for(let Id = 0; Id < splittext.length; Id++) {
-			if(splittext[Id]) {
-				DialectTranslationGameValues.CorrectAnswers.push(splittext[Id]);
-			}
-		}
-		AmountDTMLoaded++;
-		console.log(DialectTranslationGameValues.CorrectAnswers);
-	}
-	reqd.send();
-	reqn.send();
-}
