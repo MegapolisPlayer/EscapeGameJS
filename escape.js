@@ -133,7 +133,6 @@ function PlayMenu() {
 		buttonNew.deleteButton();
 		buttonLoad.deleteButton();
 		buttonBack.deleteButton();
-		setMoney(100000); //debug!!!!! todo: REMOVE remove REMOVE!!!!!!!
 		//susstina achievement
 		if(SettingsValues.Language === 4) {
 			CreditsValues.gotAchievementSus = true;
