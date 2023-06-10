@@ -36,9 +36,8 @@ function MainMenuSetup() {
 	TranslationLoad("EN", 0);
 	TranslationLoad("CZ", 1);
 	TranslationLoad("DE", 2);
-	TranslationLoad("RU", 3);
-	TranslationLoad("SUS", 4); //jirkas custom lang
-	TranslationLoad("BA", 5); //jirkas custom lang
+	TranslationLoad("SUS", 3); //jirkas custom lang
+	TranslationLoad("BA", 4); //jirkas custom lang
 
 	//key buttons activation
 	window.addEventListener("keydown", (event) => {
@@ -50,17 +49,13 @@ function MainMenuSetup() {
 	//checks if all images loaded
 	let thisInterval = window.setInterval(() => {
 		if(
-			AmountTranslations === 6 && 
+			AmountTranslations === 5 && 
 			TicketImagesLoaded === 2 &&
 			AchievementImagesLoaded === 5 &&
 			ArrowImagesLoaded === 9 &&
 			TableImagesLoaded === 5 &&
 			OrderImagesLoaded === 2 &&
 			FishingImagesLoaded === 4 &&
-			CheesemakingImagesLoaded === 5 &&
-			CheesemakingThingsImagesLoaded === 4 &&
-			ArmyImagesLoaded === 13 && 
-			HPImagesLoaded === 4 &&
 			CashierImagesLoaded === 6
 		) {
 			clearInterval(thisInterval);
@@ -101,7 +96,7 @@ function MainMenu() {
 	cvs.setnewfont("Arial, FreeSans", "16");
 	
 	cvs.text("(c) Martin/MegapolisPlayer, Jiri/KohoutGD 2023", 650, 472);
-	cvs.text("beta version 0.95, build date 10/6/2023", 650, 492);
+	cvs.text("version 1.00, build date 10/6/2023", 650, 492);
 	
 	cvs.setnewcolor("#333399");
 	cvs.setnewfont("Arial, FreeSans", "48");
@@ -143,7 +138,7 @@ function PlayMenu() {
 		if(SettingsValues.Language === 4) {
 			CreditsValues.gotAchievementSus = true;
 		}
-		Intro();
+		IntroSetup();
 	});
 	buttonLoad.button.addEventListener("click", (event) => {
 		Load(cvs);
@@ -159,8 +154,21 @@ function PlayMenu() {
 
 //game stuff
 
-function Intro() {
+function IntroSetup() {
 	console.log("Registered PLAY Button press!");
+	DialectTranslationMinigameLoad();
+	//checks if all dialect files loaded
+	let thisInterval = window.setInterval(() => {
+		if(
+			AmountDTMLoaded === 2
+		) {
+			clearInterval(thisInterval);
+			Intro();
+		}
+	}, 100);
+}
+
+function Intro() {
 	ap.playTrack(1);
 	
 	cvs.clear("black");
