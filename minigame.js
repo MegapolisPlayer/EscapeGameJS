@@ -750,6 +750,7 @@ let DialectTranslationGameValues = {
 	AmountTranslated: 0,
 	DialectWords: [],
 	CorrectAnswers: [],
+	AnswerSubmitted: "",
 	//other options are randomly picked from the list of correct answers except for the actual correct answer
 }
 
@@ -831,6 +832,24 @@ function DialectTranslationGameComponentMain(canvas) {
 	canvas.clear("#ffffff");
 	//load files
 	DialectTranslationMinigameLoadFiles();
+	let Option1 = new Button(canvas.canvas.width * 0.3, canvas.canvas.height * 0.5, canvas.canvas.width * 0.2, canvas.canvas.height * 0.2, 30, "", "canvas_container");
+	let Option2 = new Button(canvas.canvas.width * 0.3, canvas.canvas.height * 0.5, canvas.canvas.width * 0.2, canvas.canvas.height * 0.2, 30, "", "canvas_container");
+	let Option3 = new Button(canvas.canvas.width * 0.3, canvas.canvas.height * 0.5, canvas.canvas.width * 0.2, canvas.canvas.height * 0.2, 30, "", "canvas_container");
+	let Option4 = new Button(canvas.canvas.width * 0.3, canvas.canvas.height * 0.5, canvas.canvas.width * 0.2, canvas.canvas.height * 0.2, 30, "", "canvas_container");
+	
+	Option1.addEventListener("click", (event) => {
+		
+	});	
+	Option2.addEventListener("click", (event) => {
+		
+	});	
+	Option3.addEventListener("click", (event) => {
+		
+	});	
+	Option4.addEventListener("click", (event) => {
+		
+	});	
+	
 	//main game
 	timelimitStart(120); //2:00 min
 	let timerInterval = window.setInterval((canvas) => {
@@ -838,15 +857,17 @@ function DialectTranslationGameComponentMain(canvas) {
 		canvas.clear("#ffffff");
 		//elements
 		canvas.setnewcolor("#dddddd");
-		canvas.box(0, canvas.canvas.height * 0.8, canvas.canvas.width, canvas.canvas.height * 0.2);
+		canvas.box(canvas.canvas.width * 0.2 - 10, canvas.canvas.height * 0.2 - 10, canvas.canvas.width * 0.6 + 20, canvas.canvas.height * 0.3 + 20);
+		canvas.box(canvas.canvas.width * 0.3 - 10, canvas.canvas.height * 0.5 - 10, canvas.canvas.width * 0.4 + 20, canvas.canvas.height * 0.4 + 20);
 		//amount earned info
+		canvas.setnewcolor("#ffffff");
+		canvas.box(canvas.canvas.width * 0.3 - 10, canvas.canvas.height * 0.5 - 10, canvas.canvas.width * 0.4 + 20, canvas.canvas.height * 0.4 + 20);
 		renderTextAsMinigameStatus2(TranslatedText[SettingsValues.Language][123], DialectTranslationGameValues.AmountEarned, canvas);
 		//time stuff
 		timelimitRender(canvas);
 		if(timelimitIsDone()) {
 			clearInterval(timerInterval);
 			addMoney(DialectTranslationGameValues.AmountEarned); //10Kc per help
-			window.removeEventListener("click", SetResizeToTrue);	
 			deleteCanvasInputElems(canvas);
 			DialectTranslationGameValues.IsOver = 1;
 			return;
@@ -957,6 +978,7 @@ function CashierGameComponentMain(canvas) {
 			Math.abs(CashierGameValues.CurrentDegrees - CashierObjectsBarcodeOffsets[CashierGameValues.CurrentObjectSelected - 1]) % 360 > 350 ||
  			Math.abs(CashierGameValues.CurrentDegrees - CashierObjectsBarcodeOffsets[CashierGameValues.CurrentObjectSelected - 1]) % 360 < 10
 		) {
+			ap.playSFX(6);
 			CashierGameComponentCheckIfAligned(canvas);
 		}
 	});
