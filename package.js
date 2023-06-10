@@ -629,7 +629,8 @@ class Dialogue {
 //English - EN
 //Russian - RU
 //German - DE
-//Skolstina - AL
+//Susstina - SUS
+//Basta - BA
 
 let TranslatedText = [];
 let AmountTranslations = 0;
@@ -1081,20 +1082,20 @@ function Credits(iscalledfrommm, canvasobj) {
 	}, 5 * delay);
 
 	setTimeout(() => {
-		//translations
+		//misc
 		canvasobj.image(finalCreditsImage, 0, 0, canvasobj.canvas.width, canvasobj.canvas.height);
-		canvasobj.text(TranslatedText[SettingsValues.Language][75], 50, 190);
+		canvasobj.text(TranslatedText[SettingsValues.Language][74], 50, 190);
 		canvasobj.setfontweight("bold");
-		canvasobj.textml("Licensed under CC-BY-SA 4.0\nImages - Content License, CC-BY-SA 4.0\nMusic - CC-BY 4.0", 100, 230);
+		canvasobj.textml("Nářečí ČJ: cs.wikiversity.org/wiki\nEnglish Dialect: -\nDeutsche Dialekte: -\nРусские диалекты: -\n", 100, 230);
 		canvasobj.resetfontweight();
 	}, 6 * delay);
 
 	setTimeout(() => {
-		//misc
+		//license
 		canvasobj.image(finalCreditsImage, 0, 0, canvasobj.canvas.width, canvasobj.canvas.height);
 		canvasobj.text(TranslatedText[SettingsValues.Language][75], 50, 190);
 		canvasobj.setfontweight("bold");
-		canvasobj.textml("Nářečí ČJ: cs.wikiversity.org/wiki\nEnglish Dialect: -\nDeutsche Dialekte: -\nРусские диалекты: -\n", 100, 230);
+		canvasobj.textml("Licensed under CC-BY-SA 4.0\nImages - Content License, CC-BY-SA 4.0\nMusic - CC-BY 4.0", 100, 230);
 		canvasobj.resetfontweight();
 	}, 7 * delay);
 	
@@ -1403,7 +1404,9 @@ class TableManager {
 					//remove from array
 					WaiterGameValues.OrdersList = WaiterGameValues.OrdersList.filter((order) => {
 						if(order.orderFrom === this.tableno) {
-							WaiterGameValues.IsOrderSelected = -1;
+							if(WaiterGameValues.IsOrderSelected === this.tableno) {
+								WaiterGameValues.IsOrderSelected = -1;
+							}
 							order.buttonObject.remove();
 							return false;
 						}
@@ -1914,7 +1917,6 @@ function InfodeskGameComponentMain(canvas) {
 		if(timelimitIsDone()) {
 			clearInterval(timerInterval);
 			addMoney(InfodeskGameValues.AmountEarned); //10Kc per help
-			window.removeEventListener("click", SetResizeToTrue);	
 			deleteCanvasInputElems(canvas);
 			InfodeskGameValues.IsOver = 1;
 			return;
@@ -1939,7 +1941,12 @@ let DialectTranslationGameValues = {
 	AmountTranslated: 0,
 	DialectWords: [],
 	CorrectAnswers: [],
+	CurrentDialectWord: "",
+	CurrentCorrectAnswer: "",
 	AnswerSubmitted: "",
+	HasLoaded1: false,
+	HasLoaded2: false,
+	Buttons: [],
 	//other options are randomly picked from the list of correct answers except for the actual correct answer
 }
 
@@ -1951,7 +1958,9 @@ function DialectTranslationGame(canvas) {
 	let thisInterval = window.setInterval((canvas) => {
 		if(DialectTranslationGameValues.IsIntroEnd === true) {
 			clearInterval(thisInterval);
-			DialectTranslationGameComponentMain(canvas);
+			//load files
+			DialectTranslationMinigameLoadFiles();
+			DialectTranslationGameComponentLoader(canvas);
 		}
 	}, 100, canvas);
 }
@@ -1978,66 +1987,101 @@ function DialectTranslationGameComponentIntro(canvas) {
 } 
 
 function DialectTranslationMinigameLoadFiles() {
-	let reqd = new XMLHttpRequest();
-	let reqn = new XMLHttpRequest();
 	let code;
 	switch(SettingsValues.Language) {
 		case 0:
 			code = "EN";
+			break;
 		case 1:
 			code = "CZ";
+			break;
 		case 2:
 			code = "DE";
+			break;
 		case 3:
 			code = "RU";
+			break;
 		case 4:
 			code = "SUS";
+			break;
 		case 5:
 			code = "BA";
+			break;
 	}
-	reqd.open("GET", "res/minigames/dialect/dialect"+lang+".txt");
-	reqn.open("GET", "res/minigames/dialect/non"+lang+".txt");
-	reqd.onload = (event) => {
-		let splittext = req.responseText;
+	let reqd = new XMLHttpRequest();
+	let reqn = new XMLHttpRequest();
+	reqd.open("GET", "./res/minigames/dialect/dialect"+code+".txt");
+	reqn.open("GET", "./res/minigames/dialect/non"+code+".txt");
+	reqd.loadend = (event) => {
+		console.log("reqd");
+		let splittext = reqd.responseText;
 		splittext = splittext.replaceAll('\r', '');
 		splittext = splittext.split('\n');
 		for(let Id = 0; Id < splittext.length; Id++) {
 			DialectTranslationGameValues.DialectWords.push(splittext[Id]);
 		}
+		DialectTranslationGameValues.HasLoaded1 = true;
+		console.log(DialectTranslationGameValues.DialectWords);
 	}
-	reqn.onload = (event) => {
-		let splittext = req.responseText;
+	reqn.loadend = (event) => {
+		console.log("reqn");
+		let splittext = reqn.responseText;
 		splittext = splittext.replaceAll('\r', '');
 		splittext = splittext.split('\n');
 		for(let Id = 0; Id < splittext.length; Id++) {
 			DialectTranslationGameValues.CorrectAnswers.push(splittext[Id]);
 		}
+		DialectTranslationGameValues.HasLoaded2 = true;
+		console.log(DialectTranslationGameValues.CorrectAnswers);
 	}
 	reqd.send();
 	reqn.send();
 }
 
+function DialectTranslationGameComponentLoader(canvas) {
+	if(!DialectTranslationGameValues.HasLoaded1 || !DialectTranslationGameValues.HasLoaded2) {
+		window.setTimeout(DialectTranslationGameComponentLoader, 100, canvas);
+		return;
+	}
+	DialectTranslationGameComponentMain(canvas);
+}
+
+function DialectTranslationGameComponentGenerate() {
+	let randomId = randomNumber(DialectTranslationGameValues.DialectWords.length - 1);
+	DialectTranslationGameValues.CurrentDialectWord = DialectTranslationGameValues.DialectWords[randomId];
+	DialectTranslationGameValues.CurrentCorrectAnswer = DialectTranslationGameValues.CorrectAnswers[randomId];
+	let ButtonWCorrectAnswer = randomNumber(3);
+	DialectTranslationGameValues.Buttons[ButtonWCorrectAnswer].button.innerHTML = DialectTranslationGameValues.CurrentCorrectAnswer;
+	let randomAnswer;
+	for(let Id = 0; Id < 4; Id++) {
+		if(Id === ButtonWCorrectAnswer) { continue; }
+		else {
+			DialectTranslationGameValues.Buttons[Id].button.innerHTML = "wronk";
+		}
+	}
+}
+
+function DialectTranslationGameComponentEval(answer) {
+	ap.playSFX(0);
+	console.log("answer "+answer);
+	if(answer === DialectTranslationGameValues.CurrentCorrectAnswer) {
+		DialectTranslationGameValues.AmountEarned += 10;
+		DialectTranslationGameValues.Translated++;
+		DialectTranslationGameComponentGenerate();
+	}
+}
+
 function DialectTranslationGameComponentMain(canvas) {
 	canvas.clear("#ffffff");
-	//load files
-	DialectTranslationMinigameLoadFiles();
-	let Option1 = new Button(canvas.canvas.width * 0.3, canvas.canvas.height * 0.5, canvas.canvas.width * 0.2, canvas.canvas.height * 0.2, 30, "", "canvas_container");
-	let Option2 = new Button(canvas.canvas.width * 0.3, canvas.canvas.height * 0.5, canvas.canvas.width * 0.2, canvas.canvas.height * 0.2, 30, "", "canvas_container");
-	let Option3 = new Button(canvas.canvas.width * 0.3, canvas.canvas.height * 0.5, canvas.canvas.width * 0.2, canvas.canvas.height * 0.2, 30, "", "canvas_container");
-	let Option4 = new Button(canvas.canvas.width * 0.3, canvas.canvas.height * 0.5, canvas.canvas.width * 0.2, canvas.canvas.height * 0.2, 30, "", "canvas_container");
 	
-	Option1.addEventListener("click", (event) => {
-		
-	});	
-	Option2.addEventListener("click", (event) => {
-		
-	});	
-	Option3.addEventListener("click", (event) => {
-		
-	});	
-	Option4.addEventListener("click", (event) => {
-		
-	});	
+	for(let Id = 0; Id < 4; Id++) {
+		DialectTranslationGameValues.Buttons.push(new Button(canvas.canvas.width * 0.3 + ((Id % 2) * canvas.canvas.width * 0.2), canvas.canvas.height * 0.55 + (Math.floor(Id / 2) * canvas.canvas.height * 0.2), canvas.canvas.width * 0.2, canvas.canvas.height * 0.2, 30, "", "canvas_container"));
+		DialectTranslationGameValues.Buttons[Id].button.addEventListener("click", (event) => {
+			DialectTranslationGameComponentEval(event.currentTarget.innerHTML);
+		});	
+	}
+
+	DialectTranslationGameComponentGenerate();	
 	
 	//main game
 	timelimitStart(120); //2:00 min
@@ -2046,15 +2090,21 @@ function DialectTranslationGameComponentMain(canvas) {
 		canvas.clear("#ffffff");
 		//elements
 		canvas.setnewcolor("#dddddd");
-		canvas.box(canvas.canvas.width * 0.2 - 10, canvas.canvas.height * 0.2 - 10, canvas.canvas.width * 0.6 + 20, canvas.canvas.height * 0.3 + 20);
-		canvas.box(canvas.canvas.width * 0.3 - 10, canvas.canvas.height * 0.5 - 10, canvas.canvas.width * 0.4 + 20, canvas.canvas.height * 0.4 + 20);
-		//amount earned info
-		renderTextAsMinigameStatus2(TranslatedText[SettingsValues.Language][123], DialectTranslationGameValues.AmountEarned, canvas);
+		canvas.box(canvas.canvas.width * 0.2 - 10, canvas.canvas.height * 0.15 - 10, canvas.canvas.width * 0.6 + 20, canvas.canvas.height * 0.3 + 20);
+		canvas.box(canvas.canvas.width * 0.3 - 10, canvas.canvas.height * 0.55 - 10, canvas.canvas.width * 0.4 + 20, canvas.canvas.height * 0.4 + 20);
+		//text
+		canvas.setalign("center");
+		canvas.setnewcolor("#333399");
+		canvas.text(TranslatedText[SettingsValues.Language][258] + "\"" + DialectTranslationGameValues.CurrentDialectWord + "\"" + TranslatedText[SettingsValues.Language][259], canvas.canvas.width * 0.5, canvas.canvas.height * 0.3);
+		canvas.resetalign();		
+		//info
+		canvas.setnewcolor("#ffffff");
+		renderTextAsMinigameStatus2(TranslatedText[SettingsValues.Language][123], DialectTranslationGameValues.AmountTranslated, canvas);
 		//time stuff
 		timelimitRender(canvas);
 		if(timelimitIsDone()) {
 			clearInterval(timerInterval);
-			addMoney(DialectTranslationGameValues.AmountEarned); //10Kc per help
+			addMoney(DialectTranslationGameValues.AmountEarned); //10Kc per word
 			deleteCanvasInputElems(canvas);
 			DialectTranslationGameValues.IsOver = 1;
 			return;
@@ -2165,6 +2215,7 @@ function CashierGameComponentMain(canvas) {
 			Math.abs(CashierGameValues.CurrentDegrees - CashierObjectsBarcodeOffsets[CashierGameValues.CurrentObjectSelected - 1]) % 360 > 350 ||
  			Math.abs(CashierGameValues.CurrentDegrees - CashierObjectsBarcodeOffsets[CashierGameValues.CurrentObjectSelected - 1]) % 360 < 10
 		) {
+			ap.playSFX(6);
 			CashierGameComponentCheckIfAligned(canvas);
 		}
 	});
@@ -2395,7 +2446,8 @@ function CleaningGameReset(canvas) {
 
 let CheeseGameValues = {
 	IsIntroEnd: false,
-	IsOver: -1
+	IsOver: -1,
+	AmountEarned: 0,
 }
 
 let CheesemakingImages = [];

@@ -131,20 +131,20 @@ or any of the aforementioned objects (excl. fish).
 Earned
 
 Information minigame
--
--
--
--
--
+Answer as many questions as possible.
+You will get 10CZK for every correct answer.
+If you answer incorrectly, no points will be subtracted.
+Questions do not have a specified theme and vary
+in difficulty. Only 1 answer is correct.
 
-Helped
+Answered
 
 Translation minigame
 Translate as many words from a dialect.
-For every word you will get 5CZK.
--
--
--
+For every word you will get 10CZK.
+Words are from different dialects of the currently
+chosen language (in this case, english)
+Only 1 answer is correct.
 
 Translated
 
@@ -167,11 +167,11 @@ particle can remain.
 Cleaned
 
 Cheesemaking minigame
-Make as many cheese wheels as possible.
-For every successful cheese wheel made you will get 20CZK.
--
--
--
+Make as many cheese wheels as possible by using the traditional
+recipe. For every successful cheese wheel you make you will
+recieve 50CZK. Recipe: First put a piece of quark into salt, then
+put it onto a rack rto dry. After ripening, wash the cheese and put
+it back to dry. If this cheese wheel rots, you will get -20CZK.
 
 Earned
 
@@ -277,7 +277,7 @@ Yay!
 
 Hi, I need to quickly go to a place due to personal reasons
 but my superiors have forbidden me to leave the workplace.
-Would you mind covering me? I can offer you 300 CZK.
+Would you mind covering me? I can offer you a bit of money.
 Oh, thank you very much!
 Ok, I can't really be mad at you, I guess.
 
@@ -294,8 +294,6 @@ Deal?
 Thanks!
 Ok, fair enough.
 
-What does the word
-mean?
 Hi, would you like to help us manufacture some cheese?
 It's not too difficult and you get a lot of money, I swear!
 Let's go!
@@ -313,3 +311,6 @@ Air support
 Launch UAV
 
 Surface no.
+
+What does the word
+mean?

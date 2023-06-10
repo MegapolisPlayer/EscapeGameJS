@@ -3,7 +3,8 @@
 //English - EN
 //Russian - RU
 //German - DE
-//Skolstina - AL
+//Susstina - SUS
+//Basta - BA
 
 let TranslatedText = [];
 let AmountTranslations = 0;

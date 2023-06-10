@@ -107,20 +107,20 @@ function Credits(iscalledfrommm, canvasobj) {
 	}, 5 * delay);
 
 	setTimeout(() => {
-		//translations
+		//misc
 		canvasobj.image(finalCreditsImage, 0, 0, canvasobj.canvas.width, canvasobj.canvas.height);
-		canvasobj.text(TranslatedText[SettingsValues.Language][75], 50, 190);
+		canvasobj.text(TranslatedText[SettingsValues.Language][74], 50, 190);
 		canvasobj.setfontweight("bold");
-		canvasobj.textml("Licensed under CC-BY-SA 4.0\nImages - Content License, CC-BY-SA 4.0\nMusic - CC-BY 4.0", 100, 230);
+		canvasobj.textml("Nářečí ČJ: cs.wikiversity.org/wiki\nEnglish Dialect: -\nDeutsche Dialekte: -\nРусские диалекты: -\n", 100, 230);
 		canvasobj.resetfontweight();
 	}, 6 * delay);
 
 	setTimeout(() => {
-		//misc
+		//license
 		canvasobj.image(finalCreditsImage, 0, 0, canvasobj.canvas.width, canvasobj.canvas.height);
 		canvasobj.text(TranslatedText[SettingsValues.Language][75], 50, 190);
 		canvasobj.setfontweight("bold");
-		canvasobj.textml("Nářečí ČJ: cs.wikiversity.org/wiki\nEnglish Dialect: -\nDeutsche Dialekte: -\nРусские диалекты: -\n", 100, 230);
+		canvasobj.textml("Licensed under CC-BY-SA 4.0\nImages - Content License, CC-BY-SA 4.0\nMusic - CC-BY 4.0", 100, 230);
 		canvasobj.resetfontweight();
 	}, 7 * delay);
 	
