@@ -102,7 +102,7 @@ function Credits(iscalledfrommm, canvasobj) {
 		canvasobj.image(finalCreditsImage, 0, 0, canvasobj.canvas.width, canvasobj.canvas.height);
 		canvasobj.text(TranslatedText[SettingsValues.Language][74], 50, 190);
 		canvasobj.setfontweight("bold");
-		canvasobj.textml("Čeština, English - Martin\nDeutsch, Susština, Bašta - Jirka\n", 100, 230);
+		canvasobj.textml("Čeština, English - Martin\nSusština, Bašta - Jirka\n", 100, 230);
 		canvasobj.resetfontweight();
 	}, 5 * delay);
 
@@ -111,7 +111,7 @@ function Credits(iscalledfrommm, canvasobj) {
 		canvasobj.image(finalCreditsImage, 0, 0, canvasobj.canvas.width, canvasobj.canvas.height);
 		canvasobj.text(TranslatedText[SettingsValues.Language][74], 50, 190);
 		canvasobj.setfontweight("bold");
-		canvasobj.textml("Nářečí ČJ: cs.wikiversity.org/wiki\nEnglish Dialect: https://en.wiktionary.org\nDeutsche Dialekte: -\n", 100, 230);
+		canvasobj.textml("Nářečí ČJ: cs.wikiversity.org/wiki\nEnglish Dialect: https://en.wiktionary.org\n", 100, 230);
 		canvasobj.resetfontweight();
 	}, 6 * delay);
 

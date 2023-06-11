@@ -35,9 +35,8 @@ function MainMenuSetup() {
 	//translations
 	TranslationLoad("EN", 0);
 	TranslationLoad("CZ", 1);
-	TranslationLoad("DE", 2);
-	TranslationLoad("SUS", 3); //jirkas custom lang
-	TranslationLoad("BA", 4); //jirkas custom lang
+	TranslationLoad("SUS", 2); //jirkas custom lang
+	TranslationLoad("BA", 3); //jirkas custom lang
 
 	//key buttons activation
 	window.addEventListener("keydown", (event) => {
@@ -49,7 +48,7 @@ function MainMenuSetup() {
 	//checks if all images loaded
 	let thisInterval = window.setInterval(() => {
 		if(
-			AmountTranslations === 5 && 
+			AmountTranslations === 4 && 
 			TicketImagesLoaded === 2 &&
 			AchievementImagesLoaded === 5 &&
 			ArrowImagesLoaded === 9 &&
