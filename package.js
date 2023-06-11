@@ -4510,14 +4510,12 @@ function StudenkaPole(canvas) {
 	let ArrowToNamesti = new Arrow(350, 400, 100, 100, ArrowDirections.Down, canvas);
 	ArrowToNamesti.button.addEventListener("click", () => {
 		if(GamePaused) { return; }
-		army.deleteButton();
 		ArrowToNamesti.deleteButton();
     	StudenkaNamesti(canvas);
 	}, { once: true });		
 	
 	canvas.image(stu_Locations[5], 0, 0, canvas.canvas.width, canvas.canvas.height);
 	chr.draw(100, 250, 0.5, canvas);
-	army.draw(800, 250, 0.5, canvas);
 	ArrowToNamesti.draw(canvas);
 	PauseButton.draw(canvas);
 	drawMoneyCount(canvas);
@@ -5254,7 +5252,6 @@ function PlayMenu() {
 		buttonNew.deleteButton();
 		buttonLoad.deleteButton();
 		buttonBack.deleteButton();
-		setMoney(100000); //debug!!!!! todo: REMOVE remove REMOVE!!!!!!!
 		//susstina achievement
 		if(SettingsValues.Language === 4) {
 			CreditsValues.gotAchievementSus = true;
