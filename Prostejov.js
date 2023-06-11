@@ -300,6 +300,7 @@ function ProstejovCafeWaiterJob(canvas) {
 		if(dialogue.counter === 4) {
 			dialogue.end();
 			if(dialogue.choice_result === 1) {
+				WaiterGameProstejov = true;
 				WaiterGame(canvas);
 				return;
 			}
@@ -347,6 +348,7 @@ function ProstejovNamestiJob(canvas) {
 		if(dialogue.counter === 4) {
 			dialogue.end();
 			if(dialogue.choice_result === 1) {
+				HelpedBenches = true;
 				CleaningGame(canvas);
 				return;
 			}

@@ -131,16 +131,6 @@ function NezamysliceNastupiste(canvas) {
 function NezamysliceNadrazi(canvas) {
 	console.log("nzm nadrazi");
 	localLocationId = 1;
-	
-	info.append(canvas);
-	info.resetEventListeners();
-	info.button.addEventListener("click", () => {
-		if(GamePaused) { return; }
-		info.deleteButton();
-		ArrowToNastupiste.deleteButton();
-		ArrowToPodnikVenek.deleteButton();
-		NezamysliceNadraziJob(canvas);
-	}, { once: true });
 
 	let ArrowToNastupiste = new Arrow(500, 370, 100, 100, ArrowDirections.Down, canvas);
 	ArrowToNastupiste.button.addEventListener("click", () => {
@@ -227,53 +217,6 @@ function NezamyslicePodnikVnitrek(canvas) {
 	RenderStatus(canvas);
 }
 
-function NezamysliceNadraziJob(canvas) {
-	console.log("nzm nadrazi job");
-	AllowedToPause = false;
-	PauseButton.deleteButton();
-	let dialogue = new Dialogue();
-	dialogue.begin(canvas);
-	dialogue.makeBubble(0, TranslationGetMultipleLines(SettingsValues.Language, 228, 2));
-	dialogue.makeBubble(1, TranslatedText[SettingsValues.Language][230]);
-	dialogue.makeChoice(2);
-	
-	let dWaitInterval = window.setInterval((dialogue) => {
-		if(dialogue.choice_result !== -1) {
-			clearInterval(dWaitInterval);
-			if(dialogue.choice_result === 1) {
-				dialogue.makeBubble(3, TranslatedText[SettingsValues.Language][231]);
-				return;
-			}
-			else {
-				dialogue.makeBubble(3, TranslatedText[SettingsValues.Language][232]);
-				return;
-			}
-		}
-	}, 100, dialogue);
-	
-	let thisInterval = window.setInterval((dialogue, canvas) => {
-		if(dialogue.counter === 4) {
-			dialogue.end();
-			if(dialogue.choice_result === 1) {
-				InfodeskGame(canvas);
-				return;
-			}
-			if(dialogue.choice_result === 0) {
-				InfodeskGameValues.IsOver = 0;
-				return;
-			}
-		}
-		if(InfodeskGameValues.IsOver !== -1) {
-			clearInterval(thisInterval);
-			InfodeskGameReset();
-			PauseButton.append(canvas);
-			AllowedToPause = true;
-			ap.playTrack(4);
-			NezamysliceNadrazi(canvas);
-		}
-	}, 100, dialogue, canvas);
-}
-
 function NezamyslicePodnikVnitrekJob(canvas) {
 	console.log("nzm podnik vnitrek job");
 	AllowedToPause = false;
@@ -303,6 +246,7 @@ function NezamyslicePodnikVnitrekJob(canvas) {
 		if(dialogue.counter === 5) {
 			dialogue.end();
 			if(dialogue.choice_result === 1) {
+				HelpedScholar = true;
 				DialectTranslationGame(canvas);
 				return;
 			}

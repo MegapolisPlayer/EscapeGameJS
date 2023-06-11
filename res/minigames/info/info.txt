@@ -1,7 +1,0 @@
-Q - questions
-AC - correct answers
-
-(Q and AC are calibrated e.g. question on line 1 in Q has the answer at line 1 in AC
-
-AW - wrong answers
-Each question has 5 possible wrong answers.

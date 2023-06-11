@@ -49,7 +49,6 @@ let info = new Character("res/StationInfo.png");
 let schl = new Character("res/Scholar.png");
 let util = new Character("res/UtilityMan.png");
 let chse = new Character("res/Cheesemaker.png");
-let army = new Character("res/Army.png");
 
 class Dialogue {
 	constructor() {

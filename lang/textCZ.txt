@@ -91,7 +91,7 @@ autoři překladů a materiálů
 licenze:
 Vaše dostižení:
 Medalie za rychlost
-Dokončil/a si hru za méně než 10 minut!
+Dokončil/a si hru za méně než 15 minut!
 Medaile čišníka
 Dokončil/a si všechny minihry čišníka!
 Medaile pomocníka
@@ -131,29 +131,30 @@ nebo nejaký objekt (kromě ryb).
 Vyděláno
 
 Informační minihra
--
--
--
--
--
+Odpověz na co nejvíce otázek.
+Za každou správnou odpověď dostaneš 10Kč.
+Za špatnou odpoveď se peníze neodečtou.
+Otázku nemají společné téma a mají variabilní
+obtížnost. Jen 1 odpověď je správná.
 
-Informováno
+Odpovězeno
 
 Překladová minihra
-Přelož co nejvíc slov z daného nářečí.
-Za každé slovo dostaneš 5Kč.
--
--
--
+Přelož co nejvíc slov z českých nářečí.
+Za každé správně převedené slovo dostaneš 10Kč.
+Pouze 1 odpověď je vždy správná.
+Za špatnou odpověd se peníze neodečítají.
+Más 2 minuty.
 
 Přeloženo
 
 Pokladnická minihra
-Naskenuj čárové kódy (označené bílou) umístěné na produktech.
-Za každý produkt dostaneš 10Kč.
-Zrychli rotaci šipkami a zastav jí tlačítkem označeným tečkou.
-Naskenuj produkt tím že zmáčkneš tlačítko s křížem.
--
+Naskenuj čárové kódy (označené bílou) umístěné na
+produktech. Za každý naskenovaný produkt dostaneš
+10Kč. Zrychli rotaci šipkami a zastav jí tlačítkem 
+označeným krížkem. Naskenuj produkt tím že zmáčkneš
+tlačítko s tečkou. Máš 2 minuty.
+
 
 Naskenováno
 
@@ -171,7 +172,7 @@ Vyrob co nejvíc tvarůžků dodržením tradiční receptury. Recept:
 Nejdříve polož kus tvarohu do soli, dej ho do sušárny zrát a 
 potom je zapotřebí tvarůžek umýt a nechat ho zase zrát v sušárně.
 Nenechejte ho tam ale příliš dlouho, může zplesnivět. Za každý
-tvarůžek 50Kč, pokud zplesniví -50Kč.
+tvarůžek 20Kč, pokud zplesniví -20Kč.
 
 Vyděláno
 
@@ -234,7 +235,7 @@ Vítej v Prostejově. Tohle je už opravdové město a
 ne nějaká náhodná vesnička. A ještě dost hezké k tomu.
 Je taky dost daleko od fronty takže si můžeš trošku
 odpočinout a zas je to asi jedno z nejbezpečnějších míst.
-Jízdenky do Olomouce stojí plus mínus
+Jízdenky do Olomouce stojí plus mínus 
 pokud si je budeš muset koupit
 Hodně štestí!
 
@@ -277,7 +278,7 @@ Jej!
 
 Ahoj, potřebuji se ihned dostat na jedno místo kvůli osobním
 důvodům ale můj náčelník mi zakázal opustit nádraží!
-Mohl bys tady hodinku za mně být? Dám ti za to 300Kč.
+Mohl bys tady hodinku za mně být? Dám ti za to pár korun.
 Strašně ti děkuji!
 Ok, nemůžu být na tebe ani naštvaný asi.
 

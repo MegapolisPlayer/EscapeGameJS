@@ -269,16 +269,6 @@ function OlomoucObchodVnitrek(canvas) {
 function OlomoucSyrarna(canvas) {
 	console.log("olo syrarna");
 	localLocationId = 5;
-
-	chse.append(canvas);
-	chse.resetEventListeners();
-	chse.button.addEventListener("click", () => {
-		if(GamePaused) { return; }
-		chse.deleteButton();
-		ArrowToNamesti.deleteButton();
-		OlomoucSyrarnaJob(canvas);
-	}, { once: true });	
-	
 	
 	let ArrowToNamesti = new Arrow(900, 400, 100, 100, ArrowDirections.Up, canvas);
 	ArrowToNamesti.button.addEventListener("click", () => {
@@ -390,52 +380,6 @@ function OlomoucObchodJob(canvas) {
 			OlomoucObchodVnitrek(canvas);
 		}
 	}, 100, canvas);
-}
-
-function OlomoucSyrarnaJob(canvas) {
-	console.log("olo syrarna job");
-	AllowedToPause = false;
-	PauseButton.deleteButton();
-	let dialogue = new Dialogue();
-	dialogue.begin(canvas);
-	dialogue.makeBubble(0, TranslationGetMultipleLines(SettingsValues.Language, 244, 2));
-	dialogue.makeChoice(1);
-	
-	let dWaitInterval = window.setInterval((dialogue) => {
-		if(dialogue.choice_result !== -1) {
-			clearInterval(dWaitInterval);
-			if(dialogue.choice_result === 1) {
-				dialogue.makeBubble(2, TranslatedText[SettingsValues.Language][246]);
-				return;
-			}
-			else {
-				dialogue.makeBubble(2, TranslatedText[SettingsValues.Language][247]);
-				return;
-			}
-		}
-	}, 100, dialogue);
-	
-	let thisInterval = window.setInterval((dialogue, canvas) => {
-		if(dialogue.counter === 3) {
-			dialogue.end();
-			if(dialogue.choice_result === 1) {
-				CheeseGame(canvas);
-				return;
-			}
-			if(dialogue.choice_result === 0) {
-				CheeseGameValues.IsOver = 0;
-				return;
-			}
-		}
-		if(CheeseGameValues.IsOver !== -1) {
-			clearInterval(thisInterval);
-			CheeseGameReset();
-			PauseButton.append(canvas);
-			AllowedToPause = true;
-			ap.playTrack(6);
-			OlomoucSyrarna(canvas);
-		}
-	}, 100, dialogue, canvas);
 }
 
 function OlomoucNastupisteJob(canvas) {
