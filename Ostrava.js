@@ -137,14 +137,23 @@ function OstravaNastupiste2(canvas) {
 	ArrowToNadrazi.draw(canvas);
 	PauseButton.draw(canvas);
 	drawMoneyCount(canvas);
-	RenderStatus(canvas);
+	RenderStatus(canvas); 
 }
 
 function KatowiceCutscene(canvas) {
 	timerEnd();
-	if(timerToNumber() <= 600) {
+	if(timerToNumber() <= 900) {
+		//900s, 15 mins
 		CreditsValues.gotAchievementSpeed = true;
 	}
+	if(WaiterGameHranice === true && WaiterGameProstejov === true) {
+		CreditsValues.gotAchievementWaiter = true;
+	}
+	if(HelpedScholar === true && HelpedBenches === true) {
+		CreditsValues.gotAchievementHelp = true;
+	}
+	//right now you only need to play the games, not achieve a certain score
+	//too difficult to track imo
 	ap.playTrack(18);
 	canvas.image(ost_Locations[4], 0, 0, canvas.canvas.width, canvas.canvas.height);
 	chrs.draw(160, 160, 0.65, canvas);

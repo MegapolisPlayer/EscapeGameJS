@@ -246,6 +246,7 @@ function NezamyslicePodnikVnitrekJob(canvas) {
 		if(dialogue.counter === 5) {
 			dialogue.end();
 			if(dialogue.choice_result === 1) {
+				HelpedScholar = true;
 				DialectTranslationGame(canvas);
 				return;
 			}

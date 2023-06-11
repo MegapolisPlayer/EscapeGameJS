@@ -59,6 +59,9 @@ function GetDistance(x1, y1, x2, y2) {
 
 //waiter game
 
+let WaiterGameHranice = false;
+let WaiterGameProstejov = false;
+
 let WaiterGameValues = {
 	IsIntroEnd: false,
 	IsOver: -1,
@@ -680,6 +683,8 @@ let InfodeskGameValues = {
 
 //dialect translation - nezamyslice
 
+let HelpedScholar = false;
+
 let DTMDW = [];
 let DTMCA = [];
 let AmountDTMLoaded = 0;
@@ -1039,6 +1044,8 @@ function CashierGameReset() {
 }
 
 //cleaning the benches on the square - olomouc
+
+let HelpedBenches = false;
 
 let CleaningGameValues = {
 	IsIntroEnd: false,

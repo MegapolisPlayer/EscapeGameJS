@@ -310,6 +310,7 @@ function HraniceNaMoraveRestauraceJob(canvas) {
 		if(dialogue.counter === 4) {
 			dialogue.end();
 			if(dialogue.choice_result === 1) {
+				WaiterGameHranice = true;
 				WaiterGame(canvas);
 				return;
 			}

@@ -91,7 +91,7 @@ translations and material by
 license
 Your achievements:
 Medal for speed
-You finished the game in under 10 minutes!
+You finished the game in under 15 minutes!
 Waiter's medal
 You did all the waiter minigames!
 Helper's medal
