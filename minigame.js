@@ -1041,6 +1041,12 @@ function CashierGameComponentMain(canvas) {
 function CashierGameReset() {
 	CashierGameValues.IsIntroEnd = false;
 	CashierGameValues.IsOver = -1;
+	CashierGameValues.AmountEarned = 0;
+	CashierGameValues.AmountScanned = 0;
+	CashierGameValues.IsObjectSelected = false;
+	CashierGameValues.CurrentObjectSelected = 1;
+	CashierGameValues.RotationSpeed = 0;
+	CashierGameValues.CurrentDegrees = 0;
 }
 
 //cleaning the benches on the square - olomouc
