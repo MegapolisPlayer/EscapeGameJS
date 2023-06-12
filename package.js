@@ -1070,7 +1070,7 @@ function Credits(iscalledfrommm, canvasobj) {
 		canvasobj.image(finalCreditsImage, 0, 0, canvasobj.canvas.width, canvasobj.canvas.height);
 		canvasobj.text(TranslatedText[SettingsValues.Language][74], 50, 190);
 		canvasobj.setfontweight("bold");
-		canvasobj.textml("Čeština, English - Martin\nDeutsch, Susština, Bašta - Jirka\n", 100, 230);
+		canvasobj.textml("Čeština, English - Martin\nSusština, Bašta - Jirka\n", 100, 230);
 		canvasobj.resetfontweight();
 	}, 5 * delay);
 
@@ -1079,7 +1079,7 @@ function Credits(iscalledfrommm, canvasobj) {
 		canvasobj.image(finalCreditsImage, 0, 0, canvasobj.canvas.width, canvasobj.canvas.height);
 		canvasobj.text(TranslatedText[SettingsValues.Language][74], 50, 190);
 		canvasobj.setfontweight("bold");
-		canvasobj.textml("Nářečí ČJ: cs.wikiversity.org/wiki\nEnglish Dialect: https://en.wiktionary.org\nDeutsche Dialekte: -\n", 100, 230);
+		canvasobj.textml("Nářečí ČJ: cs.wikiversity.org/wiki\nEnglish Dialect: https://en.wiktionary.org\n", 100, 230);
 		canvasobj.resetfontweight();
 	}, 6 * delay);
 
@@ -2224,6 +2224,12 @@ function CashierGameComponentMain(canvas) {
 function CashierGameReset() {
 	CashierGameValues.IsIntroEnd = false;
 	CashierGameValues.IsOver = -1;
+	CashierGameValues.AmountEarned = 0;
+	CashierGameValues.AmountScanned = 0;
+	CashierGameValues.IsObjectSelected = false;
+	CashierGameValues.CurrentObjectSelected = 1;
+	CashierGameValues.RotationSpeed = 0;
+	CashierGameValues.CurrentDegrees = 0;
 }
 
 //cleaning the benches on the square - olomouc
