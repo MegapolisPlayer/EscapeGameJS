@@ -58,7 +58,7 @@ function DecrementDifficulty() {
 }
 function IncrementLanguage() {
 	SettingsValues.Language++;
-	if(SettingsValues.Language === 5) {
+	if(SettingsValues.Language === 4) {
 		SettingsValues.Language = 0;
 	}
 }
