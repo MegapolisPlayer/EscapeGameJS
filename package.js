@@ -5168,8 +5168,8 @@ function MainMenuSetup() {
 	//translations
 	TranslationLoad("EN", 0);
 	TranslationLoad("CZ", 1);
-	TranslationLoad("SUS", 3); //jirkas custom lang
-	TranslationLoad("BA", 4); //jirkas custom lang
+	TranslationLoad("SUS", 2); //jirkas custom lang
+	TranslationLoad("BA", 3); //jirkas custom lang
 
 	//key buttons activation
 	window.addEventListener("keydown", (event) => {
