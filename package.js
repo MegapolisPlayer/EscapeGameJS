@@ -5168,7 +5168,6 @@ function MainMenuSetup() {
 	//translations
 	TranslationLoad("EN", 0);
 	TranslationLoad("CZ", 1);
-	TranslationLoad("DE", 2);
 	TranslationLoad("SUS", 3); //jirkas custom lang
 	TranslationLoad("BA", 4); //jirkas custom lang
 
